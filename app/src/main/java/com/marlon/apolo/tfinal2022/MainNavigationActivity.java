@@ -425,7 +425,7 @@ public class MainNavigationActivity extends AppCompatActivity {
 
     private void deleteLocalUserInEspecialCase() {
 
-        Log.d(TAG, "########################");
+        Log.d(TAG, "Parece q funciona");
 
     }
 
