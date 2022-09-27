@@ -3,7 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_settings"
-        android:orderInCategory="100"
+        android:orderInCategory="90"
         android:title="@string/action_settings"
         app:showAsAction="never" />
+
+<!--    <item-->
+    <!--        android:id="@+id/action_app_config"-->
+    <!--        android:orderInCategory="80"-->
+    <!--        android:title="Ajustes"-->
+    <!--        app:showAsAction="never" />-->
+
+    <item
+        android:id="@+id/mnu_nav_search"
+        android:icon="@drawable/ic_baseline_person_search_24"
+        android:orderInCategory="10"
+        android:title="search"
+        app:showAsAction="collapseActionView|always" />
 </menu>

@@ -7,19 +7,71 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="com.marlon.apolo.tfinal2022.ui.home.HomeFragment"
+        android:name="com.marlon.apolo.tfinal2022.ui.bienvenido.BienvenidoFragment"
         android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_bienvenido" />
 
     <fragment
-        android:id="@+id/nav_gallery"
-        android:name="com.marlon.apolo.tfinal2022.ui.gallery.GalleryFragment"
-        android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" />
+        android:id="@+id/nav_datos_personales"
+        android:name="com.marlon.apolo.tfinal2022.ui.datosPersonales.view.DataUsuarioFragment"
+        android:label="@string/menu_datos_personales"
+        tools:layout="@layout/fragment_data_usuario" />
 
     <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="com.marlon.apolo.tfinal2022.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
+        android:id="@+id/nav_chats"
+        android:name="com.marlon.apolo.tfinal2022.ui.chats.ChatFragment"
+        android:label="@string/menu_chats"
+        tools:layout="@layout/fragment_chat" />
+    <fragment
+        android:id="@+id/nav_trabajadores"
+        android:name="com.marlon.apolo.tfinal2022.ui.trabajadores.TrabajadorFragment"
+        android:label="@string/menu_admin_trab"
+        tools:layout="@layout/trabajador_fragment" />
+    <fragment
+        android:id="@+id/nav_empleadores"
+        android:name="com.marlon.apolo.tfinal2022.ui.empleadores.EmpleadorFragment"
+        android:label="@string/menu_admin_emp"
+        tools:layout="@layout/empleador_fragment" />
+    <fragment
+        android:id="@+id/nav_oficios"
+        android:name="com.marlon.apolo.tfinal2022.ui.oficios.OficioFragment"
+        android:label="@string/menu_admin_ofi"
+        tools:layout="@layout/oficio_fragment" />
+    <fragment
+        android:id="@+id/nav_cerrar_sesion"
+        android:name="com.marlon.apolo.tfinal2022.ui.cerrarSesion.CerrarSesionFragment"
+        android:label="@string/menu_cerrar_sesion"
+        tools:layout="@layout/cerrar_sesion_fragment" />
+    <fragment
+        android:id="@+id/nav_eliminar_cuenta"
+        android:name="com.marlon.apolo.tfinal2022.ui.eliminarCuenta.EliminarCuentaFragment"
+        android:label="@string/menu_eliminar_cuenta"
+        tools:layout="@layout/eliminar_cuenta_fragment" />
+    <fragment
+        android:id="@+id/nav_politica_priv"
+        android:name="com.marlon.apolo.tfinal2022.ui.politicaPrivacidad.PoliticaPrivacidadFragment"
+        android:label="@string/menu_poli_priv"
+        tools:layout="@layout/politica_privacidad_fragment" />
+    <fragment
+        android:id="@+id/nav_sobre_nos"
+        android:name="com.marlon.apolo.tfinal2022.ui.sobreNosotros.InfoAppFragment"
+        android:label="@string/menu_sobre_nosotros"
+        tools:layout="@layout/info_app_fragment" />
+    <activity
+        android:id="@+id/nav_iniciar_sesion"
+        android:name="com.marlon.apolo.tfinal2022.login.LoginActivity"
+        android:label="@string/menu_iniciar_sesion"
+        tools:layout="@layout/activity_login" />
+    <!--    <fragment-->
+    <!--        android:id="@+id/nav_citas"-->
+    <!--        android:name="com.marlon.apolo.tfinal2022.ui.citaTrabajo.CitaTrabajoFragment"-->
+    <!--        android:label="Citas de trabajo"-->
+    <!--        tools:layout="@layout/cita_trabajo_fragment" />-->
+
+    <activity
+        android:id="@+id/nav_citas"
+        android:name="com.marlon.apolo.tfinal2022.ui.citaTrabajo.CitaTrabajoViewActivity"
+        android:label="@string/citas_trabajo"
+        tools:layout="@layout/activity_cita_trabajo_view" />
+
 </navigation>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/mnu_chat"
+        android:orderInCategory="10"
+        android:title="Enviar mensaje" />
+    <item
+        android:id="@+id/mnu_llamada"
+        android:orderInCategory="20"
+        android:title="Llamada de Voz" />
+    <item
+        android:id="@+id/mnu_videollamada"
+        android:orderInCategory="30"
+        android:title="Videollamada" />
+
+</menu>

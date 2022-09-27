@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <ImageButton
+            android:id="@+id/imgButtonQuitarItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_baseline_delete_forever_24" />
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/cardViewItemTextDetail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1.45"
+            android:hint="Detalle..."
+            android:inputType="textNoSuggestions|textCapSentences|textMultiLine"
+            android:textSize="16sp" />
+        <!--        <EditText-->
+        <!--            android:id="@+id/cardViewItemTextDetail"-->
+        <!--            android:layout_width="0dp"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_weight="0.8"-->
+        <!--            android:text="Corte de cabello"-->
+        <!--            android:textSize="@dimen/textSize18Sp"-->
+        <!--            android:inputType="text"/>-->
+
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.1"
+            android:text="$"
+            android:textAlignment="center"
+
+            android:textSize="16sp" />
+
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/cardViewItemTextPrice"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.2"
+            android:hint="0"
+            android:inputType="number"
+            android:maxLength="2"
+            android:text="17"
+            android:textAlignment="center"
+            android:textSize="16sp" />
+
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.05"
+            android:text="."
+            android:textAlignment="center"
+            android:textSize="32sp"
+
+            />
+
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/cardViewItemTextPriceCents1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.2"
+            android:hint="00"
+            android:inputType="number"
+            android:maxLength="2"
+            android:text="50"
+            android:textAlignment="center"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

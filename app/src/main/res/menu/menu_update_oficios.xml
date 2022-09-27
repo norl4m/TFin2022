@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ui.datosPersonales.view.EditarOficioHabilidadActivity">
+
+    <item
+        android:id="@+id/mnu_add_oficio"
+        android:orderInCategory="70"
+        android:title="Nuevo oficio"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/mnu_add_habilidad"
+        android:orderInCategory="80"
+        android:title="Nueva habilidad"
+        app:showAsAction="never" />
+
+
+</menu>

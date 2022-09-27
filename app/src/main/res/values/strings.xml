@@ -1,13 +1,425 @@
+<?xml version="1.0" encoding="utf-8"?><!DOCTYPE resources [<!ENTITY appname "Cachuelito"><!ENTITY author "Marlon Apolo">]>
 <resources>
-    <string name="app_name">TFinal2022</string>
+    <string name="app_name">&appname;</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_title">Marlon Apolo</string>
+    <string name="nav_header_subtitle">marlon.apolo@gmail
+        .com</string>
     <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Configuraciones</string>
 
-    <string name="menu_home">Home</string>
-    <string name="menu_gallery">Gallery</string>
-    <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_home">Bienvenido</string>
+    <string name="menu_datos_personales">Datos personales</string>
+    <string name="menu_chats">Chats</string>
+    <!--    Admin-->
+    <string name="menu_admin">Administración</string>
+    <string name="menu_admin_trab">Trabajadores</string>
+    <string name="menu_admin_emp">Empleadores</string>
+    <string name="menu_admin_ofi">Oficios</string>
+    <!--    Admin-->
+
+    <string name="menu_cerrar_sesion">Cerrar sesión</string>
+    <string name="menu_eliminar_cuenta">Eliminar cuenta</string>
+    <string name="menu_poli_priv">Política de privacidad</string>
+    <string name="menu_sobre_nosotros">Sobre nosotros</string>
+    <string name="menu_usuario">Usuario</string>
+    <string name="menu_iniciar_sesion">Iniciar sesión</string>
+
+    <!--    MainActivity-->
+    <string name="text_bienvenida_app">Bienvenido a Cachuelito</string>
+    <string name="slogan_text">La aplicación móvil que te permitirá conectarte con tus necesidades!.</string>
+    <string name="citas_trabajo">Citas de trabajo</string>
+    <string name="text_registro"><u><b>¿Eres nuevo? Regístrate ahora</b></u></string>
+
+    <!--    <string name="iniciar_sesion">Iniciar sesión</string>-->
+    <!--    MainActivity-->
+
+    <!--Comic Activity-->
+    <string name="first_slide_title">Buscas trabajadores responsables, eficientes y confiables</string>
+    <string name="second_slide_title">Contáctalos por medio de \&appname;</string>
+    <string name="third_slide_title">Establece un acuerdo con nuestros trabajadores y contrátalos de manera inmediata</string>
+    <string name="fourth_slide_title">Regístrate y disfruta de una nueva forma de conectarte con tus necesidades</string>
+    <string name="iniciar_sesion_con_email">Iniciar sesión con email</string>
+    <string name="iniciar_sesion_con_google">Iniciar sesión con Google</string>
+    <string name="iniciar_sesion_con_celular">Iniciar sesión con celular</string>
+    <!--Comic Activity-->
+
+    <!--    Login Activity-->
+    <string name="email">Correo electrónico</string>
+    <string name="password">Clave/contraseña</string>
+    <!--    Login Activity-->
+
+    <!--Validations-->
+    <string name="validate_names_and_lastname">abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZáéíóúÁÉÍÓÚ</string>
+    <string name="numbers_validation">0123456789</string>
+    <string name="validate_complete_email">abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ0123456789.-/@"!#$%^*+-/=?^_`{|}</string>
+    <string name="validate_email">abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ1234567890.-/""!#$%^*+-/=?^_`{|}</string>
+    <string name="saving_data_text">Guardando registro...</string>
+    <string name="phone">Número celular</string>
+
+
+    <string name="perfil_empleador">
+        Los empleadores pueden realizar lo siguiente dentro de &appname;:
+        \n
+        - Buscar y encontrar a su trabajador ideal para completar una determinada tarea
+        \n
+        - Comunicación directa con trabajadores confiables y seguros
+    </string>
+    <string name="perfil_trabajador">
+        Los trabajadores acceden a los siguientes beneficios dentro de &appname;:
+        \n
+        - Solución a su posible problema de falta de empleo
+        \n
+        - Comunicación directa con empleadores confiables y seguros
+        \n
+        - Ganar dinero por la prestación de sus servicios
+    </string>
+    <string name="name">Nombre</string>
+    <string name="last_name">Apellido</string>
+
+
+    <string name="record_policial_info">
+        El record policial es un requisito indispensable para registrarte en &appname;.
+        \n\n
+        Este documento nos permite verificar la identidad cada trabajador antes de registrarse en la aplicación.
+        \n\n
+        &appname; no almacena ninguna información relacionada con su record policial en sus servidores.
+    </string>
+
+    <string name="article_subtitle_politica_priv_datos">\"Estos términos y condiciones de privacidad de datos establecen los lineamientos y prácticas de protección de datos personales de la aplicación &appname;.\"</string>
+    <string name="article_text_politica_priv_datos">Lea atentamente estos términos y condiciones, ya que le ayudarán a tomar decisiones informadas sobre cómo compartir su información personal con nosotros.
+    \n\n
+        <b>1. ¿Cuál es la información que recopilamos?</b>
+    \n\n
+        - Información de Identificación Personal (\"IIP\") que recibamos, entre otros, mediante los formularios de contacto y registro que se encuentren en la aplicación móvil.
+        La IIP incluye la siguiente información de identificación:
+        \n\n
+        - Nombres y apellidos
+        \n
+        - Correo electrónico, cuenta de google, número de teléfono celular
+        \n
+        - Foto de perfil
+        \n
+        - Ciudad y país de residencia
+
+    \n\n
+        <b>2. ¿Cómo usamos esta información?</b>
+    \n\n
+        - Los datos descritos en el punto anterior se utilizan con objetivos de difusión para mantener y cumplir las obligaciones contractuales, legales y de transparencia que exijan algún tipo de comunicación. Parte de los datos se utilizan como referencia para optimizar la pertinencia de los mensajes entre los usuarios y para garantizar la integridad, confidencialidad y disponibilidad de la información almacenada en nuestros servidores.
+    </string>
+
+    <string name="article_text_sobre_nosotros">&appname; es una empresa de tecnología y permite conectar <b>empleadores</b> con <b>trabajadores</b>. Los <b>trabajadores</b> registrados ponen a disposición sus servicios para poder ser contratados. &appname;
+        permite a nuestro socio <b>trabajador</b> obtener una remuneración monetaria por los servicios prestados, y también una calificación para poder aparecer entre los primeros resultados de las búsquedas que realicen los usuarios registrados como <b>empleadores</b>.
+    \n\n
+        <b>Lo que hacemos</b>
+    \n\n
+        - &appname; ofrece una aplicación móvil para que Trabajadores se conecten con usuarios que buscan contratar personal seguro y confiable.
+
+    \n\n
+        - Creemos que para hacer frente al desafío del empleo informal es necesario conocer a los Trabajadores a través de nuestra plataforma tecnológica.
+    \n\n
+        - Hacemos posible que trabajadores informales puedan tener aún más oportunidades de ganar dinero al conectarlos con empleadores que pueden necesitar de sus servicios.
+
+    \n\n
+        <b>Lo que no hacemos</b>
+    \n\n
+        - &appname; no es una empresa de Trabajadores. &appname; es una empresa de tecnología. Nosotros desarollamos una aplicación que conecta trabajadores con empleadores que requieren de este personal.
+
+    \n\n
+        - &appname; no contrata ningún trabajador. &appname; facilita a traves de su aplicación, que trabajadores puedan conectar con empleadores, que buscan contratar un personal seguro y confiable para realizar una determinada actividad.
+
+    </string>
+    <string name="no_text">No</string>
+    <string name="messages_header">Configuraciones</string>
+    <string name="search_hint">Buscar trabajadores...</string>
+    <string name="no_resultados">No se encontraron resultados!</string>
+    <string name="text_info_metodo_reg">
+        <b>- Cuenta de correo electrónico y contraseña</b>
+        \n
+        Este método le permite utilizar una cuenta de correo electrónico o e-mail, y una contraseña para poder registrarse.
+        \n\n
+        El correo electrónico no puede ser cambiado, ya que es único y su identificador digital dentro de la aplicación.
+
+        \n\n
+        <b>- Cuenta de Google</b>
+        \n
+        Puede utilizar su cuenta personal de Google para completar el registro.
+        \n\n
+        Este método no utiliza clave o contraseña.
+        \n\n
+        Su cuenta de Google es única y no podrá ser modificada una vez completado el registro.
+
+        \n\n
+        <b>- Número celular</b>
+        \n
+        Este método utiliza su número celular como identificador para registrarse.
+        \n\n
+        Para completar el registro es necesario verificar que su número celular sea válido, de lo contrario no podrá completar el proceso.
+        \n\n
+        Su número celular es único y no podrá ser modificado una vez completado el registro.
+    </string>
+    <string name="text_info_nombre_usuario">
+        \n
+        Su nombre de usuario sirve para poder identificarlo en la aplicación.
+        \n\n
+        La información proporcionada no será compartida con ninguna empresa de terceros.
+    </string>
+    <string name="text_info_foto_perfil">
+        \n
+        Su foto de perfil es un requisito opcional en el proceso de registro.
+        \n\n
+        Su foto de perfil será almacenada en nuestros servidores únicamente para poder identificarlo.
+        \n\n
+        La información proporcionada no será compartida con ninguna empresa de terceros.
+    </string>
+    <string name="text_info_reg_with_google">
+        \n
+        A continuación, por favor seleccione su cuenta de Google para completar su registro.
+    </string>
+    <string name="ok">Ok</string>
+
+    <string name="camera_access_required">Permiso de cámara necesario</string>
+    <string name="camera_unavailable">Cámara no disponible</string>
+    <string name="camera_permission_granted">Permiso de cámara concedido</string>
+    <string name="camera_permission_denied">Permiso de cámara denegado</string>
+
+    <string name="text_info_reg_email_password">
+        \n
+        Su correo electrónico es único y no podrá ser modificado una vez completado el registro.
+        \n\n
+        Su contraseña puede ser modificada luego de completar el registro en el menú: Datos personales.
+        \n\n
+        La información proporcionada no será compartida con ninguna empresa de terceros.
+
+    </string>
+
+    <string name="text_info_reg_google">
+        \n
+        Este método no utiliza clave o contraseña.
+        \n\n
+        Su cuenta de Google es única y no podrá ser modificada una vez completado el registro.
+        \n\n
+        La información proporcionada no será compartida con ninguna empresa de terceros.
+
+    </string>
+
+    <string name="text_info_reg_phone">
+        \n
+        Este método no utiliza clave o contraseña.
+        \n\n
+        Su número celular es único y no podrá ser modificado una vez completado el registro.
+        \n\n
+        La información proporcionada no será compartida con ninguna empresa de terceros.
+
+    </string>
+
+    <string name="text_error_email">
+        \n
+        El correo electrónico ingresado es inválido.
+    </string>
+    <string name="text_error_password">
+        \n
+        Su contraseña parece ser muy débil, por favor ingrese una contraseña más segura.
+    </string>
+    <!--    <string name="text_error_email_repetido">-->
+    <!--        \n-->
+    <!--        Parece que ya posee una cuenta en &appname;.-->
+    <!--        \n-->
+    <!--        ¿Le gustaría iniciar sesión en &appname;?.-->
+    <!--    </string>-->
+    <string name="text_error_email_repetido">
+        \n
+        Parece que ya posee una cuenta en &appname;.
+        \n\n
+        Para iniciar sesión, por favor diríjase al menú Iniciar sesión, en la ventana principal de la aplicación y utilice sus credenciales de registro.
+        \n\n
+        Recuerde: usted puede iniciar sesión utilizando una cuenta de correo electrónico, cuenta de Google o con su número de celular.
+    </string>
+    <string name="text_error_password_email">
+        \n
+        La dirección de correo electrónico o la contraseña que has introducido son inválidas.
+    </string>
+    <string name="text_error_user_no_found">
+        \n
+        El usuario no se encuentra registrado.
+    </string>
+
+    <string name="text_email_verification">
+        \n
+        Se ha enviado un mensajeNube a su correo electrónico. Para completar el registro por favor revise su bandeja de entrada.
+    </string>
+    <string name="text_error_conexion_internet">
+            \n
+            Por favor antes de continuar revise que sus datos móviles se encuentren apagados.
+            \n\n
+            Se recomienda al usuario que utilice una red Wifi para poder realizar el registro sin presenta ningún inconveniente.
+            \n\n
+            Si usted utiliza los datos móviles, es posible que el registro no se pueda completar, por falta de saldo o un error debido a la operadora móvil.
+        </string>
+    <string name="error_inesperado">
+        Se ha producido un error inesperado.
+        \n
+        Por favor inténtelo más tarde.
+    </string>
+    <string name="verificar_celular">Verificar número celular</string>
+    <string name="solicitar_nuevo_codigo">Solicitar nuevo código de verificación</string>
+    <string name="enviar_cdigo">Enviar código</string>
+    <string name="codigo_verif_invalido">Código de verificación inválido</string>
+    <string name="celular_invalido">Número celular inválido</string>
+    <string name="text_google_verification">Su cuenta ha sido creada de manera exitosa.</string>
+    <string name="text_celular_verification">Su cuenta ha sido creada de manera exitosa.</string>
+    <string name="text_error_no_connectado">
+        \n
+        Por favor revise su conexión a Internet e inténtelo nuevamente.
+    </string>
+    <string name="text_error_no_connectado_receiver">
+        \n
+        Su conexión a Internet ha fallado.
+        \n\n
+        Para continuar por favor conéctese a una red Wifi o utilice sus datos móviles.
+    </string>
+    <string name="text_error_no_connectado_con_wifi">
+        \n
+        Parece que no tiene conexión a Internet.
+        \n\n
+        Por favor revise su conexión Wifi e inténtelo nuevamente.
+        \n\n
+        También puede cambiar las opciones de configuración y utilizar sus datos móviles. (Actualmente utilizando solo redes Wifi).
+    </string>
+    <string name="text_config_cambiada_solo_wifi">
+        \n
+        Su configuración de red ha cambiado.
+        \n\n
+        Conexión a Internet utilizando únicamente redes Wifi!
+    </string>
+    <string name="text_config_cambiada_datos_moviles_y_wifi">
+        \n
+        Su configuración de red ha cambiado.
+        \n\n
+        Conexión a Internet utilizando datos móviles y redes Wifi!
+    </string>
+    <string name="text_error_conexion_internet_pero_si_datos">
+        \n
+        Por favor antes de continuar revise que sus datos móviles se encuentren apagados.
+        \n\n
+        Se recomienda al usuario que utilice una red Wifi para poder realizar el registro sin presentar ningún inconveniente.
+        \n\n
+        Si usted utiliza los datos móviles, es posible que el registro de alguno de sus datos proporcionados no pueda completarse.
+        \n\n
+        Se recomienta utilizar redes wifi debido a que los datos móviles imponen un valor adicional por cada transacción.
+    </string>
+    <string name="yes_text">Si</string>
+    <string name="text_select_oficios">
+        \n
+        A continuación, por favor seleccione al menos un oficio de los registrados en la lista para completar su registro.
+        \n\n
+        Si su oficio no se encuentra registrado, por favor seleccionar la casilla Otros.
+        \n\n
+        Puede actualizar y registrar nuevos oficios o habilidades una vez completado el proceso de registro.
+    </string>
+    <string name="text_select_trabjador_no_login">
+        \n
+        Para continuar por favor inicie sesión dentro de la aplicación.
+        \n\n
+        Los usuarios registrados dentro de la aplicación son los únicos que pueden enviar mensajes y realizar llamadas de voz o videollamadas.
+    </string>
+    <string name="channel_name">Notificación desde Firebase</string>
+    <string name="channel_description">Notificación de mensaje</string>
+    <string name="reply_label">Responder</string>
+    <string name="notification_title">&appname;</string>
+    <string name="notification_message">&appname;
+        se encuentra ejecutándose en segundo plano.</string>
+    <string name="ticker_text">Ticker text</string>
+    <string name="agora_app_id">4956a1efcd5c4b7b8ee12ffe31a950ed</string>
+    <string name="agora_access_token">0064956a1efcd5c4b7b8ee12ffe31a950edIAA9oSKYZOPe0jmQnsn/ew0YmNCQ1kIg+Hl5/Dqn/H6kZQwfg2gAAAAAEADCmyrTDUq9YgEAAQAMSr1i</string>
+    <string name="message_channel_name">Notificaciones de mensajes</string>
+    <string name="message_channel_description">Notificaciones de mensajes desde Firebase</string>
+
+
+    <string name="back"><![CDATA[>]]></string>
+    <string name="rewind"><![CDATA[<<]]></string>
+    <string name="forward"><![CDATA[>>]]></string>
+    <string name="pause">||</string>
+
+
+    <!--    Ubicacion-->
+    <string name="location_text">"Latitude: %1$.4f \n Longitude: %2$.4f
+ \n Timestamp: %3$tr"</string>
+
+    <!--    <string name="address_text">"Name: %1$s \n Address: %2$s \n Timestamp: %3$tr"</string>-->
+    <!--    <string name="address_text">"Dirección: %1$s \n Hora: %2$tr"</string>-->
+    <string name="address_text">"Ubicación: %1$s"</string>
+
+
+    <string name="no_location">No location available</string>
+    <string name="no_address_found">No address found</string>
+    <string name="loading">Cargando…</string>
+    <string name="service_not_available">Service not available</string>
+    <string name="invalid_lat_long_used">Invalid coordinates used</string>
+    <string name="start_tracking_location">Empezar a compartir ubicación</string>
+    <string name="stop_tracking_location">Dejar de compartir ubicación</string>
+
+    <string name="textview_hint">Presione el botón para comenzar a mostrar su
+     ubicación.</string>
+    <string name="pick_a_place">Pick a Place</string>
+    <string name="location_permission_denied">Location permissions denied,         please enable the permissions to use this app.</string>
+    <string name="no_place">No Place Name Found</string>
+    <string name="text_select_habilidades">
+        \n
+        A continuación, por favor seleccione al menos una habilidad de las mostradas en la lista para completar su registro.
+        \n\n
+        Si su habilidad no se encuentra registrado, por favor presione en los 3 puntos ubicados en la parte superior derecha y seleccione: Nueva habilidad.
+        \n\n
+        Puede actualizar y registrar nuevas habilidades una vez completado el proceso de registro.
+    </string>
+    <string name="alarm_on_toast">Stand Up Alarm On!</string>
+    <string name="alarm_off_toast">Stand Up Alarm Off</string>
+    <string name="text_eliminar_info_con_email">
+        \n
+        A continuación, por favor ingrese su clave y contraseña para completar el proceso de eliminación de su cuenta personal.
+        \n\n.
+    </string>
+    <string name="text_eliminar_info_con_google">
+        \n
+        A continuación, por favor seleccione su cuenta de Google para completar el proceso de eliminación de su cuenta personal.
+        \n\n.
+    </string>
+    <string name="text_eliminar_info_con_phone">
+        \n
+        A continuación, por favor ingrese su número de celular para completar el proceso de eliminación de su cuenta personal.
+        \n\n.
+    </string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="text_info_enviado_code">"Se ha enviado un código  de  6 dìgitos a su aplicación de mensajería. Para continuar por favor ingrese el código de 6 dìgitos. "</string>
+    <string name="cancel">Cancelar</string>
+    <string name="incoming_call_text">Llamada entrante</string>
+
+    <string name="permiso_audio_text">Para grabar y enviar mensajes de voz, por favor permite que &appname;
+        acceda a tú micrófono. Presiona Ajustes > Permisos > Micrófono, y otrogue el premiso de Micrófono.</string>
+
+    <string name="permiso_camera_text_data">Para actualizar su perfil utilizando una foto, por favor permita que &appname;
+        acceda a su cámara. Presiona Ajustes > Permisos > Cámara, y otrogue el premiso de Cámara.</string>
+
+    <string name="permiso_camera_text">Para capturar imágenes y enviarlas  a través de mensajes, por favor permite que &appname;
+        acceda a tú cámara. Presiona Ajustes > Permisos > Cámara, y otrogue el premiso de Cámara.</string>
+
+    <string name="permiso_cam_audio_text">Para compartir imágenes y mensajes de audio, por favor permite que &appname;
+        acceda al contenido multimedia en tu dispositivo. Presiona Ajustes > Permisos > Archivos y contendio multimedia, y otorgue el permiso de Archivos y contendio multimedia.</string>
+
+    <string name="permiso_call_text">Para realizar llamadas de voz, por favor permite que &appname;
+        acceda al micrófono de tú dispositivo móvil. Presiona Ajustes > Permisos > Micrófono, y otrogue el premiso de Micrófono.</string>
+
+    <string name="permiso_video_call_text">Para realizar video llamadas, por favor permite que &appname;
+        acceda al micrófono y a la cámara de tú dispositivo móvil. Presiona Ajustes > Permisos y otrogue el premiso de Micrófono y Cámara.</string>
+
+    <string name="permiso_camera_text_data_foto">Para registrar una foto en su perfil, por favor permita que &appname;
+        acceda a su cámara. Presiona Ajustes > Permisos > Cámara, y otrogue el premiso de Cámara</string>
+
+    <string name="permiso_camera_text_data_record">Para registrar una foto de su record policial, por favor permita que &appname;
+        acceda a su cámara. Presiona Ajustes > Permisos > Cámara, y otrogue el premiso de Cámara</string>
+    <string name="incoming_video_call_text">Videollamada entrante</string>
+
 </resources>

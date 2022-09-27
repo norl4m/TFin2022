@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingDefaultResource">
+    <item
+        android:id="@+id/mnu_editar_cita"
+        android:orderInCategory="20"
+        android:title="Editar cita" />
+    <item
+        android:id="@+id/mnu_eliminar_cita"
+        android:orderInCategory="30"
+        android:title="Eliminar cita"
+        android:visible="false" />
+    <item
+        android:id="@+id/mnu_finalizar_trabajo"
+        android:orderInCategory="40"
+        android:title="Finalizar Trabajo" />
+
+<!--    <item-->
+    <!--        android:id="@+id/mnu_guardar"-->
+    <!--        android:orderInCategory="50"-->
+    <!--        android:title="Guardar cambios" />-->
+    <item
+        android:id="@+id/mnu_calif_trab"
+        android:orderInCategory="50"
+        android:title="Calificar trabajador" />
+</menu>

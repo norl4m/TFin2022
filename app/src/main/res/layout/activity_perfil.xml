@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".registro.PerfilActivity">
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:elevation="4dp"
+        app:navigationIcon="@drawable/ic_baseline_arrow_back_24"
+        app:title="Perfil" />
+
+       <ScrollView
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:layout_below="@id/toolbar">
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="match_parent"
+               android:orientation="vertical"
+               android:layout_below="@id/toolbar"
+               android:gravity="center">
+
+               <TextView
+                   android:id="@+id/textView3"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:layout_margin="8dp"
+                   android:text="Un perfil basado en tus necesidades"
+                   android:textAlignment="center"
+                   android:textSize="36sp" />
+
+
+               <LinearLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:layout_margin="8dp"
+                   android:orientation="vertical">
+
+                   <TextView
+                       android:id="@+id/textView4"
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:layout_margin="8dp"
+                       android:padding="4dp"
+                       android:text="@string/perfil_trabajador" />
+
+                   <Button
+                       android:id="@+id/btnRegTrabajador"
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:layout_margin="8dp"
+                       android:text="Regístrate como TRABAJADOR"
+                       android:textAllCaps="false"
+                       android:textSize="16sp" />
+               </LinearLayout>
+
+
+               <LinearLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:layout_margin="8dp"
+                   android:orientation="vertical">
+
+                   <TextView
+                       android:id="@+id/textView5"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_margin="8dp"
+                       android:padding="4dp"
+                       android:text="@string/perfil_empleador"
+                       android:textAlignment="textStart" />
+
+                   <Button
+                       android:id="@+id/btnRegEmpleador"
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:layout_margin="8dp"
+                       android:text="Regístrate como EMPLEADOR"
+                       android:textAllCaps="false"
+                       android:textSize="16sp" />
+               </LinearLayout>
+
+
+           </LinearLayout>
+
+       </ScrollView>
+
+
+</RelativeLayout>

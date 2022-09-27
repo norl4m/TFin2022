@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="56dp"
+        android:padding="8dp"
+        tools:ignore="UselessParent">
+
+
+        <TextView
+            android:id="@+id/textViewContenido"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="5dp"
+            android:padding="8dp"
+            android:textSize="18sp"
+            tools:text="Hola me podría ayudar"
+            android:background="@drawable/shape_background_chat_item_right"/>
+
+        <TextView
+            android:id="@+id/textViewDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textViewContenido"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@id/imageViewEstadoLectura"
+            android:text="05:16 a.m."
+            android:textSize="10sp" />
+
+        <ImageView
+            android:id="@+id/imageViewEstadoLectura"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_below="@id/textViewContenido"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/ic_baseline_done_all_24" />
+
+    </RelativeLayout>
+</RelativeLayout>

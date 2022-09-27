@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/file"
+        android:title="Fit menu">
+        <!-- "file" submenu -->
+        <menu>
+            <item
+                android:id="@+id/fitStart"
+                android:orderInCategory="100"
+                android:title="Fit start" />
+            <item
+                android:id="@+id/fitCenter"
+                android:orderInCategory="90"
+                android:title="Fit center" />
+            <item
+                android:id="@+id/fitEnd"
+                android:orderInCategory="80"
+                android:title="Fit end" />
+            <item
+                android:id="@+id/fitNormal"
+                android:orderInCategory="70"
+                android:title="Fit XY" />
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/zoom"
+        android:title="Zoom menu">
+        <!-- "file" submenu -->
+        <menu>
+            <item
+                android:id="@+id/zoomX1"
+                android:orderInCategory="100"
+                android:title="Zoom x1" />
+            <item
+                android:id="@+id/zoomX2"
+                android:orderInCategory="90"
+                android:title="Zoom x2" />
+        </menu>
+    </item>
+    <item
+        android:id="@+id/menuLin"
+        android:orderInCategory="80"
+        android:title="Linterna" />
+    <item
+        android:id="@+id/menuEn"
+        android:orderInCategory="90"
+        android:title="Enfoque y medición" />
+</menu>

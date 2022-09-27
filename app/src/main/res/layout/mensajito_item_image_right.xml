@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="56dp"
+        android:padding="8dp"
+        tools:ignore="UselessParent">
+
+        <ImageView
+            android:id="@+id/profile_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/textViewIndexDB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textViewDate"
+            android:layout_alignParentEnd="true"
+            android:layout_toEndOf="@id/profile_image"
+            android:text="0"
+            android:textColor="@color/black"
+            android:textSize="10sp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/textViewUri"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textViewIndexDB"
+            android:layout_alignParentEnd="true"
+            android:layout_toEndOf="@id/profile_image"
+            android:text="uri"
+            android:textColor="@color/black"
+            android:textSize="10sp"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/imageViewContent"
+            android:layout_width="275dp"
+            android:layout_height="300dp"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/shape_background_chat_item_right"
+            android:padding="6dp"
+            android:scaleType="fitXY" />
+
+        <TextView
+            android:id="@+id/textViewContenido"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="5dp"
+            android:layout_toEndOf="@id/profile_image"
+            android:padding="8dp"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:visibility="gone"
+            tools:text="placeholder text" />
+
+        <TextView
+            android:id="@+id/textViewDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/imageViewContent"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@id/imageViewEstadoLectura"
+            android:text="05:16 a.m."
+            android:textSize="12sp" />
+
+        <ImageView
+            android:id="@+id/imageViewEstadoLectura"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_below="@id/imageViewContent"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/ic_baseline_done_all_24" />
+
+    </RelativeLayout>
+</RelativeLayout>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<searchable xmlns:android="http://schemas.android.com/apk/res/android"
+    android:hint="@string/search_hint"
+    android:icon="@drawable/ic_citas"
+    android:inputType="textCapSentences"
+    android:label="@string/app_name"
+    android:searchSuggestAuthority="com.marlon.apolo.tfinal2022.buscador.MySuggestionProvider"
+    android:searchSuggestSelection=" ?">
+
+</searchable>
+    

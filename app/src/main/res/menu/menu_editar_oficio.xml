@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".registro.RegistroOficioActivity">
+
+    <item
+        android:id="@+id/mnu_edit_oficio"
+        android:orderInCategory="80"
+        android:title="Editar oficios"
+        app:showAsAction="never" />
+
+    <!--    <item-->
+    <!--        android:id="@+id/mnu_edit_habilidad"-->
+    <!--        android:orderInCategory="90"-->
+    <!--        android:title="Editar habilidades"-->
+    <!--        app:showAsAction="never" />-->
+
+</menu>

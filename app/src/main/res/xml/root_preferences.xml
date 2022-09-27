@@ -1,0 +1,78 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory app:title="@string/messages_header">
+
+        <!--        <EditTextPreference-->
+        <!--            app:key="signature"-->
+        <!--            app:title="Nombre"-->
+        <!--            app:useSimpleSummaryProvider="true" />-->
+
+        <!--        <ListPreference-->
+        <!--            app:defaultValue="reply"-->
+        <!--            app:entries="@array/reply_entries"-->
+        <!--            app:entryValues="@array/reply_values"-->
+        <!--            app:key="reply"-->
+        <!--            app:title="@string/reply_title"-->
+        <!--            app:useSimpleSummaryProvider="true" />-->
+
+
+        <SwitchPreferenceCompat
+            app:defaultValue="true"
+            app:key="sync_notificaciones_mensajes"
+            app:summaryOff="No permitir"
+            app:summaryOn="Permitir"
+            app:title="Notificaciones de mensajes" />
+
+        <SwitchPreferenceCompat
+            app:defaultValue="true"
+            app:key="sync_notificaciones_citas"
+            app:summaryOff="No permitir"
+            app:summaryOn="Permitir"
+            app:title="Notificaciones de citas de trabajo" />
+
+        <SwitchPreferenceCompat
+            app:defaultValue="false"
+            app:key="sync_theme"
+            app:summaryOff="Claro"
+            app:summaryOn="Oscuro"
+            app:title="Tema" />
+
+
+        <SwitchPreferenceCompat
+            app:defaultValue="true"
+            app:key="sync_network"
+            app:summaryOff="Redes móviles y redes Wifi"
+            app:summaryOn="Solo redes Wifi"
+            app:title="Descargar datos utilizando" />
+    </PreferenceCategory>
+
+    <!--    <PreferenceCategory app:title="@string/sync_header">-->
+
+    <!--        <SwitchPreferenceCompat-->
+    <!--            app:key="sync"-->
+    <!--            app:title="@string/sync_title" />-->
+
+    <!--        <SwitchPreferenceCompat-->
+    <!--            app:dependency="sync"-->
+    <!--            app:key="attachment"-->
+    <!--            app:summaryOff="@string/attachment_summary_off"-->
+    <!--            app:summaryOn="@string/attachment_summary_on"-->
+    <!--            app:title="@string/attachment_title" />-->
+
+    <!--        <SwitchPreferenceCompat-->
+    <!--            app:key="auto_updates"-->
+    <!--            app:summaryOff="Activadas"-->
+    <!--            app:summaryOn="Desactivadas"-->
+    <!--            app:title="Actualizaciones automáticas" />-->
+    <!--    </PreferenceCategory>-->
+    <!--    <PreferenceCategory app:title="Otros">-->
+
+    <!--        <SwitchPreferenceCompat-->
+    <!--            app:key="mode"-->
+    <!--            app:summaryOff="Claro"-->
+    <!--            app:summaryOn="Nocturno"-->
+    <!--            app:title="Modo" />-->
+
+    <!--    </PreferenceCategory>-->
+
+</PreferenceScreen>

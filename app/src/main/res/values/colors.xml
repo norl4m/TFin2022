@@ -1,10 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
+    <!--    <color name="purple_200">#FFBB86FC</color>-->
+    <!--    <color name="purple_700">#FF3700B3</color>-->
+    <!--    <color name="purple_500">#FF6200EE</color>-->
+
+    <color name="purple_100">#E6EDF1</color>
+    <color name="purple_200">#8eacbb</color>
+    <color name="purple_500">#607d8b</color>
+    <color name="purple_700">#34515e</color>
+    <!--    <color name="teal_200">#FF03DAC5</color>-->
+    <!--    <color name="teal_700">#FF018786</color>   -->
+    <color name="teal_100">#FCE8DD</color>
+    <color name="teal_200">#ffa06d</color>
+    <color name="teal_500">#ff6e40</color>
+    <color name="teal_700">#c53d13</color>
+
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    .
+    <!--    Qualification colors-->
+    <color name="angry_color">#F74360</color>
+    <color name="upset_color">#FF902D</color>
+    <color name="neutral_color">#FDDF1D</color>
+    <color name="happy_color">#84D53A</color>
+    <color name="excited_color">#0CCB95</color>
+
+
+    <color name="green_light">#7ADCCF</color>
+    <color name="blue_light">#B8D7F5</color>
+    <color name="blue_light_2">#707FF1</color>
+    <color name="orange_light">#F7C59F</color>
+    <color name="orange_light_2">#FE8689</color>
+    <color name="gray_black">#5D6D7E</color>
+    <color name="purple_light">#D4CBE5</color>
+    <color name="yellow_light">#FFFF00</color>
+
+    <color name="white_smoke">#F5F5F5</color>
 </resources>

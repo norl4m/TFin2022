@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_filter_completados"
+        android:orderInCategory="6"
+        android:title="Citas completadas"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_filter_pendientes"
+        android:orderInCategory="7"
+        android:title="Citas pendientes"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_order_asc"
+        android:orderInCategory="9"
+        android:title="Ordenar de forma ascendente"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_order_desc"
+        android:orderInCategory="9"
+        android:title="Ordenar de forma descendente"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_all_citas"
+        android:orderInCategory="8"
+        android:title="Todas las citas"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_filter_by_date"
+        android:orderInCategory="10"
+        android:title="Filtrar por fecha"
+        app:showAsAction="never" />
+</menu>

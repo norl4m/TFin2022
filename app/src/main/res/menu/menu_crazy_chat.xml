@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/mnu_eliminar_mensajes"
+        android:orderInCategory="90"
+        android:title="Eliminar mensajes" />
+    <item
+        android:id="@+id/mnu_agendar_cita"
+        android:orderInCategory="100"
+        android:title="Agendar cita" />
+
+</menu>

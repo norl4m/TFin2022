@@ -1,18 +1,372 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.marlon.apolo.tfinal2022">
+    <!-- Permiso necesario para saber si exsite o no conexión a Internet -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- Permiso necesario para que la aplicación pueda utilizar la cámara -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" /> <!-- Permiso necesario para que la aplicación pueda utilizar la cámara -->
+    <!-- Permiso de cámara: Tu aplicación debe solicitar permiso para usar una cámara del dispositivo. -->
+    <!-- <uses-permission android:name="android.permission.CAMERA" /> &lt;!&ndash; Funciones de cámara: Tu aplicación también debe declarar el uso de funciones de cámara, por ejemplo &ndash;&gt; -->
+    <uses-permission android:name="android.permission.MANAGE_OWN_CALLS" />
+    <uses-permission android:name="android.permission.READ_CALL_LOG" /> <!-- <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" /> -->
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" /> <!-- Permisos -->
+    <!--
+    La app necesita el permiso CAMERA. Para guardar imágenes en archivos, también necesitarás el permiso WRITE_EXTERNAL_STORAGE,
+            excepto en dispositivos que ejecuten Android 10 o versiones posteriores.
+    -->
+    <!-- Requisitos -->
+    <!-- CameraX tiene los siguientes requisitos mínimos de versión: -->
+    <!-- Nivel 21 de la API de Android -->
+    <!-- Componentes de la arquitectura de Android 1.1.1 -->
+    <!-- Para actividades relacionadas con el ciclo de vida, usa FragmentActivity o AppCompatActivity. -->
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
+    <uses-permission android:name="android.permission.CAMERA" /> <!-- Permiso necesario par apoder acceder al almacenamiento externo de un dispositivo android -->
+    <!--
+ Almacenamiento específico habilitado
+  Si tu app usa el almacenamiento específico, debe solicitar permisos relacionados con el almacenamiento solo para dispositivos que ejecuten Android 9 (nivel 28 de API) o versiones anteriores. Para aplicar esta condición, agrega el atributo android:maxSdkVersion a la declaración de permisos en el archivo de manifiesto de la app:
+    -->
+    <!-- <uses-permission -->
+    <!-- android:name="android.permission.WRITE_EXTERNAL_STORAGE" -->
+    <!-- android:maxSdkVersion="18" /> -->
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" /> -->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- Permiso para acceder al estaoo de la red y verficar si existe conexión -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />
+    <!--
+  Para poder grabar, la app le debe avisar al usuario que tendrá acceso a la entrada de audio del dispositivo. Tienes que
+  incluir esta etiqueta de permiso en el archivo de manifiesto de la app:
+    -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" /> <!-- <queries> -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" /> <!-- <intent> -->
+    <!-- <action android:name="android.media.action.IMAGE_CAPTURE" /> -->
+    <!-- </intent> -->
+    <!-- </queries> -->
+    <queries>
+        <intent>
+            <action android:name="android.media.action.IMAGE_CAPTURE" />
+        </intent>
+        <!--
+        <intent>
+            <action android:name="android.intent.action.GET_CONTENT" />
+            <data android:mimeType="image/*" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.CHOOSER" />
+        </intent>
+        -->
+        <intent>
+            <action android:name="android.intent.action.PICK" />
+
+            <data android:mimeType="image/*" />
+        </intent>
+    </queries>
+
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOWS" />
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TFinal2022">
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.bienvenido.view.TrabajadoresActivityVista"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar" />
+        <activity
+            android:name=".ui.bienvenido.view.OficiosActivityVista"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar" />
+        <activity
+            android:name=".registro.RegistroOficioActivityPoc"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar" />
+        <activity
+            android:name=".individualChat.view.SendFotoActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar" />
+        <activity
+            android:name=".individualChat.view.CamActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar" />
+        <activity
+            android:name=".individualChat.view.CamXActivity"
+            android:exported="false" />
+        <activity
+            android:name=".individualChat.view.CrazyIndividualChatActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar" />
+        <activity
+            android:name=".PoC.PocActivity6"
+            android:exported="false" />
+        <activity
+            android:name=".registro.PocRegWithGoogleActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar" />
+        <activity
+            android:name=".ui.citaTrabajo.CitaTrabajoViewActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar" />
+        <activity
+            android:name=".ui.eliminarCuenta.EliminarInfoEmailActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar" />
+        <activity
+            android:name=".ui.eliminarCuenta.EliminarInfoPhoneActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar" />
+        <activity
+            android:name=".ui.eliminarCuenta.EliminarInfoGoogleActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar" /> <!-- [START fcm_default_icon] -->
+        <!--
+Set custom default icon. This is used when no icon is set for incoming notification messages.
+         See README(https://goo.gl/l4GJaQ) for more.
+        -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_oficios" />
+        <!--
+Set color used with incoming notification messages. This is used when no color is set for the incoming
+         notification message. See README(https://goo.gl/6BKBk7) for more.
+        -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/teal_200" /> <!-- [END fcm_default_icon] -->
+        <!-- [START fcm_default_channel] -->
+        <activity
+            android:name=".ui.trabajadores.PerfilTrabajadorActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar" />
+        <activity
+            android:name=".citasTrabajo.DetalleServicioActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar" />
+        <activity
+            android:name=".ui.datosPersonales.view.EditarOficioHabilidad2Activity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar" />
+        <activity
+            android:name=".ui.datosPersonales.view.EditarOficioHabilidadActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar" />
+        <activity
+            android:name=".ui.datosPersonales.view.FotoActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar" />
+        <activity
+            android:name=".registro.RegistroHabilidadActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar" />
+        <activity
+            android:name=".videoLlamada.VideoChatViewActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PoC.PoCActivity4"
+            android:exported="false" />
+        <activity
+            android:name=".PoC.PocActivity3"
+            android:exported="false" />
+        <activity
+            android:name=".individualChat.view.IndividualChatActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar" />
+        <activity
+            android:name=".individualChat.view.location.LocationActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar" />
+        <activity
+            android:name=".PoC.PoCActivity2"
+            android:exported="false" />
+        <activity
+            android:name=".PoC.PoCActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.editarDatos.EditarOficioActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar" />
+        <activity
+            android:name=".ui.editarDatos.EditarDataActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar" />
+        <activity
+            android:name=".ui.oficios.HabilidadActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar" />
+        <activity
+            android:name=".registro.EmailPasswordActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar" />
+        <activity
+            android:name=".registro.RegWithCelularActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar" />
+        <activity
+            android:name=".registro.RegWithEmailPasswordActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar" />
+        <activity
+            android:name=".registro.RegWithGoogleActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar" />
+        <activity
+            android:name=".registro.RegFotoPerfilActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar" />
+        <activity
+            android:name=".registro.MetodoRegActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar" />
+        <activity
+            android:name=".registro.RegNombreUsuarioActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar" />
+        <activity
+            android:name=".citasTrabajo.CitaTrabajoActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar" />
+        <activity
+            android:name=".videoLlamada.VideoLlamadaActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar" />
+        <activity
+            android:name=".llamadaVoz.LlamadaVozActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar" />
+        <activity
+            android:name=".buscador.BuscadorActivity"
+            android:exported="false"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
+        <activity
+            android:name=".config.ConfiguracionActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MANAGE_NETWORK_USAGE" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".registro.RegistroOficioActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar" />
+        <activity
+            android:name=".registro.RegistroRecordPolicialActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar" />
+        <activity
+            android:name=".registro.RegistroDataEmpleadorActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar" />
+        <activity
+            android:name=".registro.RegistroDataTrabajadorActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar" />
+        <activity
+            android:name=".registro.PerfilActivity"
+            android:exported="false"
+            android:label="Perfil"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar" />
+        <activity
+            android:name=".login.LoginGoogleActivity"
+            android:exported="false"
+            android:label="@string/iniciar_sesion_con_google"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar" />
+        <activity
+            android:name=".login.LoginCelularActivity"
+            android:exported="false"
+            android:label="@string/iniciar_sesion_con_celular"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar" />
+        <activity
+            android:name=".login.LoginEmailPasswordActivity"
+            android:exported="false"
+            android:label="@string/iniciar_sesion_con_email"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar" />
+        <activity
+            android:name=".infoInicial.InformacionInicialActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".login.LoginActivity"
+            android:exported="false"
+            android:label="@string/menu_iniciar_sesion"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar" />
+        <activity
+            android:name=".puntoEntrada.MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.TFinal2022.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,6 +374,85 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".MainNavigationActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar">
+
+            <!-- enable the search dialog to send searches to SearchableActivity -->
+            <meta-data
+                android:name="android.app.default_searchable"
+                android:value=".buscador.BuscadorActivity" />
+
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
+        </activity>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider> <!-- <service -->
+        <!-- android:name=".serviciosSegundoPlano.ServicioNotificacionCustom" -->
+        <!-- android:exported="false" -->
+        <!-- android:permission="android.permission.BIND_TELECOM_CONNECTION_SERVICE"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.telecom.ConnectionService" /> -->
+        <!-- </intent-filter> -->
+        <!-- </service> -->
+        <!-- <service -->
+        <!-- android:name=".serviciosSegundoPlano.offlaneService.OffLaneService" -->
+        <!-- android:exported="false" /> -->
+        <service
+            android:name=".foregroundCustomService.ForegroundCustomService"
+            android:exported="false" />
+
+        <meta-data
+            android:name="com.google.firebase.ml.vision.DEPENDENCIES"
+            android:value="ocr" />
+
+        <receiver
+            android:name=".foregroundCustomService.ForegroundReplyNotificationReceiver"
+            android:exported="false" />
+
+        <service
+            android:name=".CrazyService"
+            android:exported="false" />
+
+        <receiver
+            android:name=".citasTrabajo.AlarmReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="ALARM" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".individualChat.view.CrazyDeleteBroadcastReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="ACTION_DELETE_NOTIFICATION" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".individualChat.view.CrazyReplyBroadcastReceiver"
+            android:exported="false" />
+
+        <provider
+            android:name=".buscador.MySuggestionProvider"
+            android:authorities="com.marlon.apolo.tfinal2022.buscador.MySuggestionProvider" />
     </application>
 
 </manifest>
