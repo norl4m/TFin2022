@@ -17,13 +17,8 @@ import android.widget.TextView;
 
 import com.google.firebase.database.FirebaseDatabase;
 import com.marlon.apolo.tfinal2022.MainNavigationActivity;
-import com.marlon.apolo.tfinal2022.PoC.PoCActivity;
-import com.marlon.apolo.tfinal2022.PoC.PocActivity6;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.infoInicial.InformacionInicialActivity;
-import com.marlon.apolo.tfinal2022.registro.PocRegWithGoogleActivity;
-import com.marlon.apolo.tfinal2022.registro.RegistroOficioActivity;
-import com.marlon.apolo.tfinal2022.registro.RegistroOficioActivityPoc;
 /*
  * Copyright (C) 2018 Google Inc.
  *

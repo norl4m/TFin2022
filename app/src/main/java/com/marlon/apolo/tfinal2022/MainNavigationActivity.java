@@ -1,18 +1,13 @@
 package com.marlon.apolo.tfinal2022;
 
-import static android.provider.Settings.ACTION_WIRELESS_SETTINGS;
-import static android.service.notification.Condition.SCHEME;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -46,12 +41,10 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
-import com.marlon.apolo.tfinal2022.PoC.PoCActivity;
 import com.marlon.apolo.tfinal2022.admin.AdminViewModel;
 import com.marlon.apolo.tfinal2022.buscador.BuscadorActivity;
 import com.marlon.apolo.tfinal2022.config.ConfiguracionActivity;
 import com.marlon.apolo.tfinal2022.databinding.ActivityMainNavigationBinding;
-import com.marlon.apolo.tfinal2022.foregroundCustomService.ForegroundCustomService;
 import com.marlon.apolo.tfinal2022.individualChat.receiver.EliminarNotificationReceiver;
 import com.marlon.apolo.tfinal2022.individualChat.receiver.RespuestaDirectaReceiver;
 import com.marlon.apolo.tfinal2022.individualChat.view.MensajeNube;

@@ -217,9 +217,6 @@ Set color used with incoming notification messages. This is used when no color i
             android:name=".PoC.PoCActivity2"
             android:exported="false" />
         <activity
-            android:name=".PoC.PoCActivity"
-            android:exported="false" />
-        <activity
             android:name=".ui.editarDatos.EditarOficioActivity"
             android:exported="false"
             android:screenOrientation="portrait"
