@@ -121,9 +121,7 @@
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.TFinal2022.NoActionBar" />
-        <activity
-            android:name=".PoC.PocActivity6"
-            android:exported="false" />
+
         <activity
             android:name=".registro.PocRegWithGoogleActivity"
             android:exported="false"
@@ -197,12 +195,7 @@ Set color used with incoming notification messages. This is used when no color i
         <activity
             android:name=".videoLlamada.VideoChatViewActivity"
             android:exported="false" />
-        <activity
-            android:name=".PoC.PoCActivity4"
-            android:exported="false" />
-        <activity
-            android:name=".PoC.PocActivity3"
-            android:exported="false" />
+
         <activity
             android:name=".individualChat.view.IndividualChatActivity"
             android:exported="false"
@@ -213,9 +206,7 @@ Set color used with incoming notification messages. This is used when no color i
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.TFinal2022.NoActionBar" />
-        <activity
-            android:name=".PoC.PoCActivity2"
-            android:exported="false" />
+
         <activity
             android:name=".ui.editarDatos.EditarOficioActivity"
             android:exported="false"
