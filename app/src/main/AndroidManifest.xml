@@ -356,7 +356,9 @@ Set color used with incoming notification messages. This is used when no color i
         <activity
             android:name=".infoInicial.InformacionInicialActivity"
             android:exported="false"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar" />
+
         <activity
             android:name=".login.LoginActivity"
             android:exported="false"
