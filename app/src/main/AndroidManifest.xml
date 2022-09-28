@@ -429,6 +429,7 @@ Set color used with incoming notification messages. This is used when no color i
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
+
         <receiver
             android:name=".individualChat.view.CrazyDeleteBroadcastReceiver"
             android:exported="false">
@@ -436,6 +437,7 @@ Set color used with incoming notification messages. This is used when no color i
                 <action android:name="ACTION_DELETE_NOTIFICATION" />
             </intent-filter>
         </receiver>
+
         <receiver
             android:name=".individualChat.view.CrazyReplyBroadcastReceiver"
             android:exported="false" />
@@ -443,6 +445,7 @@ Set color used with incoming notification messages. This is used when no color i
         <provider
             android:name=".buscador.MySuggestionProvider"
             android:authorities="com.marlon.apolo.tfinal2022.buscador.MySuggestionProvider" />
+
     </application>
 
 </manifest>
