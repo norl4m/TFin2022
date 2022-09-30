@@ -28,7 +28,8 @@ import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.text.Text;
 import com.google.mlkit.vision.text.TextRecognition;
 import com.google.mlkit.vision.text.TextRecognizer;
-import com.google.mlkit.vision.text.TextRecognizerOptions;
+//import com.google.mlkit.vision.text.TextRecognizerOptions;
+import com.google.mlkit.vision.text.latin.TextRecognizerOptions;
 import com.marlon.apolo.tfinal2022.interfaces.DataStatusMLKit;
 import com.marlon.apolo.tfinal2022.model.PoliceRecord;
 
@@ -157,6 +158,7 @@ public class FirebaseMLKitVision {
 
         // [START get_detector_default]
         TextRecognizer recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS);
+//        TextRecognizer recognizer = TextRecognition.getClient();
         // [END get_detector_default]
 
         // [START run_detector]

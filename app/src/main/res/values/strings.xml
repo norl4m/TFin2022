@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?><!DOCTYPE resources [<!ENTITY appname "Cachuelito"><!ENTITY author "Marlon Apolo">]>
+
+<!--<!DOCTYPE resources [<!ENTITY appname "Cachuelito"><!ENTITY author "Marlon Apolo">]>-->
 <resources>
     <string name="app_name">&appname;</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -59,21 +61,21 @@
     <string name="phone">Número celular</string>
 
 
+    <string name="lorem_ipsum3"><![CDATA[Intentar hasta lograrlo]]></string>
+
     <string name="perfil_empleador">
         Los empleadores pueden realizar lo siguiente dentro de &appname;:
         \n
-        - Buscar y encontrar a su trabajador ideal para completar una determinada tarea
+        - Buscar y contratar a un trabajador para completar una determinada tarea.
         \n
-        - Comunicación directa con trabajadores confiables y seguros
+        - Comunicación directa con trabajadores confiables y seguros.
     </string>
     <string name="perfil_trabajador">
         Los trabajadores acceden a los siguientes beneficios dentro de &appname;:
         \n
-        - Solución a su posible problema de falta de empleo
+        - Comunicación directa con los empleadores registrados en la aplicación.
         \n
-        - Comunicación directa con empleadores confiables y seguros
-        \n
-        - Ganar dinero por la prestación de sus servicios
+        - Obtención de una remuneración por los servicios prestados.
     </string>
     <string name="name">Nombre</string>
     <string name="last_name">Apellido</string>
@@ -83,8 +85,7 @@
         El record policial es un requisito indispensable para registrarte en &appname;.
         \n\n
         Este documento nos permite verificar la identidad cada trabajador antes de registrarse en la aplicación.
-        \n\n
-        &appname; no almacena ninguna información relacionada con su record policial en sus servidores.
+        \n\n &appname; no almacena ninguna información relacionada con su record policial en sus servidores.
     </string>
 
     <string name="article_subtitle_politica_priv_datos">\"Estos términos y condiciones de privacidad de datos establecen los lineamientos y prácticas de protección de datos personales de la aplicación &appname;.\"</string>
@@ -421,5 +422,6 @@
     <string name="permiso_camera_text_data_record">Para registrar una foto de su record policial, por favor permita que &appname;
         acceda a su cámara. Presiona Ajustes > Permisos > Cámara, y otrogue el premiso de Cámara</string>
     <string name="incoming_video_call_text">Videollamada entrante</string>
+
 
 </resources>

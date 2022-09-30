@@ -849,10 +849,14 @@ public class EditarOficioHabilidad2Activity extends AppCompatActivity implements
                 for (Oficio o : oficioSuperSpecialListAdapter.getOficioArrayList()) {
                     if (o.isEstadoRegistro()) {
                         idsOfi.add(o.getIdOficio());
-                        for (Habilidad h : o.getHabilidadArrayList()) {
-                            if (h.isHabilidadSeleccionada()) {
-                                idsHab.add(h.getIdHabilidad());
+                        try {
+                            for (Habilidad h : o.getHabilidadArrayList()) {
+                                if (h.isHabilidadSeleccionada()) {
+                                    idsHab.add(h.getIdHabilidad());
+                                }
                             }
+                        } catch (Exception e) {
+                            Log.e(TAG, e.toString());
                         }
                     }
 //                    Log.d(TAG, o.getNombre());

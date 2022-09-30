@@ -88,6 +88,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TFinal2022">
+        <meta-data
+            android:name="com.google.firebase.ml.vision.DEPENDENCIES"
+            android:value="ocr" />
+        <!-- To use multiple models: android:value="ocr,model2,model3" -->
+
         <activity
             android:name=".ui.bienvenido.view.TrabajadoresActivityVista"
             android:exported="false"
@@ -445,6 +450,7 @@ Set color used with incoming notification messages. This is used when no color i
         <provider
             android:name=".buscador.MySuggestionProvider"
             android:authorities="com.marlon.apolo.tfinal2022.buscador.MySuggestionProvider" />
+
 
     </application>
 

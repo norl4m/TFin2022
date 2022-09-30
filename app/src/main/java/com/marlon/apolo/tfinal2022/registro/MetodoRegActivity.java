@@ -59,6 +59,8 @@ public class MetodoRegActivity extends AppCompatActivity implements View.OnClick
 
         regUsuario = getIntent().getIntExtra("usuario", -1);
 
+        Toast.makeText(getApplicationContext(), "Metodo registro", Toast.LENGTH_LONG).show();
+
         switch (regUsuario) {
             case 1:
                 empleador = (Empleador) getIntent().getSerializableExtra("empleador");
