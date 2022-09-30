@@ -21,6 +21,12 @@ import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.model.Empleador;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
 
+/**
+ * Esta clase permite seleccionar el método de autenticación para los usuarios que se encuentran realizando el proceso de registro.
+ *
+ * @author Marlon Apolo
+ * @version 1.0 30 Sep 2022
+ */
 public class MetodoRegActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = MetodoRegActivity.class.getSimpleName();
@@ -31,6 +37,9 @@ public class MetodoRegActivity extends AppCompatActivity implements View.OnClick
     private Empleador empleador;
     private Trabajador trabajador;
 
+    /**
+     * Este método permite inicializar los componentes de la interfaz gráfica para la selección del método de autenticación
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,20 +68,25 @@ public class MetodoRegActivity extends AppCompatActivity implements View.OnClick
 
         regUsuario = getIntent().getIntExtra("usuario", -1);
 
-        Toast.makeText(getApplicationContext(), "Metodo registro", Toast.LENGTH_LONG).show();
-
         switch (regUsuario) {
             case 1:
                 empleador = (Empleador) getIntent().getSerializableExtra("empleador");
+                Log.d(TAG, empleador.toString());
                 break;
             case 2:
                 trabajador = (Trabajador) getIntent().getSerializableExtra("trabajador");
-//                Toast.makeText(getApplicationContext(), trabajador.toString(), Toast.LENGTH_SHORT).show();
                 Log.d(TAG, trabajador.toString());
                 break;
         }
     }
 
+    /**
+     * Este método permite escuchar el evento click en 3 radioButton. Cada radioButton informa al usuario el tipo
+     * de método de autenticación con el cuál puede registrarse.
+     * El método tambièn permite escuchar el evento click del botón Siguiente y el evento click del botón de información.
+     *
+     * @param v objeto View que permite identificar el id del botón que ha sido presionado por el usuario.
+     */
     @Override
     public void onClick(View v) {
         // Check to see if a button has been clicked.
@@ -84,33 +98,27 @@ public class MetodoRegActivity extends AppCompatActivity implements View.OnClick
                     if (checked) {
                         optionReg = 1;
                         buttonNext.setEnabled(true);
-//                        Toast.makeText(getApplicationContext(), "Email y password", Toast.LENGTH_SHORT).show();
                     }
-                    // Code for same day service ...
                     break;
                 case R.id.radioBtnGoogle:
                     if (checked) {
                         optionReg = 2;
                         buttonNext.setEnabled(true);
-//                        Toast.makeText(getApplicationContext(), "Google", Toast.LENGTH_SHORT).show();
                     }
-                    // Code for next day delivery ...
                     break;
                 case R.id.radioBtnCelular:
                     if (checked) {
                         optionReg = 3;
                         buttonNext.setEnabled(true);
-//                        Toast.makeText(getApplicationContext(), "Celular", Toast.LENGTH_SHORT).show();
                     }
                     break;
             }
         } catch (Exception e) {
-
+            Log.d(TAG, e.toString());
         }
 
         try {
             if (v.getId() == R.id.buttonInfo) {
-                //Toast.makeText(getApplicationContext(), "Info", Toast.LENGTH_LONG).show();
                 dialogInfo = alertDialogInfo();
                 dialogInfo.show();
             }
@@ -119,14 +127,10 @@ public class MetodoRegActivity extends AppCompatActivity implements View.OnClick
         }
         try {
             if (v.getId() == R.id.buttonNext) {
-//                Toast.makeText(getApplicationContext(), "Siguiente", Toast.LENGTH_LONG).show();
-
                 switch (optionReg) {
                     case 1:
-//                        Intent intentEmail = new Intent(MetodoRegActivity.this, RegWithEmailPasswordActivity.class);
                         Intent intentEmail = new Intent(MetodoRegActivity.this, EmailPasswordActivity.class);
                         intentEmail.putExtra("usuario", regUsuario);
-
                         switch (regUsuario) {
                             case 1:
                                 intentEmail.putExtra("empleador", empleador);
@@ -139,7 +143,6 @@ public class MetodoRegActivity extends AppCompatActivity implements View.OnClick
                         break;
                     case 2:
                         Intent intentGoogle = new Intent(MetodoRegActivity.this, RegWithGoogleActivity.class);
-//                        Intent intentGoogle = new Intent(MetodoRegActivity.this, PocRegWithGoogleActivity.class);
                         intentGoogle.putExtra("usuario", regUsuario);
                         switch (regUsuario) {
                             case 1:
@@ -167,7 +170,7 @@ public class MetodoRegActivity extends AppCompatActivity implements View.OnClick
                 }
             }
         } catch (Exception e) {
-
+            Log.d(TAG, e.toString());
         }
 
     }
@@ -176,14 +179,6 @@ public class MetodoRegActivity extends AppCompatActivity implements View.OnClick
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         // Get the layout inflater
         LayoutInflater inflater = this.getLayoutInflater();
-
-//        View promptsView = inflater.inflate(R.layout.dialog_info, null);
-//        builder.setView(promptsView);
-//
-//        // set prompts.xml to alertdialog builder
-//        final TextView textViewInfo = promptsView.findViewById(R.id.textViewInfo);
-//        textViewInfo.setText(getResources().getString(R.string.text_info_metodo_reg));
-
 
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
@@ -196,7 +191,7 @@ public class MetodoRegActivity extends AppCompatActivity implements View.OnClick
                         try {
                             dialogInfo.dismiss();
                         } catch (Exception e) {
-
+                            Log.d(TAG, e.toString());
                         }
                     }
                 });
