@@ -8,14 +8,12 @@ import androidx.preference.PreferenceManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.marlon.apolo.tfinal2022.MainNavigationActivity;
 import com.marlon.apolo.tfinal2022.R;
-import com.marlon.apolo.tfinal2022.registro.PerfilActivity;
-import com.marlon.apolo.tfinal2022.registro.RegWithEmailPasswordActivity;
+import com.marlon.apolo.tfinal2022.registro.view.PerfilActivity;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 

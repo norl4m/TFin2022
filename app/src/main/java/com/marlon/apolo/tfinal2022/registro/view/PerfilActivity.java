@@ -1,4 +1,4 @@
-package com.marlon.apolo.tfinal2022.registro;
+package com.marlon.apolo.tfinal2022.registro.view;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.marlon.apolo.tfinal2022.R;
+import com.marlon.apolo.tfinal2022.registro.RegNombreUsuarioActivity;
 
 public class PerfilActivity extends AppCompatActivity implements View.OnClickListener {
 

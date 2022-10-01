@@ -13,7 +13,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationManagerCompat;
 
-import com.google.android.exoplayer2.C;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -42,19 +41,15 @@ import com.marlon.apolo.tfinal2022.individualChat.repository.MensajitoRepository
 import com.marlon.apolo.tfinal2022.individualChat.view.IndividualChatActivity;
 import com.marlon.apolo.tfinal2022.individualChat.view.MensajeNube;
 import com.marlon.apolo.tfinal2022.individualChat.view.location.LocationActivity;
-import com.marlon.apolo.tfinal2022.puntoEntrada.MainActivity;
+import com.marlon.apolo.tfinal2022.puntoEntrada.view.MainActivity;
 import com.marlon.apolo.tfinal2022.ui.eliminarCuenta.EliminarInfoEmailActivity;
 import com.marlon.apolo.tfinal2022.ui.eliminarCuenta.EliminarInfoGoogleActivity;
 import com.marlon.apolo.tfinal2022.ui.eliminarCuenta.EliminarInfoPhoneActivity;
-
-import org.checkerframework.checker.units.qual.A;
 
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import io.agora.rtc.RtcEngine;
 

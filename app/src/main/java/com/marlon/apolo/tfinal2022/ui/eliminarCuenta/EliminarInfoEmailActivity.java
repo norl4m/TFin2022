@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.DialogFragment;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -34,7 +33,7 @@ import com.marlon.apolo.tfinal2022.model.Administrador;
 import com.marlon.apolo.tfinal2022.model.Empleador;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
 import com.marlon.apolo.tfinal2022.model.Usuario;
-import com.marlon.apolo.tfinal2022.puntoEntrada.MainActivity;
+import com.marlon.apolo.tfinal2022.puntoEntrada.view.MainActivity;
 
 public class EliminarInfoEmailActivity extends AppCompatActivity implements View.OnClickListener {
 

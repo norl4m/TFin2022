@@ -1,4 +1,21 @@
-package com.marlon.apolo.tfinal2022.puntoEntrada;
+/*
+ * @(#)MainActivity.java        1.0 2022/09/30
+ *
+ * Copyright (C) 2022 Marlon Apolo.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.marlon.apolo.tfinal2022.puntoEntrada.view;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -19,25 +36,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.marlon.apolo.tfinal2022.MainNavigationActivity;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.infoInicial.InformacionInicialActivity;
-/*
- * Copyright (C) 2018 Google Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 
 /**
- * Esta clase es el punto de entrada de la aplicación, permite iniciar las interfaces
- * gráficas de inicio de sesión y navegación principal
+ * Esta clase es el punto de entrada a la aplicación.
+ * <p>
+ * La clase permite seleccionar entre las interfaces gráficas de información inicial, inicio de sesión
+ * y navegación principal de la app.
  */
 
 public class MainActivity extends AppCompatActivity {
@@ -55,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // cargamos la preferencia
+        // Cargamos una referencia a la preferencia para cambiar el tema
         SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         mode = mPrefs.getBoolean("sync_theme", false);
         if (mode) {
@@ -84,7 +88,8 @@ public class MainActivity extends AppCompatActivity {
         textViewWelcome.setAnimation(topAnimation);
         textViewSlogan.setAnimation(bottomAnimation);
         if (mode) {
-            imageViewLogo.setColorFilter(getResources().getColor(R.color.white));/* Permite cambiar el ìcono de color dentro del ícono en un ImageView*/
+            /* Permite cambiar el ìcono de color dentro del ícono en un ImageView*/
+            imageViewLogo.setColorFilter(getResources().getColor(R.color.white));
         }
 
 
@@ -94,15 +99,6 @@ public class MainActivity extends AppCompatActivity {
 //                startActivity(new Intent(MainActivity.this, LoginActivity.class));
                 if (getInfoInicialActivityFlag()) {
                     startActivity(new Intent(MainActivity.this, MainNavigationActivity.class));
-//                    startActivity(new Intent(MainActivity.this, RegistroOficioActivity.class));
-//                    startActivity(new Intent(MainActivity.this, RegistroOficioActivityPoc.class));
-//                    startActivity(new Intent(MainActivity.this, PocRegWithGoogleActivity.class));
-//                    startActivity(new Intent(MainActivity.this, PocActivity6.class));
-//                    startActivity(new Intent(MainActivity.this, PoCActivity.class));
-//                    startActivity(new Intent(MainActivity.this, VideoLlamadaActivity.class));
-//                    startActivity(new Intent(MainActivity.this, LlamadaVozActivity.class));
-//                    startActivity(new Intent(MainActivity.this, IndividualChatActivity.class));
-//                    startActivity(new Intent(MainActivity.this, CitaTrabajoActivity.class));
                 } else {
                     startActivity(new Intent(MainActivity.this, InformacionInicialActivity.class));
                 }
@@ -111,11 +107,21 @@ public class MainActivity extends AppCompatActivity {
         }, TIME_SPLASH);
     }
 
+    /**
+     * Este método permite saltar el Activity que coresponde a la información inicial.
+     * <p>
+     * El Activity de información inicial aparece solo la primera vez al instalar la aplicación, cuando
+     * la bandera se encuentra en false.
+     */
     public boolean getInfoInicialActivityFlag() {
         SharedPreferences prefs = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
         return prefs.getBoolean("infoInicialActivityFlag", false);
     }
 
+    /**
+     * Este método permite habilidar la persistencia de datos en la memoria cachè del dispositivo.
+     * Los datos obtenidos desde Firebase Database no sobrepsasan los 10MB
+     */
     private void enablePersistence() {
         // [START rtdb_enable_persistence]
         Log.d("TAG", "enablePersistence");

@@ -17,24 +17,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
-import android.widget.Toast;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.marlon.apolo.tfinal2022.R;
-import com.marlon.apolo.tfinal2022.model.Oficio;
-import com.marlon.apolo.tfinal2022.model.Trabajador;
-import com.marlon.apolo.tfinal2022.registro.PerfilActivity;
 import com.marlon.apolo.tfinal2022.registro.RegNombreUsuarioActivity;
 import com.marlon.apolo.tfinal2022.ui.oficios.OficioViewModel;
-import com.marlon.apolo.tfinal2022.ui.oficios.OficioVistaListAdapter;
 
-import org.checkerframework.checker.units.qual.A;
-
-import java.util.ArrayList;
 import java.util.Collections;
 
 public class TrabajadorFragment extends Fragment {

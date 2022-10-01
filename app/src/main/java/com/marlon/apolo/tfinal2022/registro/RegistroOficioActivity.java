@@ -40,10 +40,9 @@ import com.marlon.apolo.tfinal2022.model.Empleador;
 import com.marlon.apolo.tfinal2022.model.Habilidad;
 import com.marlon.apolo.tfinal2022.model.Oficio;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
+import com.marlon.apolo.tfinal2022.registro.view.MetodoRegActivity;
 import com.marlon.apolo.tfinal2022.ui.bienvenido.BienvenidoViewModel;
 import com.marlon.apolo.tfinal2022.ui.datosPersonales.adaptadores.OficioSuperSpecialListAdapter;
-import com.marlon.apolo.tfinal2022.ui.datosPersonales.view.EditarOficioHabilidad2Activity;
-import com.marlon.apolo.tfinal2022.ui.oficios.OficioRegistroListAdapter;
 import com.marlon.apolo.tfinal2022.ui.oficios.OficioViewModel;
 
 import java.util.ArrayList;

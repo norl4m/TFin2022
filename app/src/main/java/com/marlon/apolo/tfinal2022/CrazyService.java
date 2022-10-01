@@ -18,7 +18,6 @@ import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
@@ -31,9 +30,6 @@ import androidx.core.app.Person;
 import androidx.core.app.RemoteInput;
 import androidx.preference.PreferenceManager;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -42,7 +38,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.marlon.apolo.tfinal2022.citasTrabajo.AlarmReceiver;
-import com.marlon.apolo.tfinal2022.citasTrabajo.CitaTrabajoActivity;
 import com.marlon.apolo.tfinal2022.foregroundCustomService.ForegrounAcceptVideoCallReceiver;
 import com.marlon.apolo.tfinal2022.foregroundCustomService.ForegroundAcceptCallReceiver;
 import com.marlon.apolo.tfinal2022.foregroundCustomService.ForegroundRejectCallReceiver;
@@ -61,10 +56,8 @@ import com.marlon.apolo.tfinal2022.model.NotificacionCustomLlamada;
 import com.marlon.apolo.tfinal2022.model.NotificacionCustomVideoLlamada;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
 import com.marlon.apolo.tfinal2022.model.Usuario;
-import com.marlon.apolo.tfinal2022.puntoEntrada.MainActivity;
+import com.marlon.apolo.tfinal2022.puntoEntrada.view.MainActivity;
 import com.marlon.apolo.tfinal2022.videoLlamada.VideoLlamadaActivity;
-
-import org.checkerframework.checker.units.qual.A;
 
 import java.text.DateFormat;
 import java.text.ParseException;

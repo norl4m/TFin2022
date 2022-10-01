@@ -29,9 +29,9 @@ import com.marlon.apolo.tfinal2022.MainNavigationActivity;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.citasTrabajo.CitaTrabajoActivity;
 import com.marlon.apolo.tfinal2022.citasTrabajo.DetalleServicioActivity;
-import com.marlon.apolo.tfinal2022.registro.EmailPasswordActivity;
-import com.marlon.apolo.tfinal2022.registro.RegWithCelularActivity;
-import com.marlon.apolo.tfinal2022.registro.RegWithGoogleActivity;
+import com.marlon.apolo.tfinal2022.registro.view.EmailPasswordActivity;
+import com.marlon.apolo.tfinal2022.registro.view.RegWithCelularActivity;
+import com.marlon.apolo.tfinal2022.registro.view.RegWithGoogleActivity;
 import com.marlon.apolo.tfinal2022.ui.editarDatos.EditarDataActivity;
 
 import java.util.ArrayList;

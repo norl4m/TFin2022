@@ -31,6 +31,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.model.Empleador;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
+import com.marlon.apolo.tfinal2022.registro.view.MetodoRegActivity;
 
 public class RegFotoPerfilActivity extends AppCompatActivity implements View.OnClickListener {
 

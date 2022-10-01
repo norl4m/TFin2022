@@ -1,4 +1,21 @@
-package com.marlon.apolo.tfinal2022.registro;
+/*
+ * @(#)MetodoRegActivity.java        1.0 2022/09/30
+ *
+ * Copyright (C) 2022 Marlon Apolo.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.marlon.apolo.tfinal2022.registro.view;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,16 +30,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
-import android.widget.TextView;
-import android.widget.Toast;
-
 
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.model.Empleador;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
 
 /**
- * Esta clase permite seleccionar el método de autenticación para los usuarios que se encuentran realizando el proceso de registro.
+ * Esta clase permite seleccionar el método de autenticación para los usuarios que se
+ * encuentran realizando el proceso de registro.
  *
  * @author Marlon Apolo
  * @version 1.0 30 Sep 2022
@@ -38,7 +53,8 @@ public class MetodoRegActivity extends AppCompatActivity implements View.OnClick
     private Trabajador trabajador;
 
     /**
-     * Este método permite inicializar los componentes de la interfaz gráfica para la selección del método de autenticación
+     * Este método permite inicializar los componentes de la interfaz gráfica para la
+     * selección del método de autenticación
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,9 +97,11 @@ public class MetodoRegActivity extends AppCompatActivity implements View.OnClick
     }
 
     /**
-     * Este método permite escuchar el evento click en 3 radioButton. Cada radioButton informa al usuario el tipo
-     * de método de autenticación con el cuál puede registrarse.
-     * El método tambièn permite escuchar el evento click del botón Siguiente y el evento click del botón de información.
+     * Este método permite escuchar el evento click en 3 radioButton. Cada radioButton informa
+     * al usuario el tipo de método de autenticación con el cuál puede registrarse.
+     * <p>
+     * El método tambièn permite escuchar el evento click del botón Siguiente y el evento
+     * click del botón de información.
      *
      * @param v objeto View que permite identificar el id del botón que ha sido presionado por el usuario.
      */
@@ -175,6 +193,14 @@ public class MetodoRegActivity extends AppCompatActivity implements View.OnClick
 
     }
 
+
+    /**
+     * Este método devuelve un objeto del tipo Dialog que contiene información acerca
+     * de los diferentes métodos de autenticación (email-password, cuenta de Google, número celular)
+     *
+     * @return un objeto AlertDialog.Bulder que continene información acerca de los
+     * 3 métodos de autenticación.
+     */
     public Dialog alertDialogInfo() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         // Get the layout inflater
@@ -187,7 +213,6 @@ public class MetodoRegActivity extends AppCompatActivity implements View.OnClick
                 .setPositiveButton("Entendido", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        // sign in the user ...
                         try {
                             dialogInfo.dismiss();
                         } catch (Exception e) {

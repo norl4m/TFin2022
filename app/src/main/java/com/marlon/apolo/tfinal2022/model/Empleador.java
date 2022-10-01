@@ -6,10 +6,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.net.Uri;
-import android.os.Handler;
-import android.provider.OpenableColumns;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -35,10 +32,10 @@ import com.google.firebase.storage.UploadTask;
 import com.marlon.apolo.tfinal2022.MainNavigationActivity;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.citasTrabajo.DetalleServicioActivity;
-import com.marlon.apolo.tfinal2022.registro.EmailPasswordActivity;
-import com.marlon.apolo.tfinal2022.registro.RegWithCelularActivity;
+import com.marlon.apolo.tfinal2022.registro.view.EmailPasswordActivity;
+import com.marlon.apolo.tfinal2022.registro.view.RegWithCelularActivity;
 import com.marlon.apolo.tfinal2022.registro.RegWithEmailPasswordActivity;
-import com.marlon.apolo.tfinal2022.registro.RegWithGoogleActivity;
+import com.marlon.apolo.tfinal2022.registro.view.RegWithGoogleActivity;
 import com.marlon.apolo.tfinal2022.ui.editarDatos.EditarDataActivity;
 
 import java.util.ArrayList;

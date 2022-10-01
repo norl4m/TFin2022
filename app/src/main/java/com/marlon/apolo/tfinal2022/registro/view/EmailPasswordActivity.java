@@ -1,4 +1,4 @@
-package com.marlon.apolo.tfinal2022.registro;
+package com.marlon.apolo.tfinal2022.registro.view;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;

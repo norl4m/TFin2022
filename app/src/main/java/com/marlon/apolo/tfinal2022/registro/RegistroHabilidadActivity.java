@@ -31,17 +31,13 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.model.Habilidad;
 import com.marlon.apolo.tfinal2022.model.Oficio;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
+import com.marlon.apolo.tfinal2022.registro.view.MetodoRegActivity;
 import com.marlon.apolo.tfinal2022.ui.bienvenido.BienvenidoViewModel;
 import com.marlon.apolo.tfinal2022.ui.oficios.HabilidadListAdapter;
-import com.marlon.apolo.tfinal2022.ui.oficios.OficioRegistroListAdapter;
-
-import org.checkerframework.checker.units.qual.A;
-import org.checkerframework.checker.units.qual.Length;
 
 import java.util.ArrayList;
 
