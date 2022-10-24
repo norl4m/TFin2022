@@ -99,6 +99,7 @@ public class Empleador extends Usuario {
 
                             if (adminFlag) {
                                 signInAdmin(activity, myPreferences);
+
                             } else {
                                 activity.finishAffinity();
                                 Intent intent = new Intent(activity, MainNavigationActivity.class);

@@ -1,4 +1,4 @@
-package com.marlon.apolo.tfinal2022.registro;
+package com.marlon.apolo.tfinal2022.registro.view;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -31,7 +31,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.model.Empleador;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
-import com.marlon.apolo.tfinal2022.registro.view.MetodoRegActivity;
+import com.marlon.apolo.tfinal2022.registro.RegistroRecordPolicialActivity;
 
 public class RegFotoPerfilActivity extends AppCompatActivity implements View.OnClickListener {
 

@@ -1,3 +1,20 @@
+/*
+ * @(#)InformacionInicialActivity.java        1.0 2022/09/30
+ *
+ * Copyright (C) 2022 Marlon Apolo.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.marlon.apolo.tfinal2022.infoInicial;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,11 +31,20 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.adaptadores.SliderAdapter;
 import com.marlon.apolo.tfinal2022.login.LoginActivity;
 
+/**
+ * Esta clase permite mostrar cuatro interfaces que contienen
+ * información acerca del uso de la aplicación.
+ * <p>
+ * Esta clase es creada en dos casos:
+ * Al instalar la aplicación desde cero
+ * Y cuando el usuario borra todos los datos de la aplicación
+ */
 public class InformacionInicialActivity extends AppCompatActivity implements View.OnClickListener {
     private ViewPager viewPager;
     private LinearLayout dotsLayout;
@@ -47,9 +73,11 @@ public class InformacionInicialActivity extends AppCompatActivity implements Vie
         btnChangeSlide.setOnClickListener(this);
 
         btnLogin.setEnabled(false);
+
     }
 
     private void addDots(int position) {
+        Toast.makeText(getApplicationContext(), "addDots", Toast.LENGTH_LONG).show();
         dots = new TextView[4];
         dotsLayout.removeAllViews();
 

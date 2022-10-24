@@ -88,11 +88,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TFinal2022">
+        <activity
+            android:name=".registro.view.RegistroAdminActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar" />
+
         <meta-data
             android:name="com.google.firebase.ml.vision.DEPENDENCIES"
-            android:value="ocr" />
-        <!-- To use multiple models: android:value="ocr,model2,model3" -->
-
+            android:value="ocr" /> <!-- To use multiple models: android:value="ocr,model2,model3" -->
         <activity
             android:name=".ui.bienvenido.view.TrabajadoresActivityVista"
             android:exported="false"
@@ -126,7 +130,6 @@
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.TFinal2022.NoActionBar" />
-
         <activity
             android:name=".registro.PocRegWithGoogleActivity"
             android:exported="false"
@@ -200,7 +203,6 @@ Set color used with incoming notification messages. This is used when no color i
         <activity
             android:name=".videoLlamada.VideoChatViewActivity"
             android:exported="false" />
-
         <activity
             android:name=".individualChat.view.IndividualChatActivity"
             android:exported="false"
@@ -211,7 +213,6 @@ Set color used with incoming notification messages. This is used when no color i
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.TFinal2022.NoActionBar" />
-
         <activity
             android:name=".ui.editarDatos.EditarOficioActivity"
             android:exported="false"
@@ -248,7 +249,7 @@ Set color used with incoming notification messages. This is used when no color i
             android:screenOrientation="portrait"
             android:theme="@style/Theme.TFinal2022.NoActionBar" />
         <activity
-            android:name=".registro.RegFotoPerfilActivity"
+            android:name=".registro.view.RegFotoPerfilActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.TFinal2022.NoActionBar" />
@@ -351,7 +352,6 @@ Set color used with incoming notification messages. This is used when no color i
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.TFinal2022.NoActionBar" />
-
         <activity
             android:name=".login.LoginActivity"
             android:exported="false"
@@ -434,7 +434,6 @@ Set color used with incoming notification messages. This is used when no color i
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
-
         <receiver
             android:name=".individualChat.view.CrazyDeleteBroadcastReceiver"
             android:exported="false">
@@ -442,7 +441,6 @@ Set color used with incoming notification messages. This is used when no color i
                 <action android:name="ACTION_DELETE_NOTIFICATION" />
             </intent-filter>
         </receiver>
-
         <receiver
             android:name=".individualChat.view.CrazyReplyBroadcastReceiver"
             android:exported="false" />
@@ -450,8 +448,6 @@ Set color used with incoming notification messages. This is used when no color i
         <provider
             android:name=".buscador.MySuggestionProvider"
             android:authorities="com.marlon.apolo.tfinal2022.buscador.MySuggestionProvider" />
-
-
     </application>
 
 </manifest>

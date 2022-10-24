@@ -12,7 +12,7 @@
         android:layout_height="?attr/actionBarSize"
         android:elevation="4dp"
         app:navigationIcon="@drawable/ic_baseline_arrow_back_24"
-        app:title="Récord policial">
+        app:title="Record policial">
 
         <ImageButton
             android:id="@+id/buttonInfo"
@@ -47,13 +47,12 @@
         android:layout_height="match_parent"
         android:layout_below="@id/toolbar"
         android:layout_centerInParent="true"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginBottom="72dp"
-        android:background="@color/black"
         android:padding="16dp"
-        android:scaleType="fitCenter"
+        android:scaleType="fitXY"
         android:src="@drawable/ic_police_record" />
 
 
@@ -62,11 +61,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:text="Seleccionar récord policial"
+        android:layout_margin="16dp"
+        android:text="@string/seleccionar_record_policial"
         android:textAllCaps="false" />
 
     <Button
@@ -74,10 +70,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_margin="16dp"
         android:enabled="false"
         android:text="Siguiente"
         android:textAllCaps="false" />

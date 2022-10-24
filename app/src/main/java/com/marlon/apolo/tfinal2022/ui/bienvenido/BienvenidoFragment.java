@@ -327,17 +327,18 @@ public class BienvenidoFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
 
-        int numberOfElementsToShow = 2;
-        int oneElementHeight = 480;
-
-        RelativeLayout.LayoutParams lp =
-                new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, oneElementHeight * numberOfElementsToShow);
-        recyclerView.setLayoutParams(lp);
-
 
         empleadorViewModel = new ViewModelProvider(this).get(EmpleadorViewModel.class);
         empleadorViewModel.getAllEmpleadores().observe(getViewLifecycleOwner(), empleadors -> {
             if (empleadors != null) {
+                //recyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
+
+                int numberOfElementsToShow = 2;
+                int oneElementHeight = 480;
+
+                RelativeLayout.LayoutParams lp =
+                        new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, oneElementHeight * numberOfElementsToShow);
+                recyclerView.setLayoutParams(lp);
                 adapter.setEmpleadores(empleadors);
                 progressBar2.setVisibility(View.GONE);
             }
@@ -785,16 +786,17 @@ public class BienvenidoFragment extends Fragment {
             trabajadorListAdapter.setOficioList(oficios);
             recyclerView1.setAdapter(trabajadorListAdapter);
             recyclerView1.setLayoutManager(new LinearLayoutManager(requireActivity()));
-            int numberOfElementsToShow = 3;
-            int oneElementHeight = 380;
 
-            RelativeLayout.LayoutParams lp =
-                    new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, oneElementHeight * numberOfElementsToShow);
-            recyclerView1.setLayoutParams(lp);
 
             trabajadorViewModel = new ViewModelProvider(this).get(TrabajadorViewModel.class);
             trabajadorViewModel.getAllTrabajadores().observe(getViewLifecycleOwner(), trabajadors -> {
                 if (trabajadors != null) {
+                    int numberOfElementsToShow = 3;
+                    int oneElementHeight = 380;
+
+                    RelativeLayout.LayoutParams lp =
+                            new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, oneElementHeight * numberOfElementsToShow);
+                    recyclerView1.setLayoutParams(lp);
                     Collections.sort(trabajadors, (o1, o2) -> Double.compare(o2.getCalificacion(), o1.getCalificacion()));
 
                     trabajadorListAdapter.setTrabajadores(trabajadors);

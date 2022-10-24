@@ -1,9 +1,12 @@
 package com.marlon.apolo.tfinal2022.ui.trabajadores;
 
+import static com.google.common.net.HttpHeaders.USER_AGENT;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,16 +24,35 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.google.firebase.database.FirebaseDatabase;
+import com.coloros.ocs.base.a.e;
+import com.google.firebase.auth.FirebaseAuth;
 import com.marlon.apolo.tfinal2022.R;
-import com.marlon.apolo.tfinal2022.model.Habilidad;
+import com.marlon.apolo.tfinal2022.herramientasAsíncronas.GetAsyncTask;
+import com.marlon.apolo.tfinal2022.herramientasAsíncronas.PublicKeyAsyncTask;
 import com.marlon.apolo.tfinal2022.model.Oficio;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
 import com.marlon.apolo.tfinal2022.ui.editarDatos.EditarDataActivity;
 import com.marlon.apolo.tfinal2022.ui.oficios.OficioTrabajadorVistaListAdapter;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.security.KeyFactory;
+import java.security.PublicKey;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
+
+import javax.crypto.Cipher;
+import javax.net.ssl.HttpsURLConnection;
 
 public class TrabajadorCRUDListAdapter extends RecyclerView.Adapter<TrabajadorCRUDListAdapter.TrabajadorViewHolder> {
 
@@ -134,6 +156,111 @@ public class TrabajadorCRUDListAdapter extends RecyclerView.Adapter<TrabajadorCR
         notifyDataSetChanged();
     }
 
+    public String cipherMessageWithRSA2048(String publicKeyString, String message) {
+        try {
+            // 4. get public key
+//            X509EncodedKeySpec publicSpec = new X509EncodedKeySpec(Base64.getDecoder().decode(publicKeyString));
+
+            Log.d(TAG, "*********************************************");
+            Log.d(TAG, "Iniciando proceso de encriptación");
+            Log.d(TAG, "Mensaje: " + message);
+            X509EncodedKeySpec publicSpec = null;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                publicSpec = new X509EncodedKeySpec(Base64.getDecoder().decode(publicKeyString));
+            }
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            PublicKey publicKey = keyFactory.generatePublic(publicSpec);
+            Cipher encryptCipher = Cipher.getInstance("RSA");
+            encryptCipher.init(Cipher.ENCRYPT_MODE, publicKey);
+            byte[] messageBytes = message.getBytes(StandardCharsets.UTF_8);
+            Log.d(TAG, "Encriptando mensaje...");
+            byte[] encryptedMessageBytes = encryptCipher.doFinal(messageBytes);
+            Log.d(TAG, "Mensaje encriptado: " + new String(encryptedMessageBytes, StandardCharsets.UTF_8));
+            String encodedMessage = null;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                encodedMessage = Base64.getEncoder().encodeToString(encryptedMessageBytes);
+                Log.d(TAG, "Mensaje Base64: " + encodedMessage);
+            }
+
+
+            Log.d(TAG, "Message: " + message);
+            Log.d(TAG, "Encode Base64 Message: " + encodedMessage);
+            //System.out.println("Decrypted Message: " + decryptedMessage);
+            Log.d(TAG, "*********************************************");
+            return encodedMessage;
+        } catch (Exception e) {
+            Log.e(TAG, "Error: " + e.getMessage());
+            Log.d(TAG, "*********************************************");
+            return "Error: " + e.toString();
+
+        }
+    }
+
+    private static void sendGET(String message) throws IOException {
+        Log.d("TAG", "Send GET REQUEST");
+        String urlBase = "https://authwitouthauth.herokuapp.com";
+        String GET_URL = urlBase + "/damin/cipher";
+
+        /*URL obj = new URL(GET_URL);
+        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+        con.setRequestMethod("GET");
+        con.setRequestProperty("User-Agent", USER_AGENT);
+        int responseCode = con.getResponseCode();
+        System.out.println("GET Response Code :: " + responseCode);
+        if (responseCode == HttpURLConnection.HTTP_OK) { // success
+            BufferedReader in = new BufferedReader(new InputStreamReader(
+                    con.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+
+            // print result
+            System.out.println(response.toString());
+        } else {
+            System.out.println("GET request not worked");
+        }*/
+
+        URL url = new URL(GET_URL);
+        HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
+        conn.setReadTimeout(10000);
+        conn.setConnectTimeout(15000);
+//        conn.setRequestMethod("POST");
+        conn.setRequestMethod("GET");
+        conn.setDoInput(true);
+        conn.setDoOutput(true);
+
+        Uri.Builder builder = new Uri.Builder()
+                .appendQueryParameter("message", "Hello world of cryptography")
+//                .appendQueryParameter("secondParam", paramValue2)
+//                .appendQueryParameter("thirdParam", paramValue3)
+                ;
+        String query = builder.build().getEncodedQuery();
+
+        OutputStream os = conn.getOutputStream();
+        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+        writer.write(query);
+        writer.flush();
+        writer.close();
+        os.close();
+
+        conn.connect();
+
+        InputStream in = conn.getInputStream();
+        // 3. Download and decode the string response using builder
+        StringBuilder stringBuilder = new StringBuilder();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+        String line;
+        while ((line = reader.readLine()) != null) {
+            stringBuilder.append(line);
+            Log.d("TAG", line);
+        }
+
+    }
+
     public class TrabajadorViewHolder extends RecyclerView.ViewHolder {
         private final TextView textViewNombre;
         private final TextView textViewCalif;
@@ -171,12 +298,84 @@ public class TrabajadorCRUDListAdapter extends RecyclerView.Adapter<TrabajadorCR
             imageButtonDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //Toast.makeText(context, "Eliminar", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "Eliminar", Toast.LENGTH_LONG).show();
                     alertDialogConfirmar(trabajadors.get(getAdapterPosition())).show();
+
+                    PublicKeyAsyncTask publicKeyAsyncTask = new PublicKeyAsyncTask();
+                    publicKeyAsyncTask.execute();
+                    publicKeyAsyncTask.setOnListenerAsyncTask(publicKey -> {
+                        Log.d(TAG, "PUBLIC KEY: " + publicKey);
+                        String plainText = "Hello world of cryptography";
+                        String encodeMessage = cipherMessageWithRSA2048(publicKey, plainText);
+//                        cipherMessageWithRSA2048(publicKey, plainText);
+
+//                        GetAsyncTask getAsyncTask = new GetAsyncTask(plainText);
+                        GetAsyncTask getAsyncTask = new GetAsyncTask(encodeMessage);
+                        getAsyncTask.execute();
+//                        try {
+//                            sendGET("Message");
+//                        } catch (Exception e) {
+//                            Log.d(TAG, e.toString());
+//                        }
+
+
+
+
+                    });
+
+
+                    /*String text = "Hola mundo de la criptografìa";
+                    byte[] plaintext = text.getBytes();
+                    try {
+                        KeyGenerator keygen = KeyGenerator.getInstance("AES");
+                        keygen.init(256);
+                        SecretKey key = keygen.generateKey();
+                        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
+                        cipher.init(Cipher.ENCRYPT_MODE, key);
+                        byte[] ciphertext = cipher.doFinal(plaintext);
+                        byte[] iv = cipher.getIV();
+                        Log.d(TAG, "plain text: " + new String(plaintext, "UTF8"));
+                        Log.d(TAG, "cipher text: " + new String(ciphertext, "UTF8"));
+                    } catch (Exception e) {
+                        Log.d(TAG, e.toString());
+                    }*/
+
+                    /*String getToken = urlBase + "/rtc/" + channelNameShare + "/publisher/uid/" + uid + "/";
+
+                    try {
+                        // 1. Declare a URL Connection
+                        URL url = new URL(getToken);
+                        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                        // 2. Open InputStream to connection
+                        conn.connect();
+                        InputStream in = conn.getInputStream();
+                        // 3. Download and decode the string response using builder
+                        StringBuilder stringBuilder = new StringBuilder();
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+                        String line;
+                        while ((line = reader.readLine()) != null) {
+                            stringBuilder.append(line);
+                            //Log.d(TAG, line);
+                        }
+                        tokenLocal = stringBuilder.substring(stringBuilder.indexOf(":") + 2, stringBuilder.length() - 2);
+//            tokenLocal = stringBuilder.substring(stringBuilder.indexOf(":") + 2);
+//            tokenLocal = stringBuilder.toString();
+                        Log.d(TAG, tokenLocal);
+                        Log.d(TAG, String.valueOf(uidLocal));
+                        Log.d(TAG, uid);
+//            this.channelNameShare =tokenLocal;
+                        //joinChannel();
+
+                    } catch (Exception e) {
+
+                    }*/
+
+
                 }
             });
         }
     }
+
 
     public android.app.AlertDialog alertDialogConfirmar(Trabajador trabajador) {
 

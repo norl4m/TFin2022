@@ -525,7 +525,7 @@ public class RegistroRecordPolicialActivity extends AppCompatActivity implements
     private void procesarRecordPolicial(Bitmap recordPolicialBitmap) {
 //        progressDialog = getDialogProgressBar().create();
 //        progressDialog.show();
-        String title = "Procesando récord policial";
+        String title = getString(R.string.proc_record_policial);
         String message = "Por favor espere...";
         showProgress(title, message);
 
@@ -556,7 +556,7 @@ public class RegistroRecordPolicialActivity extends AppCompatActivity implements
         }
         dialogRecordPolicial = new android.app.AlertDialog.Builder(this)
                 .setIcon(R.drawable.ic_oficios)
-                .setTitle("Récord policial ingresado:")
+                .setTitle(R.string.record_ingresado)
                 .setMessage(policeRecord.toString())
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {

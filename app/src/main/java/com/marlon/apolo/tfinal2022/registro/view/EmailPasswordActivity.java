@@ -36,6 +36,7 @@ import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseUser;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.herramientas.NetworkTool;
+import com.marlon.apolo.tfinal2022.herramientasAsíncronas.PostAsyncTask;
 import com.marlon.apolo.tfinal2022.login.LoginActivity;
 import com.marlon.apolo.tfinal2022.model.Empleador;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
@@ -43,6 +44,8 @@ import com.marlon.apolo.tfinal2022.model.Usuario;
 import com.marlon.apolo.tfinal2022.receivers.NetworkReceiver;
 import com.marlon.apolo.tfinal2022.ui.empleadores.EmpleadorViewModel;
 import com.marlon.apolo.tfinal2022.ui.trabajadores.TrabajadorViewModel;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -250,11 +253,163 @@ public class EmailPasswordActivity extends AppCompatActivity implements View.OnC
 
     /*Paso 1*/
     private void createAccount(String email, String password) {
-        title = "Por favor espere";
-        message = "Cachuelito se encuentra verificando su información personal...";
+        title = "Por favor espere " + "(Rev)";
+        message = "Cachuelito se encuentra verificando su información personal..." + "(Rev)";
+
+        showCustomProgressDialog(title, message);
+//            Toast.makeText(getApplicationContext(), "Normalin", Toast.LENGTH_LONG).show();
+        normalReg(email, password);
+
+        /*if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+
+            SharedPreferences myPreferences = this.getSharedPreferences("MyPreferences", MODE_PRIVATE);
+            SharedPreferences.Editor editorPref = myPreferences.edit();
+            int u = myPreferences.getInt("usuario", -1);
+            if (u == 0) {
+                Toast.makeText(getApplicationContext(), "Admin", Toast.LENGTH_LONG).show();
+
+                regWithAdmin(email, password);
+            }
+        } else {
+            showCustomProgressDialog(title, message);
+//            Toast.makeText(getApplicationContext(), "Normalin", Toast.LENGTH_LONG).show();
+            normalReg(email, password);
+        }*/
 //
 //        showProgress(title, message);
-        showCustomProgressDialog(title, message);
+
+    }
+
+    public void regWithAdmin(String email, String password) {
+
+        JSONObject jsonObject = new JSONObject();
+        PostAsyncTask postAsyncTask = null;
+        try {
+            jsonObject = new JSONObject();
+
+            jsonObject.put("uid", "xxxxxxxxxxxx");
+            jsonObject.put("displayName", usuarioEmpleador.getNombre() + " " + usuarioEmpleador.getApellido());
+            jsonObject.put("email", email);
+//                            jsonObject.put("phoneNumber", "+593983228466");
+            jsonObject.put("phoneNumber", null);
+            jsonObject.put("password", password);
+
+        } catch (Exception e) {
+            Log.d(TAG, e.toString());
+        }
+        postAsyncTask = new PostAsyncTask(jsonObject.toString(), this);
+        postAsyncTask.execute();
+        postAsyncTask.setOnListenerAsyncTask(new PostAsyncTask.ClickListener() {
+            @Override
+            public void onTokenListener(String publicKey) {
+                if (publicKey.equals("1")) {
+
+                    /**
+                     * Scar uid y respuetras
+                     *
+                     * */
+                    boolean photoFlag = false;
+//                    switch (regUsuario) {
+//                        case 1:
+//                            photoFlag = false;
+//                            if (usuarioEmpleador.getFotoPerfil() != null) {
+//                                Uri returnUri = Uri.parse(usuarioEmpleador.getFotoPerfil().toString());
+//                                Cursor returnCursor = EmailPasswordActivity.this.getContentResolver().query(returnUri, null, null, null, null);
+//                                /*
+//                                 * Get the column indexes of the data in the Cursor,
+//                                 * move to the first row in the Cursor, get the data,
+//                                 * and display it.
+//                                 */
+//                                int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+//                                int sizeIndex = returnCursor.getColumnIndex(OpenableColumns.SIZE);
+//                                returnCursor.moveToFirst();
+//                                Log.d(TAG, returnCursor.getString(nameIndex));
+//                                Log.d(TAG, String.format("Tamaño de archivo: %s", Long.toString(returnCursor.getLong(sizeIndex))));
+//
+//                                if (returnCursor.getLong(sizeIndex) > 0) {
+//                                    //Toast.makeText(getApplicationContext(), "Registro con foto", Toast.LENGTH_SHORT).show();
+//                                    Log.d(TAG, String.format("Tamaño de archivo: %s", Long.toString(returnCursor.getLong(sizeIndex))));
+//                                    photoFlag = true;
+//                                } else {
+//                                    //Toast.makeText(getApplicationContext(), "Registro normal", Toast.LENGTH_SHORT).show();
+//                                    photoFlag = false;
+//                                }
+//                            } else {
+//                                photoFlag = false;
+//                            }
+//                            /*Paso 2*/
+//                            usuarioEmpleador.setIdUsuario(user.getUid());
+//                            if (photoFlag) {
+////                        Toast.makeText(getApplicationContext(), usuarioTrabajador.toString(), Toast.LENGTH_LONG).show();
+////                        closeProgress();
+////                        closeCustomAlertDialog();
+//                                title = "Por favor espere";
+//                                message = "Su cuenta ya casi está lista!";
+////                        showProgress(title, message);
+//                                showCustomProgressDialog(title, message);
+//
+//                                usuarioEmpleador.registrarseEnFirebaseConFoto(EmailPasswordActivity.this, 1);
+//                            } else {
+//                                usuarioEmpleador.setFotoPerfil(null);
+////                        Toast.makeText(getApplicationContext(), usuarioTrabajador.toString(), Toast.LENGTH_LONG).show();
+//                                usuarioEmpleador.registrarseEnFirebase(EmailPasswordActivity.this, 1);
+//                            }
+//                            break;
+//                        case 2:
+//                            photoFlag = false;
+//                            if (usuarioTrabajador.getFotoPerfil() != null) {
+//                                Uri returnUri = Uri.parse(usuarioTrabajador.getFotoPerfil().toString());
+//                                Cursor returnCursor = EmailPasswordActivity.this.getContentResolver().query(returnUri, null, null, null, null);
+//                                /*
+//                                 * Get the column indexes of the data in the Cursor,
+//                                 * move to the first row in the Cursor, get the data,
+//                                 * and display it.
+//                                 */
+//                                int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+//                                int sizeIndex = returnCursor.getColumnIndex(OpenableColumns.SIZE);
+//                                returnCursor.moveToFirst();
+//                                Log.d(TAG, returnCursor.getString(nameIndex));
+//                                Log.d(TAG, String.format("Tamaño de archivo: %s", Long.toString(returnCursor.getLong(sizeIndex))));
+//
+//                                if (returnCursor.getLong(sizeIndex) > 0) {
+//                                    //Toast.makeText(getApplicationContext(), "Registro con foto", Toast.LENGTH_SHORT).show();
+//                                    Log.d(TAG, String.format("Tamaño de archivo: %s", Long.toString(returnCursor.getLong(sizeIndex))));
+//                                    photoFlag = true;
+//                                } else {
+//                                    //Toast.makeText(getApplicationContext(), "Registro normal", Toast.LENGTH_SHORT).show();
+//                                    photoFlag = false;
+//                                }
+//                            } else {
+//                                photoFlag = false;
+//                            }
+//                            /*Paso 2*/
+//                            usuarioTrabajador.setIdUsuario(user.getUid());
+//                            if (photoFlag) {
+////                        Toast.makeText(getApplicationContext(), usuarioTrabajador.toString(), Toast.LENGTH_LONG).show();
+////                        closeProgress();
+////                        closeCustomAlertDialog();
+//                                title = "Por favor espere";
+//                                message = "Su cuenta ya casi está lista!";
+////                        showProgress(title, message);
+//                                showCustomProgressDialog(title, message);
+//
+//                                usuarioTrabajador.registrarseEnFirebaseConFoto(EmailPasswordActivity.this, 1);
+//                            } else {
+//                                usuarioTrabajador.setFotoPerfil(null);
+////                        Toast.makeText(getApplicationContext(), usuarioTrabajador.toString(), Toast.LENGTH_LONG).show();
+//                                usuarioTrabajador.registrarseEnFirebase(EmailPasswordActivity.this, 1);
+//                            }
+//                            break;
+//                    }
+
+                } else {
+                    Toast.makeText(getApplicationContext(), R.string.error_inesperado, Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
+    public void normalReg(String email, String password) {
         // [START create_user_with_email]
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {

@@ -160,6 +160,22 @@
         \n\n
         Su número celular es único y no podrá ser modificado una vez completado el registro.
     </string>
+    <string name="text_info_metodo_reg_admin">
+        <b>- Cuenta de correo electrónico y contraseña</b>
+        \n
+        Este método le permite utilizar una cuenta de correo electrónico o e-mail, y una contraseña para poder registrarse.
+        \n\n
+        El correo electrónico no puede ser cambiado, ya que es único y su identificador digital dentro de la aplicación.
+
+        \n\n
+        <b>- Número celular</b>
+        \n
+        Este método utiliza su número celular como identificador para registrarse.
+        \n\n
+        Para completar el registro es necesario verificar que su número celular sea válido, de lo contrario no podrá completar el proceso.
+        \n\n
+        Su número celular es único y no podrá ser modificado una vez completado el registro.
+    </string>
     <string name="text_info_nombre_usuario">
         \n
         Su nombre de usuario sirve para poder identificarlo en la aplicación.
@@ -422,6 +438,9 @@
     <string name="permiso_camera_text_data_record">Para registrar una foto de su record policial, por favor permita que &appname;
         acceda a su cámara. Presiona Ajustes > Permisos > Cámara, y otrogue el premiso de Cámara</string>
     <string name="incoming_video_call_text">Videollamada entrante</string>
+    <string name="seleccionar_record_policial">Seleccionar record policial</string>
+    <string name="proc_record_policial">Procesando record policial</string>
+    <string name="record_ingresado">Record policial ingresado:</string>
 
 
 </resources>
