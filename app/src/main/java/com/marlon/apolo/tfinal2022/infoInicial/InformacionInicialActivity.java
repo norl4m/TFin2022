@@ -77,7 +77,7 @@ public class InformacionInicialActivity extends AppCompatActivity implements Vie
     }
 
     private void addDots(int position) {
-        Toast.makeText(getApplicationContext(), "addDots", Toast.LENGTH_LONG).show();
+        //Toast.makeText(getApplicationContext(), "addDots", Toast.LENGTH_LONG).show();
         dots = new TextView[4];
         dotsLayout.removeAllViews();
 

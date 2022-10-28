@@ -1,4 +1,4 @@
-package com.marlon.apolo.tfinal2022.ui.oficios;
+package com.marlon.apolo.tfinal2022.ui.oficios.view;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,16 +17,13 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.model.Habilidad;
 import com.marlon.apolo.tfinal2022.model.Oficio;
-import com.marlon.apolo.tfinal2022.model.Trabajador;
-import com.marlon.apolo.tfinal2022.ui.bienvenido.BienvenidoRepository;
 import com.marlon.apolo.tfinal2022.ui.bienvenido.BienvenidoViewModel;
+import com.marlon.apolo.tfinal2022.ui.oficios.adaptadores.HabilidadCRUDListAdapterAaaaaaaa;
+import com.marlon.apolo.tfinal2022.ui.oficios.HabilidadViewModel;
 import com.marlon.apolo.tfinal2022.ui.trabajadores.TrabajadorViewModel;
 
 import java.util.ArrayList;
@@ -59,7 +56,6 @@ public class HabilidadActivity extends AppCompatActivity {
 
         oficio = (Oficio) getIntent().getSerializableExtra("oficio");
 //        Toast.makeText(getApplicationContext(), oficio.toString(), Toast.LENGTH_LONG).show();
-
 
 
 //        oficioRegistroListAdapter = new OficioRegistroCRUDListAdapter(requireActivity(), trabajadorArrayList);
@@ -101,6 +97,12 @@ public class HabilidadActivity extends AppCompatActivity {
         HabilidadCRUDListAdapterAaaaaaaa habilidadCRUDListAdapter = new HabilidadCRUDListAdapterAaaaaaaa(HabilidadActivity.this, oficio);
         recyclerViewHab.setAdapter(habilidadCRUDListAdapter);
         recyclerViewHab.setLayoutManager(new LinearLayoutManager(HabilidadActivity.this));
+        bienvenidoViewModel.getAllTrabajadores().observe(this, trabajadors -> {
+            if (trabajadors != null) {
+                habilidadCRUDListAdapter.setTrabajadorList(trabajadors);
+            }
+        });
+
         bienvenidoViewModel.getHabilidadesByOficio(oficio.getIdOficio()).observe(this, habilidads -> {
             if (habilidads != null) {
 

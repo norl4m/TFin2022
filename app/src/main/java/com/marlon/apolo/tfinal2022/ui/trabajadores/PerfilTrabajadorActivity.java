@@ -349,6 +349,7 @@ public class PerfilTrabajadorActivity extends AppCompatActivity {
             @Override
             public void onChanged(Trabajador trabajador) {
                 if (trabajador != null) {
+//                    Toast.makeText(getApplicationContext(), "TRABAJADOR", Toast.LENGTH_SHORT).show();
                     trabajadorSelected = trabajador;
                     textViewNombre.setText(trabajador.getNombre() + " " + trabajador.getApellido());
                     try {
@@ -413,6 +414,9 @@ public class PerfilTrabajadorActivity extends AppCompatActivity {
                             }
 
 
+                        }
+
+                        for (Oficio of : oficioArrayList) {
                             FirebaseDatabase.getInstance().getReference().child("habilidades")
                                     .child(of.getIdOficio())
                                     .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -425,16 +429,23 @@ public class PerfilTrabajadorActivity extends AppCompatActivity {
                                                     Habilidad h = data.getValue(Habilidad.class);
                                                     if (trabajador.getIdHabilidades() != null) {
                                                         try {
-                                                            if (trabajador.getIdHabilidades().contains(h.getIdHabilidad())) {
-                                                                h.setHabilidadSeleccionada(true);
+                                                            for (String idH : trabajador.getIdHabilidades()) {
+                                                                if (idH.equals(h.getIdHabilidad())) {
+                                                                    h.setHabilidadSeleccionada(true);
+                                                                    habilidadArrayList.add(h);
+
+                                                                }
                                                             }
+//                                                            if (trabajador.getIdHabilidades().contains(h.getIdHabilidad())) {
+//                                                                h.setHabilidadSeleccionada(true);
+//                                                            }
                                                         } catch (Exception e) {
 
                                                         }
 
                                                     }
 
-                                                    habilidadArrayList.add(h);
+//                                                    habilidadArrayList.add(h);
                                                 } catch (Exception e) {
 
                                                 }
@@ -449,6 +460,7 @@ public class PerfilTrabajadorActivity extends AppCompatActivity {
 
                                         }
                                     });
+
                         }
 
 

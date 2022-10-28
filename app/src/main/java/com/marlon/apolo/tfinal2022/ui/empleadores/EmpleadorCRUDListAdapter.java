@@ -1,9 +1,11 @@
 package com.marlon.apolo.tfinal2022.ui.empleadores;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,12 +14,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.marlon.apolo.tfinal2022.R;
+import com.marlon.apolo.tfinal2022.herramientasAsíncronas.DeleteAsyncTask;
 import com.marlon.apolo.tfinal2022.model.Empleador;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
 import com.marlon.apolo.tfinal2022.ui.editarDatos.EditarDataActivity;
@@ -25,9 +29,11 @@ import com.marlon.apolo.tfinal2022.ui.editarDatos.EditarDataActivity;
 import java.util.List;
 
 public class EmpleadorCRUDListAdapter extends RecyclerView.Adapter<EmpleadorCRUDListAdapter.EmpleadorViewHolder> {
+    private static final String TAG = EmpleadorCRUDListAdapter.class.getSimpleName();
     private final Context contextInstance;
     private final LayoutInflater mInflater;
     private List<Empleador> mEmpleadores; // Cached copy of words
+    private Dialog alertDialogVar;
 
     public EmpleadorCRUDListAdapter(Context context) {
         contextInstance = context;
@@ -122,7 +128,30 @@ public class EmpleadorCRUDListAdapter extends RecyclerView.Adapter<EmpleadorCRUD
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        empleador.eliminarInfo((Activity) contextInstance);
+
+                        /*aSYNC operation*/
+                        String title = "Por favor espere ";
+//        message = "Cachuelito se encuentra verificando su información personal..." + "(Rev)";
+                        String message = "Cachuelito se encuentra eliminando los registros de información del empleador...";
+
+                        showCustomProgressDialog(title, message);
+
+                        DeleteAsyncTask deleteAsyncTask = new DeleteAsyncTask(empleador.getIdUsuario(), contextInstance);
+                        deleteAsyncTask.execute();
+                        deleteAsyncTask.setOnListenerAsyncTask(new DeleteAsyncTask.ClickListener() {
+                            @Override
+                            public void onTokenListener(String publicKey) {
+                                if (publicKey.equals("1")) {
+                                    empleador.eliminarInfo((Activity) contextInstance);
+                                    closeCustomAlertDialog();
+                                } else {
+                                    Toast.makeText(contextInstance, contextInstance.getString(R.string.error_inesperado), Toast.LENGTH_LONG).show();
+                                    closeCustomAlertDialog();
+                                }
+                            }
+                        });
+
+                        //empleador.eliminarInfo((Activity) contextInstance);
                     }
                 })
                 .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -130,6 +159,46 @@ public class EmpleadorCRUDListAdapter extends RecyclerView.Adapter<EmpleadorCRUD
 
                     }
                 }).create();
+    }
+
+
+    public void showCustomProgressDialog(String title, String message) {
+        try {
+            closeCustomAlertDialog();
+        } catch (Exception e) {
+            Log.d(TAG, e.toString());
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(contextInstance);
+        // Get the layout inflater
+//        LayoutInflater inflater = this.getLayoutInflater();
+        LayoutInflater inflater = LayoutInflater.from(contextInstance);
+        View promptsView = inflater.inflate(R.layout.custom_progress_dialog, null);
+
+
+        // set prompts.xml to alertdialog builder
+        builder.setView(promptsView);
+        // Inflate and set the layout for the dialog
+        // Pass null as the parent view because its going in the dialog layout
+//        builder.setView(inflater.inflate(R.layout.custom_progress_dialog, null));
+//        return builder.create();
+        final TextView textViewTitle = promptsView.findViewById(R.id.textViewTitle);
+        final TextView textViewMessage = promptsView.findViewById(R.id.textViewMessage);
+
+        textViewTitle.setText(title);
+        textViewMessage.setText(message);
+
+        alertDialogVar = builder.create();
+        alertDialogVar.show();
+//        builder.show();
+    }
+
+
+    public void closeCustomAlertDialog() {
+        try {
+            alertDialogVar.dismiss();
+        } catch (Exception e) {
+
+        }
     }
 
 

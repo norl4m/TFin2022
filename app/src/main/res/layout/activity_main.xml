@@ -43,5 +43,14 @@
         android:textColor="@color/teal_500"
         android:textSize="18sp" />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:text="Versión: 1.0.0"
+        android:textAlignment="textEnd"
+        android:textSize="12sp" />
+
 
 </RelativeLayout>

@@ -1,4 +1,4 @@
-package com.marlon.apolo.tfinal2022.ui.oficios;
+package com.marlon.apolo.tfinal2022.ui.oficios.adaptadores;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -101,7 +101,36 @@ public class HabilidadCRUDListAdapterAaaaaaaa extends RecyclerView.Adapter<Habil
                 @Override
                 public void onClick(View v) {
                     //Toast.makeText(context, "Eliminar habilidad", Toast.LENGTH_LONG).show();
-                    alertDialogEliminarHabilidad(habilidadList.get(getAdapterPosition()), oficio);
+                    int escape = 0;
+                    int exitFlag = 0;
+                    for (Trabajador tr : trabajadorList) {
+                        try {
+
+                            for (String idH : tr.getIdHabilidades()) {
+                                Log.d("TAG", idH);
+                                if (idH.equals(habilidadList.get(getAdapterPosition()).getIdHabilidad())) {
+                                    escape = 1;
+                                    break;
+                                }
+                            }
+                        } catch (Exception e) {
+                            Log.d("TAG", e.toString());
+                        }
+                        if (escape == 1) {
+                            escape = 0;
+                            exitFlag = 1;
+                            break;
+                        }
+                    }
+                    if (exitFlag == 1) {
+                        Toast.makeText(context, R.string.delete_habilidad, Toast.LENGTH_LONG).show();
+//                        alertDialogEliminarHabilidad(habilidadList.get(getAdapterPosition()), oficio);
+                        exitFlag = 0;
+                    } else {
+                        alertDialogEliminarHabilidad(habilidadList.get(getAdapterPosition()), oficio);
+//                        Toast.makeText(context, R.string.delete_habilidad, Toast.LENGTH_LONG).show();
+                    }
+//                    alertDialogEliminarHabilidad(habilidadList.get(getAdapterPosition()), oficio);
                 }
             });
         }

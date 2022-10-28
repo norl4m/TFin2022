@@ -22,8 +22,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.model.Habilidad;
 import com.marlon.apolo.tfinal2022.model.Oficio;
-import com.marlon.apolo.tfinal2022.model.Trabajador;
-import com.marlon.apolo.tfinal2022.ui.oficios.HabilidadCRUDListAdapterAaaaaaaa;
 
 import java.util.ArrayList;
 import java.util.List;

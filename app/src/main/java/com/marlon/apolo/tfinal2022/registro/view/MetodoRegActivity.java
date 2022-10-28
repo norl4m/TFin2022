@@ -97,17 +97,17 @@ public class MetodoRegActivity extends AppCompatActivity implements View.OnClick
                 Log.d(TAG, trabajador.toString());
                 break;
         }
-
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-
-            SharedPreferences myPreferences = this.getSharedPreferences("MyPreferences", MODE_PRIVATE);
-            SharedPreferences.Editor editorPref = myPreferences.edit();
-            int u = myPreferences.getInt("usuario", -1);
-            if (u == 0) {
-                findViewById(R.id.radioBtnGoogle).setVisibility(View.GONE);
-//                Toast.makeText(getApplicationContext(), "Admin", Toast.LENGTH_LONG).show();
-            }
-        }
+//
+//        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+//
+//            SharedPreferences myPreferences = this.getSharedPreferences("MyPreferences", MODE_PRIVATE);
+//            SharedPreferences.Editor editorPref = myPreferences.edit();
+//            int u = myPreferences.getInt("usuario", -1);
+//            if (u == 0) {
+//                findViewById(R.id.radioBtnGoogle).setVisibility(View.GONE);
+////                Toast.makeText(getApplicationContext(), "Admin", Toast.LENGTH_LONG).show();
+//            }
+//        }
     }
 
     /**

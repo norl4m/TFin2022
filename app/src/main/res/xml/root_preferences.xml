@@ -16,19 +16,19 @@
         <!--            app:useSimpleSummaryProvider="true" />-->
 
 
-        <SwitchPreferenceCompat
-            app:defaultValue="true"
-            app:key="sync_notificaciones_mensajes"
-            app:summaryOff="No permitir"
-            app:summaryOn="Permitir"
-            app:title="Notificaciones de mensajes" />
+        <!--        <SwitchPreferenceCompat-->
+        <!--            app:defaultValue="true"-->
+        <!--            app:key="sync_notificaciones_mensajes"-->
+        <!--            app:summaryOff="No permitir"-->
+        <!--            app:summaryOn="Permitir"-->
+        <!--            app:title="Notificaciones de mensajes" />-->
 
-        <SwitchPreferenceCompat
-            app:defaultValue="true"
-            app:key="sync_notificaciones_citas"
-            app:summaryOff="No permitir"
-            app:summaryOn="Permitir"
-            app:title="Notificaciones de citas de trabajo" />
+        <!--        <SwitchPreferenceCompat-->
+        <!--            app:defaultValue="true"-->
+        <!--            app:key="sync_notificaciones_citas"-->
+        <!--            app:summaryOff="No permitir"-->
+        <!--            app:summaryOn="Permitir"-->
+        <!--            app:title="Notificaciones de citas de trabajo" />-->
 
         <SwitchPreferenceCompat
             app:defaultValue="false"

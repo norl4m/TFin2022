@@ -253,8 +253,10 @@ public class EmailPasswordActivity extends AppCompatActivity implements View.OnC
 
     /*Paso 1*/
     private void createAccount(String email, String password) {
-        title = "Por favor espere " + "(Rev)";
-        message = "Cachuelito se encuentra verificando su información personal..." + "(Rev)";
+//        title = "Por favor espere " + "(Rev)";
+        title = "Por favor espere ";
+//        message = "Cachuelito se encuentra verificando su información personal..." + "(Rev)";
+        message = "Cachuelito se encuentra verificando su información personal...";
 
         showCustomProgressDialog(title, message);
 //            Toast.makeText(getApplicationContext(), "Normalin", Toast.LENGTH_LONG).show();

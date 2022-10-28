@@ -1,4 +1,4 @@
-package com.marlon.apolo.tfinal2022.ui.bienvenido;
+package com.marlon.apolo.tfinal2022.ui.bienvenido.view;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -19,10 +19,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -40,7 +37,6 @@ import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.admin.AdminViewModel;
 import com.marlon.apolo.tfinal2022.citasTrabajo.CitaListAdapter;
 import com.marlon.apolo.tfinal2022.citasTrabajo.CitaViewModel;
-import com.marlon.apolo.tfinal2022.citasTrabajo.TimePickerFragment;
 import com.marlon.apolo.tfinal2022.databinding.FragmentBienvenidoBinding;
 import com.marlon.apolo.tfinal2022.model.Administrador;
 import com.marlon.apolo.tfinal2022.model.Cita;
@@ -48,14 +44,14 @@ import com.marlon.apolo.tfinal2022.model.Empleador;
 import com.marlon.apolo.tfinal2022.model.Oficio;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
 import com.marlon.apolo.tfinal2022.model.Usuario;
-import com.marlon.apolo.tfinal2022.ui.bienvenido.view.OficiosActivityVista;
-import com.marlon.apolo.tfinal2022.ui.bienvenido.view.TrabajadoresActivityVista;
+import com.marlon.apolo.tfinal2022.ui.bienvenido.BienvenidoTrabajadorListAdapter;
+import com.marlon.apolo.tfinal2022.ui.bienvenido.BienvenidoViewModel;
+import com.marlon.apolo.tfinal2022.ui.bienvenido.HabilidadListAdapter;
 import com.marlon.apolo.tfinal2022.ui.chats.ChatViewModel;
 import com.marlon.apolo.tfinal2022.ui.citaTrabajo.CitaTrabajoViewActivity;
 import com.marlon.apolo.tfinal2022.ui.empleadores.EmpleadorCRUDListAdapter;
-import com.marlon.apolo.tfinal2022.ui.empleadores.EmpleadorFragment;
 import com.marlon.apolo.tfinal2022.ui.empleadores.EmpleadorViewModel;
-import com.marlon.apolo.tfinal2022.ui.oficios.OficioRegistroCRUDListAdapter;
+import com.marlon.apolo.tfinal2022.ui.oficios.adaptadores.OficioRegistroCRUDListAdapter;
 import com.marlon.apolo.tfinal2022.ui.oficios.OficioViewModel;
 import com.marlon.apolo.tfinal2022.ui.oficios.OficioVistaListAdapter;
 import com.marlon.apolo.tfinal2022.ui.trabajadores.TrabajadorCRUDListAdapter;
@@ -121,7 +117,11 @@ public class BienvenidoFragment extends Fragment {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         trabajadorListAdapter = new TrabajadorListAdapter(requireActivity());
 
-        setInvitadoUI(root);
+        root.findViewById(R.id.relativeLayout1).setVisibility(View.GONE);/*Trabajadores*/
+        root.findViewById(R.id.relativeLayout2).setVisibility(View.GONE);/*Empleadores*/
+        root.findViewById(R.id.relativeLayout4).setVisibility(View.GONE);/*Citas de trabajo*/
+
+//        setInvitadoUI(root);
         if (firebaseUser != null) {
 
             ChatViewModel chatViewModel = new ViewModelProvider(this).get(ChatViewModel.class);
@@ -131,6 +131,8 @@ public class BienvenidoFragment extends Fragment {
 
             loadLocalUser(root, firebaseUser);
 //            loadTrabajadoresYOficios(root);
+        } else {
+            setInvitadoUI(root);
         }
 
 
@@ -199,14 +201,26 @@ public class BienvenidoFragment extends Fragment {
 //        recyclerView3.setLayoutParams(lp);
 
 
-        int numberOfElementsToShow = 5;
-        int oneElementHeight = 175;
-        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, oneElementHeight * numberOfElementsToShow);
-        recyclerView3.setLayoutParams(lp);
+//        int numberOfElementsToShow = 5;
+//        int oneElementHeight = 175;
+//        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, oneElementHeight * numberOfElementsToShow);
+//        recyclerView3.setLayoutParams(lp);
 
         bienvenidoViewModel.getAllOficios().observe(requireActivity(), oficios -> {
             if (oficios != null) {
                 Collections.sort(oficios, (t1, t2) -> (t1.getNombre()).compareTo(t2.getNombre()));
+
+
+                if (oficios.size() > 2) {
+
+                    int numberOfElementsToShow = 5;
+                    int oneElementHeight = 175;
+                    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, oneElementHeight * numberOfElementsToShow);
+                    recyclerView3.setLayoutParams(lp);
+
+                } else {
+                    recyclerView3.setLayoutManager(new LinearLayoutManager(requireActivity()));
+                }
 
                 oficioVistaListAdapter.setOficios(oficios);
                 progressBar3.setVisibility(View.GONE);
@@ -249,28 +263,28 @@ public class BienvenidoFragment extends Fragment {
 //        recyclerView4.setLayoutParams(lp);
 
 
-        FirebaseDatabase.getInstance().getReference()
-                .child("citas")
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Log.d(TAG, "Citas de trabajo totales: " + String.valueOf(snapshot.getChildrenCount()));
-                        for (DataSnapshot data : snapshot.getChildren()) {
-                            Cita cita = data.getValue(Cita.class);
-                            Log.d(TAG, cita.toString());
-                        }
-                        if (snapshot.getChildrenCount() > 0) {
-
-                        } else {
-                            Toast.makeText(getContext(), "No existen resultados", Toast.LENGTH_LONG).show();
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
+//        FirebaseDatabase.getInstance().getReference()
+//                .child("citas")
+//                .addListenerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                        Log.d(TAG, "Citas de trabajo totales: " + String.valueOf(snapshot.getChildrenCount()));
+//                        for (DataSnapshot data : snapshot.getChildren()) {
+//                            Cita cita = data.getValue(Cita.class);
+//                            Log.d(TAG, cita.toString());
+//                        }
+//                        if (snapshot.getChildrenCount() > 0) {
+//
+//                        } else {
+//                            Toast.makeText(getContext(), "No existen resultados", Toast.LENGTH_LONG).show();
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//
+//                    }
+//                });
 
 
         mViewModel
@@ -279,9 +293,9 @@ public class BienvenidoFragment extends Fragment {
                     @Override
                     public void onChanged(ArrayList<Cita> citas) {
                         if (citas != null) {
-                            if (citas.size() > 0) {
+                            if (citas.size() > 2) {
                                 progressBar4.setVisibility(View.GONE);
-                                citaListAdapter.setCitas(citas);
+//                                citaListAdapter.setCitas(citas);
                                 recyclerView4.setVisibility(View.VISIBLE);
                                 int numberOfElementsToShow = 4;
                                 int oneElementHeight = 294;
@@ -289,17 +303,20 @@ public class BienvenidoFragment extends Fragment {
                                 recyclerView4.setLayoutParams(lp);
 
                             } else {
-                                Log.d("TAG", "no existen resultados");
-                                progressBar4.setVisibility(View.GONE);
-                                recyclerView4.setVisibility(View.GONE);
+//                                Log.d("TAG", "no existen resultados");
+//                                progressBar4.setVisibility(View.GONE);
+//                                recyclerView4.setVisibility(View.GONE);
 
                             }
-                        } else {
-                            Log.d("TAG", "no existen resultados");
-                            Toast.makeText(getContext(), "No existen resultados", Toast.LENGTH_LONG).show();
-                            progressBar4.setVisibility(View.GONE);
-                            recyclerView4.setVisibility(View.GONE);
+                            citaListAdapter.setCitas(citas);
+
                         }
+//                        else {
+//                            Log.d("TAG", "no existen resultados");
+//                            Toast.makeText(getContext(), "No existen resultados", Toast.LENGTH_LONG).show();
+//                            progressBar4.setVisibility(View.GONE);
+//                            recyclerView4.setVisibility(View.GONE);
+//                        }
                     }
 
                 });
@@ -333,12 +350,18 @@ public class BienvenidoFragment extends Fragment {
             if (empleadors != null) {
                 //recyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
 
-                int numberOfElementsToShow = 2;
-                int oneElementHeight = 480;
+                if (empleadors.size() > 2) {
 
-                RelativeLayout.LayoutParams lp =
-                        new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, oneElementHeight * numberOfElementsToShow);
-                recyclerView.setLayoutParams(lp);
+                    int numberOfElementsToShow = 2;
+                    int oneElementHeight = 480;
+
+                    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, oneElementHeight * numberOfElementsToShow);
+                    recyclerView.setLayoutParams(lp);
+
+                } else {
+                    recyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
+                }
+
                 adapter.setEmpleadores(empleadors);
                 progressBar2.setVisibility(View.GONE);
             }
@@ -426,6 +449,7 @@ public class BienvenidoFragment extends Fragment {
     private void setInvitadoUI(View root) {
 //        loadTrabajadoresYOficios(root);
 //        loadTrabajadores(root);
+        root.findViewById(R.id.relativeLayout1).setVisibility(View.VISIBLE);/*Trabajadores*/
         loadTrabajadoresVista(root);
         root.findViewById(R.id.relativeLayout2).setVisibility(View.GONE);/*Empleadores*/
         root.findViewById(R.id.relativeLayout4).setVisibility(View.GONE);/*Citas de trabajo*/
@@ -518,6 +542,7 @@ public class BienvenidoFragment extends Fragment {
     }
 
     private void setEmpleadorUI(View root) {
+        root.findViewById(R.id.relativeLayout1).setVisibility(View.VISIBLE);/*Trabajadores*/
         root.findViewById(R.id.relativeLayout2).setVisibility(View.GONE);/*Empleadores*/
         root.findViewById(R.id.relativeLayout4).setVisibility(View.GONE);/*Citas de trabajo*/
 //        loadTrabajadores(root);
@@ -526,13 +551,14 @@ public class BienvenidoFragment extends Fragment {
     }
 
     private void setAdminUI(View root) {
+        root.findViewById(R.id.relativeLayout1).setVisibility(View.VISIBLE);/*Trabajadores*/
         root.findViewById(R.id.relativeLayout2).setVisibility(View.VISIBLE);/*Empleadores*/
         root.findViewById(R.id.relativeLayout4).setVisibility(View.GONE);/*Citas de trabajo*/
-        loadEmpleadoresAdmin(root);
         loadOficiosAdmin(root);
-//        loadTrabajadores(root);
-        cleanInvitadoUI(root);
         loadTrabajadoresAdmin(root);
+        loadEmpleadoresAdmin(root);
+//        loadTrabajadores(root);
+        //cleanInvitadoUI(root);
 //        loadHabiliades(root);
 
     }
@@ -562,6 +588,8 @@ public class BienvenidoFragment extends Fragment {
 
                 oficioRegistroListAdapter.setOficios(oficios);
                 progressBar3.setVisibility(View.GONE);
+
+
 //                oficioRegistroListAdapter.setOnItemClickListener(new OficioRegistroCRUDListAdapter.ClickListener() {
 //                    @Override
 //                    public void onItemClickEdit(View v, int position) {
@@ -738,6 +766,49 @@ public class BienvenidoFragment extends Fragment {
 
     private void loadTrabajadoresAdmin(View root) {
 
+//        TrabajadorCRUDListAdapter trabajadorCRUDListAdapter = new TrabajadorCRUDListAdapter(requireActivity());
+//        RecyclerView recyclerView1 = root.findViewById(R.id.fragHomeRecyclerView1);
+//        ProgressBar progressBar1 = root.findViewById(R.id.fragHomeProgressBar1);
+//        recyclerView1.setAdapter(trabajadorCRUDListAdapter);
+//        recyclerView1.setLayoutManager(new LinearLayoutManager(requireActivity()));
+//
+//        FirebaseDatabase.getInstance().getReference().child("oficios")
+//                .addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                        ArrayList<Oficio> oficioArrayList = new ArrayList<>();
+//                        for (DataSnapshot data : snapshot.getChildren()) {
+//                            Oficio oficio = data.getValue(Oficio.class);
+//                            oficioArrayList.add(oficio);
+//                        }
+//                        trabajadorCRUDListAdapter.setOficioList(oficioArrayList);
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//
+//                    }
+//                });
+//
+//        FirebaseDatabase.getInstance().getReference().child("trabajadores")
+//                .addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                        ArrayList<Trabajador> trabajadorArrayList = new ArrayList<>();
+//                        for (DataSnapshot data : snapshot.getChildren()) {
+//                            Trabajador trabajador = data.getValue(Trabajador.class);
+//                            trabajadorArrayList.add(trabajador);
+//                        }
+//                        trabajadorCRUDListAdapter.setTrabajadores(trabajadorArrayList);
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//
+//                    }
+//                });
+
+
         /*Carga de datos oficios*/
         OficioViewModel oficioViewModel = new ViewModelProvider(this).get(OficioViewModel.class);
         oficioViewModel.getAllOficios().observe(this, oficios -> {
@@ -745,22 +816,29 @@ public class BienvenidoFragment extends Fragment {
             /*Carga de datos trabajadores*/
             RecyclerView recyclerView1 = root.findViewById(R.id.fragHomeRecyclerView1);
             ProgressBar progressBar1 = root.findViewById(R.id.fragHomeProgressBar1);
-            TrabajadorCRUDListAdapter trabajadorListAdapter = new TrabajadorCRUDListAdapter(requireActivity(), (ArrayList<Oficio>) oficios);
-            recyclerView1.setAdapter(trabajadorListAdapter);
+            TrabajadorCRUDListAdapter trabajadorCRUDListAdapter = new TrabajadorCRUDListAdapter(requireActivity(), (ArrayList<Oficio>) oficios);
+//             trabajadorCRUDListAdapterO = new TrabajadorCRUDListAdapter(requireActivity());
+            recyclerView1.setAdapter(trabajadorCRUDListAdapter);
             recyclerView1.setLayoutManager(new LinearLayoutManager(requireActivity()));
-
-            int numberOfElementsToShow = 2;
-            int oneElementHeight = 670;
-
-            RelativeLayout.LayoutParams lp =
-                    new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, oneElementHeight * numberOfElementsToShow);
-            recyclerView1.setLayoutParams(lp);
 
 
             trabajadorViewModel = new ViewModelProvider(this).get(TrabajadorViewModel.class);
             trabajadorViewModel.getAllTrabajadores().observe(getViewLifecycleOwner(), trabajadors -> {
                 if (trabajadors != null) {
-                    trabajadorListAdapter.setTrabajadores(trabajadors);
+
+                    if (trabajadors.size() > 2) {
+
+                        int numberOfElementsToShow = 2;
+                        int oneElementHeight = 670;
+
+                        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, oneElementHeight * numberOfElementsToShow);
+                        recyclerView1.setLayoutParams(lp);
+
+                    } else {
+                        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                        recyclerView1.setLayoutParams(lp);
+                    }
+                    trabajadorCRUDListAdapter.setTrabajadores(trabajadors);
                     progressBar1.setVisibility(View.GONE);
                 }
             });
@@ -768,6 +846,8 @@ public class BienvenidoFragment extends Fragment {
             /*Carga de datos trabajadores*/
         });
         /*Carga de datos oficios*/
+
+
     }
 
     private void loadTrabajadoresVista(View root) {
@@ -785,19 +865,28 @@ public class BienvenidoFragment extends Fragment {
 
             trabajadorListAdapter.setOficioList(oficios);
             recyclerView1.setAdapter(trabajadorListAdapter);
-            recyclerView1.setLayoutManager(new LinearLayoutManager(requireActivity()));
+//            recyclerView1.setLayoutManager(new LinearLayoutManager(requireActivity()));
 
 
             trabajadorViewModel = new ViewModelProvider(this).get(TrabajadorViewModel.class);
             trabajadorViewModel.getAllTrabajadores().observe(getViewLifecycleOwner(), trabajadors -> {
                 if (trabajadors != null) {
-                    int numberOfElementsToShow = 3;
-                    int oneElementHeight = 380;
 
-                    RelativeLayout.LayoutParams lp =
-                            new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, oneElementHeight * numberOfElementsToShow);
-                    recyclerView1.setLayoutParams(lp);
                     Collections.sort(trabajadors, (o1, o2) -> Double.compare(o2.getCalificacion(), o1.getCalificacion()));
+
+                    if (trabajadors.size() > 2) {
+                        recyclerView1.setLayoutManager(new LinearLayoutManager(requireActivity()));
+                        int numberOfElementsToShow = 3;
+                        int oneElementHeight = 380;
+
+                        RelativeLayout.LayoutParams lp =
+                                new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, oneElementHeight * numberOfElementsToShow);
+                        recyclerView1.setLayoutParams(lp);
+
+                    } else {
+                        recyclerView1.setLayoutManager(new LinearLayoutManager(requireActivity()));
+                    }
+
 
                     trabajadorListAdapter.setTrabajadores(trabajadors);
                     progressBar1.setVisibility(View.GONE);

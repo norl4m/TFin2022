@@ -1,4 +1,4 @@
-package com.marlon.apolo.tfinal2022.ui.oficios;
+package com.marlon.apolo.tfinal2022.ui.oficios.view;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
@@ -31,18 +31,16 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.model.Habilidad;
 import com.marlon.apolo.tfinal2022.model.Oficio;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
-import com.marlon.apolo.tfinal2022.registro.RegistroOficioActivity;
 import com.marlon.apolo.tfinal2022.ui.bienvenido.BienvenidoViewModel;
+import com.marlon.apolo.tfinal2022.ui.oficios.OficioViewModel;
+import com.marlon.apolo.tfinal2022.ui.oficios.adaptadores.OficioRegistroCRUDListAdapter;
 import com.marlon.apolo.tfinal2022.ui.trabajadores.TrabajadorViewModel;
 
 import java.util.ArrayList;

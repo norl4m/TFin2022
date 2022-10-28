@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="com.marlon.apolo.tfinal2022.ui.bienvenido.BienvenidoFragment"
+        android:name="com.marlon.apolo.tfinal2022.ui.bienvenido.view.BienvenidoFragment"
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_bienvenido" />
 
@@ -34,7 +34,7 @@
         tools:layout="@layout/empleador_fragment" />
     <fragment
         android:id="@+id/nav_oficios"
-        android:name="com.marlon.apolo.tfinal2022.ui.oficios.OficioFragment"
+        android:name="com.marlon.apolo.tfinal2022.ui.oficios.view.OficioFragment"
         android:label="@string/menu_admin_ofi"
         tools:layout="@layout/oficio_fragment" />
     <fragment

@@ -103,7 +103,7 @@ public class HabilidadCRUDListAdapter extends RecyclerView.Adapter<HabilidadCRUD
             imageButtonDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //Toast.makeText(context, "Eliminar habilidad", Toast.LENGTH_LONG).show();
+//                    Toast.makeText(context, "Eliminar habilidad", Toast.LENGTH_LONG).show();
                     alertDialogEliminarHabilidad(habilidadList.get(getAdapterPosition()), oficio);
                 }
             });
@@ -287,7 +287,6 @@ public class HabilidadCRUDListAdapter extends RecyclerView.Adapter<HabilidadCRUD
 //                                oficio.setHabilidadArrayList((ArrayList<Habilidad>) habilidadList);
                                 oficio.setHabilidadArrayList(habilidadArrayListFilter);
                                 //Toast.makeText(context, "Habilidad eliminada", Toast.LENGTH_LONG).show();
-
 
 
                                 FirebaseDatabase.getInstance().getReference()

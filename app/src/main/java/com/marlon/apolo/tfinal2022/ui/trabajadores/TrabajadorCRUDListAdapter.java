@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,6 +28,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.coloros.ocs.base.a.e;
 import com.google.firebase.auth.FirebaseAuth;
 import com.marlon.apolo.tfinal2022.R;
+import com.marlon.apolo.tfinal2022.herramientasAsíncronas.DeleteAsyncTask;
 import com.marlon.apolo.tfinal2022.herramientasAsíncronas.GetAsyncTask;
 import com.marlon.apolo.tfinal2022.herramientasAsíncronas.PublicKeyAsyncTask;
 import com.marlon.apolo.tfinal2022.model.Oficio;
@@ -61,6 +63,7 @@ public class TrabajadorCRUDListAdapter extends RecyclerView.Adapter<TrabajadorCR
     private List<Trabajador> trabajadors;
     private List<Oficio> oficioList;
     private String TAG;
+    private AlertDialog alertDialogVar;
 
     public TrabajadorCRUDListAdapter(Context contextVar) {
         context = contextVar;
@@ -71,6 +74,10 @@ public class TrabajadorCRUDListAdapter extends RecyclerView.Adapter<TrabajadorCR
         context = contextVar;
         inflater = LayoutInflater.from(context);
         oficioList = oficioArrayList;
+    }
+
+    public List<Oficio> getOficioList() {
+        return oficioList;
     }
 
     @NonNull
@@ -298,30 +305,28 @@ public class TrabajadorCRUDListAdapter extends RecyclerView.Adapter<TrabajadorCR
             imageButtonDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(context, "Eliminar", Toast.LENGTH_LONG).show();
+//                    Toast.makeText(context, "Eliminar", Toast.LENGTH_LONG).show();
                     alertDialogConfirmar(trabajadors.get(getAdapterPosition())).show();
 
-                    PublicKeyAsyncTask publicKeyAsyncTask = new PublicKeyAsyncTask();
-                    publicKeyAsyncTask.execute();
-                    publicKeyAsyncTask.setOnListenerAsyncTask(publicKey -> {
-                        Log.d(TAG, "PUBLIC KEY: " + publicKey);
-                        String plainText = "Hello world of cryptography";
-                        String encodeMessage = cipherMessageWithRSA2048(publicKey, plainText);
-//                        cipherMessageWithRSA2048(publicKey, plainText);
-
-//                        GetAsyncTask getAsyncTask = new GetAsyncTask(plainText);
-                        GetAsyncTask getAsyncTask = new GetAsyncTask(encodeMessage);
-                        getAsyncTask.execute();
-//                        try {
-//                            sendGET("Message");
-//                        } catch (Exception e) {
-//                            Log.d(TAG, e.toString());
-//                        }
-
-
-
-
-                    });
+//                    PublicKeyAsyncTask publicKeyAsyncTask = new PublicKeyAsyncTask();
+//                    publicKeyAsyncTask.execute();
+//                    publicKeyAsyncTask.setOnListenerAsyncTask(publicKey -> {
+//                        Log.d(TAG, "PUBLIC KEY: " + publicKey);
+//                        String plainText = "Hello world of cryptography";
+//                        String encodeMessage = cipherMessageWithRSA2048(publicKey, plainText);
+////                        cipherMessageWithRSA2048(publicKey, plainText);
+//
+////                        GetAsyncTask getAsyncTask = new GetAsyncTask(plainText);
+//                        GetAsyncTask getAsyncTask = new GetAsyncTask(encodeMessage);
+//                        getAsyncTask.execute();
+////                        try {
+////                            sendGET("Message");
+////                        } catch (Exception e) {
+////                            Log.d(TAG, e.toString());
+////                        }
+//
+//
+//                    });
 
 
                     /*String text = "Hola mundo de la criptografìa";
@@ -386,7 +391,28 @@ public class TrabajadorCRUDListAdapter extends RecyclerView.Adapter<TrabajadorCR
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        trabajador.eliminarInfo((Activity) context);
+                        /*aSYNC operation*/
+                        String title = "Por favor espere ";
+//        message = "Cachuelito se encuentra verificando su información personal..." + "(Rev)";
+                        String message = "Cachuelito se encuentra eliminando los registros de información del trabajador...";
+
+                        showCustomProgressDialog(title, message);
+
+                        DeleteAsyncTask deleteAsyncTask = new DeleteAsyncTask(trabajador.getIdUsuario(), context);
+                        deleteAsyncTask.execute();
+                        deleteAsyncTask.setOnListenerAsyncTask(new DeleteAsyncTask.ClickListener() {
+                            @Override
+                            public void onTokenListener(String publicKey) {
+                                if (publicKey.equals("1")) {
+                                    trabajador.eliminarInfo((Activity) context);
+                                    closeCustomAlertDialog();
+                                } else {
+                                    Toast.makeText(context, context.getString(R.string.error_inesperado), Toast.LENGTH_LONG).show();
+                                    closeCustomAlertDialog();
+                                }
+                            }
+                        });
+
 
                     }
                 })
@@ -396,6 +422,46 @@ public class TrabajadorCRUDListAdapter extends RecyclerView.Adapter<TrabajadorCR
                     }
                 }).create();
     }
+
+    public void showCustomProgressDialog(String title, String message) {
+        try {
+            closeCustomAlertDialog();
+        } catch (Exception e) {
+            Log.d(TAG, e.toString());
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        // Get the layout inflater
+//        LayoutInflater inflater = this.getLayoutInflater();
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View promptsView = inflater.inflate(R.layout.custom_progress_dialog, null);
+
+
+        // set prompts.xml to alertdialog builder
+        builder.setView(promptsView);
+        // Inflate and set the layout for the dialog
+        // Pass null as the parent view because its going in the dialog layout
+//        builder.setView(inflater.inflate(R.layout.custom_progress_dialog, null));
+//        return builder.create();
+        final TextView textViewTitle = promptsView.findViewById(R.id.textViewTitle);
+        final TextView textViewMessage = promptsView.findViewById(R.id.textViewMessage);
+
+        textViewTitle.setText(title);
+        textViewMessage.setText(message);
+
+        alertDialogVar = builder.create();
+        alertDialogVar.show();
+//        builder.show();
+    }
+
+
+    public void closeCustomAlertDialog() {
+        try {
+            alertDialogVar.dismiss();
+        } catch (Exception e) {
+
+        }
+    }
+
 
     public void setOficioList(List<Oficio> oficioList) {
         this.oficioList = oficioList;

@@ -1,4 +1,4 @@
-package com.marlon.apolo.tfinal2022.ui.oficios;
+package com.marlon.apolo.tfinal2022.ui.oficios.adaptadores;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -18,12 +18,12 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.FirebaseDatabase;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.model.Oficio;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
+import com.marlon.apolo.tfinal2022.ui.oficios.view.HabilidadActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -125,7 +125,7 @@ public class OficioRegistroCRUDListAdapter extends RecyclerView.Adapter<OficioRe
 
                     Oficio oficio = getOficioAtPosition(getAdapterPosition());
                     launchDeleteOficioActivity(oficio);
-                    //Toast.makeText(context, "Eliminar", Toast.LENGTH_LONG).show();
+//                    Toast.makeText(context, "Eliminar", Toast.LENGTH_LONG).show();
                     boolean flagEliminar = true;
                     try {
 //                        for (Trabajador tr : trabajadors) {
@@ -211,7 +211,7 @@ public class OficioRegistroCRUDListAdapter extends RecyclerView.Adapter<OficioRe
                                         }
                                     });
                         } else {
-                            Toast.makeText(context, "No se puede eliminar el oficio", Toast.LENGTH_LONG).show();
+                            Toast.makeText(context, R.string.delete_oficio, Toast.LENGTH_LONG).show();
                         }
 
                         try {

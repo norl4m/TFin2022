@@ -29,7 +29,8 @@
     <string name="menu_iniciar_sesion">Iniciar sesión</string>
 
     <!--    MainActivity-->
-    <string name="text_bienvenida_app">Bienvenido a Cachuelito</string>
+    <!--    <string name="text_bienvenida_app">Bienvenido a Cachuelito</string>-->
+    <string name="text_bienvenida_app">Cachuelito</string>
     <string name="slogan_text">La aplicación móvil que te permitirá conectarte con tus necesidades!.</string>
     <string name="citas_trabajo">Citas de trabajo</string>
     <string name="text_registro"><u><b>¿Eres nuevo? Regístrate ahora</b></u></string>
@@ -64,17 +65,17 @@
     <string name="lorem_ipsum3"><![CDATA[Intentar hasta lograrlo]]></string>
 
     <string name="perfil_empleador">
-        Los empleadores pueden realizar lo siguiente dentro de &appname;:
-        \n
+        <b>Los empleadores pueden realizar lo siguiente dentro de &appname;:</b>
+        \n\n
         - Buscar y contratar a un trabajador para completar una determinada tarea.
-        \n
+        \n\n
         - Comunicación directa con trabajadores confiables y seguros.
     </string>
     <string name="perfil_trabajador">
-        Los trabajadores acceden a los siguientes beneficios dentro de &appname;:
-        \n
+        <b>Los trabajadores acceden a los siguientes beneficios dentro de &appname;:</b>
+        \n\n
         - Comunicación directa con los empleadores registrados en la aplicación.
-        \n
+        \n\n
         - Obtención de una remuneración por los servicios prestados.
     </string>
     <string name="name">Nombre</string>
@@ -331,7 +332,8 @@
         \n
         A continuación, por favor seleccione al menos un oficio de los registrados en la lista para completar su registro.
         \n\n
-        Si su oficio no se encuentra registrado, por favor seleccionar la casilla Otros.
+        Si su oficio o habilidad no se encuentran registrados, por favor pulse sobre los 3 puntos ubicados en la parte superior derecha
+        y a continuación proceda a registrarlos.
         \n\n
         Puede actualizar y registrar nuevos oficios o habilidades una vez completado el proceso de registro.
     </string>
@@ -441,6 +443,8 @@
     <string name="seleccionar_record_policial">Seleccionar record policial</string>
     <string name="proc_record_policial">Procesando record policial</string>
     <string name="record_ingresado">Record policial ingresado:</string>
+    <string name="delete_habilidad">La habilidad seleccionada no puede ser eliminada</string>
+    <string name="delete_oficio">El oficio seleccionado no puede ser eliminado</string>
 
 
 </resources>
