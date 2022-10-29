@@ -1686,7 +1686,11 @@ public abstract class Usuario implements Serializable {
 
                         }
 
-                        FirebaseAuth.getInstance().getCurrentUser().delete();
+                        try {
+                            FirebaseAuth.getInstance().getCurrentUser().delete();
+                        } catch (Exception e) {
+
+                        }
                         FirebaseAuth.getInstance().signOut();
 
                         //FirebaseAuth.getInstance().getCurrentUser().delete();

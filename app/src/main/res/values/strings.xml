@@ -29,8 +29,8 @@
     <string name="menu_iniciar_sesion">Iniciar sesión</string>
 
     <!--    MainActivity-->
-    <!--    <string name="text_bienvenida_app">Bienvenido a Cachuelito</string>-->
-    <string name="text_bienvenida_app">Cachuelito</string>
+    <string name="text_bienvenida_app">Bienvenido a Cachuelito</string>
+    <!--    <string name="text_bienvenida_app">Cachuelito</string>-->
     <string name="slogan_text">La aplicación móvil que te permitirá conectarte con tus necesidades!.</string>
     <string name="citas_trabajo">Citas de trabajo</string>
     <string name="text_registro"><u><b>¿Eres nuevo? Regístrate ahora</b></u></string>
