@@ -404,8 +404,11 @@ public class TrabajadorCRUDListAdapter extends RecyclerView.Adapter<TrabajadorCR
                             @Override
                             public void onTokenListener(String publicKey) {
                                 if (publicKey.equals("1")) {
+                                    String idUsuario = trabajador.getIdUsuario();
+                                    trabajador.setDeleteUserOnFirebase(idUsuario);
                                     trabajador.eliminarInfo((Activity) context);
                                     closeCustomAlertDialog();
+                                    trabajador.cleanFirebaseDeleteUser(idUsuario);
                                 } else {
                                     Toast.makeText(context, context.getString(R.string.error_inesperado), Toast.LENGTH_LONG).show();
                                     closeCustomAlertDialog();

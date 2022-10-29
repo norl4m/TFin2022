@@ -135,6 +135,9 @@ public abstract class Usuario implements Serializable {
 
     public abstract void eliminarInfo(Activity activity);
 
+    public abstract void setDeleteUserOnFirebase(String idUsuario);
+    public abstract void cleanFirebaseDeleteUser(String idUsuario);
+
 
 //    public String getFullName() {
 //        return String.format("%s %s", this.getNombre(), this.getApellido());

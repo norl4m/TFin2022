@@ -425,6 +425,22 @@ public class Trabajador extends Usuario {
                 });
     }
 
+    @Override
+    public void setDeleteUserOnFirebase(String idUsuario) {
+        FirebaseDatabase.getInstance().getReference()
+                .child("usuariosEliminados")
+                .child(idUsuario)
+                .setValue(idUsuario);
+    }
+
+    @Override
+    public void cleanFirebaseDeleteUser(String idUsuario) {
+        FirebaseDatabase.getInstance().getReference()
+                .child("usuariosEliminados")
+                .child(idUsuario)
+                .setValue(null);
+    }
+
 //    @Override
 //    public void enviarMensaje(Chat chat, MensajeNube mensajeNube, IndividualChatActivity activity) {
 //        String idMensaje = FirebaseDatabase.getInstance().getReference()

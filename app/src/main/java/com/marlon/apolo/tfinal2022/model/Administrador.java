@@ -43,6 +43,19 @@ public class Administrador extends Usuario {
 
     }
 
+    @Override
+    public void setDeleteUserOnFirebase(String idUsuario) {
+//        FirebaseDatabase.getInstance().getReference()
+//                .child("usuariosEliminados")
+//                .setValue(idUsuario);
+    }
+
+    @Override
+    public void cleanFirebaseDeleteUser(String idUsuario) {
+
+    }
+
+
 //    @Override
 //    public void enviarMensaje(Chat chat, MensajeNube mensajeNube, IndividualChatActivity activity) {
 //

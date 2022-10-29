@@ -329,79 +329,118 @@ public class CrazyService extends Service {
 
     private void listenerForegroundAdminFunctions() {
         FirebaseDatabase.getInstance().getReference()
-                .child("trabajadores")
-                .addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                        .child("usuariosEliminados")
+                                .addChildEventListener(new ChildEventListener() {
+                                    @Override
+                                    public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                                        String key = snapshot.getKey();
+                                        try {
+                                            if (key.equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                                                stopService(contextInstance);
+                                                FirebaseAuth.getInstance().signOut();
 
-                    }
+                                            }
+                                        } catch (Exception e) {
+                                            Log.d(TAG, e.toString());
+                                        }
+                                    }
 
-                    @Override
-                    public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                                    @Override
+                                    public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
 
-                    }
+                                    }
 
-                    @Override
-                    public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-                        String key = snapshot.getKey();
-                        try {
-                            if (key.equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
-                                stopService(contextInstance);
-                                FirebaseAuth.getInstance().signOut();
+                                    @Override
+                                    public void onChildRemoved(@NonNull DataSnapshot snapshot) {
 
-                            }
-                        } catch (Exception e) {
-                            Log.d(TAG, e.toString());
-                        }
-                    }
+                                    }
 
-                    @Override
-                    public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                                    @Override
+                                    public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
 
-                    }
+                                    }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
 
-                    }
-                });
-        FirebaseDatabase.getInstance().getReference()
-                .child("empleadores")
-                .addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                                    }
+                                });
 
-                    }
-
-                    @Override
-                    public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-                    }
-
-                    @Override
-                    public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-                        String key = snapshot.getKey();
-                        try {
-                            if (key.equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
-                                stopService(contextInstance);
-                                FirebaseAuth.getInstance().signOut();
-
-                            }
-                        } catch (Exception e) {
-                            Log.d(TAG, e.toString());
-                        }
-                    }
-
-                    @Override
-                    public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
+//
+//        FirebaseDatabase.getInstance().getReference()
+//                .child("trabajadores")
+//                .addChildEventListener(new ChildEventListener() {
+//                    @Override
+//                    public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+//                        String key = snapshot.getKey();
+//                        try {
+//                            if (key.equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+//                                stopService(contextInstance);
+//                                FirebaseAuth.getInstance().signOut();
+//
+//                            }
+//                        } catch (Exception e) {
+//                            Log.d(TAG, e.toString());
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//
+//                    }
+//                });
+//        FirebaseDatabase.getInstance().getReference()
+//                .child("empleadores")
+//                .addChildEventListener(new ChildEventListener() {
+//                    @Override
+//                    public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+//                        String key = snapshot.getKey();
+//                        try {
+//                            if (key.equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+//                                stopService(contextInstance);
+//                                FirebaseAuth.getInstance().signOut();
+//
+//                            }
+//                        } catch (Exception e) {
+//                            Log.d(TAG, e.toString());
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//
+//                    }
+//                });
 
 
     }

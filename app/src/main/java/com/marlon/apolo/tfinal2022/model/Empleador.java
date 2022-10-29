@@ -52,6 +52,22 @@ public class Empleador extends Usuario {
     }
 
     @Override
+    public void setDeleteUserOnFirebase(String idUsuario) {
+        FirebaseDatabase.getInstance().getReference()
+                .child("usuariosEliminados")
+                .child(idUsuario)
+                .setValue(idUsuario);
+    }
+
+    @Override
+    public void cleanFirebaseDeleteUser(String idUsuario) {
+        FirebaseDatabase.getInstance().getReference()
+                .child("usuariosEliminados")
+                .child(idUsuario)
+                .setValue(null);
+    }
+
+    @Override
     public void registrarseEnFirebase(Activity activity, int metodoReg) {
         SharedPreferences myPreferences = activity.getSharedPreferences("MyPreferences", MODE_PRIVATE);
 
