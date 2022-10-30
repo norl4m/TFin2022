@@ -68,10 +68,6 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        // Esto permite que al inicar el splashScreen desaparezcan las barras del nombre de la app, donde se encuentra información de red y batería etc
-        //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-        //enablePersistence();/*Utilizado antes de cualquier instancia*/
 
         // Animations
         Animation topAnimation = AnimationUtils.loadAnimation(this, R.anim.top_animation);
@@ -117,19 +113,4 @@ public class MainActivity extends AppCompatActivity {
         return prefs.getBoolean("infoInicialActivityFlag", false);
     }
 
-    /**
-     * Este método permite habilidar la persistencia de datos en la memoria cachè del dispositivo.
-     * Los datos obtenidos desde Firebase Database no sobrepsasan los 10MB
-     */
-    private void enablePersistence() {
-        // [START rtdb_enable_persistence]
-        Log.d("TAG", "enablePersistence");
-
-        try {
-            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-        } catch (Exception e) {
-            Log.d("TAG", e.toString());
-        }
-        // [END rtdb_enable_persistence]
-    }
 }
