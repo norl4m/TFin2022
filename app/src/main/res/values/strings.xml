@@ -113,13 +113,13 @@
         <b>2. ¿Cómo usamos esta información?</b>
     \n\n
         - Los datos descritos en el punto anterior se utilizan como referencia para optimizar la pertinencia de los mensajes entre los usuarios y para garantizar la integridad, confidencialidad y disponibilidad de la información almacenada en nuestros servidores.
-    \n\n La recogida, almacenamiento, modificación, estructuración y en su caso, eliminación, de los datos proporcionados por los Usuarios, constituirán operaciones de tratamiento llevadas a cabo por el Administrado o el Usuario registrados, con la finalidad de garantizar el
-correcto funcionamiento de la Aplicación, mantener la relación de prestación de servicios y/o comercial con el Usuario, y
-para la gestión, administración, información, prestación y mejora del servicio.
-Los datos personales facilitados por el Usuario -especialmente, el correo electrónico o e-mail- podrán emplearse también
-para remitir boletines (newsletters), así como comunicaciones comerciales de promociones y/o publicidad de la Aplicación,
-siempre y cuando, el Usuario haya prestado previamente su consentimiento expreso para la recepción de estas
-comunicaciones vía electrónica.
+    \n\n El almacenamiento, modificación, estructuración y en su caso, eliminación, de los datos proporcionados por los Usuarios, constituirán operaciones de tratamiento llevadas a cabo por el Administrador o el Usuario registrados, con la finalidad de garantizar el
+        correcto funcionamiento de la Aplicación, mantener la relación de prestación de servicios y/o comercial con el Usuario, y
+        para la gestión, administración, información, prestación y mejora del servicio.
+        Los datos personales facilitados por el Usuario -especialmente, el correo electrónico o e-mail- podrán emplearse también
+        para remitir boletines (newsletters), así como comunicaciones comerciales de promociones y/o publicidad de la Aplicación,
+        siempre y cuando, el Usuario haya prestado previamente su consentimiento expreso para la recepción de estas
+        comunicaciones vía electrónica.
     </string>
 
     <string name="article_text_sobre_nosotros">&appname; es una empresa de tecnología y permite conectar <b>empleadores</b> con <b>trabajadores</b>. Los <b>trabajadores</b> registrados ponen a disposición sus servicios para poder ser contratados. &appname;

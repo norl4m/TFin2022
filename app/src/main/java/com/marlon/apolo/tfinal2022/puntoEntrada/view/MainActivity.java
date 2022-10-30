@@ -96,7 +96,6 @@ public class MainActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-//                startActivity(new Intent(MainActivity.this, LoginActivity.class));
                 if (getInfoInicialActivityFlag()) {
                     startActivity(new Intent(MainActivity.this, MainNavigationActivity.class));
                 } else {
