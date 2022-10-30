@@ -89,6 +89,8 @@
         \n\n &appname; no almacena ninguna información relacionada con su record policial en sus servidores.
     </string>
 
+    <string name="article_fech_politica_priv_datos">Fecha de última actualización: 29/10/2022</string>
+    <string name="article_ue_politica_priv_datos">De conformidad con el Reglamento (UE) 2016/679, del Parlamento Europeo y del Consejo, de 27 de abril de 2016, relativo a la protección de las personas físicas en lo que respecta al tratamiento de datos personales y a la libre circulación de estos datos (Reglamento General de Protección de Datos - RGPD), NelectrogApps, informa a los usuarios de la aplicación <b>Cachuelito</b> (en adelante, la Aplicación), acerca del tratamiento de los datos personales, que ellos voluntariamente hayan facilitado durante el proceso de registro, acceso y utilización del servicio.</string>
     <string name="article_subtitle_politica_priv_datos">\"Estos términos y condiciones de privacidad de datos establecen los lineamientos y prácticas de protección de datos personales de la aplicación &appname;.\"</string>
     <string name="article_text_politica_priv_datos">Lea atentamente estos términos y condiciones, ya que le ayudarán a tomar decisiones informadas sobre cómo compartir su información personal con nosotros.
     \n\n
@@ -99,16 +101,25 @@
         \n\n
         - Nombres y apellidos
         \n
-        - Correo electrónico, cuenta de google, número de teléfono celular
+        - Correo electrónico, cuenta de google o número de teléfono celular
         \n
         - Foto de perfil
         \n
-        - Ciudad y país de residencia
+        - Ubicación
+        \n
+        - Record policial (Nuevos trabajadores)
 
     \n\n
         <b>2. ¿Cómo usamos esta información?</b>
     \n\n
-        - Los datos descritos en el punto anterior se utilizan con objetivos de difusión para mantener y cumplir las obligaciones contractuales, legales y de transparencia que exijan algún tipo de comunicación. Parte de los datos se utilizan como referencia para optimizar la pertinencia de los mensajes entre los usuarios y para garantizar la integridad, confidencialidad y disponibilidad de la información almacenada en nuestros servidores.
+        - Los datos descritos en el punto anterior se utilizan como referencia para optimizar la pertinencia de los mensajes entre los usuarios y para garantizar la integridad, confidencialidad y disponibilidad de la información almacenada en nuestros servidores.
+    \n\n La recogida, almacenamiento, modificación, estructuración y en su caso, eliminación, de los datos proporcionados por los Usuarios, constituirán operaciones de tratamiento llevadas a cabo por el Administrado o el Usuario registrados, con la finalidad de garantizar el
+correcto funcionamiento de la Aplicación, mantener la relación de prestación de servicios y/o comercial con el Usuario, y
+para la gestión, administración, información, prestación y mejora del servicio.
+Los datos personales facilitados por el Usuario -especialmente, el correo electrónico o e-mail- podrán emplearse también
+para remitir boletines (newsletters), así como comunicaciones comerciales de promociones y/o publicidad de la Aplicación,
+siempre y cuando, el Usuario haya prestado previamente su consentimiento expreso para la recepción de estas
+comunicaciones vía electrónica.
     </string>
 
     <string name="article_text_sobre_nosotros">&appname; es una empresa de tecnología y permite conectar <b>empleadores</b> con <b>trabajadores</b>. Los <b>trabajadores</b> registrados ponen a disposición sus servicios para poder ser contratados. &appname;
