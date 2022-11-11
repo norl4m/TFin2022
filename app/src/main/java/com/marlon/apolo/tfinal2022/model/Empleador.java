@@ -32,9 +32,8 @@ import com.google.firebase.storage.UploadTask;
 import com.marlon.apolo.tfinal2022.MainNavigationActivity;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.citasTrabajo.DetalleServicioActivity;
-import com.marlon.apolo.tfinal2022.registro.view.EmailPasswordActivity;
+import com.marlon.apolo.tfinal2022.registro.view.RegWithEmailPasswordActivity;
 import com.marlon.apolo.tfinal2022.registro.view.RegWithCelularActivity;
-import com.marlon.apolo.tfinal2022.registro.RegWithEmailPasswordActivity;
 import com.marlon.apolo.tfinal2022.registro.view.RegWithGoogleActivity;
 import com.marlon.apolo.tfinal2022.ui.editarDatos.EditarDataActivity;
 
@@ -96,8 +95,8 @@ public class Empleador extends Usuario {
 
                             switch (metodoReg) {
                                 case 1:/*email*/
-                                    EmailPasswordActivity emailPasswordActivity = (EmailPasswordActivity) activity;
-                                    emailPasswordActivity.closeCustomAlertDialog();
+                                    RegWithEmailPasswordActivity regWithEmailPasswordActivity = (RegWithEmailPasswordActivity) activity;
+                                    regWithEmailPasswordActivity.closeCustomAlertDialog();
                                     break;
                                 case 2:/*google*/
                                     RegWithGoogleActivity regWithGoogleActivity = (RegWithGoogleActivity) activity;
@@ -668,93 +667,94 @@ public class Empleador extends Usuario {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         // Email sent
-                        RegWithEmailPasswordActivity regWithEmailPasswordActivity = (RegWithEmailPasswordActivity) activity;
-                        regWithEmailPasswordActivity.alertDialogEmailVerificationInfo();
+//                        RegWithEmailPasswordActivityAux regWithEmailPasswordActivityAux = (RegWithEmailPasswordActivityAux) activity;
+//                        regWithEmailPasswordActivityAux.alertDialogEmailVerificationInfo();
 //                        Toast.makeText(activity, "Se ha enviado un mensaje a su correo electrónico. Para completar el registro por favor revise su bandeja de entrada", Toast.LENGTH_SHORT).show();
                     }
                 });
         // [END send_email_verification]
     }
 
-    public void regEmpleadorEnFirebase(Empleador empleadorReg, Activity activity, FirebaseAuth firebaseAuth, int regMethod) {
-        String idUsuario = FirebaseDatabase.getInstance().getReference().child("empleadores").push().getKey();
-        empleadorReg.setIdUsuario(idUsuario);
-
-//        AtomicBoolean estadoEmpleador = new AtomicBoolean(false);
+//    public void regEmpleadorEnFirebase(Empleador empleadorReg, Activity activity, FirebaseAuth firebaseAuth, int regMethod) {
+//        String idUsuario = FirebaseDatabase.getInstance().getReference().child("empleadores").push().getKey();
+//        empleadorReg.setIdUsuario(idUsuario);
 //
-//        EmpleadorViewModel empleadorViewModel = new ViewModelProvider((ViewModelStoreOwner) activity).get(EmpleadorViewModel.class);
+////        AtomicBoolean estadoEmpleador = new AtomicBoolean(false);
+////
+////        EmpleadorViewModel empleadorViewModel = new ViewModelProvider((ViewModelStoreOwner) activity).get(EmpleadorViewModel.class);
+////
+//////        empleadorViewModel.getEmpleadorLiveData("-N3fLkg4y_eVuxpVaeYE").observe((LifecycleOwner) activity, empleador -> {
+////
+////
+////        String contactoVeri = "";
+////        if (empleadorReg.getEmail() != null) {
+////            contactoVeri = empleadorReg.getEmail();
+////        }
+////        if (empleadorReg.getCelular() != null) {
+////            contactoVeri = empleadorReg.getCelular();
+////        }
+////
+////        empleadorViewModel.getVerficiadorDeUsuario(contactoVeri).observe((LifecycleOwner) activity, empleador -> {
+////            if (empleador != null) {
+////                estadoEmpleador.set(true);
+//////                Log.d(TAG, "Empleador encontrado");
+//////                Toast.makeText(activity, "El empleador no puede ser registrado. Por favor inténtelo más tarde", Toast.LENGTH_LONG).show();
+////            }
+////        });
 //
-////        empleadorViewModel.getEmpleadorLiveData("-N3fLkg4y_eVuxpVaeYE").observe((LifecycleOwner) activity, empleador -> {
+//        FirebaseDatabase.getInstance().getReference()
+//                .child("empleadores")
+//                .child(idUsuario)
+//                .setValue(empleadorReg)
+//                .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<Void> task) {
+//                        if (task.isSuccessful()) {
+////                            if (empleadorReg.getFotoPerfil() != null) {
+////                                Uri uriFoto = Uri.parse(empleadorReg.toString());
+////                                registrarUsuarioConFoto(uriFoto,activity,idUsuario,empleadorReg);
+////                            } else {
 //
+//                            switch (regMethod) {
+//                                case 1:
+////                                    if (estadoEmpleador.get()) {
+////                                    Toast.makeText(activity, "El empleador no puede ser registrado. Por favor inténtelo más tarde", Toast.LENGTH_LONG).show();
+////                                    } else {
+//                                    sendEmailVerification(firebaseAuth, activity);
+////                                    }
+//                                    break;
+//                                case 2:
+//                                    RegWithGoogleActivity regWithGoogleActivity = (RegWithGoogleActivity) activity;
+//                                    regWithGoogleActivity.alertDialogVerificationInfo();
+//                                    break;
+//                                case 3:
+//                                    RegWithCelularActivity regWithCelularActivity = (RegWithCelularActivity) activity;
+//                                    regWithCelularActivity.alertDialogVerificationInfo();
 //
-//        String contactoVeri = "";
-//        if (empleadorReg.getEmail() != null) {
-//            contactoVeri = empleadorReg.getEmail();
-//        }
-//        if (empleadorReg.getCelular() != null) {
-//            contactoVeri = empleadorReg.getCelular();
-//        }
-//
-//        empleadorViewModel.getVerficiadorDeUsuario(contactoVeri).observe((LifecycleOwner) activity, empleador -> {
-//            if (empleador != null) {
-//                estadoEmpleador.set(true);
-////                Log.d(TAG, "Empleador encontrado");
-////                Toast.makeText(activity, "El empleador no puede ser registrado. Por favor inténtelo más tarde", Toast.LENGTH_LONG).show();
-//            }
-//        });
-
-        FirebaseDatabase.getInstance().getReference()
-                .child("empleadores")
-                .child(idUsuario)
-                .setValue(empleadorReg)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-//                            if (empleadorReg.getFotoPerfil() != null) {
-//                                Uri uriFoto = Uri.parse(empleadorReg.toString());
-//                                registrarUsuarioConFoto(uriFoto,activity,idUsuario,empleadorReg);
-//                            } else {
-
-                            switch (regMethod) {
-                                case 1:
-//                                    if (estadoEmpleador.get()) {
-//                                    Toast.makeText(activity, "El empleador no puede ser registrado. Por favor inténtelo más tarde", Toast.LENGTH_LONG).show();
-//                                    } else {
-                                    sendEmailVerification(firebaseAuth, activity);
-//                                    }
-                                    break;
-                                case 2:
-                                    RegWithGoogleActivity regWithGoogleActivity = (RegWithGoogleActivity) activity;
-                                    regWithGoogleActivity.alertDialogVerificationInfo();
-                                    break;
-                                case 3:
-                                    RegWithCelularActivity regWithCelularActivity = (RegWithCelularActivity) activity;
-                                    regWithCelularActivity.alertDialogVerificationInfo();
-
-                                    break;
-                            }
-
+//                                    break;
 //                            }
-                        } else {
-                            switch (regMethod) {
-                                case 1:
-                                    RegWithEmailPasswordActivity regWithEmailPasswordActivity = (RegWithEmailPasswordActivity) activity;
-                                    regWithEmailPasswordActivity.controlErrorsUI();
-                                    break;
-                                case 2:
-                                    RegWithGoogleActivity regWithGoogleActivity = (RegWithGoogleActivity) activity;
-                                    break;
-                                case 3:
-                                    RegWithCelularActivity regWithCelularActivity = (RegWithCelularActivity) activity;
-                                    break;
-                            }
+//
+////                            }
+//                        } else {
+//                            switch (regMethod) {
+//                                case 1:
+////                                    RegWithEmailPasswordActivityAux regWithEmailPasswordActivityAux = (RegWithEmailPasswordActivityAux) activity;
+////                                    regWithEmailPasswordActivityAux.controlErrorsUI();
+//                                    break;
+//                                case 2:
+//                                    RegWithGoogleActivity regWithGoogleActivity = (RegWithGoogleActivity) activity;
+//                                    break;
+//                                case 3:
+//                                    RegWithCelularActivity regWithCelularActivity = (RegWithCelularActivity) activity;
+//                                    break;
+//                            }
+//
+//
+//                        }
+//                    }
+//                });
+//    }
 
-
-                        }
-                    }
-                });
-    }
 
 //    public void registrarEmpleadorConFoto(Uri uri, String refUser, FirebaseAuth firebaseAuth, Activity activity, Empleador empleador, int regMethod) {
 //

@@ -41,7 +41,7 @@
         <SwitchPreferenceCompat
             app:defaultValue="true"
             app:key="sync_network"
-            app:summaryOff="Redes móviles y redes Wifi"
+            app:summaryOff="Datos móviles o redes Wifi"
             app:summaryOn="Solo redes Wifi"
             app:title="Descargar datos utilizando" />
     </PreferenceCategory>

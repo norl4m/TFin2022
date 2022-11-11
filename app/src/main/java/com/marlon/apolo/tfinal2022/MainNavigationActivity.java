@@ -74,6 +74,7 @@ public class MainNavigationActivity extends AppCompatActivity {
             navPersonalData,
             navChats,
             navCitas,
+            navAuthentication,
             navTrabajadores,
             navEmpleadores,
             navOficios,
@@ -307,6 +308,7 @@ public class MainNavigationActivity extends AppCompatActivity {
                 R.id.nav_datos_personales,
                 R.id.nav_chats,
                 R.id.nav_citas,
+                R.id.nav_auth,
                 R.id.nav_trabajadores,
                 R.id.nav_empleadores,
                 R.id.nav_oficios,
@@ -325,6 +327,7 @@ public class MainNavigationActivity extends AppCompatActivity {
         navPersonalData = menu.findItem(R.id.nav_datos_personales);
         navChats = menu.findItem(R.id.nav_chats);
         navCitas = menu.findItem(R.id.nav_citas);
+        navAuthentication = menu.findItem(R.id.nav_auth);
         navTrabajadores = menu.findItem(R.id.nav_trabajadores);
         navEmpleadores = menu.findItem(R.id.nav_empleadores);
         navOficios = menu.findItem(R.id.nav_oficios);
@@ -582,6 +585,7 @@ public class MainNavigationActivity extends AppCompatActivity {
         navPersonalData.setVisible(true);
         navChats.setVisible(true);
         navCitas.setVisible(false);
+        navAuthentication.setVisible(true);
         navTrabajadores.setVisible(true);
         navEmpleadores.setVisible(true);
         navOficios.setVisible(true);
@@ -595,6 +599,7 @@ public class MainNavigationActivity extends AppCompatActivity {
         navPersonalData.setVisible(true);
         navChats.setVisible(true);
         navCitas.setVisible(true);
+        navAuthentication.setVisible(false);
         navTrabajadores.setVisible(false);
         navEmpleadores.setVisible(false);
         navOficios.setVisible(false);
@@ -607,6 +612,7 @@ public class MainNavigationActivity extends AppCompatActivity {
         navPersonalData.setVisible(true);
         navChats.setVisible(true);
         navCitas.setVisible(true);
+        navAuthentication.setVisible(false);
         navTrabajadores.setVisible(false);
         navEmpleadores.setVisible(false);
         navOficios.setVisible(false);
@@ -620,6 +626,7 @@ public class MainNavigationActivity extends AppCompatActivity {
         navPersonalData.setVisible(false);
         navChats.setVisible(false);
         navCitas.setVisible(false);
+        navAuthentication.setVisible(false);
         navTrabajadores.setVisible(false);
         navEmpleadores.setVisible(false);
         navOficios.setVisible(false);
@@ -640,6 +647,7 @@ public class MainNavigationActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.action_settings:
                 startActivity(new Intent(MainNavigationActivity.this, ConfiguracionActivity.class));
+//                startActivity(new Intent(MainNavigationActivity.this, SettingsActivity.class));
                 break;
             case R.id.mnu_nav_search:
                 startActivity(new Intent(MainNavigationActivity.this, BuscadorActivity.class));

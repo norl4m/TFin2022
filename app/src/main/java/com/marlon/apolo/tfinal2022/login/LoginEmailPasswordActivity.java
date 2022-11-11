@@ -40,6 +40,7 @@ import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.model.Administrador;
 import com.marlon.apolo.tfinal2022.model.Empleador;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
+import com.marlon.apolo.tfinal2022.registro.view.PerfilActivity;
 import com.marlon.apolo.tfinal2022.ui.bienvenido.BienvenidoViewModel;
 
 import java.util.ArrayList;
@@ -299,28 +300,84 @@ public class LoginEmailPasswordActivity extends AppCompatActivity implements Vie
         final TextView textViewInfo = promptsView.findViewById(R.id.textViewInfo);
         switch (error) {
             case 0:/*usuario no registrado*/
-                textViewInfo.setText(getResources().getString(R.string.text_error_user_no_found));
+                textViewInfo.setText(getResources().getString(R.string.text_error_user_no_found) + getResources().getString(R.string.text_error_user_no_found_concat));
+                builder.setPositiveButton("Sí", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        // sign in the user ...
+//                        Toast.makeText(getApplicationContext(), "AAAAAAAAAAAAAAAAA", Toast.LENGTH_LONG).show();
+
+                        setOnSharedPreferences();
+
+                        Intent intentExtraData = new Intent(LoginEmailPasswordActivity.this, PerfilActivity.class);
+
+                        startActivity(intentExtraData);
+                        try {
+                            dialogInfoError.dismiss();
+                        } catch (Exception e) {
+
+                        }
+                        finish();
+                    }
+                });
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        // sign in the user ...
+                        try {
+                            dialogInfoError.dismiss();
+
+                        } catch (Exception e) {
+
+                        }
+                    }
+                });
+
                 break;
             case 1:/*clave equivocada*/
                 textViewInfo.setText(getResources().getString(R.string.text_error_password_email));
+                builder.setPositiveButton("Entendido", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        // sign in the user ...
+                        try {
+                            dialogInfoError.dismiss();
+
+                        } catch (Exception e) {
+
+                        }
+                    }
+                });
                 break;
             case 2:/*email inválido*/
                 textViewInfo.setText(getResources().getString(R.string.text_error_email));
+                builder.setPositiveButton("Entendido", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        // sign in the user ...
+                        try {
+                            dialogInfoError.dismiss();
+
+                        } catch (Exception e) {
+
+                        }
+                    }
+                });
                 break;
         }
-
-        builder.setPositiveButton("Entendido", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-                // sign in the user ...
-                try {
-                    dialogInfoError.dismiss();
-
-                } catch (Exception e) {
-
-                }
-            }
-        });
+//
+//        builder.setPositiveButton("Entendido", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int id) {
+//                // sign in the user ...
+//                try {
+//                    dialogInfoError.dismiss();
+//
+//                } catch (Exception e) {
+//
+//                }
+//            }
+//        });
 
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
@@ -329,6 +386,15 @@ public class LoginEmailPasswordActivity extends AppCompatActivity implements Vie
 
         dialogInfoError = builder.create();
         dialogInfoError.show();
+    }
+
+    private void setOnSharedPreferences() {
+        myPreferences = LoginEmailPasswordActivity.this.getSharedPreferences("MyPreferences", MODE_PRIVATE);
+        editorPref = myPreferences.edit();
+        editorPref.putInt("methodTemp", 1);
+        editorPref.putString("emailTemp", email);
+        editorPref.putString("passTemp", password);
+        editorPref.apply();
     }
 
     public void showProgress(String title, String message) {

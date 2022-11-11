@@ -31,10 +31,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.marlon.apolo.tfinal2022.R;
+import com.marlon.apolo.tfinal2022.login.LoginEmailPasswordActivity;
 import com.marlon.apolo.tfinal2022.model.Empleador;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
 
@@ -100,8 +100,32 @@ public class MetodoRegActivity extends AppCompatActivity implements View.OnClick
 //
 //        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
 //
-//            SharedPreferences myPreferences = this.getSharedPreferences("MyPreferences", MODE_PRIVATE);
-//            SharedPreferences.Editor editorPref = myPreferences.edit();
+        SharedPreferences myPreferences = this.getSharedPreferences("MyPreferences", MODE_PRIVATE);
+        SharedPreferences.Editor editorPref = myPreferences.edit();
+        int u = myPreferences.getInt("methodTemp", -1);
+        try {
+            switch (u) {
+                case 1:
+                    ((RadioButton) findViewById(R.id.radioBtnCorreoPassword)).setChecked(true);
+                    optionReg = 1;
+                    buttonNext.setEnabled(true);
+                    break;
+                case 2:
+                    ((RadioButton) findViewById(R.id.radioBtnGoogle)).setChecked(true);
+                    optionReg = 2;
+                    buttonNext.setEnabled(true);
+                    break;
+                case 3:
+                    ((RadioButton) findViewById(R.id.radioBtnCelular)).setChecked(true);
+                    optionReg = 3;
+                    buttonNext.setEnabled(true);
+                    break;
+            }
+        } catch (Exception e) {
+
+        }
+        String email = myPreferences.getString("emailTemp", null);
+        String password = myPreferences.getString("passTemp", null);
 //            int u = myPreferences.getInt("usuario", -1);
 //            if (u == 0) {
 //                findViewById(R.id.radioBtnGoogle).setVisibility(View.GONE);
@@ -174,7 +198,8 @@ public class MetodoRegActivity extends AppCompatActivity implements View.OnClick
             if (v.getId() == R.id.buttonNext) {
                 switch (optionReg) {
                     case 1:
-                        Intent intentEmail = new Intent(MetodoRegActivity.this, EmailPasswordActivity.class);
+                        Intent intentEmail = new Intent(MetodoRegActivity.this, RegWithEmailPasswordActivity.class);
+//                        Intent intentEmail = new Intent(MetodoRegActivity.this, RegWithEmailPocActivity.class);
                         intentEmail.putExtra("usuario", regUsuario);
                         switch (regUsuario) {
                             case 1:

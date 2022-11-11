@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,6 +24,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firestore.v1.TargetOrBuilder;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.herramientas.DataValidation;
 import com.marlon.apolo.tfinal2022.individualChat.model.MessageCloudPoc;
@@ -404,18 +406,31 @@ public class SpecialMessagePoc extends RecyclerView.Adapter<SpecialMessagePoc.My
                         mapIntent1.setPackage("com.google.android.apps.maps");
 
 // Attempt to start an activity that can handle the Intent
-                        activity.startActivity(mapIntent1);
-                        if (mapIntent1.resolveActivity(activity.getPackageManager()) != null) {
-//                            startActivity(mapIntent);
+//                        activity.startActivity(mapIntent1);
+
+//                        Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+//                                Uri.parse("http://maps.google.com/maps?daddr="+current.getLatitude()+","+current.getLongitude()));
+                        try {
                             activity.startActivity(mapIntent1);
 
+                        } catch (Exception e) {
+                            Toast.makeText(activity, "La aplicación de Google Maps no se encuentra instalada en su dispositivo móvil", Toast.LENGTH_LONG).show();
+//                            Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+//                                    Uri.parse("http://maps.google.com/maps?daddr=" + current.getLatitude() + "," + current.getLongitude()));
+//                            activity.startActivity(intent);
+
                         }
+
+//                        if (mapIntent1.resolveActivity(activity.getPackageManager()) != null) {
+////                            startActivity(mapIntent);
+//                            activity.startActivity(mapIntent1);
+//
+//                        }
                     }
                 });
 
 
             }
-
 
 
 //            holder.textViewTime.setText(String.valueOf(current.getCreateDate()));

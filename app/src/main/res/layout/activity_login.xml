@@ -13,19 +13,6 @@
         android:elevation="4dp"
         app:navigationIcon="@drawable/ic_baseline_arrow_back_24">
 
-        <Button
-            android:id="@+id/buttonContinuar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/toolbar"
-            android:layout_alignParentEnd="true"
-            android:layout_gravity="end"
-            android:layout_marginEnd="2dp"
-
-            android:drawableEnd="@drawable/ic_baseline_navigate_next_24"
-            android:drawableTint="@color/white"
-            android:text="Continuar"
-            android:textAllCaps="false" />
     </androidx.appcompat.widget.Toolbar>
 
     <!--    <Button-->
@@ -118,18 +105,45 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/button4" />
 
+        <Button
+            android:id="@+id/textViewNuevoReg"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginStart="25dp"
+            android:layout_marginEnd="25dp"
+            android:backgroundTint="@color/purple_200"
+            android:text="@string/text_registro"
+            android:textAllCaps="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/buttonContinuar"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginStart="25dp"
+            android:layout_marginEnd="25dp"
+            android:backgroundTint="@color/teal_200"
+            android:text="Omitir inicio de sesión"
+            android:textAllCaps="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
     </LinearLayout>
 
 
-    <TextView
-        android:id="@+id/textViewNuevoReg"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="24dp"
-        android:text="@string/text_registro"
-        android:textAlignment="center"
-        android:textSize="18sp" />
+    <!--    <TextView-->
+    <!--        android:id="@+id/textViewNuevoReg"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_alignParentBottom="true"-->
+    <!--        android:layout_marginBottom="24dp"-->
+    <!--        android:text="@string/text_registro"-->
+    <!--        android:textAlignment="center"-->
+    <!--        android:textSize="18sp"-->
+    <!--        android:visibility="gone" />-->
 
 
 </RelativeLayout>

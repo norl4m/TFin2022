@@ -73,5 +73,11 @@
         android:name="com.marlon.apolo.tfinal2022.ui.citaTrabajo.CitaTrabajoViewActivity"
         android:label="@string/citas_trabajo"
         tools:layout="@layout/activity_cita_trabajo_view" />
+    <fragment
+        android:id="@+id/nav_auth"
+        android:name="com.marlon.apolo.tfinal2022.ui.authentication.AuthenticationFragment"
+        android:label="Autenticación"
+        tools:layout="@layout/fragment_authentication" />
+
 
 </navigation>

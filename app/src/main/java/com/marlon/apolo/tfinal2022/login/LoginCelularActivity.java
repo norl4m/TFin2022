@@ -1,16 +1,21 @@
 package com.marlon.apolo.tfinal2022.login;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
@@ -35,6 +40,7 @@ import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.model.Administrador;
 import com.marlon.apolo.tfinal2022.model.Empleador;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
+import com.marlon.apolo.tfinal2022.registro.view.PerfilActivity;
 import com.marlon.apolo.tfinal2022.ui.bienvenido.BienvenidoViewModel;
 
 import java.util.ArrayList;
@@ -64,6 +70,7 @@ public class LoginCelularActivity extends AppCompatActivity implements View.OnCl
     private ArrayList<Trabajador> trabajadorListByCelular;
     private ArrayList<Empleador> empleadorListByCelular;
     private ProgressDialog progressDialog;
+    private AlertDialog dialogInfoError;
 
 
     @Override
@@ -472,6 +479,8 @@ public class LoginCelularActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void deleteAccountAndSignOut(FirebaseUser user) {
+        setPhoneOnPreferences(textInputLayoutPhone.getEditText().getText().toString());
+
         try {
             progressDialog.dismiss();
         } catch (Exception e) {
@@ -498,6 +507,128 @@ public class LoginCelularActivity extends AppCompatActivity implements View.OnCl
             }
         });
         mAuth.signOut();
+
+        alertDialogInfoError(0);
+    }
+
+
+    public void alertDialogInfoError(int error) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        // Get the layout inflater
+        LayoutInflater inflater = this.getLayoutInflater();
+
+        View promptsView = inflater.inflate(R.layout.dialog_info, null);
+        builder.setView(promptsView);
+
+        // set prompts.xml to alertdialog builder
+        final TextView textViewInfo = promptsView.findViewById(R.id.textViewInfo);
+        switch (error) {
+            case 0:/*usuario no registrado*/
+                textViewInfo.setText(getResources().getString(R.string.text_error_user_no_found) + getResources().getString(R.string.text_error_user_no_found_concat));
+                builder.setPositiveButton("Sí", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        // sign in the user ...
+//                        Toast.makeText(getApplicationContext(), "AAAAAAAAAAAAAAAAA", Toast.LENGTH_LONG).show();
+
+                        setOnSharedPreferences();
+
+                        Intent intentExtraData = new Intent(LoginCelularActivity.this, PerfilActivity.class);
+
+                        startActivity(intentExtraData);
+                        try {
+                            dialogInfoError.dismiss();
+                        } catch (Exception e) {
+
+                        }
+                        finish();
+                    }
+                });
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        // sign in the user ...
+                        try {
+                            dialogInfoError.dismiss();
+
+                        } catch (Exception e) {
+
+                        }
+                    }
+                });
+
+                break;
+            case 1:/*clave equivocada*/
+                textViewInfo.setText(getResources().getString(R.string.text_error_password_email));
+                builder.setPositiveButton("Entendido", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        // sign in the user ...
+                        try {
+                            dialogInfoError.dismiss();
+
+                        } catch (Exception e) {
+
+                        }
+                    }
+                });
+                break;
+            case 2:/*email inválido*/
+                textViewInfo.setText(getResources().getString(R.string.text_error_email));
+                builder.setPositiveButton("Entendido", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        // sign in the user ...
+                        try {
+                            dialogInfoError.dismiss();
+
+                        } catch (Exception e) {
+
+                        }
+                    }
+                });
+                break;
+        }
+//
+//        builder.setPositiveButton("Entendido", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int id) {
+//                // sign in the user ...
+//                try {
+//                    dialogInfoError.dismiss();
+//
+//                } catch (Exception e) {
+//
+//                }
+//            }
+//        });
+
+        // Inflate and set the layout for the dialog
+        // Pass null as the parent view because its going in the dialog layout
+//        builder.setView(inflater.inflate(R.layout.dialog_info, null))
+        // Add action buttons
+
+        dialogInfoError = builder.create();
+        dialogInfoError.show();
+    }
+
+
+    private void setOnSharedPreferences() {
+        SharedPreferences myPreferences = LoginCelularActivity.this.getSharedPreferences("MyPreferences", MODE_PRIVATE);
+        SharedPreferences.Editor editorPref = myPreferences.edit();
+        editorPref.putInt("methodTemp", 3);
+        editorPref.putString("celularTemp", textInputLayoutPhone.getEditText().getText().toString());
+        editorPref.apply();
+    }
+
+
+    private void setPhoneOnPreferences(String celular) {
+
+        SharedPreferences myPreferences = LoginCelularActivity.this.getSharedPreferences("MyPreferences", MODE_PRIVATE);
+        SharedPreferences.Editor editorPref = myPreferences.edit();
+        editorPref.putInt("methodTemp", 3);
+        editorPref.putString("celularTemp", celular);
+        editorPref.apply();
     }
 
     @Override

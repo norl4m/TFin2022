@@ -338,6 +338,22 @@ public class RegWithCelularActivity extends AppCompatActivity implements View.On
 
         regUsuario = getIntent().getIntExtra("usuario", -1);
 
+
+        try {
+            String phoneTemp = myPreferences.getString("celularTemp", null);
+
+            if (phoneTemp != null) {
+                textInputLayoutCelular.getEditText().setText(phoneTemp);
+            }
+
+
+//            textInputEditTextPassword.setText(passwordTemp);
+//            password = passwordTemp;
+            buttonVerificarCelular.setEnabled(true);
+        } catch (Exception e) {
+
+        }
+
         switch (regUsuario) {
             case 1:
                 empleador = (Empleador) getIntent().getSerializableExtra("empleador");
@@ -814,27 +830,46 @@ public class RegWithCelularActivity extends AppCompatActivity implements View.On
                             // AsyncTask subclass
                             //new DownloadXmlTask().execute(URL);
 
-                            if (networkTool.isOnlineWithWifi()) {
-                                //empleador.crearCuentaConEmailPassword(mAuth, password, (Activity) RegWithEmailPasswordActivity.this);
+
+                            ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+                            boolean isMetered = cm.isActiveNetworkMetered();
+
+
+                            if (isMetered) {
+                                alertDialogContinuarRegistroConDatos();
+                            } else {
+//                                createAccount(usuarioEmpleador.getEmail(), password);
                                 if (textInputLayoutCelular.getEditText().getText().length() == 10) {
                                     startPhoneNumberVerification(textInputLayoutCelular.getEditText().getText().toString());
                                     //startPhoneNumberVerification(textInputLayoutCelular.getEditText().getText().toString());
                                 } else {
                                     Toast.makeText(getApplicationContext(), getString(R.string.celular_invalido), Toast.LENGTH_SHORT).show();
                                 }
-
-                            } else {
-                                if (networkTool.isOnlineWithData()) {
-                                    if (!sPref) {
-                                        alertDialogContinuarRegistroConDatos();
-                                    } else {
-
-                                        networkTool.alertDialogNoConectadoWifiInfo();
-                                    }
-                                } else {
-                                    networkTool.alertDialogNoConectadoInfo();
-                                }
                             }
+
+
+//                            if (networkTool.isOnlineWithWifi()) {
+//                                //empleador.crearCuentaConEmailPassword(mAuth, password, (Activity) RegWithEmailPasswordActivity.this);
+//                                if (textInputLayoutCelular.getEditText().getText().length() == 10) {
+//                                    startPhoneNumberVerification(textInputLayoutCelular.getEditText().getText().toString());
+//                                    //startPhoneNumberVerification(textInputLayoutCelular.getEditText().getText().toString());
+//                                } else {
+//                                    Toast.makeText(getApplicationContext(), getString(R.string.celular_invalido), Toast.LENGTH_SHORT).show();
+//                                }
+//
+//                            } else {
+//                                if (networkTool.isOnlineWithData()) {
+//                                    if (!sPref) {
+//                                        alertDialogContinuarRegistroConDatos();
+//                                    } else {
+//
+//                                        networkTool.alertDialogNoConectadoWifiInfo();
+//                                    }
+//                                } else {
+//                                    networkTool.alertDialogNoConectadoInfo();
+//                                }
+//                            }
                         } else {
                             networkTool.alertDialogNoConectadoInfo();
                         }

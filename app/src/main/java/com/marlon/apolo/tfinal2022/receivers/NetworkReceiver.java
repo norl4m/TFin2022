@@ -1,7 +1,7 @@
 package com.marlon.apolo.tfinal2022.receivers;
 
 import static android.content.Context.MODE_PRIVATE;
-import static com.marlon.apolo.tfinal2022.registro.RegWithEmailPasswordActivity.sPref;
+import static com.marlon.apolo.tfinal2022.registro.view.RegWithEmailPasswordActivity.sPref;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -10,12 +10,10 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.preference.PreferenceManager;
 
 import com.marlon.apolo.tfinal2022.herramientas.NetworkTool;
-import com.marlon.apolo.tfinal2022.registro.RegWithEmailPasswordActivity;
 
 public class NetworkReceiver extends BroadcastReceiver {
     private static final String TAG = NetworkReceiver.class.getSimpleName();

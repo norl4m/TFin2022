@@ -89,6 +89,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TFinal2022">
         <activity
+            android:name=".login.LoginMainActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar" />
+        <activity
+            android:name=".registro.view.RegWithEmailPocActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar" />
+        <activity
             android:name=".registro.view.RegistroAdminActivity"
             android:exported="false"
             android:screenOrientation="portrait"
@@ -229,17 +239,12 @@ Set color used with incoming notification messages. This is used when no color i
             android:screenOrientation="portrait"
             android:theme="@style/Theme.TFinal2022.NoActionBar" />
         <activity
-            android:name=".registro.view.EmailPasswordActivity"
+            android:name=".registro.view.RegWithEmailPasswordActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.TFinal2022.NoActionBar" />
         <activity
             android:name=".registro.view.RegWithCelularActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.TFinal2022.NoActionBar" />
-        <activity
-            android:name=".registro.RegWithEmailPasswordActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.TFinal2022.NoActionBar" />
@@ -303,6 +308,7 @@ Set color used with incoming notification messages. This is used when no color i
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".registro.RegistroOficioActivity"
             android:exported="false"

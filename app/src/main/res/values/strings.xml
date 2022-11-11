@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><!DOCTYPE resources [<!ENTITY appname "Cachuelito"><!ENTITY author "Marlon Apolo">]>
+<?xml version="1.0" encoding="utf-8"?><!DOCTYPE resources [<!ENTITY appname "Cachuelito"><!ENTITY  author "Marlon Apolo"><!ENTITY  empresa "NelectrogApps">]>
 
 <!--<!DOCTYPE resources [<!ENTITY appname "Cachuelito"><!ENTITY author "Marlon Apolo">]>-->
 <resources>
@@ -33,7 +33,8 @@
     <string name="text_bienvenida_app">Cachuelito</string>
     <string name="slogan_text">La aplicación móvil que te permitirá conectarte con tus necesidades!.</string>
     <string name="citas_trabajo">Citas de trabajo</string>
-    <string name="text_registro"><u><b>¿Eres nuevo? Regístrate ahora</b></u></string>
+    <!--    <string name="text_registro"><u><b>¿Eres nuevo? Regístrate ahora</b></u></string>-->
+    <string name="text_registro">¿Eres nuevo? Regístrate ahora</string>
 
     <!--    <string name="iniciar_sesion">Iniciar sesión</string>-->
     <!--    MainActivity-->
@@ -90,36 +91,107 @@
     </string>
 
     <string name="article_fech_politica_priv_datos">Fecha de última actualización: 29/10/2022</string>
-    <string name="article_ue_politica_priv_datos">De conformidad con el Reglamento (UE) 2016/679, del Parlamento Europeo y del Consejo, de 27 de abril de 2016, relativo a la protección de las personas físicas en lo que respecta al tratamiento de datos personales y a la libre circulación de estos datos (Reglamento General de Protección de Datos - RGPD), NelectrogApps, informa a los usuarios de la aplicación <b>Cachuelito</b> (en adelante, la Aplicación), acerca del tratamiento de los datos personales, que ellos voluntariamente hayan facilitado durante el proceso de registro, acceso y utilización del servicio.</string>
-    <string name="article_subtitle_politica_priv_datos">\"Estos términos y condiciones de privacidad de datos establecen los lineamientos y prácticas de protección de datos personales de la aplicación &appname;.\"</string>
-    <string name="article_text_politica_priv_datos">Lea atentamente estos términos y condiciones, ya que le ayudarán a tomar decisiones informadas sobre cómo compartir su información personal con nosotros.
-    \n\n
+    <string name="article_ue_politica_priv_datos">
+        De conformidad con el Reglamento (UE) 2016/679, del Parlamento Europeo y del Consejo, de 27 de abril de 2016, relativo a la protección de las personas
+        físicas en lo que respecta al tratamiento de datos personales y a la libre circulación de estos datos (Reglamento General de Protección de Datos - RGPD),
+        <b>&empresa;</b>, informa a los usuarios de la aplicación <b>&appname;</b> (en adelante, la Aplicación), acerca del tratamiento de los datos personales,
+        que ellos voluntariamente hayan facilitado durante el proceso de registro, acceso y utilización del servicio.
+    </string>
+
+    <string name="article_subtitle_politica_priv_datos">
+        \"Estos términos y condiciones de privacidad de datos establecen los lineamientos y prácticas de protección de datos personales de la aplicación &appname;.\"
+    </string>
+    <string name="article_text_politica_priv_datos">
+        Lea atentamente estos términos y condiciones, ya que le ayudarán a tomar decisiones informadas sobre cómo compartir su información personal con nosotros.
+        \n\n
         <b>1. ¿Cuál es la información que recopilamos?</b>
-    \n\n
-        - Información de Identificación Personal (\"IIP\") que recibamos, entre otros, mediante los formularios de contacto y registro que se encuentren en la aplicación móvil.
+        \n\n
+        Información de identificación personal (IIP) que recibamos mediante los formularios de registro que se encuentran en la aplicación móvil.
         La IIP incluye la siguiente información de identificación:
         \n\n
-        - Nombres y apellidos
+        \t\t• Nombres y apellidos
         \n
-        - Correo electrónico, cuenta de google o número de teléfono celular
+        \t\t• Correo electrónico, cuenta de google o número
+        \n\t\tde teléfono celular
         \n
-        - Foto de perfil
+        \t\t• Foto de perfil
         \n
-        - Ubicación
+        \t\t• Ubicación
         \n
-        - Record policial (Nuevos trabajadores)
-
-    \n\n
+        \t\t• Record policial (Nuevos trabajadores)
+        \n\n
         <b>2. ¿Cómo usamos esta información?</b>
-    \n\n
-        - Los datos descritos en el punto anterior se utilizan como referencia para optimizar la pertinencia de los mensajes entre los usuarios y para garantizar la integridad, confidencialidad y disponibilidad de la información almacenada en nuestros servidores.
-    \n\n El almacenamiento, modificación, estructuración y en su caso, eliminación, de los datos proporcionados por los Usuarios, constituirán operaciones de tratamiento llevadas a cabo por el Administrador o el Usuario registrados, con la finalidad de garantizar el
-        correcto funcionamiento de la Aplicación, mantener la relación de prestación de servicios y/o comercial con el Usuario, y
-        para la gestión, administración, información, prestación y mejora del servicio.
-        Los datos personales facilitados por el Usuario -especialmente, el correo electrónico o e-mail- podrán emplearse también
-        para remitir boletines (newsletters), así como comunicaciones comerciales de promociones y/o publicidad de la Aplicación,
-        siempre y cuando, el Usuario haya prestado previamente su consentimiento expreso para la recepción de estas
-        comunicaciones vía electrónica.
+        \n\n
+        Los datos descritos en el punto anterior se utilizan como referencia para optimizar la pertinencia de los mensajes, notificaciones, llamadas, videollamadas
+        y citas de trabajo que se pueden generar entre los usuarios, y para garantizar la integridad, confidencialidad y disponibilidad de la información almacenada
+        en nuestros servidores.
+        \n\n
+        El almacenamiento y modificación de los datos proporcionados por los usuarios, constituirán operaciones de tratamiento llevadas a cabo por el Trabajador,
+        Empleador o Administrador que se encuentre registrado y además tenga una sesión activa en la aplicación. Con la finalidad de garantizar el correcto funcionamiento
+        de la aplicación, mantener la relación de prestación de servicios con el usuario, y para la gestión, administración, información,
+        prestación y mejora del servicio, la operación de eliminación de datos será ejecutada únicamente por un Administrador de la Aplicación.
+        \n\n
+        Los datos personales facilitados por el usuario en especial su correo electrónico, cuenta de Google o número de celular, podrán emplearse para poder verficar la
+        identidad de cada usuario que utilice la Aplicación.
+        \n\n
+        <i><u><b>3. Legitimación</b></u></i>
+        \n\n
+        El tratamiento de los datos del usuario, se realiza con las siguientes bases jurídicas que legitiman el mismo:
+        \n\n
+        \t\t• La solicitud de información y/o la contratación de los servicios de la Aplicación, cuyos términos y condiciones se
+        pondrán a disposición del usuario en todo caso, con carácter previo, para su expresa aceptación.
+        \n
+        \t\t• El consentimiento libre, específico, informado e inequívoco del Usuario, poniendo a su disposición la presente política
+        de privacidad, que deberá aceptar mediante una declaración o una clara acción afirmativa, como el marcado de una
+        casilla dispuesta al efecto.
+        \n\n
+        En caso de que el usuario no facilite a &empresa; sus datos, o lo haga de forma errónea o incompleta, no será posible
+        proceder al uso de la Aplicación.
+        \n\n
+        <b>4. Conservación de la información</b>
+        \n\n
+        Los datos personales proporcionados por el usuario, se conservarán en los sistemas y bases de datos de la plataforma Firebase, mientras aquél continúe haciendo uso
+        de la Aplicación.
+        \n\n
+        Con el objetivo de depurar las posibles responsabilidades derivadas del tratamiento de los datos, los mismos se conservarán hasta que el usuario decida eliminar
+        su cuenta de la Aplicación.
+        \n\n
+        <b>5. Destinatarios</b>
+        \n\n
+        Los datos no se comunicarán a ningún tercero ajeno a &empresa;, salvo por obligación legal o en cualquier caso, con una previa solicitud del consentimiento del usuario.
+        \n\n
+        De otra parte, &empresa; podrá dar acceso o transmitir los datos personales facilitados por el usuario, a terceros proveedores de servicios (Firebase), con los que
+        haya suscrito acuerdos de encargo de tratamiento de datos, y que únicamente accedan a dicha información para prestar un servicio en favor y por cuenta del Administrador.
+        \n\n
+        <b>6. Retención de datos</b>
+        \n\n &empresa;, informa al Usuario de que, como prestador de servicio de alojamiento de datos y en virtud de lo establecido en la Ley 34/2002 de 11 de julio de
+        Servicios de la Sociedad de la Información y de Comercio Electrónico (LSSI), retiene por un período máximo de 12 meses la información imprescindible
+        para identificar el origen de los datos alojados y el momento en que se inició la prestación del servicio.
+        \n\n
+        La retención de estos datos podrán ser utilizados únicamente en el marco de una investigación criminal o para la
+        salvaguardia de la seguridad pública, poniéndose a disposición de los jueces y/o tribunales o del Ministerio que así los requiera.
+        \n\n
+        La comunicación de datos a las Fuerzas y Cuerpos de Seguridad del Estado, se hará en virtud de lo dispuesto por la normativa
+        sobre protección de datos personales, y bajo el máximo respeto a la misma.
+        \n\n
+        <b>7. Protección de la información alojada</b>
+        \n\n
+        El Administrador adopta las medidas necesarias para garantizar la seguridad, integridad y confidencialidad de los datos conforme a lo dispuesto en el
+        Reglamento (UE) 2016/679 del Parlamento Europeo y del Consejo, de 27 de abril de 2016, relativo a la protección de las personas físicas en lo
+        que respecta al tratamiento de datos personales y a la libre circulación de los mismos.
+        \n\n
+        Al ser un prototipo, la Aplicación no cuenta con la realización de copias de seguridad o backup de la información del usuario. La protección de datos se
+        da de tal manera que, el Administrador de la Aplicación es el único que puede eliminar la información de los diferentes usuarios registrados.
+        \n\n
+        La reposición de datos borrados no está incluida en el prototipo de la Aplicación.
+        \n\n
+        En caso de que el usuario quiera darse de baja en la Aplicación, podrá hacerlo remitiendo su voluntad por e-mail
+        al correo electrónico: <b>4ndroidd3v3l@gmail.com</b>.
+        \n\n
+        <b>8. Comunicaciones comerciales vía electrónica</b>
+        \n\n
+        En aplicación de la LSSI (Ley de Servicios de la Sociedad de la Información), &empresa;, no enviará comunicaciones publicitarias o promocionales por correo
+        electrónico u otro medio de comunicación electrónica.
     </string>
 
     <string name="article_text_sobre_nosotros">&appname; es una empresa de tecnología y permite conectar <b>empleadores</b> con <b>trabajadores</b>. Los <b>trabajadores</b> registrados ponen a disposición sus servicios para poder ser contratados. &appname;
@@ -273,6 +345,10 @@
         \n
         El usuario no se encuentra registrado.
     </string>
+    <string name="text_error_user_no_found_concat">
+        \n
+        ¿Le gustraría registrarse en Cachuelito?.
+    </string>
 
     <string name="text_email_verification">
         \n
@@ -326,17 +402,16 @@
         \n
         Su configuración de red ha cambiado.
         \n\n
-        Conexión a Internet utilizando datos móviles y redes Wifi!
+        Conexión a Internet utilizando datos móviles o redes Wifi!
     </string>
     <string name="text_error_conexion_internet_pero_si_datos">
         \n
-        Por favor antes de continuar revise que sus datos móviles se encuentren apagados.
+        Atención: sus datos móviles están siendo utilizador por la aplicación.
         \n\n
-        Se recomienda al usuario que utilice una red Wifi para poder realizar el registro sin presentar ningún inconveniente.
+        Se recomienda al usuario que utilice una red Wifi para completar el proceso de registro sin presentar ningún inconveniente debido a que,
+        los datos móviles imponen un valor adicional por cada transacción.
         \n\n
-        Si usted utiliza los datos móviles, es posible que el registro de alguno de sus datos proporcionados no pueda completarse.
-        \n\n
-        Se recomienta utilizar redes wifi debido a que los datos móviles imponen un valor adicional por cada transacción.
+        ¿Le gustaría contuniar con el proceso de registro?
     </string>
     <string name="yes_text">Si</string>
     <string name="text_select_oficios">

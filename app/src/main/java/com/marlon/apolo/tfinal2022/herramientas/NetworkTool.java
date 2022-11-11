@@ -19,6 +19,7 @@ import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.config.ConfiguracionActivity;
 
 public class NetworkTool {
+    private static final String TAG = NetworkTool.class.getSimpleName();
     private boolean syncNetwork;
     private Context context;
     private boolean isWifiConn;
@@ -66,6 +67,27 @@ public class NetworkTool {
 
 
         if (networkInfo != null && networkInfo.getType() == ConnectivityManager.TYPE_MOBILE) {
+            // If device has its Wi-Fi connection, sets refreshDisplay
+            // to true. This causes the display to be refreshed when the user
+            // returns to the app.
+            online = true;
+        }
+
+
+//        return (networkInfo != null && networkInfo.isConnected());
+        return online;
+    }
+
+    public boolean isOnlineWithDataAndWifi() {
+        ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+
+        NetworkInfo.DetailedState networkInfoDetailedState = networkInfo.getDetailedState();
+        Log.d(TAG, networkInfoDetailedState.name());
+        boolean online = false;
+
+
+        if (networkInfo != null && (networkInfo.getType() == ConnectivityManager.TYPE_MOBILE || networkInfo.getType() == ConnectivityManager.TYPE_WIFI)) {
             // If device has its Wi-Fi connection, sets refreshDisplay
             // to true. This causes the display to be refreshed when the user
             // returns to the app.

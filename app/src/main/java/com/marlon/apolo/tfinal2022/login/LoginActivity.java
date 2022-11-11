@@ -5,6 +5,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -17,6 +18,18 @@ import com.marlon.apolo.tfinal2022.registro.view.PerfilActivity;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
+
+    private void setTempFlags() {
+        SharedPreferences myPreferences = LoginActivity.this.getSharedPreferences("MyPreferences", MODE_PRIVATE);
+        SharedPreferences.Editor editorPref = myPreferences.edit();
+        editorPref.putInt("methodTemp", -1);
+        editorPref.putString("emailTemp", null);
+        editorPref.putString("passTemp", null);
+        editorPref.putString("celularTemp", null);
+        editorPref.apply();
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,6 +41,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             ((ImageView) findViewById(R.id.imageView)).setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.white));
 
         }
+        setTempFlags();
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -40,7 +54,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         findViewById(R.id.btnLoginWithGoogle).setOnClickListener(this);
         findViewById(R.id.btnLoginWithPhone).setOnClickListener(this);
         findViewById(R.id.textViewNuevoReg).setOnClickListener(this);
-        findViewById(R.id.buttonContinuar).setOnClickListener(this);
+
+        if (getOmitirLoginFlag()) {
+            findViewById(R.id.buttonContinuar).setVisibility(View.GONE);
+        } else {
+            findViewById(R.id.buttonContinuar).setVisibility(View.VISIBLE);
+            findViewById(R.id.buttonContinuar).setOnClickListener(this);
+        }
+
+//        findViewById(R.id.buttonContinuar).setOnClickListener(this);
 
 
     }
@@ -67,10 +89,32 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                 break;
             case R.id.buttonContinuar:
+//                finishAffinity();
+                setOmitirLoginFlag();
                 Intent intentConti = new Intent(LoginActivity.this, MainNavigationActivity.class);
-                intentConti.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                intentConti.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                finishAffinity();
+                finish();
                 startActivity(intentConti);
                 break;
         }
+    }
+
+    /**
+     * Este método permite saltar el Activity que coresponde a la información inicial.
+     * <p>
+     * El Activity de información inicial aparece solo la primera vez al instalar la aplicación, cuando
+     * la bandera se encuentra en false.
+     */
+    public boolean getOmitirLoginFlag() {
+        SharedPreferences prefs = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
+        return prefs.getBoolean("omitirLogin", false);
+    }
+
+    public void setOmitirLoginFlag() {
+        SharedPreferences prefs = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean("omitirLogin", true);
+        editor.apply();
     }
 }

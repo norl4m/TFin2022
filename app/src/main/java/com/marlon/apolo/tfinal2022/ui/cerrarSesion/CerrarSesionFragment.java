@@ -27,6 +27,7 @@ import com.marlon.apolo.tfinal2022.CrazyService;
 import com.marlon.apolo.tfinal2022.MainNavigationActivity;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.foregroundCustomService.ForegroundCustomService;
+import com.marlon.apolo.tfinal2022.login.LoginActivity;
 import com.marlon.apolo.tfinal2022.login.LoginEmailPasswordActivity;
 import com.marlon.apolo.tfinal2022.model.Administrador;
 
@@ -53,6 +54,19 @@ public class CerrarSesionFragment extends Fragment {
         progressDialog.show();
     }
 
+
+    private void setTempFlags() {
+        SharedPreferences myPreferences = requireActivity().getSharedPreferences("MyPreferences", MODE_PRIVATE);
+        SharedPreferences.Editor editorPref = myPreferences.edit();
+        editorPref.putInt("methodTemp", -1);
+        editorPref.putString("emailTemp", null);
+        editorPref.putString("passTemp", null);
+        editorPref.putString("celularTemp", null);
+        editorPref.apply();
+
+    }
+
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -63,6 +77,7 @@ public class CerrarSesionFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        setTempFlags();
         String title = "Cerrando sesión";
         String message = "Por favor espere...";
         showProgress(title, message);

@@ -1,54 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.politicaPrivacidad.PoliticaPrivacidadFragment">
 
-    <ScrollView
+
+    <WebView
+        android:id="@+id/webview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/update_fech"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:text="@string/article_fech_politica_priv_datos"
-                android:textAlignment="textStart"
-                android:textSize="12sp" />
-            <TextView
-                android:id="@+id/ue"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:text="@string/article_ue_politica_priv_datos"
-                android:textAlignment="textStart"
-                android:textSize="12sp" />
-            <TextView
-                android:id="@+id/article_subheading"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/padding_regular"
-                android:text="@string/article_subtitle_politica_priv_datos"
-                android:textAppearance="@android:style/TextAppearance.DeviceDefault" />
-
-            <TextView
-                android:id="@+id/article"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:autoLink="web"
-                android:lineSpacingExtra="@dimen/line_spacing"
-                android:padding="@dimen/padding_regular"
-                android:text="@string/article_text_politica_priv_datos" />
-        </LinearLayout>
-
-    </ScrollView>
+        android:layout_height="match_parent"
+        />
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"/>
 
 
-</FrameLayout>
+</RelativeLayout>

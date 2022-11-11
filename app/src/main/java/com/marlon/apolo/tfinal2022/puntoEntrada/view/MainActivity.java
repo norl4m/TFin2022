@@ -47,8 +47,6 @@ import com.marlon.apolo.tfinal2022.infoInicial.InformacionInicialActivity;
 public class MainActivity extends AppCompatActivity {
 
     private final static int TIME_SPLASH = 2500;
-    private ImageView imageViewLogo;
-    private boolean mode;
 
 
     /**
@@ -61,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // Cargamos una referencia a la preferencia para cambiar el tema
         SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        mode = mPrefs.getBoolean("sync_theme", false);
+        boolean mode = mPrefs.getBoolean("sync_theme", false);
         if (mode) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);/* recrea las actividades*/
         }
@@ -74,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         Animation bottomAnimation = AnimationUtils.loadAnimation(this, R.anim.bottom_animation);
 
         // Hooks
-        imageViewLogo = findViewById(R.id.imageViewLogo);
+        ImageView imageViewLogo = findViewById(R.id.imageViewLogo);
         TextView textViewWelcome = findViewById(R.id.textView1);
         TextView textViewSlogan = findViewById(R.id.textView2);
 

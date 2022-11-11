@@ -29,7 +29,7 @@ import com.marlon.apolo.tfinal2022.MainNavigationActivity;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.citasTrabajo.CitaTrabajoActivity;
 import com.marlon.apolo.tfinal2022.citasTrabajo.DetalleServicioActivity;
-import com.marlon.apolo.tfinal2022.registro.view.EmailPasswordActivity;
+import com.marlon.apolo.tfinal2022.registro.view.RegWithEmailPasswordActivity;
 import com.marlon.apolo.tfinal2022.registro.view.RegWithCelularActivity;
 import com.marlon.apolo.tfinal2022.registro.view.RegWithGoogleActivity;
 import com.marlon.apolo.tfinal2022.ui.editarDatos.EditarDataActivity;
@@ -138,8 +138,8 @@ public class Trabajador extends Usuario {
 
                             switch (metodoReg) {
                                 case 1:/*email*/
-                                    EmailPasswordActivity emailPasswordActivity = (EmailPasswordActivity) activity;
-                                    emailPasswordActivity.closeCustomAlertDialog();
+                                    RegWithEmailPasswordActivity regWithEmailPasswordActivity = (RegWithEmailPasswordActivity) activity;
+                                    regWithEmailPasswordActivity.closeCustomAlertDialog();
                                     break;
                                 case 2:/*google*/
                                     RegWithGoogleActivity regWithGoogleActivity = (RegWithGoogleActivity) activity;

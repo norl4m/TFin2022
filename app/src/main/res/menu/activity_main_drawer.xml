@@ -31,6 +31,10 @@
         <menu>
             <group android:checkableBehavior="none">
                 <item
+                    android:id="@+id/nav_auth"
+                    android:icon="@drawable/ic_authentication"
+                    android:title="Autenticación" />
+                <item
                     android:id="@+id/nav_trabajadores"
                     android:icon="@drawable/ic_trabajadores"
                     android:title="@string/menu_admin_trab" />
