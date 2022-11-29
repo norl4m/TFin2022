@@ -1,4 +1,4 @@
-package com.marlon.apolo.tfinal2022.buscador;
+package com.marlon.apolo.tfinal2022.buscador.adaptadores;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +19,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
-import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -29,7 +29,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.individualChat.view.CrazyIndividualChatActivity;
-import com.marlon.apolo.tfinal2022.individualChat.view.IndividualChatActivity;
 import com.marlon.apolo.tfinal2022.llamadaVoz.LlamadaVozActivity;
 import com.marlon.apolo.tfinal2022.model.Chat;
 import com.marlon.apolo.tfinal2022.model.Oficio;
@@ -41,18 +40,14 @@ import com.marlon.apolo.tfinal2022.ui.trabajadores.PerfilTrabajadorActivity;
 import com.marlon.apolo.tfinal2022.videoLlamada.VideoLlamadaActivity;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
-import java.util.stream.Collectors;
 
-public class TrabajadorListAdapterBuscador extends RecyclerView.Adapter<TrabajadorListAdapterBuscador.TrabajadorViewHolder> {
+public class TrabajadorListAdapterResultados extends RecyclerView.Adapter<TrabajadorListAdapterResultados.TrabajadorViewHolder> {
 
     private Context context;
     private LayoutInflater inflater;
     private List<Trabajador> trabajadors;
-    private List<Trabajador> trabajadorsAux;
+    //    private List<Trabajador> trabajadorsAux;
     private List<Oficio> oficioList;
     private List<Chat> chatList;
     private String TAG;
@@ -64,14 +59,14 @@ public class TrabajadorListAdapterBuscador extends RecyclerView.Adapter<Trabajad
 
     private Usuario usuarioFrom;
 
-    public TrabajadorListAdapterBuscador(Context context) {
+    public TrabajadorListAdapterResultados(Context context) {
         this.context = context;
         this.inflater = LayoutInflater.from(context);
-        trabajadorsAux = new ArrayList<>();
+//        trabajadorsAux = new ArrayList<>();
 
     }
 
-    public TrabajadorListAdapterBuscador(Context context, ArrayList<Oficio> oficioArrayList) {
+    public TrabajadorListAdapterResultados(Context context, ArrayList<Oficio> oficioArrayList) {
         this.context = context;
         this.inflater = LayoutInflater.from(context);
         oficioList = oficioArrayList;
@@ -80,31 +75,22 @@ public class TrabajadorListAdapterBuscador extends RecyclerView.Adapter<Trabajad
     @NonNull
     @Override
     public TrabajadorViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = inflater.inflate(R.layout.card_view_presentacion_trabajador_buscardor_bar, parent, false);
+        View itemView = inflater.inflate(R.layout.card_view_presentacion_trabajador, parent, false);
         return new TrabajadorViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull TrabajadorViewHolder holder, int position) {
-        Trabajador current = trabajadorsAux.get(position);
+        Trabajador current = trabajadors.get(position);
         holder.textViewNombre.setText(String.format("%s %s", current.getNombre(), current.getApellido()));
         if (current.getFotoPerfil() != null) {
-//            Glide.with(context).load(current.getFotoPerfil()).placeholder(R.drawable.ic_baseline_person_24).circleCrop().into(holder.imageViewTrabajador);
-
-            Glide
-                    .with(context)
-                    .load(current.getFotoPerfil())
-                    .circleCrop()
-                    .apply(new RequestOptions().override(200, 300))
-                    .placeholder(R.drawable.ic_baseline_person_24)
-                    .transition(DrawableTransitionOptions.withCrossFade())
-                    .into(holder.imageViewTrabajador);
+            Glide.with(context).load(current.getFotoPerfil()).placeholder(R.drawable.ic_baseline_person_24).circleCrop().into(holder.imageViewTrabajador);
         } else {
-            Glide
-                    .with(context)
-                    .load(ContextCompat.getDrawable(context, R.drawable.ic_baseline_person_24))
-                    .placeholder(R.drawable.ic_baseline_person_24)
-                    .into(holder.imageViewTrabajador);
+            TypedValue typedValue = new TypedValue();
+            context.getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
+            int colorPrimary = typedValue.data;
+            Glide.with(context).load(ContextCompat.getDrawable(context, R.drawable.ic_usuario)).placeholder(R.drawable.ic_usuario).into(holder.imageViewTrabajador);
+            holder.imageViewTrabajador.setColorFilter(colorPrimary);
         }
         Log.d(TAG, current.toString());
 
@@ -131,7 +117,7 @@ public class TrabajadorListAdapterBuscador extends RecyclerView.Adapter<Trabajad
         }
 
 
-        OficioTrabajadorVistaMiniListAdapter oficioTrabajadorVistaListAdapter = new OficioTrabajadorVistaMiniListAdapter(context);
+        OficioTrabajadorVistaListAdapter oficioTrabajadorVistaListAdapter = new OficioTrabajadorVistaListAdapter(context);
         holder.recyclerViewOficios.setAdapter(oficioTrabajadorVistaListAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
 
@@ -142,8 +128,19 @@ public class TrabajadorListAdapterBuscador extends RecyclerView.Adapter<Trabajad
 
 //        holder.textViewCalif.setText(String.format("Calificación: %.2f " + "/ 5.00", current.getCalificacion()));
 //        holder.textViewCalif.setText(String.format("Calificación: %.1f " + "/ 5.0", current.getCalificacion()));
-        holder.textViewCalif.setText(String.format(Locale.getDefault(), " %.1f ", current.getCalificacion()));
-        holder.ratingBar.setRating((float) current.getCalificacion());
+//        holder.ratingBar.setRating((float) current.getCalificacion());
+
+        if (current.getCalificacion() > 0.0) {
+            holder.textViewCalif.setText(String.format("Calificación: %.1f " + "/ 5.0", current.getCalificacion()));
+            holder.ratingBar.setRating((float) current.getCalificacion());
+            holder.ratingBar.setVisibility(View.VISIBLE);
+
+
+        } else {
+            holder.textViewCalif.setText(context.getString(R.string.text_no_trabajo));
+//            holder.ratingBar.setRating((float) current.getCalificacion());
+            holder.ratingBar.setVisibility(View.GONE);
+        }
 
         if (current.getEmail() != null) {
             holder.textViewContacto.setText(current.getEmail());
@@ -156,90 +153,76 @@ public class TrabajadorListAdapterBuscador extends RecyclerView.Adapter<Trabajad
 
     @Override
     public int getItemCount() {
-        if (trabajadorsAux != null)
-            return trabajadorsAux.size();
+        if (trabajadors != null)
+            return trabajadors.size();
         else return 0;
     }
 
     public List<Trabajador> getTrabajadors() {
-        return trabajadorsAux;
+        return trabajadors;
     }
 
     public void setTrabajadores(List<Trabajador> trabajadorsVar) {
         trabajadors = trabajadorsVar;
-//        notifyDataSetChanged();
-    }
-
-    public void filtrado(final String txtBuscar) {
-//        trabajadorsAux = new ArrayList<>();
-
-        int longitud = txtBuscar.length();
-        if (longitud == 0) {
-            trabajadorsAux.clear();
-            trabajadorsAux.addAll(trabajadors);
-        } else {
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                List<Trabajador> collecion = trabajadors.stream()
-                        .filter(i -> (i.getNombre() + " " + i.getApellido()).toLowerCase().contains(txtBuscar.toLowerCase()))
-                        .collect(Collectors.toList());
-                trabajadorsAux.clear();
-                trabajadorsAux.addAll(collecion);
-            } else {
-                for (Trabajador c : trabajadors) {
-                    if ((c.getNombre() + " " + c.getApellido()).toLowerCase().contains(txtBuscar.toLowerCase())) {
-                        trabajadorsAux.add(c);
-                    }
-                }
-            }
-        }
-        Collections.sort(trabajadorsAux, (o1, o2) -> Double.compare(o2.getCalificacion(), o1.getCalificacion()));
-
         notifyDataSetChanged();
     }
 
-    public void filtradoByOficio(final String txtBuscar) {
-//        trabajadorsAux = new ArrayList<>();
-
-        String idFound = "";
-        ArrayList<String> ofids = new ArrayList<>();
-        for (Oficio o : oficioList) {
-            if (o.getNombre().toLowerCase().contains(txtBuscar.toLowerCase())) {
-//                idFound = o.getIdOficio();
-                ofids.add(o.getIdOficio());
-            }
-        }
-        int longitud = txtBuscar.length();
-        trabajadorsAux = new ArrayList<>();
-//        for (Trabajador tr : trabajadors) {
-//            Log.d(TAG, tr.getNombre().toString());
+//    public void filtrado(final String txtBuscar) {
+////        trabajadorsAux = new ArrayList<>();
+//
+//        int longitud = txtBuscar.length();
+//        if (longitud == 0) {
+//            trabajadorsAux.clear();
+//            trabajadorsAux.addAll(trabajadors);
+//        } else {
+//            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+//                List<Trabajador> collecion = trabajadors.stream()
+//                        .filter(i -> (i.getNombre() + " " + i.getApellido()).toLowerCase().contains(txtBuscar.toLowerCase()))
+//                        .collect(Collectors.toList());
+//                trabajadorsAux.clear();
+//                trabajadorsAux.addAll(collecion);
+//            } else {
+//                for (Trabajador c : trabajadors) {
+//                    if ((c.getNombre() + " " + c.getApellido()).toLowerCase().contains(txtBuscar.toLowerCase())) {
+//                        trabajadorsAux.add(c);
+//                    }
+//                }
+//            }
 //        }
-        if (longitud == 0) {
-            trabajadorsAux.clear();
-            trabajadorsAux.addAll(trabajadors);
-        } else {
-            trabajadorsAux.clear();
-            for (Trabajador tr : trabajadors) {
-                for (String idof : tr.getIdOficios()) {
-                    for (String ofiIdLocal : ofids) {
-                        if (idof.equals(ofiIdLocal)) {
-                            trabajadorsAux.add(tr);
-                            break;
-                        }
-                    }
-
-                }
-            }
-            for (Trabajador tr : trabajadorsAux) {
-                Log.d(TAG, tr.getNombre().toString());
-            }
-            HashSet<Trabajador> hs = new HashSet<Trabajador>(trabajadorsAux);
-            trabajadorsAux.clear();
-            trabajadorsAux.addAll(hs);
-        }
-        Collections.sort(trabajadorsAux, (o1, o2) -> Double.compare(o2.getCalificacion(), o1.getCalificacion()));
-
-        notifyDataSetChanged();
-    }
+//        notifyDataSetChanged();
+//    }
+//
+//    public void filtradoByOficio(final String txtBuscar) {
+////        trabajadorsAux = new ArrayList<>();
+//
+//        String idFound = "";
+//        ArrayList<String> ofids = new ArrayList<>();
+//        for (Oficio o : oficioList) {
+//            if (o.getNombre().toLowerCase().contains(txtBuscar.toLowerCase())) {
+////                idFound = o.getIdOficio();
+//                ofids.add(o.getIdOficio());
+//            }
+//        }
+//        int longitud = txtBuscar.length();
+//        if (longitud == 0) {
+//            trabajadorsAux.clear();
+//            trabajadorsAux.addAll(trabajadors);
+//        } else {
+//            trabajadorsAux.clear();
+//            for (Trabajador tr : trabajadors) {
+//                for (String idof : tr.getIdOficios()) {
+//                    for (String ofiIdLocal : ofids) {
+//                        if (idof.equals(ofiIdLocal)) {
+//                            trabajadorsAux.add(tr);
+//                            break;
+//                        }
+//                    }
+//
+//                }
+//            }
+//        }
+//        notifyDataSetChanged();
+//    }
 
 
     public void setChatList(List<Chat> chatList) {
@@ -276,7 +259,7 @@ public class TrabajadorListAdapterBuscador extends RecyclerView.Adapter<Trabajad
                         switch (usuario) {
                             case 0:/*admin*/
                             case 1:/*empleador*/
-                                opcionesTrabajadorDialog(trabajadorsAux.get(getAbsoluteAdapterPosition()));
+                                opcionesTrabajadorDialog(trabajadors.get(getAbsoluteAdapterPosition()));
                                 break;
                             case 2:
                                 break;
@@ -296,7 +279,9 @@ public class TrabajadorListAdapterBuscador extends RecyclerView.Adapter<Trabajad
 
     public void opcionesTrabajadorDialog(Trabajador trabajador) {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+//        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.CustomAlertDialog);
+
         // Get the layout inflater
         LayoutInflater inflater = LayoutInflater.from(context);
 
@@ -312,16 +297,28 @@ public class TrabajadorListAdapterBuscador extends RecyclerView.Adapter<Trabajad
         final ImageView imageButtonVideoCall = promptsView.findViewById(R.id.imageViewVideoCall);
         final ImageView imageButtonInfo = promptsView.findViewById(R.id.imageViewInfo);
 //        SharedPreferences sharedPreferences = context.getSharedPreferences("MyPreferences", MODE_PRIVATE);
-        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
-        boolean mode = mPrefs.getBoolean("sync_theme", false);
-        if (mode) {
-            imageButtonMessage.setColorFilter(context.getResources().getColor(R.color.white));
-            imageButtonCall.setColorFilter(context.getResources().getColor(R.color.white));
-            imageButtonVideoCall.setColorFilter(context.getResources().getColor(R.color.white));
-            imageButtonInfo.setColorFilter(context.getResources().getColor(R.color.white));
-        } else {
+//        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+//        boolean mode = mPrefs.getBoolean("sync_theme", false);
+//        if (mode) {
+//            imageButtonMessage.setColorFilter(context.getResources().getColor(R.color.white));
+//            imageButtonCall.setColorFilter(context.getResources().getColor(R.color.white));
+//            imageButtonVideoCall.setColorFilter(context.getResources().getColor(R.color.white));
+//            imageButtonInfo.setColorFilter(context.getResources().getColor(R.color.white));
+//        } else {
+//
+//        }
 
-        }
+
+        /*Esto es una maravilla*/
+        TypedValue typedValue = new TypedValue();
+        context.getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
+        int colorPrimary = typedValue.data;
+
+        imageButtonMessage.setColorFilter(colorPrimary);
+        imageButtonCall.setColorFilter(colorPrimary);
+        imageButtonVideoCall.setColorFilter(colorPrimary);
+        imageButtonInfo.setColorFilter(colorPrimary);
+        /*Esto es una maravilla*/
 
         final ImageView imageView = promptsView.findViewById(R.id.imageViewTrabajador);
         final TextView textView = promptsView.findViewById(R.id.textViewNombreUsuario);
@@ -346,13 +343,15 @@ public class TrabajadorListAdapterBuscador extends RecyclerView.Adapter<Trabajad
                     .load(trabajador.getFotoPerfil())
 //                    .circleCrop() /*mala idea*/
                     .apply(new RequestOptions().override(300, 400))
-                    .placeholder(R.drawable.ic_baseline_person_24)
+                    .placeholder(R.drawable.ic_usuario)
                     .transition(DrawableTransitionOptions.withCrossFade())
                     .into(imageView);
 
 
         } else {
-            imageView.setImageResource(R.drawable.ic_baseline_person_24);
+            imageView.setImageResource(R.drawable.ic_usuario);
+            imageView.setColorFilter(colorPrimary);
+
         }
         //imageButtonImages.setOnClickListener(clickListenerDialogCustom);
         //imageButtonCall.setOnClickListener(clickListenerDialogCustom);
@@ -368,7 +367,7 @@ public class TrabajadorListAdapterBuscador extends RecyclerView.Adapter<Trabajad
                 intent.putExtra("trabajador", trabajador);
                 //intent.putExtra("usuarioFrom", usuarioFrom);
                 //Toast.makeText(context, usuarioFrom.toString(), Toast.LENGTH_SHORT).show();
-
+//
 //                int exitFlag = 0;
 //                if (chatList != null) {
 //                    for (Chat chat : chatList) {
@@ -409,13 +408,19 @@ public class TrabajadorListAdapterBuscador extends RecyclerView.Adapter<Trabajad
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(context, LlamadaVozActivity.class);
-                intent.putExtra("usuarioTo", (Usuario) trabajador);
-                intent.putExtra("usuarioFrom", usuarioFrom);
-                intent.putExtra("callStatus", 0
-                );
-                context.startActivity(intent);
-
+                Intent intentllamadaVoz = new Intent(context, LlamadaVozActivity.class);
+                intentllamadaVoz.putExtra("usuarioTo", (Usuario) trabajador);
+                intentllamadaVoz.putExtra("usuarioFrom", (Usuario) usuarioFrom);
+                intentllamadaVoz.putExtra("callStatus", 0);
+                context.startActivity(intentllamadaVoz);
+//
+//                Intent intent = new Intent(context, LlamadaVozActivity.class);
+//                intent.putExtra("usuarioTo", (Usuario) trabajador);
+////                intent.putExtra("usuarioFrom", usuarioLocal);
+//                intent.putExtra("callStatus", 0
+//                );
+//                context.startActivity(intent);
+//
                 try {
                     dialogVar.dismiss();
                 } catch (Exception e) {
@@ -430,10 +435,8 @@ public class TrabajadorListAdapterBuscador extends RecyclerView.Adapter<Trabajad
 //                Toast.makeText(context, "Video Call", Toast.LENGTH_SHORT).show();
                 Intent intentVideollamada = new Intent(context, VideoLlamadaActivity.class);
                 intentVideollamada.putExtra("usuarioTo", (Usuario) trabajador);
-                intentVideollamada.putExtra("usuarioFrom", usuarioFrom);
+                intentVideollamada.putExtra("usuarioFrom", (Usuario) usuarioFrom);
                 intentVideollamada.putExtra("callStatus", 0);
-
-
                 context.startActivity(intentVideollamada);
                 try {
                     dialogVar.dismiss();
@@ -521,9 +524,9 @@ public class TrabajadorListAdapterBuscador extends RecyclerView.Adapter<Trabajad
         this.oficioList = oficioList;
     }
 
-    public void setTrabajadors(List<Trabajador> trabajadors) {
-//        this.trabajadors = trabajadors;
-        this.trabajadorsAux = trabajadors;
-    }
+//    public void setTrabajadors(List<Trabajador> trabajadors) {
+////        this.trabajadors = trabajadors;
+//        this.trabajadorsAux = trabajadors;
+//    }
 }
 

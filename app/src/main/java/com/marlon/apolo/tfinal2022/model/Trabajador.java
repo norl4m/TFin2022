@@ -123,7 +123,7 @@ public class Trabajador extends Usuario {
         boolean adminFlag = myPreferences.getBoolean("adminFlag", false);
         Log.d(TAG, "Iniciando registro");
         Log.d(TAG, "Registrando Trabajador en Firebase");
-        this.setCalificacion(0.5);
+        this.setCalificacion(0.0);
         Log.d(TAG, this.toString());
 
         FirebaseDatabase.getInstance().getReference().child("trabajadores")
@@ -139,17 +139,17 @@ public class Trabajador extends Usuario {
                             switch (metodoReg) {
                                 case 1:/*email*/
                                     RegWithEmailPasswordActivity regWithEmailPasswordActivity = (RegWithEmailPasswordActivity) activity;
-                                    regWithEmailPasswordActivity.closeCustomAlertDialog();
+                                    regWithEmailPasswordActivity.closeProgress();
                                     break;
                                 case 2:/*google*/
                                     RegWithGoogleActivity regWithGoogleActivity = (RegWithGoogleActivity) activity;
-                                    regWithGoogleActivity.closeCustomAlertDialog();
+                                    regWithGoogleActivity.closeProgressDialog();
 //                                    addToGoogleUsers(activity, empleador);
                                     break;
                                 case 3:/*phone*/
 //                                    addToPhoneUsers(activity, empleador);
                                     RegWithCelularActivity regWithCelularActivity = (RegWithCelularActivity) activity;
-                                    regWithCelularActivity.closeCustomAlertDialog();
+                                    regWithCelularActivity.closeProgressDialog();
 //
                                     break;
 

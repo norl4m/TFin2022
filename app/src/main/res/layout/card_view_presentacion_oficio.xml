@@ -23,7 +23,8 @@
             android:layout_centerVertical="true"
             android:layout_toStartOf="@id/imageViewOficio"
             android:text="Electricista"
-            android:textSize="24sp" />
+            android:textAppearance="@android:style/TextAppearance.Material.Headline"
+            android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/imageViewOficio"

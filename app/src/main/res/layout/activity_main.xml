@@ -16,8 +16,8 @@
         android:layout_marginBottom="24dp"
         android:text="@string/text_bienvenida_app"
         android:textAlignment="center"
-        android:textColor="@color/teal_500"
-        android:textSize="32sp" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:textStyle="bold" />
 
     <ImageView
         android:id="@+id/imageViewLogo"
@@ -40,8 +40,8 @@
         android:layout_marginBottom="64dp"
         android:text="@string/slogan_text"
         android:textAlignment="center"
-        android:textColor="@color/teal_500"
-        android:textSize="18sp" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+        android:textStyle="bold" />
 
     <TextView
         android:layout_width="match_parent"
@@ -50,7 +50,8 @@
         android:layout_alignParentBottom="true"
         android:text="Versión: 1.0.0"
         android:textAlignment="textEnd"
-        android:textSize="12sp" />
+        android:textSize="12sp"
+        android:layout_marginEnd="4dp"/>
 
 
 </RelativeLayout>

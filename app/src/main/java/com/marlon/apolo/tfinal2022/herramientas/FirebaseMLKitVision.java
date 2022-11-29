@@ -228,6 +228,7 @@ public class FirebaseMLKitVision {
                 "No detectado",
                 "No detectado",
                 true);
+        policeRecord.setCriminalRecordStat("No detectado");
         for (String block : dataRecognized) {
             data = new StringBuilder(data.toString() + dataRecognized.indexOf(block) + "-" + block + "\n");
         }
@@ -273,7 +274,29 @@ public class FirebaseMLKitVision {
         // se filta debido a que pueden confundirse con palabras como GOBIER"NO" o "NO"A, "NO"VIEMBRE
         if (text.contains("Registra Antecedentes")) {
 //            Log.d(TAG, "Registraaaaaaaaaaaaaaaaaaaaaaaaaa");
+
+            aux = getDataBetweenDelimiters(text);
+            aux = aux.toString().replaceAll("\\|+", "");
+            policeRecord.setCriminalRecordStat(aux);
+
+            Log.d(TAG, "************************");
+            Log.d(TAG, aux.toString());
+            Log.d(TAG, String.valueOf(aux.length()));
+            Log.d(TAG, "************************");
+
+            try {
+                if (aux.length() == 0) {
+                    policeRecord.setCriminalRecordStat("No detectado");
+                    policeRecord.setStatusCriminalRecord(true);
+
+                }
+            } catch (Exception e) {
+
+            }
+
+
             if (getDataBetweenDelimiters(text).contains("NO")) {
+                policeRecord.setCriminalRecordStat("NO");
                 policeRecord.setStatusCriminalRecord(false);
             }
         }
@@ -282,6 +305,7 @@ public class FirebaseMLKitVision {
                 //Log.d(TAG, "Registraaaaaaaaaaaaaaaaaaaaaaaaaa");
                 //Log.d(TAG, text);
                 //Log.d(TAG, String.valueOf(text.length()));
+                policeRecord.setCriminalRecordStat("NO");
                 policeRecord.setStatusCriminalRecord(false);
             }
         }

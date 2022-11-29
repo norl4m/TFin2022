@@ -75,7 +75,7 @@
                     android:layout_marginEnd="8dp"
                     android:text="@string/menu_admin_ofi"
                     android:textAlignment="textStart"
-                    android:textSize="26sp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                     android:textStyle="bold" />
 
                 <ProgressBar
@@ -85,22 +85,27 @@
                     android:layout_below="@id/fragHomeTextView3"
                     android:layout_centerInParent="true" />
 
-                <View
-                    android:id="@+id/separator3"
-                    android:layout_width="fill_parent"
-                    android:layout_height="1dp"
-                    android:layout_below="@+id/fragHomeTextView3"
-                    android:layout_marginStart="2dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginEnd="2dp"
-                    android:layout_marginBottom="4dp"
-                    android:background="@color/purple_100" />
+                <!--                <View-->
+                <!--                    android:id="@+id/separator3"-->
+                <!--                    android:layout_width="fill_parent"-->
+                <!--                    android:layout_height="1dp"-->
+                <!--                    android:layout_below="@+id/fragHomeTextView3"-->
+                <!--                    android:layout_marginStart="2dp"-->
+                <!--                    android:layout_marginTop="4dp"-->
+                <!--                    android:layout_marginEnd="2dp"-->
+                <!--                    android:layout_marginBottom="4dp"-->
+                <!--                    android:background="@color/purple_100" />-->
 
 
+                <!--                <RelativeLayout-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:layout_below="@id/separator3"-->
+                <!--                    android:layout_marginTop="4dp">-->
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/separator3"
+                    android:layout_below="@id/fragHomeTextView3"
                     android:layout_marginTop="4dp">
 
                     <androidx.recyclerview.widget.RecyclerView
@@ -137,24 +142,14 @@
                     android:layout_marginBottom="8dp"
                     android:text="@string/menu_admin_trab"
                     android:textAlignment="textStart"
-                    android:textSize="26sp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                     android:textStyle="bold" />
 
-                <View
-                    android:id="@+id/separator1"
-                    android:layout_width="fill_parent"
-                    android:layout_height="1dp"
-                    android:layout_below="@+id/fragHomeTextView1"
-                    android:layout_marginStart="2dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginEnd="2dp"
-                    android:layout_marginBottom="4dp"
-                    android:background="@color/purple_100" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/separator1">
+                    android:layout_below="@id/fragHomeTextView1">
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/fragHomeRecyclerView1"
@@ -195,7 +190,7 @@
                     android:layout_marginBottom="8dp"
                     android:text="@string/menu_admin_emp"
                     android:textAlignment="textStart"
-                    android:textSize="26sp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                     android:textStyle="bold" />
 
                 <ProgressBar
@@ -244,7 +239,7 @@
                     android:layout_marginBottom="8dp"
                     android:text="@string/citas_trabajo"
                     android:textAlignment="textStart"
-                    android:textSize="26sp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                     android:textStyle="bold" />
 
                 <ProgressBar

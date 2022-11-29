@@ -1,4 +1,4 @@
-package com.marlon.apolo.tfinal2022.buscador;
+package com.marlon.apolo.tfinal2022.buscador.view;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,12 +27,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.marlon.apolo.tfinal2022.R;
+import com.marlon.apolo.tfinal2022.buscador.MySuggestionProvider;
+import com.marlon.apolo.tfinal2022.buscador.adaptadores.TrabajadorListAdapterBuscador;
+import com.marlon.apolo.tfinal2022.buscador.adaptadores.TrabajadorListAdapterResultados;
 import com.marlon.apolo.tfinal2022.model.Administrador;
 import com.marlon.apolo.tfinal2022.model.Empleador;
 import com.marlon.apolo.tfinal2022.model.Oficio;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
 import com.marlon.apolo.tfinal2022.model.Usuario;
-import com.marlon.apolo.tfinal2022.ui.bienvenido.BienvenidoTrabajadorListAdapter;
 import com.marlon.apolo.tfinal2022.ui.bienvenido.BienvenidoViewModel;
 import com.marlon.apolo.tfinal2022.ui.chats.ChatViewModel;
 

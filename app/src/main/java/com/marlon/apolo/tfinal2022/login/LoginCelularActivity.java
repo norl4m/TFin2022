@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -77,13 +78,18 @@ public class LoginCelularActivity extends AppCompatActivity implements View.OnCl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_celular);
-        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean mode = mPrefs.getBoolean("sync_theme", false);
-        if (mode) {
-//            ((ImageView) findViewById(R.id.acLoginImageViewLogo)).setColorFilter(getResources().getColor(R.color.white));
-            ((ImageView) findViewById(R.id.acLoginImageViewLogo)).setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.white));
+//        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+//        boolean mode = mPrefs.getBoolean("sync_theme", false);
+//        if (mode) {
+////            ((ImageView) findViewById(R.id.acLoginImageViewLogo)).setColorFilter(getResources().getColor(R.color.white));
+//            ((ImageView) findViewById(R.id.acLoginImageViewLogo)).setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.white));
+//
+//        }
 
-        }
+        TypedValue typedValue = new TypedValue();
+        this.getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
+        int colorNight = typedValue.data;
+        ((ImageView) findViewById(R.id.acLoginImageViewLogo)).setColorFilter(colorNight);
 
         bienvenidoViewModel = new ViewModelProvider(this).get(BienvenidoViewModel.class);
 

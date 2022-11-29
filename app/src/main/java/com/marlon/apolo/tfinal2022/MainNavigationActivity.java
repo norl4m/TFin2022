@@ -42,7 +42,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.marlon.apolo.tfinal2022.admin.AdminViewModel;
-import com.marlon.apolo.tfinal2022.buscador.BuscadorActivity;
+import com.marlon.apolo.tfinal2022.buscador.view.BuscadorActivity;
 import com.marlon.apolo.tfinal2022.config.ConfiguracionActivity;
 import com.marlon.apolo.tfinal2022.databinding.ActivityMainNavigationBinding;
 import com.marlon.apolo.tfinal2022.individualChat.receiver.EliminarNotificationReceiver;
@@ -356,6 +356,9 @@ public class MainNavigationActivity extends AppCompatActivity {
             setInvitadoUI();
 //            setAdminUI();
             setInvitadoHeader();
+            navCerrarSesion.setVisible(true);/*REVISAR BIEN CHAPO*/
+//            navIniciarSesion.setVisible(false);/*REVISAR BIEN CHAPO*/
+
             filterByFirebaseUserUID(firebaseUser);
 
             /*Login*/

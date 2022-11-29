@@ -9,26 +9,20 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.SearchManager;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
-import com.marlon.apolo.tfinal2022.MainNavigationActivity;
 import com.marlon.apolo.tfinal2022.R;
-import com.marlon.apolo.tfinal2022.buscador.BuscadorActivity;
+import com.marlon.apolo.tfinal2022.buscador.view.BuscadorActivity;
 import com.marlon.apolo.tfinal2022.config.ConfiguracionActivity;
 import com.marlon.apolo.tfinal2022.model.Oficio;
 import com.marlon.apolo.tfinal2022.ui.bienvenido.viewModel.OficioListAdapter;
 import com.marlon.apolo.tfinal2022.ui.bienvenido.viewModel.OficioViewModel;
-import com.marlon.apolo.tfinal2022.ui.oficios.OficioVistaListAdapter;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 
 public class OficiosActivityVista extends AppCompatActivity {
 

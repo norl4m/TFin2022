@@ -2,19 +2,27 @@ package com.marlon.apolo.tfinal2022.individualChat.view;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -454,11 +462,76 @@ public class SpecialMessagePoc extends RecyclerView.Adapter<SpecialMessagePoc.My
         Timestamp timestamp = new Timestamp(seconds, (int) nanoseconds);
         Date date = timestamp.toDate();
         holder.textViewFecha.setText(String.format("%s", date.toLocaleString()));
+
+        // Cargamos una referencia a la preferencia para cambiar el tema
+//        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(activity);
+//        boolean mode = mPrefs.getBoolean("sync_theme", false);
+//        if (mode) {
+////            holder.textViewContenido.settint.setColorFilter(activity.getResources().getColor(R.color.teal_700));
+//
+//            DrawableCompat.setTint(holder.textViewContenido.getBackground(), activity.getResources().getColor(R.color.black_minus));
+//            holder.textViewContenido.setBackground(holder.textViewContenido.getBackground());
+//        }
+
+
+        /*Esto es una maravilla*/
+        TypedValue typedValue = new TypedValue();
+        activity.getTheme().resolveAttribute(R.attr.colorOnPrimary, typedValue, true);
+        int colorPrimary = typedValue.data;
+
+        TypedValue typedValue2 = new TypedValue();
+        activity.getTheme().resolveAttribute(R.attr.colorSecondaryVariant, typedValue2, true);
+        int colorSecondary = typedValue2.data;
+//        DrawableCompat.setTint(holder.textViewContenido.getBackground(), activity.getResources().getColor(R.color.black_minus));
+        try {
+            switch (current.getType()) {
+                case 0:
+                case 4:
+                    if (current.getFrom().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                        DrawableCompat.setTint(holder.textViewContenido.getBackground(), colorPrimary);
+                    } else {
+                        DrawableCompat.setTint(holder.textViewContenido.getBackground(), colorSecondary);
+                    }
+//                    holder.textViewContenido.setTextColor(ContextCompat.getColor(activity, R.color.white_smoke));
+                    break;
+                case 1:
+                    if (current.getFrom().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                        DrawableCompat.setTint(holder.imageViewContent.getBackground(), colorPrimary);
+                    } else {
+                        DrawableCompat.setTint(holder.imageViewContent.getBackground(), colorSecondary);
+                    }
+//                    holder.textViewContenido.setTextColor(ContextCompat.getColor(activity, R.color.white_smoke));
+                    break;
+                case 2:
+                    if (current.getFrom().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                        DrawableCompat.setTint(holder.relativeLayoutAudioE.getBackground(), colorPrimary);
+                    } else {
+                        DrawableCompat.setTint(holder.relativeLayoutAudioE.getBackground(), colorSecondary);
+                    }
+                    break;
+
+            }
+
+            holder.textViewContenido.setBackground(holder.textViewContenido.getBackground());
+
+//            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+//                DrawableCompat.setTint(holder.textViewContenido.getBackground(), colorTheme);
+//                holder.textViewContenido.setBackground(holder.textViewContenido.getBackground());
+//            } else {
+//                DrawableCompat.setTint(holder.textViewContenido.getBackground(), colorTheme2);
+//                holder.textViewContenido.setBackground(holder.textViewContenido.getBackground());
+//
+//            }
+        } catch (Exception e) {
+
+        }
+
+        /*Esto es una maravilla*/
+
         if (current.isEstadoLectura()) {
             holder.imageViewEstadoLectura.setColorFilter(activity.getResources().getColor(R.color.teal_700));
         } else {
             holder.imageViewEstadoLectura.setColorFilter(activity.getResources().getColor(R.color.purple_700));
-
         }
 
         try {
@@ -582,6 +655,7 @@ public class SpecialMessagePoc extends RecyclerView.Adapter<SpecialMessagePoc.My
 
 
         private TextView textViewCurrentTime;
+        private RelativeLayout relativeLayoutAudioE;
 
         MyadapterViewHolder(View itemView) {
             super(itemView);
@@ -604,6 +678,7 @@ public class SpecialMessagePoc extends RecyclerView.Adapter<SpecialMessagePoc.My
             }
 
             try {
+                relativeLayoutAudioE = itemView.findViewById(R.id.audioElements);
                 textViewCurrentTime = itemView.findViewById(R.id.textViewInitTime);
                 ivPlayPause = itemView.findViewById(R.id.buttoPlay);
                 ivPlayPause.setOnClickListener(this);

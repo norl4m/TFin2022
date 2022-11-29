@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.marlon.apolo.tfinal2022.R;
+import com.marlon.apolo.tfinal2022.registro.view.RegistroRecordPolicialActivity;
 
 public class RegistroDataTrabajadorActivity extends AppCompatActivity implements View.OnClickListener {
 

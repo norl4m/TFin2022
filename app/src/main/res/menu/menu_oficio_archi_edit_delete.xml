@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!--    <item-->
+    <!--        android:id="@+id/action_linear_layout"-->
+    <!--        android:icon="@drawable/ic_lista"-->
+    <!--        android:orderInCategory="30"-->
+    <!--        android:title="Lista"-->
+    <!--        app:showAsAction="ifRoom" />-->
+    <!--    <item-->
+    <!--        android:id="@+id/action_grid_layout"-->
+    <!--        android:icon="@drawable/ic_cuadricula"-->
+    <!--        android:orderInCategory="20"-->
+    <!--        android:title="Cuadrícula"-->
+    <!--        app:showAsAction="ifRoom" />-->
+
+<!--    <item-->
+    <!--        android:id="@+id/action_settings"-->
+    <!--        android:icon="@drawable/ic_lista"-->
+    <!--        android:orderInCategory="10"-->
+    <!--        android:title="Configuraciones"-->
+    <!--        app:showAsAction="collapseActionView" />-->
+
+
+    <item
+        android:id="@+id/action_delete"
+        android:icon="@drawable/ic_delete"
+        android:orderInCategory="20"
+        android:title="Eliminar oficio"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_edit"
+        android:icon="@drawable/ic_updated"
+        android:orderInCategory="10"
+        android:title="Actualizar oficio"
+        app:showAsAction="ifRoom" />
+</menu>

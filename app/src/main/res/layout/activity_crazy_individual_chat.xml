@@ -40,7 +40,7 @@
                 android:gravity="center_vertical"
                 android:text="Marlon Apolo" />
 
-            <ImageButton
+            <ImageView
                 android:id="@+id/imageButtonVideoCall"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
@@ -50,9 +50,9 @@
                 android:layout_marginTop="2dp"
                 android:layout_marginEnd="8sp"
                 android:layout_marginBottom="2dp"
-                android:background="@drawable/video_camera_icon_behavior" />
+                android:src="@drawable/video_camera_icon_behavior" />
 
-            <ImageButton
+            <ImageView
                 android:id="@+id/imageButtonCall"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
@@ -62,7 +62,7 @@
                 android:layout_marginTop="2dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="2dp"
-                android:background="@drawable/call_icon_behavior" />
+                android:src="@drawable/call_icon_behavior" />
 
         </LinearLayout>
 

@@ -7,11 +7,16 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.InsetDrawable;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -86,10 +91,15 @@ public class TrabajadorListAdapter extends RecyclerView.Adapter<TrabajadorListAd
         if (current.getFotoPerfil() != null) {
             Glide.with(context).load(current.getFotoPerfil()).placeholder(R.drawable.ic_baseline_person_24).circleCrop().into(holder.imageViewTrabajador);
         } else {
-            Glide.with(context).load(ContextCompat.getDrawable(context, R.drawable.ic_baseline_person_24)).placeholder(R.drawable.ic_baseline_person_24).into(holder.imageViewTrabajador);
+            TypedValue typedValue = new TypedValue();
+            context.getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
+            int colorPrimary = typedValue.data;
+            Glide.with(context).load(ContextCompat.getDrawable(context, R.drawable.ic_usuario)).placeholder(R.drawable.ic_usuario).into(holder.imageViewTrabajador);
+            holder.imageViewTrabajador.setColorFilter(colorPrimary);
         }
 
-        Log.d(TAG, current.toString());
+
+//        Log.d(TAG, current.toString());
 
 
         ArrayList<Oficio> oficiosFiltrados = new ArrayList<>();
@@ -124,8 +134,17 @@ public class TrabajadorListAdapter extends RecyclerView.Adapter<TrabajadorListAd
 //        oficioViewModel.getAllOficios().observe((LifecycleOwner) context, oficioRegistroListAdapter::setOficios);
 
 //        holder.textViewCalif.setText(String.format("Calificación: %.2f " + "/ 5.00", current.getCalificacion()));
-        holder.textViewCalif.setText(String.format("Calificación: %.1f " + "/ 5.0", current.getCalificacion()));
-        holder.ratingBar.setRating((float) current.getCalificacion());
+        if (current.getCalificacion() > 0.0) {
+            holder.textViewCalif.setText(String.format("Calificación: %.1f " + "/ 5.0", current.getCalificacion()));
+            holder.ratingBar.setRating((float) current.getCalificacion());
+            holder.ratingBar.setVisibility(View.VISIBLE);
+
+
+        } else {
+            holder.textViewCalif.setText(context.getString(R.string.text_no_trabajo));
+//            holder.ratingBar.setRating((float) current.getCalificacion());
+            holder.ratingBar.setVisibility(View.GONE);
+        }
 
         if (current.getEmail() != null) {
             holder.textViewContacto.setText(current.getEmail());
@@ -199,6 +218,8 @@ public class TrabajadorListAdapter extends RecyclerView.Adapter<TrabajadorListAd
             imageViewTrabajador = itemView.findViewById(R.id.imageViewTrabajador);
             ratingBar = itemView.findViewById(R.id.ratingBar);
             textViewContacto = itemView.findViewById(R.id.textViewContacto);
+
+
             imageViewTrabajador.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -232,6 +253,8 @@ public class TrabajadorListAdapter extends RecyclerView.Adapter<TrabajadorListAd
     public void opcionesTrabajadorDialog(Trabajador trabajador) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
+//        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.CustomAlertDialog);
+
         // Get the layout inflater
         LayoutInflater inflater = LayoutInflater.from(context);
 
@@ -242,24 +265,47 @@ public class TrabajadorListAdapter extends RecyclerView.Adapter<TrabajadorListAd
         // set prompts.xml to alertdialog builder
         builder.setView(promptsView);
 
+
         final ImageView imageButtonMessage = promptsView.findViewById(R.id.imageViewMessage);
         final ImageView imageButtonCall = promptsView.findViewById(R.id.imageViewCall);
         final ImageView imageButtonVideoCall = promptsView.findViewById(R.id.imageViewVideoCall);
         final ImageView imageButtonInfo = promptsView.findViewById(R.id.imageViewInfo);
+        final LinearLayout linearLayoutButtons = promptsView.findViewById(R.id.linLytButtons);
 //        SharedPreferences sharedPreferences = context.getSharedPreferences("MyPreferences", MODE_PRIVATE);
-        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
-        boolean mode = mPrefs.getBoolean("sync_theme", false);
-        if (mode) {
-            imageButtonMessage.setColorFilter(context.getResources().getColor(R.color.white));
-            imageButtonCall.setColorFilter(context.getResources().getColor(R.color.white));
-            imageButtonVideoCall.setColorFilter(context.getResources().getColor(R.color.white));
-            imageButtonInfo.setColorFilter(context.getResources().getColor(R.color.white));
-        } else {
+//        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+//        boolean mode = mPrefs.getBoolean("sync_theme", false);
+//        if (mode) {
+//            imageButtonMessage.setColorFilter(context.getResources().getColor(R.color.white));
+//            imageButtonCall.setColorFilter(context.getResources().getColor(R.color.white));
+//            imageButtonVideoCall.setColorFilter(context.getResources().getColor(R.color.white));
+//            imageButtonInfo.setColorFilter(context.getResources().getColor(R.color.white));
+//        } else {
+//
+//        }
 
-        }
+        /*Esto es una maravilla*/
+        TypedValue typedValue = new TypedValue();
+        context.getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
+        int colorPrimary = typedValue.data;
+
+        imageButtonMessage.setColorFilter(colorPrimary);
+        imageButtonCall.setColorFilter(colorPrimary);
+        imageButtonVideoCall.setColorFilter(colorPrimary);
+        imageButtonInfo.setColorFilter(colorPrimary);
+        /*Esto es una maravilla*/
+
+        TypedValue typedValue2 = new TypedValue();
+        context.getTheme().resolveAttribute(R.attr.colorSecondary, typedValue2, true);
+        int color = typedValue2.data;
+//        linearLayoutButtons.setBackgroundColor(color);
 
         final ImageView imageView = promptsView.findViewById(R.id.imageViewTrabajador);
         final TextView textView = promptsView.findViewById(R.id.textViewNombreUsuario);
+
+//        textView.setBackgroundColor(context.getColor(R.color.black_minus));
+//        textView.setBackgroundColor(ContextCompat.getColor(context, R.color.black_minus));
+//        textView.setTextColor(color);
+        //textView.setBackgroundColor(color);
 //
 
         textView.setText(String.format("%s %s", trabajador.getNombre(), trabajador.getApellido()));
@@ -281,13 +327,15 @@ public class TrabajadorListAdapter extends RecyclerView.Adapter<TrabajadorListAd
                     .load(trabajador.getFotoPerfil())
 //                    .circleCrop() /*mala idea*/
                     .apply(new RequestOptions().override(300, 400))
-                    .placeholder(R.drawable.ic_baseline_person_24)
+                    .placeholder(R.drawable.ic_usuario)
                     .transition(DrawableTransitionOptions.withCrossFade())
                     .into(imageView);
 
 
         } else {
-            imageView.setImageResource(R.drawable.ic_baseline_person_24);
+            imageView.setImageResource(R.drawable.ic_usuario);
+            imageView.setColorFilter(colorPrimary);
+
         }
         //imageButtonImages.setOnClickListener(clickListenerDialogCustom);
         //imageButtonCall.setOnClickListener(clickListenerDialogCustom);
@@ -437,6 +485,9 @@ public class TrabajadorListAdapter extends RecyclerView.Adapter<TrabajadorListAd
 
 //        return builder.create();
         dialogVar = builder.create();
+        ColorDrawable back = new ColorDrawable(Color.TRANSPARENT);
+        InsetDrawable inset = new InsetDrawable(back, 180);
+        dialogVar.getWindow().setBackgroundDrawable(inset);
         dialogVar.show();
     }
 

@@ -185,7 +185,8 @@ limitations under the License. -->
                     android:layout_gravity="center_vertical"
                     android:layout_weight="2.3"
                     android:hint="Escribir..."
-                    android:inputType="textCapSentences"
+                    android:inputType="textCapSentences|textMultiLine"
+                    android:maxLines="4"
                     android:textAllCaps="false" />
 
 

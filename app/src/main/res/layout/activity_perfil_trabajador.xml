@@ -31,24 +31,21 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:divider="@drawable/divider_10p"
+            android:orientation="vertical"
+            android:showDividers="middle">
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="2dp">
+                android:layout_height="wrap_content">
 
                 <ImageView
                     android:id="@+id/imageViewUsuario"
-                    android:layout_width="match_parent"
-                    android:layout_height="350dp"
+                    android:layout_width="156dp"
+                    android:layout_height="156dp"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginStart="2dp"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginEnd="2dp"
-                    android:layout_marginBottom="2dp"
                     android:scaleType="fitXY"
-                    android:src="@drawable/ic_baseline_person_24"
+                    android:src="@drawable/ic_usuario"
                     android:visibility="visible" />
 
             </RelativeLayout>
@@ -58,16 +55,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="2dp"
-                android:orientation="vertical">
+                android:divider="@drawable/divider_10p"
+                android:orientation="vertical"
+                android:showDividers="middle">
 
                 <TextView
                     android:id="@+id/textViewNombreUsuario"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="2dp"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginEnd="2dp"
-                    android:layout_marginBottom="2dp"
+
                     android:text="Nombre usuario"
                     android:textAlignment="center"
                     android:textAllCaps="false"
@@ -78,7 +74,7 @@
                     android:id="@+id/linLytEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="2dp">
+                    android:gravity="center_horizontal">
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -109,7 +105,7 @@
                     android:id="@+id/linLytPhone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="2dp">
+                    android:gravity="center_horizontal">
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -131,10 +127,10 @@
 
                 <TextView
                     android:id="@+id/textViewCalif"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="2dp"
                     android:text="Calificación: 2.5/5.0"
+                    android:textAlignment="center"
                     android:textSize="20sp"
                     android:textStyle="normal"
                     android:visibility="visible" />
@@ -144,7 +140,7 @@
                     style="@style/Widget.AppCompat.RatingBar.Indicator"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="2dp"
+                    android:layout_gravity="center"
                     android:rating="0.5" />
 
             </LinearLayout>

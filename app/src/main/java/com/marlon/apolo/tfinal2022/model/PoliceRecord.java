@@ -9,6 +9,7 @@ public class PoliceRecord {
     private String ci;
     private String nameAndLastName;
     private boolean statusCriminalRecord;
+    private String criminalRecordStat;
 
     public PoliceRecord() {
     }
@@ -74,6 +75,14 @@ public class PoliceRecord {
         return false;
     }
 
+    public String getCriminalRecordStat() {
+        return criminalRecordStat;
+    }
+
+    public void setCriminalRecordStat(String criminalRecordStat) {
+        this.criminalRecordStat = criminalRecordStat;
+    }
+
     @NotNull
     @Override
     public String toString() {
@@ -89,6 +98,7 @@ public class PoliceRecord {
                 "\nTipo de Documento: " + typeDocument +
                 "\nNo. de Identificación: " + ci +
                 "\nApellidos y Nombres: " + nameAndLastName +
-                "\nRegistra Antecedentes: " + valueCriminalStatus;
+//                "\nRegistra Antecedentes: " + valueCriminalStatus;
+                "\nRegistra Antecedentes: " + criminalRecordStat;
     }
 }

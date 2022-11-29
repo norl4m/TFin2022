@@ -118,9 +118,11 @@ public class AuthAsyncTask extends AsyncTask<String, Void, String> {
             } else {
                 Log.d(TAG, "Error en la solicitud");
                 // Return a String result
+                progressBarWeakReference.setVisibility(View.GONE);
                 return "Error en la solicitud";
             }
         } catch (Exception e) {
+            progressBarWeakReference.setVisibility(View.GONE);
             return "Error: " + e.toString();
         }
 
@@ -137,8 +139,8 @@ public class AuthAsyncTask extends AsyncTask<String, Void, String> {
     protected void onPostExecute(String s) {
         progressBarWeakReference.setVisibility(View.GONE);
         authUserListAdapter.setFirebaseUsers(authArrayList);
-        Log.d(TAG, s.toString());
-        Toast.makeText(contextInstance, s, Toast.LENGTH_LONG).show();
+//        Log.d(TAG, s.toString());
+//        Toast.makeText(contextInstance, s, Toast.LENGTH_LONG).show();
         super.onPostExecute(s);
     }
 }

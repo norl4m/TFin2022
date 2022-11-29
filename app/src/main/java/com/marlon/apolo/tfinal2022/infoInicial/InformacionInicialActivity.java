@@ -85,7 +85,9 @@ public class InformacionInicialActivity extends AppCompatActivity implements Vie
             dots[i] = new TextView(this);
             dots[i].setText(Html.fromHtml("&#8226;"));
             dots[i].setTextSize(35);
+
             dotsLayout.addView(dots[i]);
+
         }
         if (dots.length > 0) {
             dots[position].setTextColor(getResources().getColor(R.color.purple_200));

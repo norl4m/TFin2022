@@ -17,8 +17,10 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -63,17 +65,39 @@ public class LoginEmailPasswordActivity extends AppCompatActivity implements Vie
     private SharedPreferences myPreferences;
     private SharedPreferences.Editor editorPref;
 
+    private void hideSystemBars() {
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+//        WindowInsetsControllerCompat windowInsetsController =
+//                ViewCompat.getWindowInsetsController(getWindow().getDecorView());
+//        if (windowInsetsController == null) {
+//            return;
+//        }
+//        // Configure the behavior of the hidden system bars
+//        windowInsetsController.setSystemBarsBehavior(
+//                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+//        );
+//        // Hide both the status bar and the navigation bar
+//        windowInsetsController.hide(WindowInsetsCompat.Type.systemBars());
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        hideSystemBars();
         setContentView(R.layout.activity_login_email_password);
 
-        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean mode = mPrefs.getBoolean("sync_theme", false);
-        if (mode) {
-//            ((ImageView) findViewById(R.id.acLoginImageViewLogo)).setColorFilter(getResources().getColor(R.color.white));
-            ((ImageView) findViewById(R.id.acLoginImageViewLogo)).setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.white));
-        }
+//        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+//        boolean mode = mPrefs.getBoolean("sync_theme", false);
+//        if (mode) {
+////            ((ImageView) findViewById(R.id.acLoginImageViewLogo)).setColorFilter(getResources().getColor(R.color.white));
+//            ((ImageView) findViewById(R.id.acLoginImageViewLogo)).setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.white));
+//        }
+        TypedValue typedValue = new TypedValue();
+        this.getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
+        int colorNight = typedValue.data;
+        ((ImageView) findViewById(R.id.acLoginImageViewLogo)).setColorFilter(colorNight);
+
 
         bienvenidoViewModel = new ViewModelProvider(this).get(BienvenidoViewModel.class);
         bienvenidoViewModel.getAllEmpleadoresByEmail().observe(this, empleadors -> {

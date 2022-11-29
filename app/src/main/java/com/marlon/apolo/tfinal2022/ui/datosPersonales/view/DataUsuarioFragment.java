@@ -20,6 +20,7 @@ import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.provider.Settings;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -210,6 +211,13 @@ public class DataUsuarioFragment extends Fragment implements View.OnClickListene
         linearLayout.setVisibility(View.GONE);
         relativeLayoutCalif.setVisibility(View.GONE);
 
+
+        /*Esto es una maravilla*/
+        TypedValue typedValue = new TypedValue();
+        requireActivity().getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
+        int colorNight = typedValue.data;
+        imageViewProfile.setColorFilter(colorNight);
+        /*Esto es una maravilla*/
         /*final TextView textView = binding.textDataUsuario;
         dataUsuarioViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
@@ -327,6 +335,7 @@ public class DataUsuarioFragment extends Fragment implements View.OnClickListene
         if (usuario.getFotoPerfil() != null) {
             try {
                 Glide.with(requireActivity()).load(usuario.getFotoPerfil()).placeholder(R.drawable.ic_baseline_person_24).circleCrop().into(imageViewProfile);
+                imageViewProfile.setColorFilter(null);
             } catch (Exception e) {
 
             }

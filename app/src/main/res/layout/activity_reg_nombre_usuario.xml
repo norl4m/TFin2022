@@ -1,84 +1,156 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".registro.RegNombreUsuarioActivity">
+    android:orientation="vertical"
+    tools:context=".registro.view.RegNombreUsuarioActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:elevation="4dp"
+        android:visibility="visible"
         app:navigationIcon="@drawable/ic_baseline_arrow_back_24"
-        app:title="Nombre de usuario">
+        app:title="@string/no_nothing_text">
 
-        <ImageButton
-            android:id="@+id/buttonInfo"
+
+        <Button
+            android:id="@+id/buttonNext"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
             android:layout_gravity="end"
-            android:layout_marginEnd="2dp"
-            android:src="@drawable/ic_baseline_info_24"
+            android:text="Siguiente"
             android:textAllCaps="false" />
+
 
     </androidx.appcompat.widget.Toolbar>
 
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textFieldNombre"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+    <TextView
+        android:id="@+id/textViewHeading"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/toolbar"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginRight="8dp"
-        android:hint="Nombre">
+        android:layout_margin="8dp"
+        android:text="Registro de datos personales"
+        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+        android:textStyle="bold" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editTextNombre"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:digits="@string/validate_names_and_lastname"
-            android:inputType="textCapSentences|textPersonName" />
+            android:layout_margin="8dp"
+            android:divider="@drawable/divider_20p"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:showDividers="middle">
 
-    </com.google.android.material.textfield.TextInputLayout>
+            <RelativeLayout
+                android:id="@+id/rltLytFotoPerfil"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/textViewFotoP"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:text="Foto de perfil (opcional)"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+                <ImageView
+                    android:id="@+id/imageViewProfile"
+                    android:layout_width="156dp"
+                    android:layout_height="156dp"
+                    android:layout_below="@id/textViewFotoP"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="4dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_usuario" />
 
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textFieldApellido"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/textFieldNombre"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginRight="8dp"
-        android:hint="Apellido">
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/fabSeleccionarFoto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/imageViewProfile"
+                    android:layout_marginStart="-60dp"
+                    android:layout_marginTop="-60dp"
+                    android:layout_toEndOf="@id/imageViewProfile"
+                    android:src="@drawable/ic_menu_camera" />
 
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editTextApellido"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:digits="@string/validate_names_and_lastname"
-            android:inputType="textCapSentences" />
+            </RelativeLayout>
 
 
-    </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayoutNombre"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Nombre"
+                app:errorEnabled="true"
+                app:helperText="@string/text_campo_necesario"
+                app:helperTextEnabled="true">
 
-    <Button
-        android:id="@+id/buttonNext"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:text="Siguiente"
-        android:textAllCaps="false" />
-</RelativeLayout>
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextNombre"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:digits="@string/validate_names_and_lastname"
+                    android:inputType="textCapSentences|textPersonName" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayoutApellido"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Apellido"
+                app:helperText="@string/text_campo_necesario"
+                app:helperTextEnabled="true">
+
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextApellido"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:digits="@string/validate_names_and_lastname"
+                    android:inputType="textCapSentences" />
+
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!--            <Button-->
+            <!--                android:id="@+id/buttonNext"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_below="@id/textFieldApellido"-->
+            <!--                android:layout_margin="8dp"-->
+            <!--                android:layout_marginStart="8dp"-->
+            <!--                android:layout_marginTop="8dp"-->
+            <!--                android:layout_marginEnd="8dp"-->
+            <!--                android:layout_marginBottom="8dp"-->
+            <!--                android:text="Continuar"-->
+            <!--                android:textAllCaps="false" />-->
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+</LinearLayout>

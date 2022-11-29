@@ -19,6 +19,9 @@ package com.marlon.apolo.tfinal2022.puntoEntrada.view;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.preference.PreferenceManager;
 
 import android.content.Context;
@@ -27,6 +30,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -36,6 +41,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.marlon.apolo.tfinal2022.MainNavigationActivity;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.infoInicial.InformacionInicialActivity;
+import com.marlon.apolo.tfinal2022.ui.oficioArchi.view.OficioArchiActivity;
 
 /**
  * Esta clase es el punto de entrada a la aplicación.
@@ -58,13 +64,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // Cargamos una referencia a la preferencia para cambiar el tema
-        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean mode = mPrefs.getBoolean("sync_theme", false);
-        if (mode) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);/* recrea las actividades*/
-        }
+//        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+//        boolean mode = mPrefs.getBoolean("sync_theme", false);
+//        if (mode) {
+//            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);/* recrea las actividades*/
+//        }
+//        hideSystemBars();
 
         super.onCreate(savedInstanceState);
+        hideSystemBars();
         setContentView(R.layout.activity_main);
 
         // Animations
@@ -81,10 +89,17 @@ public class MainActivity extends AppCompatActivity {
 //        textViewWelcome.setAnimation(bottomAnimation);
         textViewWelcome.setAnimation(topAnimation);
         textViewSlogan.setAnimation(bottomAnimation);
-        if (mode) {
-            /* Permite cambiar el ìcono de color dentro del ícono en un ImageView*/
-            imageViewLogo.setColorFilter(getResources().getColor(R.color.white));
-        }
+//        if (mode) {
+        /* Permite cambiar el ìcono de color dentro del ícono en un ImageView*/
+//            imageViewLogo.setColorFilter(getResources().getColor(R.color.white));
+//        }
+
+        /*Esto es una maravilla*/
+        TypedValue typedValue = new TypedValue();
+        getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
+        int colorNight = typedValue.data;
+        imageViewLogo.setColorFilter(colorNight);
+        /*Esto es una maravilla*/
 
 
         new Handler().postDelayed(new Runnable() {
@@ -92,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 if (getInfoInicialActivityFlag()) {
                     startActivity(new Intent(MainActivity.this, MainNavigationActivity.class));
+//                    startActivity(new Intent(MainActivity.this, OficioArchiActivity.class));
                 } else {
                     startActivity(new Intent(MainActivity.this, InformacionInicialActivity.class));
                 }
@@ -110,5 +126,22 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
         return prefs.getBoolean("infoInicialActivityFlag", false);
     }
+
+    private void hideSystemBars() {
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+//        WindowInsetsControllerCompat windowInsetsController =
+//                ViewCompat.getWindowInsetsController(getWindow().getDecorView());
+//        if (windowInsetsController == null) {
+//            return;
+//        }
+//        // Configure the behavior of the hidden system bars
+//        windowInsetsController.setSystemBarsBehavior(
+//                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+//        );
+//        // Hide both the status bar and the navigation bar
+//        windowInsetsController.hide(WindowInsetsCompat.Type.systemBars());
+    }
+
 
 }

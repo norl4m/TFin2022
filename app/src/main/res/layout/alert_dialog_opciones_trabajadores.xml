@@ -1,141 +1,157 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="8dp">
+    android:layout_margin="60dp">
 
-    <TextView
-        android:id="@+id/textViewNombreUsuario"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Marlon Apolo"
-        android:textSize="18sp" />
+        android:layout_height="wrap_content">
 
+        <TextView
+            android:id="@+id/textViewNombreUsuario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Marlon Apolo"
+            android:textAppearance="@android:style/TextAppearance.Material.Headline"
+            android:textStyle="bold" />
 
-    <ImageView
-        android:id="@+id/imageViewTrabajador"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:layout_below="@id/textViewNombreUsuario"
-        android:layout_centerHorizontal="true"
-        android:scaleType="fitXY"
-        android:src="@drawable/ic_baseline_person_24" />
-
-
-<!--    <LinearLayout-->
-<!--        android:id="@+id/linearLayoutMessage"-->
-<!--        android:layout_width="90dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_below="@id/imageViewTrabajador"-->
-<!--        android:layout_alignParentStart="true"-->
-<!--        android:orientation="vertical">-->
-
-<!--        <ImageButton-->
-<!--            android:id="@+id/imageButtonMesssage"-->
-<!--            android:layout_width="56dp"-->
-<!--            android:layout_height="56dp"-->
-<!--            android:layout_gravity="center_horizontal"-->
-<!--            android:layout_margin="8dp"-->
-<!--            android:background="@drawable/ic_burbuja_de_dialogo" />-->
-
-<!--        <TextView-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="Mensaje"-->
-<!--            android:textAlignment="center"-->
-<!--            android:textSize="16sp" />-->
-<!--    </LinearLayout>-->
-
-
-<!--    <LinearLayout-->
-<!--        android:id="@+id/linearLayoutCall"-->
-<!--        android:layout_width="90dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_below="@id/imageViewTrabajador"-->
-<!--        android:layout_alignParentStart="true"-->
-<!--        android:orientation="vertical">-->
-
-<!--        <ImageButton-->
-<!--            android:id="@+id/imageButtonDelete"-->
-<!--            android:layout_width="56dp"-->
-<!--            android:layout_height="56dp"-->
-<!--            android:layout_gravity="center_horizontal"-->
-<!--            android:layout_margin="8dp"-->
-<!--            android:background="@drawable/ic_baseline_delete_forever_24" />-->
-
-<!--        <TextView-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="Borrar Usuario"-->
-<!--            android:textAlignment="center"-->
-<!--            android:textSize="16sp" />-->
-<!--    </LinearLayout>-->
-
-<!--    <LinearLayout-->
-<!--        android:id="@+id/linearLayoutInfo"-->
-<!--        android:layout_width="90dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_below="@id/imageViewTrabajador"-->
-<!--        android:layout_alignParentEnd="true"-->
-<!--        android:orientation="vertical">-->
-
-<!--        <ImageButton-->
-<!--            android:id="@+id/imageButtonInfo"-->
-<!--            android:layout_width="56dp"-->
-<!--            android:layout_height="56dp"-->
-<!--            android:layout_gravity="center_horizontal"-->
-<!--            android:layout_margin="8dp"-->
-<!--            android:background="@drawable/ic_baseline_info_24"/>-->
-
-<!--        <TextView-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="Información"-->
-<!--            android:textAlignment="center"-->
-<!--            android:textSize="16sp" />-->
-<!--    </LinearLayout>-->
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:orientation="horizontal"
-        android:layout_below="@id/imageViewTrabajador"
-        android:layout_marginTop="32dp">
 
         <ImageView
-            android:id="@+id/imageViewMessage"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="20"
-            android:scaleType="centerInside"
-            android:src="@drawable/ic_burbuja_de_dialogo" />
-
-        <ImageView
-            android:id="@+id/imageViewCall"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="20"
-            android:scaleType="centerInside"
-            android:src="@drawable/phone_call" />
-
-        <ImageView
-            android:id="@+id/imageViewVideoCall"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="20"
-            android:scaleType="centerInside"
-            android:src="@drawable/video_camera" />
-
-        <ImageView
-            android:id="@+id/imageViewInfo"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="20"
-            android:scaleType="centerInside"
-            android:src="@drawable/information" />
-
-    </LinearLayout>
+            android:id="@+id/imageViewTrabajador"
+            android:layout_width="match_parent"
+            android:layout_height="256dp"
+            android:layout_below="@id/textViewNombreUsuario"
+            android:layout_centerHorizontal="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_usuario" />
 
 
+        <!--    <LinearLayout-->
+        <!--        android:id="@+id/linearLayoutMessage"-->
+        <!--        android:layout_width="90dp"-->
+        <!--        android:layout_height="wrap_content"-->
+        <!--        android:layout_below="@id/imageViewTrabajador"-->
+        <!--        android:layout_alignParentStart="true"-->
+        <!--        android:orientation="vertical">-->
 
-</RelativeLayout>
+        <!--        <ImageButton-->
+        <!--            android:id="@+id/imageButtonMesssage"-->
+        <!--            android:layout_width="56dp"-->
+        <!--            android:layout_height="56dp"-->
+        <!--            android:layout_gravity="center_horizontal"-->
+        <!--            android:layout_margin="8dp"-->
+        <!--            android:background="@drawable/ic_burbuja_de_dialogo" />-->
+
+        <!--        <TextView-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:text="Mensaje"-->
+        <!--            android:textAlignment="center"-->
+        <!--            android:textSize="16sp" />-->
+        <!--    </LinearLayout>-->
+
+
+        <!--    <LinearLayout-->
+        <!--        android:id="@+id/linearLayoutCall"-->
+        <!--        android:layout_width="90dp"-->
+        <!--        android:layout_height="wrap_content"-->
+        <!--        android:layout_below="@id/imageViewTrabajador"-->
+        <!--        android:layout_alignParentStart="true"-->
+        <!--        android:orientation="vertical">-->
+
+        <!--        <ImageButton-->
+        <!--            android:id="@+id/imageButtonDelete"-->
+        <!--            android:layout_width="56dp"-->
+        <!--            android:layout_height="56dp"-->
+        <!--            android:layout_gravity="center_horizontal"-->
+        <!--            android:layout_margin="8dp"-->
+        <!--            android:background="@drawable/ic_baseline_delete_forever_24" />-->
+
+        <!--        <TextView-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:text="Borrar Usuario"-->
+        <!--            android:textAlignment="center"-->
+        <!--            android:textSize="16sp" />-->
+        <!--    </LinearLayout>-->
+
+        <!--    <LinearLayout-->
+        <!--        android:id="@+id/linearLayoutInfo"-->
+        <!--        android:layout_width="90dp"-->
+        <!--        android:layout_height="wrap_content"-->
+        <!--        android:layout_below="@id/imageViewTrabajador"-->
+        <!--        android:layout_alignParentEnd="true"-->
+        <!--        android:orientation="vertical">-->
+
+        <!--        <ImageButton-->
+        <!--            android:id="@+id/imageButtonInfo"-->
+        <!--            android:layout_width="56dp"-->
+        <!--            android:layout_height="56dp"-->
+        <!--            android:layout_gravity="center_horizontal"-->
+        <!--            android:layout_margin="8dp"-->
+        <!--            android:background="@drawable/ic_baseline_info_24"/>-->
+
+        <!--        <TextView-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:text="Información"-->
+        <!--            android:textAlignment="center"-->
+        <!--            android:textSize="16sp" />-->
+        <!--    </LinearLayout>-->
+
+        <LinearLayout
+            android:id="@+id/linLytButtons"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_below="@id/imageViewTrabajador"
+            android:divider="@drawable/divider_20p"
+            android:orientation="horizontal"
+            android:showDividers="middle">
+
+
+            <ImageView
+                android:id="@+id/imageViewMessage"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="8dp"
+                android:layout_weight="20"
+                android:padding="4dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_burbuja_de_dialogo" />
+
+            <ImageView
+                android:id="@+id/imageViewCall"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="8dp"
+                android:layout_weight="20"
+                android:padding="8dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/phone_call" />
+
+            <ImageView
+                android:id="@+id/imageViewVideoCall"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="8dp"
+                android:layout_weight="20"
+                android:padding="4dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/video_camera" />
+
+            <ImageView
+                android:id="@+id/imageViewInfo"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="8dp"
+                android:layout_weight="20"
+                android:padding="4dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/information" />
+
+        </LinearLayout>
+    </RelativeLayout>
+
+
+</androidx.cardview.widget.CardView>

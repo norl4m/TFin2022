@@ -19,8 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.marlon.apolo.tfinal2022.R;
-import com.marlon.apolo.tfinal2022.registro.RegNombreUsuarioActivity;
-import com.marlon.apolo.tfinal2022.registro.view.RegistroAdminActivity;
+import com.marlon.apolo.tfinal2022.registro.view.RegNombreUsuarioActivity;
 import com.marlon.apolo.tfinal2022.ui.oficios.OficioViewModel;
 
 import java.util.Collections;

@@ -14,20 +14,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.marlon.apolo.tfinal2022.R;
-import com.marlon.apolo.tfinal2022.buscador.BuscadorActivity;
+import com.marlon.apolo.tfinal2022.buscador.view.BuscadorActivity;
 import com.marlon.apolo.tfinal2022.config.ConfiguracionActivity;
-import com.marlon.apolo.tfinal2022.model.Oficio;
-import com.marlon.apolo.tfinal2022.ui.bienvenido.viewModel.OficioListAdapter;
 import com.marlon.apolo.tfinal2022.ui.bienvenido.viewModel.OficioViewModel;
 import com.marlon.apolo.tfinal2022.ui.bienvenido.viewModel.TrabajadorViewModel;
 import com.marlon.apolo.tfinal2022.ui.trabajadores.TrabajadorListAdapter;
-
-import java.util.ArrayList;
 
 public class TrabajadoresActivityVista extends AppCompatActivity {
 

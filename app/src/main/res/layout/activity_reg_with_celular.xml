@@ -82,25 +82,21 @@
         android:id="@+id/buttonVerificarCelular"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_below="@id/textFieldCode"
+        android:layout_margin="8dp"
         android:text="@string/verificar_celular"
         android:textAllCaps="false" />
+
 
     <Button
         android:id="@+id/buttonEnviarCode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_below="@id/textFieldCode"
+        android:layout_margin="8dp"
         android:text="@string/enviar_cdigo"
         android:textAllCaps="false" />
+
 
     <TextView
         android:id="@+id/textViewContador"
@@ -159,11 +155,8 @@
         android:id="@+id/buttonSolicitarNuevoCode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_below="@id/textFieldCode"
+        android:layout_margin="8dp"
         android:text="@string/solicitar_nuevo_codigo"
         android:textAllCaps="false" />
 </RelativeLayout>

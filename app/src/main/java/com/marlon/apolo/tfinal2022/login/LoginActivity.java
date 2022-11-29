@@ -9,7 +9,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.marlon.apolo.tfinal2022.MainNavigationActivity;
@@ -30,17 +32,40 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
+    private void hideSystemBars() {
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+//        WindowInsetsControllerCompat windowInsetsController =
+//                ViewCompat.getWindowInsetsController(getWindow().getDecorView());
+//        if (windowInsetsController == null) {
+//            return;
+//        }
+//        // Configure the behavior of the hidden system bars
+//        windowInsetsController.setSystemBarsBehavior(
+//                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+//        );
+//        // Hide both the status bar and the navigation bar
+//        windowInsetsController.hide(WindowInsetsCompat.Type.systemBars());
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        hideSystemBars();
         setContentView(R.layout.activity_login);
         SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         boolean mode = mPrefs.getBoolean("sync_theme", false);
-        if (mode) {
-//            ((ImageView) findViewById(R.id.imageView)).setColorFilter(getResources().getColor(R.color.white));
-            ((ImageView) findViewById(R.id.imageView)).setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.white));
+//        if (mode) {
+////            ((ImageView) findViewById(R.id.imageView)).setColorFilter(getResources().getColor(R.color.white));
+//            ((ImageView) findViewById(R.id.imageView)).setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.white));
+//
+//        }
+        TypedValue typedValue = new TypedValue();
+        this.getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
+        int colorNight = typedValue.data;
+        ((ImageView) findViewById(R.id.imageView)).setColorFilter(colorNight);
 
-        }
         setTempFlags();
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

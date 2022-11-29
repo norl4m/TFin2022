@@ -96,17 +96,17 @@ public class Empleador extends Usuario {
                             switch (metodoReg) {
                                 case 1:/*email*/
                                     RegWithEmailPasswordActivity regWithEmailPasswordActivity = (RegWithEmailPasswordActivity) activity;
-                                    regWithEmailPasswordActivity.closeCustomAlertDialog();
+                                    regWithEmailPasswordActivity.closeProgress();
                                     break;
                                 case 2:/*google*/
                                     RegWithGoogleActivity regWithGoogleActivity = (RegWithGoogleActivity) activity;
-                                    regWithGoogleActivity.closeCustomAlertDialog();
+                                    regWithGoogleActivity.closeProgressDialog();
 //                                    addToGoogleUsers(activity, empleador);
                                     break;
                                 case 3:/*phone*/
 //                                    addToPhoneUsers(activity, empleador);
                                     RegWithCelularActivity regWithCelularActivity = (RegWithCelularActivity) activity;
-                                    regWithCelularActivity.closeCustomAlertDialog();
+                                    regWithCelularActivity.closeProgressDialog();
                                     break;
 
                             }

@@ -4,8 +4,10 @@ import android.Manifest;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,6 +21,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -45,6 +48,7 @@ import com.marlon.apolo.tfinal2022.model.Habilidad;
 import com.marlon.apolo.tfinal2022.model.Oficio;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
 import com.marlon.apolo.tfinal2022.model.Usuario;
+import com.marlon.apolo.tfinal2022.ui.datosPersonales.view.FotoActivity;
 import com.marlon.apolo.tfinal2022.ui.empleadores.EmpleadorViewModel;
 import com.marlon.apolo.tfinal2022.ui.oficios.OficioViewModel;
 import com.marlon.apolo.tfinal2022.ui.oficios.OficioVistaListAdapter;
@@ -352,8 +356,11 @@ public class PerfilTrabajadorActivity extends AppCompatActivity {
 //                    Toast.makeText(getApplicationContext(), "TRABAJADOR", Toast.LENGTH_SHORT).show();
                     trabajadorSelected = trabajador;
                     textViewNombre.setText(trabajador.getNombre() + " " + trabajador.getApellido());
+                    TypedValue typedValue = new TypedValue();
+                    getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
                     try {
-                        if (!trabajador.getFotoPerfil().isEmpty()) {
+//                        if (!trabajador.getFotoPerfil().isEmpty()) {
+                        if (trabajador.getFotoPerfil() != null) {
                             //byte[] encodeByte = Base64.decode(trabajador.getFotoPerfil(), Base64.DEFAULT);
                             //Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
 
@@ -367,10 +374,18 @@ public class PerfilTrabajadorActivity extends AppCompatActivity {
                                     .load(trabajador.getFotoPerfil())
                                     .apply(new RequestOptions().override(300, 400))
                                     .placeholder(R.drawable.ic_baseline_person_24)
+                                    .circleCrop()
                                     .transition(DrawableTransitionOptions.withCrossFade())
                                     .into(imageView);
 
 
+                        } else {
+
+                            int colorPrimary = typedValue.data;
+                            Glide.with(PerfilTrabajadorActivity.this)
+                                    .load(ContextCompat.getDrawable(PerfilTrabajadorActivity.this, R.drawable.ic_usuario))
+                                    .placeholder(R.drawable.ic_usuario).into(imageView);
+                            imageView.setColorFilter(colorPrimary);
                         }
 
 
@@ -579,6 +594,17 @@ public class PerfilTrabajadorActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
+            }
+        });
+
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (trabajadorSelected.getFotoPerfil() != null) {
+                    Intent intentFoto = new Intent(PerfilTrabajadorActivity.this, FotoActivity.class);
+                    intentFoto.setData(Uri.parse(trabajadorSelected.getFotoPerfil()));
+                    PerfilTrabajadorActivity.this.startActivity(intentFoto);
+                }
             }
         });
     }

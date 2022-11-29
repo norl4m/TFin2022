@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".login.LoginActivity">
 
     <androidx.appcompat.widget.Toolbar
@@ -29,18 +30,31 @@
     <!--        android:textAllCaps="false"-->
     <!--        android:textColor="@color/black"-->
     <!--        android:textSize="18sp" />-->
+    <TextView
+        android:id="@+id/textViewTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar"
+        android:layout_margin="4dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="4dp"
+        android:text="Inicio de sesión"
+        android:textAppearance="@android:style/TextAppearance.Material.Headline"
+        android:textStyle="bold" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
         android:orientation="vertical">
 
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
+            android:layout_width="156dp"
+            android:layout_height="156dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="8dp"
             android:src="@drawable/ic_oficios"
@@ -48,88 +62,106 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/textViewContenido"
+        <!--        <TextView-->
+        <!--            android:id="@+id/textViewContenido"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:text="Bienvenido"-->
+        <!--            android:textAlignment="center"-->
+        <!--            android:textAppearance="@android:style/TextAppearance.Material.Display1"-->
+        <!--            android:textStyle="bold"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toBottomOf="@+id/imageView" />-->
+
+
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/app_name"
-            android:textAlignment="center"
-            android:textColor="@color/teal_200"
-            android:textSize="46sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView" />
+            android:layout_margin="16dp">
 
-        <Button
-            android:id="@+id/btnLoginWithEmail"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginStart="25dp"
-            android:layout_marginEnd="25dp"
-            android:drawableLeft="@drawable/ic_baseline_email_24"
-            android:drawableTint="@color/white"
-            android:text="@string/iniciar_sesion_con_email"
-            android:textAllCaps="false"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewContenido" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="4dp"
+                android:divider="@drawable/divider_10p"
+                android:orientation="vertical"
+                android:padding="8dp"
+                android:showDividers="middle">
 
-        <Button
-            android:id="@+id/btnLoginWithGoogle"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginStart="25dp"
-            android:layout_marginEnd="25dp"
-            android:drawableLeft="@drawable/googleg_standard_color_18"
-            android:drawableTint="@color/white"
-            android:text="@string/iniciar_sesion_con_google"
-            android:textAllCaps="false"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+                <Button
+                    android:id="@+id/btnLoginWithEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginEnd="25dp"
+                    android:drawableLeft="@drawable/ic_baseline_email_24"
+                    android:drawableTint="@color/white"
+                    android:text="@string/iniciar_sesion_con_email"
+                    android:textAllCaps="false"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textViewContenido" />
 
-        <Button
-            android:id="@+id/btnLoginWithPhone"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginStart="25dp"
-            android:layout_marginEnd="25dp"
-            android:drawableLeft="@drawable/ic_baseline_phone_android_24"
-            android:drawableTint="@color/white"
-            android:text="@string/iniciar_sesion_con_celular"
-            android:textAllCaps="false"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button4" />
+                <Button
+                    android:id="@+id/btnLoginWithGoogle"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginEnd="25dp"
+                    android:drawableLeft="@drawable/googleg_standard_color_18"
+                    android:drawableTint="@color/white"
+                    android:text="@string/iniciar_sesion_con_google"
+                    android:textAllCaps="false"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
 
-        <Button
-            android:id="@+id/textViewNuevoReg"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginStart="25dp"
-            android:layout_marginEnd="25dp"
-            android:backgroundTint="@color/purple_200"
-            android:text="@string/text_registro"
-            android:textAllCaps="false"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+                <Button
+                    android:id="@+id/btnLoginWithPhone"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginEnd="25dp"
+                    android:drawableLeft="@drawable/ic_baseline_phone_android_24"
+                    android:drawableTint="@color/white"
+                    android:text="@string/iniciar_sesion_con_celular"
+                    android:textAllCaps="false"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/button4" />
 
-        <Button
-            android:id="@+id/buttonContinuar"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginStart="25dp"
-            android:layout_marginEnd="25dp"
-            android:backgroundTint="@color/teal_200"
-            android:text="Omitir inicio de sesión"
-            android:textAllCaps="false"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+                <Button
+                    android:id="@+id/textViewNuevoReg"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginEnd="25dp"
+                    android:backgroundTint="@color/purple_200"
+                    android:text="@string/text_registro"
+                    android:textAllCaps="false"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <Button
+                    android:id="@+id/buttonContinuar"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginEnd="25dp"
+                    android:backgroundTint="@color/teal_200"
+                    android:text="Omitir inicio de sesión"
+                    android:textAllCaps="false"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+            </LinearLayout>
+
+        </ScrollView>
+
 
     </LinearLayout>
 
@@ -146,4 +178,4 @@
     <!--        android:visibility="gone" />-->
 
 
-</RelativeLayout>
+</LinearLayout>

@@ -1,4 +1,4 @@
-package com.marlon.apolo.tfinal2022.registro.view;
+package com.marlon.apolo.tfinal2022.registro;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -14,7 +14,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
-import android.net.Network;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.text.Editable;
@@ -30,9 +29,7 @@ import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
-import com.marlon.apolo.tfinal2022.MainNavigationActivity;
 import com.marlon.apolo.tfinal2022.R;
-import com.marlon.apolo.tfinal2022.buscador.BuscadorActivity;
 import com.marlon.apolo.tfinal2022.config.ConfiguracionActivity;
 import com.marlon.apolo.tfinal2022.herramientas.NetworkTool;
 import com.marlon.apolo.tfinal2022.login.LoginActivity;
@@ -367,9 +364,6 @@ public class RegWithEmailPocActivity extends AppCompatActivity implements View.O
                                 boolean isMetered = cm.isActiveNetworkMetered();
                                 Log.d(TAG, "isConnected: " + String.valueOf(isConnected));
                                 Log.d(TAG, "isMetered: " + String.valueOf(isMetered));
-
-
-
 
 
                                 if (networkTool.isOnlineWithDataAndWifi()) {

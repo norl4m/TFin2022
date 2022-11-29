@@ -187,6 +187,7 @@ public class BienvenidoFragment extends Fragment {
         RecyclerView recyclerView3 = root.findViewById(R.id.fragHomeRecyclerView3);
         recyclerView3.setVisibility(View.GONE);
         ProgressBar progressBar3 = root.findViewById(R.id.fragHomeProgressBar3);
+
         OficioVistaListAdapter oficioVistaListAdapter = new OficioVistaListAdapter(requireActivity());
         recyclerView3.setAdapter(oficioVistaListAdapter);
 //        recyclerView3.setLayoutManager(new LinearLayoutManager(requireActivity()));
@@ -215,7 +216,8 @@ public class BienvenidoFragment extends Fragment {
 
                     int numberOfElementsToShow = 5;
                     int oneElementHeight = 175;
-                    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, oneElementHeight * numberOfElementsToShow);
+//                    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, oneElementHeight * numberOfElementsToShow);
+                    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
                     recyclerView3.setLayoutParams(lp);
 
                 } else {
@@ -449,8 +451,8 @@ public class BienvenidoFragment extends Fragment {
     private void setInvitadoUI(View root) {
 //        loadTrabajadoresYOficios(root);
 //        loadTrabajadores(root);
-        root.findViewById(R.id.relativeLayout1).setVisibility(View.VISIBLE);/*Trabajadores*/
-        loadTrabajadoresVista(root);
+        root.findViewById(R.id.relativeLayout1).setVisibility(View.GONE);/*Trabajadores*/
+//        loadTrabajadoresVista(root);
         root.findViewById(R.id.relativeLayout2).setVisibility(View.GONE);/*Empleadores*/
         root.findViewById(R.id.relativeLayout4).setVisibility(View.GONE);/*Citas de trabajo*/
     }

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.marlon.apolo.tfinal2022">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.marlon.apolo.tfinal2022">
     <!-- Permiso necesario para saber si exsite o no conexión a Internet -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- Permiso necesario para que la aplicación pueda utilizar la cámara -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" /> <!-- Permiso necesario para que la aplicación pueda utilizar la cámara -->
@@ -89,12 +88,47 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TFinal2022">
         <activity
+            android:name=".ui.oficioArchi.view.OficioArchiEditDeleteActivity"
+            android:exported="false"
+            android:label="@string/no_nothing_text"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar" />
+        <activity
+            android:name=".ui.oficioArchi.view.NuevoOficioArchiActivity"
+            android:exported="false"
+            android:label="@string/no_nothing_text"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar" />
+        <activity
+            android:name=".ui.oficioArchi.view.OficioArchiActivity"
+            android:exported="false"
+            android:label="@string/no_nothing_text"
+            android:theme="@style/Theme.TFinal2022.NoActionBar" />
+        <activity
+            android:name=".registro.view.regMethod.RegistrarseConGoogleActivity"
+            android:exported="false"
+            android:label="@string/no_nothing_text"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar" />
+        <activity
+            android:name=".registro.view.regMethod.RegistrarseConCelularActivity"
+            android:exported="false"
+            android:label="@string/no_nothing_text"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar" />
+        <activity
+            android:name=".registro.view.regMethod.RegistrarseConEmailPasswordActivity"
+            android:exported="false"
+            android:label="@string/no_nothing_text"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar" />
+        <activity
             android:name=".login.LoginMainActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.TFinal2022.NoActionBar" />
         <activity
-            android:name=".registro.view.RegWithEmailPocActivity"
+            android:name=".registro.RegWithEmailPocActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.TFinal2022.NoActionBar" />
@@ -261,11 +295,13 @@ Set color used with incoming notification messages. This is used when no color i
         <activity
             android:name=".registro.view.MetodoRegActivity"
             android:exported="false"
+            android:label="@string/no_nothing_text"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.TFinal2022.NoActionBar" />
         <activity
-            android:name=".registro.RegNombreUsuarioActivity"
+            android:name=".registro.view.RegNombreUsuarioActivity"
             android:exported="false"
+            android:label="@string/no_nothing_text"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.TFinal2022.NoActionBar" />
         <activity
@@ -284,7 +320,7 @@ Set color used with incoming notification messages. This is used when no color i
             android:screenOrientation="portrait"
             android:theme="@style/Theme.TFinal2022.NoActionBar" />
         <activity
-            android:name=".buscador.BuscadorActivity"
+            android:name=".buscador.view.BuscadorActivity"
             android:exported="false"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
@@ -308,15 +344,15 @@ Set color used with incoming notification messages. This is used when no color i
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
         <activity
-            android:name=".registro.RegistroOficioActivity"
+            android:name=".registro.view.RegistroOficioActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.TFinal2022.NoActionBar" />
         <activity
-            android:name=".registro.RegistroRecordPolicialActivity"
+            android:name=".registro.view.RegistroRecordPolicialActivity"
             android:exported="false"
+            android:label="@string/no_nothing_text"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.TFinal2022.NoActionBar" />
         <activity
@@ -332,7 +368,7 @@ Set color used with incoming notification messages. This is used when no color i
         <activity
             android:name=".registro.view.PerfilActivity"
             android:exported="false"
-            android:label="Perfil"
+            android:label="@string/perfil_text"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.TFinal2022.NoActionBar" />
         <activity
@@ -344,13 +380,13 @@ Set color used with incoming notification messages. This is used when no color i
         <activity
             android:name=".login.LoginCelularActivity"
             android:exported="false"
-            android:label="@string/iniciar_sesion_con_celular"
+            android:label="@string/no_nothing_text"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.TFinal2022.NoActionBar" />
         <activity
             android:name=".login.LoginEmailPasswordActivity"
             android:exported="false"
-            android:label="@string/iniciar_sesion_con_email"
+            android:label="@string/no_nothing_text"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.TFinal2022.NoActionBar" />
         <activity
@@ -361,7 +397,7 @@ Set color used with incoming notification messages. This is used when no color i
         <activity
             android:name=".login.LoginActivity"
             android:exported="false"
-            android:label="@string/menu_iniciar_sesion"
+            android:label="@string/no_nothing_text"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.TFinal2022.NoActionBar" />
         <activity

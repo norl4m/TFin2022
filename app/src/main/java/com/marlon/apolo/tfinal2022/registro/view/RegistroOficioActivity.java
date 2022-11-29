@@ -1,4 +1,4 @@
-package com.marlon.apolo.tfinal2022.registro;
+package com.marlon.apolo.tfinal2022.registro.view;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -40,12 +40,12 @@ import com.marlon.apolo.tfinal2022.model.Empleador;
 import com.marlon.apolo.tfinal2022.model.Habilidad;
 import com.marlon.apolo.tfinal2022.model.Oficio;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
-import com.marlon.apolo.tfinal2022.registro.view.MetodoRegActivity;
 import com.marlon.apolo.tfinal2022.ui.bienvenido.BienvenidoViewModel;
 import com.marlon.apolo.tfinal2022.ui.datosPersonales.adaptadores.OficioSuperSpecialListAdapter;
 import com.marlon.apolo.tfinal2022.ui.oficios.OficioViewModel;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class RegistroOficioActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -122,6 +122,8 @@ public class RegistroOficioActivity extends AppCompatActivity implements View.On
                             oficios.add(oficio);
 
                         }
+                        Collections.sort(oficios, (t1, t2) -> (t1.getNombre()).compareTo(t2.getNombre()));
+
                         if (oficioSuperSpecialListAdapter.getOficioArrayList() != null) {
 
                             /*Si son iguales**************************/
@@ -602,11 +604,11 @@ public class RegistroOficioActivity extends AppCompatActivity implements View.On
                         Intent intent = new Intent(RegistroOficioActivity.this, MetodoRegActivity.class);
 //                        Intent intent = new Intent(RegistroOficioActivity.this, RegistroHabilidadActivity.class);
                         switch (regUsuario) {
-                            case 1:/*empleador*/
-
-                                intent.putExtra("usuario", regUsuario);
-                                intent.putExtra("empleador", empleador);
-                                break;
+//                            case 1:/*empleador*/
+//
+//                                intent.putExtra("usuario", regUsuario);
+//                                intent.putExtra("empleador", empleador);
+//                                break;
                             case 2:/*trabajador*/
 
                                 intent.putExtra("usuario", regUsuario);

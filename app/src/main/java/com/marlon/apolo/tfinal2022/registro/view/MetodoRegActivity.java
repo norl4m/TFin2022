@@ -27,9 +27,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,6 +40,9 @@ import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.login.LoginEmailPasswordActivity;
 import com.marlon.apolo.tfinal2022.model.Empleador;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
+import com.marlon.apolo.tfinal2022.registro.view.regMethod.RegistrarseConCelularActivity;
+import com.marlon.apolo.tfinal2022.registro.view.regMethod.RegistrarseConEmailPasswordActivity;
+import com.marlon.apolo.tfinal2022.registro.view.regMethod.RegistrarseConGoogleActivity;
 
 /**
  * Esta clase permite seleccionar el método de autenticación para los usuarios que se
@@ -54,6 +60,22 @@ public class MetodoRegActivity extends AppCompatActivity implements View.OnClick
     private int regUsuario;
     private Empleador empleador;
     private Trabajador trabajador;
+    private int colorTheme;
+
+    private void hideSystemBars() {
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//        WindowInsetsControllerCompat windowInsetsController =
+//                ViewCompat.getWindowInsetsController(getWindow().getDecorView());
+//        if (windowInsetsController == null) {
+//            return;
+//        }
+//        // Configure the behavior of the hidden system bars
+//        windowInsetsController.setSystemBarsBehavior(
+//                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+//        );
+//        // Hide both the status bar and the navigation bar
+//        windowInsetsController.hide(WindowInsetsCompat.Type.systemBars());
+    }
 
     /**
      * Este método permite inicializar los componentes de la interfaz gráfica para la
@@ -62,7 +84,9 @@ public class MetodoRegActivity extends AppCompatActivity implements View.OnClick
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_metodo_reg);
+//        setContentView(R.layout.activity_metodo_reg);
+        hideSystemBars();
+        setContentView(R.layout.activity_metodo_reg_poc);
 
         optionReg = 0;
 
@@ -75,15 +99,15 @@ public class MetodoRegActivity extends AppCompatActivity implements View.OnClick
             }
         });
 
-        findViewById(R.id.radioBtnCorreoPassword).setOnClickListener(this);
-        findViewById(R.id.radioBtnGoogle).setOnClickListener(this);
-        findViewById(R.id.radioBtnCelular).setOnClickListener(this);
-
-        findViewById(R.id.buttonInfo).setOnClickListener(this);
-
-        buttonNext = findViewById(R.id.buttonNext);
-        buttonNext.setEnabled(false);
-        buttonNext.setOnClickListener(this);
+//        findViewById(R.id.radioBtnCorreoPassword).setOnClickListener(this);
+//        findViewById(R.id.radioBtnGoogle).setOnClickListener(this);
+//        findViewById(R.id.radioBtnCelular).setOnClickListener(this);
+//
+//        findViewById(R.id.buttonInfo).setOnClickListener(this);
+//
+//        buttonNext = findViewById(R.id.buttonNext);
+//        buttonNext.setEnabled(false);
+//        buttonNext.setOnClickListener(this);
 
         regUsuario = getIntent().getIntExtra("usuario", -1);
 
@@ -100,23 +124,52 @@ public class MetodoRegActivity extends AppCompatActivity implements View.OnClick
 //
 //        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
 //
+
+        /*Esto es una maravilla*/
+        TypedValue typedValue = new TypedValue();
+        getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
+        colorTheme = typedValue.data;
+        /*Esto es una maravilla*/
+
+
+        buttonNext = findViewById(R.id.buttonNext);
+//        buttonRecord = findViewById(R.id.buttonRecordPolicial);
+//
+//        findViewById(R.id.buttonInfo).setOnClickListener(this);
+        findViewById(R.id.cardViewEmailPass).setOnClickListener(this);
+        ImageView imageViewEmail = findViewById(R.id.imgViewEmailPass);
+        imageViewEmail.setColorFilter(colorTheme);
+
+        findViewById(R.id.cardViewGoogle).setOnClickListener(this);
+        ImageView imageViewGoogle = findViewById(R.id.imgViewGoogle);
+        imageViewGoogle.setColorFilter(colorTheme);
+
+        findViewById(R.id.cardViewPhone).setOnClickListener(this);
+        ImageView imageViewPhone = findViewById(R.id.imgViewPhone);
+        imageViewPhone.setColorFilter(colorTheme);
+//        buttonRecord.setOnClickListener(this);
+        buttonNext.setOnClickListener(this);
+//        imageButtonFotoRecord.setOnClickListener(this);
+//
+        buttonNext.setEnabled(false);
+
         SharedPreferences myPreferences = this.getSharedPreferences("MyPreferences", MODE_PRIVATE);
         SharedPreferences.Editor editorPref = myPreferences.edit();
         int u = myPreferences.getInt("methodTemp", -1);
         try {
             switch (u) {
                 case 1:
-                    ((RadioButton) findViewById(R.id.radioBtnCorreoPassword)).setChecked(true);
+//                    ((RadioButton) findViewById(R.id.radioBtnCorreoPassword)).setChecked(true);
                     optionReg = 1;
                     buttonNext.setEnabled(true);
                     break;
                 case 2:
-                    ((RadioButton) findViewById(R.id.radioBtnGoogle)).setChecked(true);
+//                    ((RadioButton) findViewById(R.id.radioBtnGoogle)).setChecked(true);
                     optionReg = 2;
                     buttonNext.setEnabled(true);
                     break;
                 case 3:
-                    ((RadioButton) findViewById(R.id.radioBtnCelular)).setChecked(true);
+//                    ((RadioButton) findViewById(R.id.radioBtnCelular)).setChecked(true);
                     optionReg = 3;
                     buttonNext.setEnabled(true);
                     break;
@@ -147,26 +200,55 @@ public class MetodoRegActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View v) {
         // Check to see if a button has been clicked.
         try {
-            boolean checked = ((RadioButton) v).isChecked();
+            //boolean checked = ((RadioButton) v).isChecked();
             // Check which radio button was clicked.
             switch (v.getId()) {
-                case R.id.radioBtnCorreoPassword:
-                    if (checked) {
-                        optionReg = 1;
-                        buttonNext.setEnabled(true);
+                case R.id.cardViewEmailPass:
+                case R.id.imgViewEmailPass:
+                    Intent intentEmail = new Intent(MetodoRegActivity.this, RegWithEmailPasswordActivity.class);
+//                    Intent intentEmail = new Intent(MetodoRegActivity.this, RegWithEmailPocActivity.class);
+//                    Intent intentEmail = new Intent(MetodoRegActivity.this, RegistrarseConEmailPasswordActivity.class);
+
+                    intentEmail.putExtra("usuario", regUsuario);
+                    switch (regUsuario) {
+                        case 1:
+                            intentEmail.putExtra("empleador", empleador);
+                            break;
+                        case 2:
+                            intentEmail.putExtra("trabajador", trabajador);
+                            break;
                     }
+                    startActivity(intentEmail);
                     break;
-                case R.id.radioBtnGoogle:
-                    if (checked) {
-                        optionReg = 2;
-                        buttonNext.setEnabled(true);
+                case R.id.cardViewGoogle:
+                case R.id.imgViewGoogle:
+                    Intent intentGoogle = new Intent(MetodoRegActivity.this, RegWithGoogleActivity.class);
+//                    Intent intentGoogle = new Intent(MetodoRegActivity.this, RegistrarseConGoogleActivity.class);
+                    intentGoogle.putExtra("usuario", regUsuario);
+                    switch (regUsuario) {
+                        case 1:
+                            intentGoogle.putExtra("empleador", empleador);
+                            break;
+                        case 2:
+                            intentGoogle.putExtra("trabajador", trabajador);
+                            break;
                     }
+                    startActivity(intentGoogle);
                     break;
-                case R.id.radioBtnCelular:
-                    if (checked) {
-                        optionReg = 3;
-                        buttonNext.setEnabled(true);
+                case R.id.cardViewPhone:
+                case R.id.imgViewPhone:
+                    Intent intentCelular = new Intent(MetodoRegActivity.this, RegWithCelularActivity.class);
+//                    Intent intentCelular = new Intent(MetodoRegActivity.this, RegistrarseConCelularActivity.class);
+                    intentCelular.putExtra("usuario", regUsuario);
+                    switch (regUsuario) {
+                        case 1:
+                            intentCelular.putExtra("empleador", empleador);
+                            break;
+                        case 2:
+                            intentCelular.putExtra("trabajador", trabajador);
+                            break;
                     }
+                    startActivity(intentCelular);
                     break;
             }
         } catch (Exception e) {

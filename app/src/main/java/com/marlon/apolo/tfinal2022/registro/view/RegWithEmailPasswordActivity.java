@@ -91,43 +91,43 @@ public class RegWithEmailPasswordActivity extends AppCompatActivity implements V
     public static void setsPref(boolean sPref) {
         RegWithEmailPasswordActivity.sPref = sPref;
     }
-
-    public void showCustomProgressDialog(String title, String message) {
-        try {
-            closeCustomAlertDialog();
-        } catch (Exception e) {
-            Log.d(TAG, e.toString());
-        }
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        // Get the layout inflater
-        LayoutInflater inflater = this.getLayoutInflater();
-        View promptsView = inflater.inflate(R.layout.custom_progress_dialog, null);
-
-
-        // set prompts.xml to alertdialog builder
-        builder.setView(promptsView);
-        // Inflate and set the layout for the dialog
-        // Pass null as the parent view because its going in the dialog layout
-//        builder.setView(inflater.inflate(R.layout.custom_progress_dialog, null));
-//        return builder.create();
-        final TextView textViewTitle = promptsView.findViewById(R.id.textViewTitle);
-        final TextView textViewMessage = promptsView.findViewById(R.id.textViewMessage);
-
-        textViewTitle.setText(title);
-        textViewMessage.setText(message);
-
-        alertDialogVar = builder.create();
-        alertDialogVar.show();
-//        builder.show();
-    }
-
-    public void closeCustomAlertDialog() {
-        try {
-            alertDialogVar.dismiss();
-        } catch (Exception e) {
-
-        }
-    }
+//
+//    public void showCustomProgressDialog(String title, String message) {
+//        try {
+//            closeCustomAlertDialog();
+//        } catch (Exception e) {
+//            Log.d(TAG, e.toString());
+//        }
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        // Get the layout inflater
+//        LayoutInflater inflater = this.getLayoutInflater();
+//        View promptsView = inflater.inflate(R.layout.custom_progress_dialog, null);
+//
+//
+//        // set prompts.xml to alertdialog builder
+//        builder.setView(promptsView);
+//        // Inflate and set the layout for the dialog
+//        // Pass null as the parent view because its going in the dialog layout
+////        builder.setView(inflater.inflate(R.layout.custom_progress_dialog, null));
+////        return builder.create();
+//        final TextView textViewTitle = promptsView.findViewById(R.id.textViewTitle);
+//        final TextView textViewMessage = promptsView.findViewById(R.id.textViewMessage);
+//
+//        textViewTitle.setText(title);
+//        textViewMessage.setText(message);
+//
+//        alertDialogVar = builder.create();
+//        alertDialogVar.show();
+////        builder.show();
+//    }
+//
+//    public void closeCustomAlertDialog() {
+//        try {
+//            alertDialogVar.dismiss();
+//        } catch (Exception e) {
+//
+//        }
+//    }
 
 
     @Override
@@ -248,11 +248,16 @@ public class RegWithEmailPasswordActivity extends AppCompatActivity implements V
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 email = s.toString();
-                if (!email.isEmpty() && !password.isEmpty()) {
-                    buttonFinish.setEnabled(true);
-                } else {
-                    buttonFinish.setEnabled(false);
+                try {
+                    if (!email.isEmpty() && !password.isEmpty()) {
+                        buttonFinish.setEnabled(true);
+                    } else {
+                        buttonFinish.setEnabled(false);
+                    }
+                } catch (Exception e) {
+
                 }
+
             }
 
             @Override
@@ -270,11 +275,16 @@ public class RegWithEmailPasswordActivity extends AppCompatActivity implements V
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 password = s.toString();
-                if (!email.isEmpty() && !password.isEmpty()) {
-                    buttonFinish.setEnabled(true);
-                } else {
-                    buttonFinish.setEnabled(false);
+                try {
+                    if (!email.isEmpty() && !password.isEmpty()) {
+                        buttonFinish.setEnabled(true);
+                    } else {
+                        buttonFinish.setEnabled(false);
+                    }
+                } catch (Exception e) {
+
                 }
+
             }
 
             @Override
@@ -291,7 +301,8 @@ public class RegWithEmailPasswordActivity extends AppCompatActivity implements V
 //        message = "Cachuelito se encuentra verificando su información personal..." + "(Rev)";
         message = "Cachuelito se encuentra verificando su información personal...";
 
-        showCustomProgressDialog(title, message);
+        showProgress(title, message);
+//        showCustomProgressDialog(title, message);
 //            Toast.makeText(getApplicationContext(), "Normalin", Toast.LENGTH_LONG).show();
         normalReg(email, password);
 
@@ -479,8 +490,7 @@ public class RegWithEmailPasswordActivity extends AppCompatActivity implements V
                             }
 
                             try {
-//                                closeProgress();
-                                closeCustomAlertDialog();
+                                closeProgress();
                             } catch (Exception exception) {
 
                             }
@@ -579,9 +589,8 @@ public class RegWithEmailPasswordActivity extends AppCompatActivity implements V
 //                        closeProgress();
 //                        closeCustomAlertDialog();
                         title = "Por favor espere";
-                        message = "Su cuenta ya casi está lista!";
-//                        showProgress(title, message);
-                        showCustomProgressDialog(title, message);
+                        message = "Su cuenta ya casi está lista...";
+                        showProgress(title, message);
 
                         usuarioEmpleador.registrarseEnFirebaseConFoto(RegWithEmailPasswordActivity.this, 1);
                     } else {
@@ -624,9 +633,8 @@ public class RegWithEmailPasswordActivity extends AppCompatActivity implements V
 //                        closeProgress();
 //                        closeCustomAlertDialog();
                         title = "Por favor espere";
-                        message = "Su cuenta ya casi está lista!";
-//                        showProgress(title, message);
-                        showCustomProgressDialog(title, message);
+                        message = "Su cuenta ya casi está lista...";
+                        showProgress(title, message);
 
                         usuarioTrabajador.registrarseEnFirebaseConFoto(RegWithEmailPasswordActivity.this, 1);
                     } else {
@@ -862,8 +870,8 @@ public class RegWithEmailPasswordActivity extends AppCompatActivity implements V
                         .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-//                                closeProgress();
-                                closeCustomAlertDialog();
+                                closeProgress();
+//                                closeCustomAlertDialog();
 
                             }
                         });

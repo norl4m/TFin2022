@@ -167,7 +167,8 @@ public class RegWithGoogleActivity extends AppCompatActivity implements View.OnC
                 .setGoogleIdTokenRequestOptions(BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
                         .setSupported(true)
                         // Your server's client ID, not your Android client ID.
-                        .setServerClientId(getString(R.string.default_web_client_id))
+//                        .setServerClientId(getString(R.string.default_web_client_id))
+                        .setServerClientId("299262505124-56887uu0pge1go2355rhu4thf0oagr55.apps.googleusercontent.com")
                         // Show all accounts on the device.
                         .setFilterByAuthorizedAccounts(false)
                         .build())
@@ -355,46 +356,13 @@ public class RegWithGoogleActivity extends AppCompatActivity implements View.OnC
         return builder.create();
     }
 
-    public void showCustomProgressDialog(String title, String message) {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        // Get the layout inflater
-        LayoutInflater inflater = this.getLayoutInflater();
-        View promptsView = inflater.inflate(R.layout.custom_progress_dialog, null);
-
-
-        // set prompts.xml to alertdialog builder
-        builder.setView(promptsView);
-        // Inflate and set the layout for the dialog
-        // Pass null as the parent view because its going in the dialog layout
-//        builder.setView(inflater.inflate(R.layout.custom_progress_dialog, null));
-//        return builder.create();
-        final TextView textViewTitle = promptsView.findViewById(R.id.textViewTitle);
-        final TextView textViewMessage = promptsView.findViewById(R.id.textViewMessage);
-
-        textViewTitle.setText(title);
-        textViewMessage.setText(message);
-
-        alertDialogVar = builder.create();
-        alertDialogVar.show();
-//        builder.show();
-    }
-
-
-    public void closeCustomAlertDialog() {
-        try {
-            alertDialogVar.dismiss();
-        } catch (Exception e) {
-
-        }
-    }
     // [START auth_with_google]
     private void firebaseAuthWithGoogle(String idToken) {
         title = "Por favor espere";
         message = "Cachuelito se encuentra verificando su información personal...";
 //
-//        showProgress(title, message);
-        showCustomProgressDialog(title, message);
+        showProgress(title, message);
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -410,7 +378,7 @@ public class RegWithGoogleActivity extends AppCompatActivity implements View.OnC
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
                             Toast.makeText(getApplicationContext(), getResources().getString(R.string.error_inesperado), Toast.LENGTH_LONG).show();
                             updateUI(null);
-                            closeCustomAlertDialog();
+                            closeProgressDialog();
                         }
                     }
                 });

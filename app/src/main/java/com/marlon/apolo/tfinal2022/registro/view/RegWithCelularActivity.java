@@ -289,7 +289,7 @@ public class RegWithCelularActivity extends AppCompatActivity implements View.On
                 buttonVerificarCelular.setVisibility(View.GONE);
                 textInputLayoutCode.setEnabled(true);
 //                Toast.makeText(getApplicationContext(), "Se ha enviado un código a su aplicación de mensajes. Para continuar ingrese el código de 6 dìgitos ", Toast.LENGTH_LONG).show();
-                closeCustomAlertDialogAuth();
+                closeProgressDialog();
 
                 alertDialogInfoEnvioCodigo();
 
@@ -419,7 +419,7 @@ public class RegWithCelularActivity extends AppCompatActivity implements View.On
         title = "Por favor espere";
         message = "Cachuelito se encuentra verificando su número de teléfono...";
 //
-        showCustomProgressDialogAuth(title, message);
+        showProgress(title, message);
 
 //        startContador();
         phoneNumberVerif = phoneNumber;
@@ -441,76 +441,76 @@ public class RegWithCelularActivity extends AppCompatActivity implements View.On
         title = "Por favor espere";
         message = "Cachuelito se encuentra verificando el código ingresado...";
 //
-        showCustomProgressDialog(title, message);
+        showProgress(title, message);
 
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
         signInWithPhoneAuthCredential(credential);
         // [END verify_with_code]
     }
 
-    public void showCustomProgressDialog(String title, String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        // Get the layout inflater
-        LayoutInflater inflater = this.getLayoutInflater();
-        View promptsView = inflater.inflate(R.layout.custom_progress_dialog, null);
+//    public void showCustomProgressDialog(String title, String message) {
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        // Get the layout inflater
+//        LayoutInflater inflater = this.getLayoutInflater();
+//        View promptsView = inflater.inflate(R.layout.custom_progress_dialog, null);
+//
+//
+//        // set prompts.xml to alertdialog builder
+//        builder.setView(promptsView);
+//        // Inflate and set the layout for the dialog
+//        // Pass null as the parent view because its going in the dialog layout
+////        builder.setView(inflater.inflate(R.layout.custom_progress_dialog, null));
+////        return builder.create();
+//        final TextView textViewTitle = promptsView.findViewById(R.id.textViewTitle);
+//        final TextView textViewMessage = promptsView.findViewById(R.id.textViewMessage);
+//
+//        textViewTitle.setText(title);
+//        textViewMessage.setText(message);
+//
+//        alertDialogVar = builder.create();
+//        alertDialogVar.show();
+////        builder.show();
+//    }
 
+//    public void showCustomProgressDialogAuth(String title, String message) {
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        // Get the layout inflater
+//        LayoutInflater inflater = this.getLayoutInflater();
+//        View promptsView = inflater.inflate(R.layout.custom_progress_dialog, null);
+//
+//
+//        // set prompts.xml to alertdialog builder
+//        builder.setView(promptsView);
+//        // Inflate and set the layout for the dialog
+//        // Pass null as the parent view because its going in the dialog layout
+////        builder.setView(inflater.inflate(R.layout.custom_progress_dialog, null));
+////        return builder.create();
+//        final TextView textViewTitle = promptsView.findViewById(R.id.textViewTitle);
+//        final TextView textViewMessage = promptsView.findViewById(R.id.textViewMessage);
+//
+//        textViewTitle.setText(title);
+//        textViewMessage.setText(message);
+//
+//        alertDialogVarAuth = builder.create();
+//        alertDialogVarAuth.show();
+////        builder.show();
+//    }
 
-        // set prompts.xml to alertdialog builder
-        builder.setView(promptsView);
-        // Inflate and set the layout for the dialog
-        // Pass null as the parent view because its going in the dialog layout
-//        builder.setView(inflater.inflate(R.layout.custom_progress_dialog, null));
-//        return builder.create();
-        final TextView textViewTitle = promptsView.findViewById(R.id.textViewTitle);
-        final TextView textViewMessage = promptsView.findViewById(R.id.textViewMessage);
+//    public void closeCustomAlertDialog() {
+//        try {
+//            alertDialogVar.dismiss();
+//        } catch (Exception e) {
+//
+//        }
+//    }
 
-        textViewTitle.setText(title);
-        textViewMessage.setText(message);
-
-        alertDialogVar = builder.create();
-        alertDialogVar.show();
-//        builder.show();
-    }
-
-    public void showCustomProgressDialogAuth(String title, String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        // Get the layout inflater
-        LayoutInflater inflater = this.getLayoutInflater();
-        View promptsView = inflater.inflate(R.layout.custom_progress_dialog, null);
-
-
-        // set prompts.xml to alertdialog builder
-        builder.setView(promptsView);
-        // Inflate and set the layout for the dialog
-        // Pass null as the parent view because its going in the dialog layout
-//        builder.setView(inflater.inflate(R.layout.custom_progress_dialog, null));
-//        return builder.create();
-        final TextView textViewTitle = promptsView.findViewById(R.id.textViewTitle);
-        final TextView textViewMessage = promptsView.findViewById(R.id.textViewMessage);
-
-        textViewTitle.setText(title);
-        textViewMessage.setText(message);
-
-        alertDialogVarAuth = builder.create();
-        alertDialogVarAuth.show();
-//        builder.show();
-    }
-
-    public void closeCustomAlertDialog() {
-        try {
-            alertDialogVar.dismiss();
-        } catch (Exception e) {
-
-        }
-    }
-
-    public void closeCustomAlertDialogAuth() {
-        try {
-            alertDialogVarAuth.dismiss();
-        } catch (Exception e) {
-
-        }
-    }
+//    public void closeCustomAlertDialogAuth() {
+//        try {
+//            alertDialogVarAuth.dismiss();
+//        } catch (Exception e) {
+//
+//        }
+//    }
 
     // [START resend_verification]
     private void resendVerificationCode(String phoneNumber, PhoneAuthProvider.ForceResendingToken token) {
@@ -533,10 +533,9 @@ public class RegWithCelularActivity extends AppCompatActivity implements View.On
 
     // [START sign_in_with_phone]
     private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
-        closeCustomAlertDialog();
         title = "Por favor espere";
         message = "Cachuelito se encuentra verificando su información personal...";
-        showCustomProgressDialog(title, message);
+        showProgress(title, message);
 
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -589,7 +588,7 @@ public class RegWithCelularActivity extends AppCompatActivity implements View.On
                             try {
 //                                closeProgressDialog();
 
-                                closeCustomAlertDialog();
+                                closeProgressDialog();
                             } catch (Exception e) {
 
                             }
@@ -607,7 +606,7 @@ public class RegWithCelularActivity extends AppCompatActivity implements View.On
     private void updateUI(FirebaseUser user) {
         boolean photoFlag = false;
         if (user != null) {
-            closeCustomAlertDialog();
+            closeProgressDialog();
             switch (regUsuario) {
                 case 1:
                     photoFlag = false;
@@ -1141,7 +1140,7 @@ public class RegWithCelularActivity extends AppCompatActivity implements View.On
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        closeCustomAlertDialog();
+        closeProgressDialog();
     }
 
     public boolean isOnlineWithWifi() {

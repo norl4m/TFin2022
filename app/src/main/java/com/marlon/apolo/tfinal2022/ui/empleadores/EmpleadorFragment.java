@@ -18,12 +18,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.marlon.apolo.tfinal2022.R;
-import com.marlon.apolo.tfinal2022.model.Empleador;
 import com.marlon.apolo.tfinal2022.model.Usuario;
-import com.marlon.apolo.tfinal2022.registro.RegNombreUsuarioActivity;
+import com.marlon.apolo.tfinal2022.registro.view.RegNombreUsuarioActivity;
 
 import java.util.Collections;
 import java.util.Comparator;

@@ -25,6 +25,7 @@ import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -379,6 +380,17 @@ public class CrazyIndividualChatActivity extends AppCompatActivity implements Vi
         findViewById(R.id.imageButtonCall).setOnClickListener(this);
         findViewById(R.id.imageButtonVideoCall).setOnClickListener(this);
         findViewById(R.id.buttonAttachFile).setOnClickListener(this);
+
+        ImageView imageViewCall = findViewById(R.id.imageButtonCall);
+        ImageView imageViewVideoCall = findViewById(R.id.imageButtonVideoCall);
+
+        /*Esto es una maravilla*/
+        TypedValue typedValue = new TypedValue();
+        getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
+        int colorNight = typedValue.data;
+        imageViewCall.setColorFilter(colorNight);
+        imageViewVideoCall.setColorFilter(colorNight);
+        /*Esto es una maravilla*/
 
         Trabajador trabajador = (Trabajador) getIntent().getSerializableExtra("trabajador");
         String idRemoteUser = getIntent().getStringExtra("idRemoteUser");
