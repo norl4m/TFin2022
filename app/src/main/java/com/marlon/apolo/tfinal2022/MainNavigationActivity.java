@@ -205,7 +205,12 @@ public class MainNavigationActivity extends AppCompatActivity {
 //                citaLocal.actualizarCita();
                 float calif = 1;
                 calificarTrabajador(calif, citaLocal);
-                alertD.dismiss();
+                try {
+                    alertD.dismiss();
+
+                } catch (Exception e) {
+                    Log.d(TAG, e.toString());
+                }
             }
         });
         calif2.setOnClickListener(new View.OnClickListener() {
