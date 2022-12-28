@@ -119,8 +119,8 @@ public class MainNavigationActivity extends AppCompatActivity {
 
                         if (cita.getTo().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
                             if (cita.isStateReceive() && cita.isState() && cita.getCalificacion() == 0) {
-                                Log.d(TAG, "#################################");
-//                                Log.d(TAG, "LOKURA");
+//                                Log.d(TAG, "#################################");
+                                Log.d(TAG, "LOKURA");
                                 alertD = califTrabajador(cita);
                                 try {
                                     alertD.show();
