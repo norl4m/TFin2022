@@ -32,6 +32,7 @@
                 android:id="@+id/textViewNombreContact"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/andika"
                 android:text="Marlon Apolo"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -47,6 +48,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="4dp"
                     android:layout_toStartOf="@id/points"
+                    android:fontFamily="@font/andika"
                     android:maxLines="1"
                     android:text="Hola Marlon, necesito" />
 
@@ -71,6 +73,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="4dp"
             android:layout_toStartOf="@id/imageViewReadStatus"
+            android:fontFamily="@font/andika"
             android:inputType="textMultiLine|textFilter"
             android:text="20 ago. 2021 12:33:08 p. m."
             android:textAlignment="center"

@@ -1,4 +1,4 @@
-package com.marlon.apolo.tfinal2022.ui.datosPersonales.view;
+package com.marlon.apolo.tfinal2022.ui.datosPersonales;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

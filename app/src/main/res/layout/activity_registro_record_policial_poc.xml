@@ -15,14 +15,6 @@
         app:navigationIcon="@drawable/ic_baseline_arrow_back_24"
         app:title="">
 
-        <Button
-            android:id="@+id/buttonNext"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:enabled="false"
-            android:text="Siguiente"
-            android:textAllCaps="false" />
     </androidx.appcompat.widget.Toolbar>
 
     <TextView
@@ -33,9 +25,9 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
+        android:fontFamily="@font/andika"
         android:text="Por favor registre su record policial:"
-        android:textAppearance="@android:style/TextAppearance.Material.Headline"
-        android:textStyle="bold" />
+        android:textAppearance="@android:style/TextAppearance.Material.Headline" />
 
     <!--    <ScrollView-->
     <!--        android:layout_width="match_parent"-->
@@ -44,7 +36,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/textViewHeading"
         android:layout_margin="4dp"
         android:orientation="vertical"
         android:weightSum="3">
@@ -86,23 +77,17 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="2dp"
-                        android:layout_marginEnd="2dp"
-                        android:layout_marginBottom="2dp"
+                        android:fontFamily="@font/andika"
                         android:text="Cámara"
-                        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"
-                        android:textSize="28sp"
-                        android:textStyle="bold" />
+                        android:textAppearance="@android:style/TextAppearance.Material.Body1" />
 
                     <TextView
                         android:id="@+id/textViewCamLegend"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="2dp"
-                        android:layout_marginTop="2dp"
-                        android:layout_marginEnd="2dp"
-                        android:layout_marginBottom="2dp"
-                        android:text="Validar su record policial a través de una captura de foto utilizando la cámara de su dispositivo móvil." />
+                        android:fontFamily="@font/andika"
+                        android:text="Validar su record policial a través de una captura de foto utilizando la cámara de su dispositivo móvil."
+                        android:textSize="12sp" />
 
                 </LinearLayout>
 
@@ -146,24 +131,17 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="2dp"
-                        android:layout_marginTop="2dp"
-                        android:layout_marginEnd="2dp"
-                        android:layout_marginBottom="2dp"
+                        android:fontFamily="@font/andika"
                         android:text="Galería"
-                        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"
-                        android:textSize="28sp"
-                        android:textStyle="bold" />
+                        android:textAppearance="@android:style/TextAppearance.Material.Body1" />
 
                     <TextView
                         android:id="@+id/textViewGalleryLegend"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="2dp"
-                        android:layout_marginTop="2dp"
-                        android:layout_marginEnd="2dp"
-                        android:layout_marginBottom="2dp"
-                        android:text="Validar su record policial utilizando una foto almacenada en la galería de imágenes." />
+                        android:fontFamily="@font/andika"
+                        android:text="Validar su record policial utilizando una foto almacenada en la galería de imágenes."
+                        android:textSize="12sp" />
 
                 </LinearLayout>
 
@@ -207,27 +185,33 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="2dp"
-                        android:layout_marginTop="2dp"
-                        android:layout_marginEnd="2dp"
-                        android:layout_marginBottom="2dp"
                         android:text="PDF"
-                        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"
-                        android:textSize="28sp"
-                        android:textStyle="bold" />
+                        android:textAppearance="@android:style/TextAppearance.Material.Body1" />
 
                     <TextView
                         android:id="@+id/textViewPdfLegend"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="2dp"
+                        android:fontFamily="@font/andika"
+                        android:textSize="12sp"
                         android:text="Validar su record policial utilizando un archivo PDF previamente descargado de internet." />
 
                 </LinearLayout>
 
 
             </LinearLayout>
+
         </androidx.cardview.widget.CardView>
+
+        <Button
+            android:id="@+id/buttonNext"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_margin="8dp"
+            android:enabled="false"
+            android:text="Continuar"
+            android:textAllCaps="false" />
+
 
     </LinearLayout>
 

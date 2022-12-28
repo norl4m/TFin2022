@@ -8,6 +8,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.marlon.apolo.tfinal2022.model.Oficio;
 import com.marlon.apolo.tfinal2022.ui.oficioArchi.model.OficioArchiModel;
 import com.marlon.apolo.tfinal2022.ui.oficioArchi.repository.OficioArchiRepository;
 import com.marlon.apolo.tfinal2022.ui.oficioArchi.view.NuevoOficioArchiActivity;
@@ -33,13 +34,13 @@ public class OficioArchiViewModel extends AndroidViewModel {
         return allOficios;
     }
 
-    public void insert(OficioArchiModel oficioArchiModel, NuevoOficioArchiActivity nuevoOficioArchiActivity, ProgressDialog progressDialog) {
+    public void insert(Oficio oficioArchiModel, NuevoOficioArchiActivity nuevoOficioArchiActivity, ProgressDialog progressDialog) {
         mRepository.writeNewOficioWithTaskListeners(oficioArchiModel, nuevoOficioArchiActivity, progressDialog);
     }
     public void delete(OficioArchiModel oficioArchiModel, OficioArchiEditDeleteActivity oficioArchiEditDeleteActivity, ProgressDialog progressDialog) {
         mRepository.deleteOficio(oficioArchiModel, oficioArchiEditDeleteActivity, progressDialog);
     }
-    public void update(OficioArchiModel oficioArchiModel, OficioArchiEditDeleteActivity oficioArchiEditDeleteActivity, ProgressDialog progressDialog) {
+    public void update(Oficio oficioArchiModel, OficioArchiEditDeleteActivity oficioArchiEditDeleteActivity, ProgressDialog progressDialog) {
         mRepository.updateOficio(oficioArchiModel, oficioArchiEditDeleteActivity, progressDialog);
     }
 //

@@ -16,7 +16,7 @@
         android:orderInCategory="40"
         android:title="Finalizar Trabajo" />
 
-<!--    <item-->
+    <!--    <item-->
     <!--        android:id="@+id/mnu_guardar"-->
     <!--        android:orderInCategory="50"-->
     <!--        android:title="Guardar cambios" />-->
@@ -24,4 +24,25 @@
         android:id="@+id/mnu_calif_trab"
         android:orderInCategory="50"
         android:title="Calificar trabajador" />
+
+
+    <item
+        android:id="@+id/action_observaciones"
+        android:title="Observaciones">
+        <!-- "file" submenu -->
+        <menu>
+            <group
+                android:checkableBehavior="single">
+                <item
+                    android:id="@+id/o1"
+                    android:title="Trabajador no asistió" />
+                <item
+                    android:id="@+id/o2"
+                    android:title="Trabajador incumplido" />
+                <item
+                    android:id="@+id/o3"
+                    android:title="Ninguna" />
+            </group>
+        </menu>
+    </item>
 </menu>

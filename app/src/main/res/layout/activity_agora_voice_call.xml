@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".comunnication.AgoraVoiceCallActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/infoText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="10dp"
+            android:text="Press the button to join a channel" />
+
+
+        <EditText
+            android:id="@+id/editChannelName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/infoText"
+            android:hint="Type the channel name here"
+            android:inputType="text"
+            android:text="chainsawman" />
+
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/linLytRemoteUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <ImageView
+            android:id="@+id/imageViewRemote"
+            android:layout_width="156dp"
+            android:layout_height="156dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/usuario" />
+
+        <TextView
+            android:id="@+id/textViewRemoteUser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:fontFamily="@font/andika"
+            android:text="Marlon Apolo"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+
+        <TextView
+            android:id="@+id/textViewRemoteState"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:fontFamily="@font/andika"
+            android:text="Llamando"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:divider="@drawable/divider_10p"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:weightSum="5">
+
+        <ImageView
+            android:id="@+id/activarAltavoz"
+            android:layout_width="0dp"
+            android:layout_height="52dp"
+            android:layout_margin="4dp"
+            android:layout_weight="0.8"
+            android:onClick="onSwitchSpeakerphoneClicked"
+            android:src="@drawable/btn_speaker"
+            android:text="altavoz" />
+
+        <ImageButton
+            android:id="@+id/micUnmute"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_margin="4dp"
+            android:layout_weight="0.8"
+            android:background="@drawable/mic_unmute_icon_behavior"
+            android:onClick="unmuteMic"
+            android:text="Activar mic"
+            android:visibility="gone" />
+
+
+        <ImageButton
+            android:id="@+id/micMute"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_margin="4dp"
+            android:layout_weight="0.8"
+            android:background="@drawable/mic_mute_icon_behavior"
+            android:onClick="muteMic"
+            android:text="Silenciar mic" />
+
+<!--        <ImageButton-->
+<!--            android:id="@+id/joinLeaveButton"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="56dp"-->
+<!--            android:layout_below="@id/infoText"-->
+<!--            android:layout_margin="4dp"-->
+<!--            android:layout_weight="0.8"-->
+<!--            android:background="@drawable/start_call_icon_behavior"-->
+<!--            android:onClick="joinLeaveChannel"-->
+<!--            android:text="Join" />-->
+
+
+        <ImageButton
+            android:id="@+id/joinButton"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_margin="4dp"
+            android:layout_weight="0.8"
+            android:background="@drawable/start_call_icon_behavior"
+            android:onClick="joinChannel"
+            android:text="Llamar" />
+
+
+        <ImageButton
+            android:id="@+id/leaveButton"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_margin="4dp"
+            android:layout_weight="0.8"
+            android:background="@drawable/end_call_icon_behavior"
+            android:onClick="leaveChannel"
+            android:text="Colgar"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+</RelativeLayout>

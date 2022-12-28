@@ -6,13 +6,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.preference.PreferenceManager;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -22,9 +22,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -64,6 +64,8 @@ public class LoginEmailPasswordActivity extends AppCompatActivity implements Vie
     private ArrayList<Trabajador> trabajadorsByEmail;
     private SharedPreferences myPreferences;
     private SharedPreferences.Editor editorPref;
+    private ScrollView scrollView;
+    private LinearLayout linearLayout;
 
     private void hideSystemBars() {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -94,9 +96,29 @@ public class LoginEmailPasswordActivity extends AppCompatActivity implements Vie
 //            ((ImageView) findViewById(R.id.acLoginImageViewLogo)).setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.white));
 //        }
         TypedValue typedValue = new TypedValue();
-        this.getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
+        getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
         int colorNight = typedValue.data;
-        ((ImageView) findViewById(R.id.acLoginImageViewLogo)).setColorFilter(colorNight);
+//        ((ImageView) findViewById(R.id.acLoginImageViewLogo)).setColorFilter(colorNight);
+
+
+//        getTheme().resolveAttribute(R.attr.colorPrimaryVariant, typedValue, true);
+//        int colorPrimaryVariant = typedValue.data;
+        //linearLayout.setBackgroundColor(colorSecondaryVariant);
+
+//        relativeLayoutBack = findViewById(R.id.scrollView);
+
+        getTheme().resolveAttribute(R.attr.colorOnPrimary, typedValue, true);
+        int colorOnPrimary = typedValue.data;
+
+        scrollView = findViewById(R.id.scrollView);
+        linearLayout = findViewById(R.id.linLytBack);
+
+
+        Drawable drawable = ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background);
+        drawable.setTint(colorOnPrimary);
+        scrollView.setBackground(drawable);
+
+        linearLayout.setBackgroundColor(colorOnPrimary);
 
 
         bienvenidoViewModel = new ViewModelProvider(this).get(BienvenidoViewModel.class);

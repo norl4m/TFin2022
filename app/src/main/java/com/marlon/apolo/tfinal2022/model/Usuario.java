@@ -38,7 +38,7 @@ import com.marlon.apolo.tfinal2022.herramientas.DataValidation;
 import com.marlon.apolo.tfinal2022.individualChat.model.ChatPoc;
 import com.marlon.apolo.tfinal2022.individualChat.model.Mensajito;
 import com.marlon.apolo.tfinal2022.individualChat.repository.MensajitoRepository;
-import com.marlon.apolo.tfinal2022.individualChat.view.IndividualChatActivity;
+import com.marlon.apolo.tfinal2022.individualChat.view.no.IndividualChatActivity;
 import com.marlon.apolo.tfinal2022.individualChat.view.MensajeNube;
 import com.marlon.apolo.tfinal2022.individualChat.view.location.LocationActivity;
 import com.marlon.apolo.tfinal2022.puntoEntrada.view.MainActivity;
@@ -51,7 +51,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
-import io.agora.rtc.RtcEngine;
+import io.agora.rtc2.RtcEngine;
+
 
 public abstract class Usuario implements Serializable {
     private String idUsuario;

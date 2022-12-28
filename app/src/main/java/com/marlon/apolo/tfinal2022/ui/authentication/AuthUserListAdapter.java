@@ -3,6 +3,7 @@ package com.marlon.apolo.tfinal2022.ui.authentication;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,22 +13,46 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.herramientasAsíncronas.DeleteAsyncTask;
+import com.marlon.apolo.tfinal2022.model.Empleador;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
+import com.marlon.apolo.tfinal2022.model.Usuario;
 import com.marlon.apolo.tfinal2022.model.UsuarioFirebaseAuth;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class AuthUserListAdapter extends
         RecyclerView.Adapter<AuthUserListAdapter.AuthUserViewHolder> {
 
+    private static final String TAG = AuthUserListAdapter.class.getSimpleName();
     private final Context contextInstance;
     private ArrayList<UsuarioFirebaseAuth> mWordList;
     private final LayoutInflater mInflater;
     private AlertDialog alertDialogVar;
+
+    private List<Trabajador> trabajadorArrayList;
+    private List<Empleador> empleadorArrayList;
+
+    public List<Trabajador> getTrabajadorArrayList() {
+        return trabajadorArrayList;
+    }
+
+    public void setTrabajadorArrayList(List<Trabajador> trabajadorArrayList) {
+        this.trabajadorArrayList = trabajadorArrayList;
+    }
+
+    public List<Empleador> getEmpleadorArrayList() {
+        return empleadorArrayList;
+    }
+
+    public void setEmpleadorArrayList(List<Empleador> empleadorArrayList) {
+        this.empleadorArrayList = empleadorArrayList;
+    }
 
     class AuthUserViewHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
@@ -100,7 +125,21 @@ public class AuthUserListAdapter extends
                             @Override
                             public void onTokenListener(String publicKey) {
                                 if (publicKey.equals("1")) {
-                                    String idUsuario = usuarioFirebaseAuth.getUid();
+                                    try {
+                                        Usuario usuariodel = usuarioFirebaseAuth.getExtraUsuarioLol();
+//                                        if (usuariodel instanceof Trabajador) {
+//
+//                                        }
+//                                        if (usuariodel instanceof Empleador) {
+                                        String idUsuario = usuariodel.getIdUsuario();
+                                        usuariodel.setDeleteUserOnFirebase(idUsuario);
+                                        usuariodel.eliminarInfo((Activity) contextInstance);
+                                        closeCustomAlertDialog();
+                                        usuariodel.cleanFirebaseDeleteUser(idUsuario);
+//                                        }
+                                    } catch (Exception e) {
+                                        Log.d(TAG, e.toString());
+                                    }
 //                                    trabajador.setDeleteUserOnFirebase(idUsuario);
 //                                    trabajador.eliminarInfo((Activity) context);
                                     closeCustomAlertDialog();
@@ -224,6 +263,24 @@ public class AuthUserListAdapter extends
         holder.textViewUid.setText(String.format("UID: %s", mCurrent.getUid()));
         holder.textViewEmail.setText(String.format("EMAIL: %s", mCurrent.getEmail()));
         holder.textViewPhone.setText(String.format("CELULAR: %s", mCurrent.getPhoneNumber()));
+        Drawable[] itrems = new Drawable[]{AppCompatResources.getDrawable(contextInstance, R.drawable.bg4),
+                AppCompatResources.getDrawable(contextInstance, R.drawable.bg5),
+                AppCompatResources.getDrawable(contextInstance, R.drawable.bg6)};
+        try {
+            switch (mCurrent.getExtraLol()) {
+                case "si":
+                    holder.itemView.setBackground(itrems[0]);
+                    break;
+                case "trabajador":
+                    holder.itemView.setBackground(itrems[1]);
+                    break;
+                case "empleador":
+                    holder.itemView.setBackground(itrems[2]);
+                    break;
+            }
+        } catch (Exception e) {
+            Log.d(TAG, e.toString());
+        }
     }
 
     /**

@@ -51,6 +51,16 @@ public class CitaViewModel extends ViewModel {
         return citas;
     }
 
+
+    public void removeChildLister() {
+        FirebaseDatabase
+                .getInstance()
+                .getReference()
+                .child("citas")
+                .removeEventListener(childEventListenerCita);
+
+    }
+
     private void loadCitas() {
         citaArrayList = new ArrayList<>();
         FirebaseDatabase
@@ -362,6 +372,8 @@ public class CitaViewModel extends ViewModel {
     }
 
     private void loadItems(String idCita) {
+
+
         FirebaseDatabase
                 .getInstance()
                 .getReference()

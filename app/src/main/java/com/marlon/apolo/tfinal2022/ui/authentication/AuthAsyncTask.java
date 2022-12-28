@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.marlon.apolo.tfinal2022.model.Empleador;
+import com.marlon.apolo.tfinal2022.model.Trabajador;
 import com.marlon.apolo.tfinal2022.model.UsuarioFirebaseAuth;
 
 import org.json.JSONArray;
@@ -138,6 +140,44 @@ public class AuthAsyncTask extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String s) {
         progressBarWeakReference.setVisibility(View.GONE);
+        /*Filtrado gg*/
+        for (UsuarioFirebaseAuth us : authArrayList) {
+            us.setExtraLol("si");
+        }
+
+        for (UsuarioFirebaseAuth us : authArrayList) {
+            try {
+                for (Trabajador tr : authUserListAdapter.getTrabajadorArrayList()) {
+                    if (us.getUid().equals(tr.getIdUsuario())) {
+                        us.setExtraLol("trabajador");
+                        us.setExtraUsuarioLol(tr);
+                    } else {
+//                    us.setExtraLol("si");
+                    }
+                }
+            } catch (Exception e) {
+                Log.d(TAG, e.toString());
+            }
+
+        }
+
+        for (UsuarioFirebaseAuth us : authArrayList) {
+            try {
+                for (Empleador tr : authUserListAdapter.getEmpleadorArrayList()) {
+                    if (us.getUid().equals(tr.getIdUsuario())) {
+                        us.setExtraLol("empleador");
+                        us.setExtraUsuarioLol(tr);
+                    } else {
+//                    us.setExtraLol("si");
+                    }
+                }
+            } catch (Exception e) {
+                Log.d(TAG, e.toString());
+            }
+
+        }
+
+
         authUserListAdapter.setFirebaseUsers(authArrayList);
 //        Log.d(TAG, s.toString());
 //        Toast.makeText(contextInstance, s, Toast.LENGTH_LONG).show();

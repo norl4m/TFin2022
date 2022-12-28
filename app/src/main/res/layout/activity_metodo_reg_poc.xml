@@ -31,12 +31,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/toolbar"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+        android:fontFamily="@font/andika"
         android:text="Por favor seleccione un método de autenticación:"
-        android:textAppearance="@android:style/TextAppearance.Material.Headline"
-        android:textStyle="bold" />
+        android:textAppearance="@android:style/TextAppearance.Material.Headline" />
 
 
     <LinearLayout
@@ -84,21 +81,16 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="2dp"
-                        android:layout_marginEnd="2dp"
-                        android:layout_marginBottom="2dp"
+                        android:fontFamily="@font/andika"
                         android:text="Email y contraseña"
-                        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"
+                        android:textAppearance="@android:style/TextAppearance.Material.Body1"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/textViewEmailPassLegend"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="2dp"
-                        android:layout_marginTop="2dp"
-                        android:layout_marginEnd="2dp"
-                        android:layout_marginBottom="2dp"
+                        android:fontFamily="@font/andika"
                         android:text="@string/text_info_reg_email_password" />
 
                 </LinearLayout>
@@ -147,18 +139,16 @@
                         android:layout_marginTop="2dp"
                         android:layout_marginEnd="2dp"
                         android:layout_marginBottom="2dp"
+                        android:fontFamily="@font/andika"
                         android:text="Cuenta de Google"
-                        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/textViewGoogleLegend"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="2dp"
-                        android:layout_marginTop="2dp"
-                        android:layout_marginEnd="2dp"
-                        android:layout_marginBottom="2dp"
+                        android:fontFamily="@font/andika"
                         android:text="@string/text_info_reg_google" />
 
                 </LinearLayout>
@@ -203,19 +193,16 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="2dp"
-                        android:layout_marginTop="2dp"
-                        android:layout_marginEnd="2dp"
-                        android:layout_marginBottom="2dp"
+                        android:fontFamily="@font/andika"
                         android:text="Número de teléfono celular"
-                        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/textViewPdfLegend"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="2dp"
+                        android:fontFamily="@font/andika"
                         android:text="@string/text_info_reg_phone" />
 
                 </LinearLayout>

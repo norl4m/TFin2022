@@ -9,6 +9,8 @@ public class Oficio implements Serializable {
     private String nombre;
     private boolean estadoRegistro;
     private ArrayList<Habilidad> habilidadArrayList;
+    private String uriPhoto;
+
 
     public Oficio() {
         estadoRegistro = false;
@@ -39,6 +41,14 @@ public class Oficio implements Serializable {
         this.estadoRegistro = estadoRegistro;
     }
 
+    public String getUriPhoto() {
+        return uriPhoto;
+    }
+
+    public void setUriPhoto(String uriPhoto) {
+        this.uriPhoto = uriPhoto;
+    }
+
     @Override
     public String toString() {
         return "Oficio{" +
@@ -46,6 +56,7 @@ public class Oficio implements Serializable {
                 ", nombre='" + nombre + '\'' +
                 ", estadoRegistro=" + estadoRegistro +
                 ", habilidadArrayList=" + habilidadArrayList +
+                ", uriPhoto='" + uriPhoto + '\'' +
                 '}';
     }
 

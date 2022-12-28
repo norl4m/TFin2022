@@ -4,119 +4,157 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/purple_700"
     android:orientation="vertical"
+    android:weightSum="4"
     tools:context=".login.LoginCelularActivity">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:elevation="4dp"
-        app:navigationIcon="@drawable/ic_baseline_arrow_back_24"
-        app:title="@string/no_nothing_text" />
+        android:layout_height="0dp"
+        android:layout_weight="1.2">
 
-    <TextView
-        android:id="@+id/textViewTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/toolbar"
-        android:layout_margin="4dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="4dp"
-        android:layout_marginBottom="4dp"
-        android:text="Iniciar sesión con número celular"
-        android:textAppearance="@android:style/TextAppearance.Material.Title"
-        android:textStyle="bold" />
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:elevation="4dp"
+            android:theme="@style/Theme.TFinal2022.AppBarOverlay"
+            app:navigationIcon="@drawable/ic_baseline_arrow_back_24"
+            app:popupTheme="@style/Theme.TFinal2022.PopupOverlay"
+            app:title="@string/no_nothing_text" />
 
-    <LinearLayout
+        <TextView
+            android:id="@+id/textViewTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/toolbar"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginBottom="4dp"
+            android:fontFamily="@font/andika"
+            android:text="Iniciar sesión con número celular"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+            android:textColor="@color/white" />
+    </RelativeLayout>
+
+    <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="4dp"
-        android:gravity="center_vertical"
-        android:orientation="vertical">
+        android:layout_height="0dp"
+        android:layout_weight="2.8"
 
-
-        <ImageView
-            android:id="@+id/acLoginImageViewLogo"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:layout_gravity="center_horizontal"
-            android:src="@drawable/ic_phone_otp" />
-
+        android:background="@drawable/card_background">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:divider="@drawable/divider_20p"
+            android:layout_marginTop="16dp"
+            android:divider="@drawable/divider_10p"
             android:orientation="vertical"
-            android:padding="8dp"
+            android:padding="16dp"
             android:showDividers="middle">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textInputLayoutPhone"
+            <ImageView
+                android:id="@+id/acLoginImageViewLogo"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/ic_phone_otp" />
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:hint="@string/phone"
-                app:startIconDrawable="@drawable/ic_baseline_phone_android_24">
+                android:divider="@drawable/divider_20p"
+                android:orientation="vertical"
+                android:showDividers="middle">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editTextPhone"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textInputLayoutPhone"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:digits="@string/numbers_validation"
-                    android:inputType="phone"
-                    android:maxLength="10" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_margin="8dp"
+                    android:hint="@string/phone"
+                    app:startIconDrawable="@drawable/ic_baseline_phone_android_24">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textInputLayoutPassword"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:hint="Código de verificación"
-                app:startIconDrawable="@drawable/ic_baseline_lock_24">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editTextPhone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:digits="@string/numbers_validation"
+                        android:fontFamily="@font/andika"
+                        android:inputType="phone"
+                        android:maxLength="10" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editTextPassword"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textInputLayoutPassword"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:digits="@string/numbers_validation"
-                    android:inputType="phone"
-                    android:maxLength="6" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_margin="8dp"
+                    android:hint="Código de verificación"
+                    app:startIconDrawable="@drawable/ic_baseline_lock_24">
 
-            <Button
-                android:id="@+id/btnLogin"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_margin="8dp"
-                android:text="Iniciar sesión"
-                android:textAllCaps="false" />
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editTextPassword"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:digits="@string/numbers_validation"
+                        android:fontFamily="@font/andika"
+                        android:inputType="phone"
+                        android:maxLength="6" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-            <Button
-                android:id="@+id/btnContinue"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_margin="8dp"
-                android:text="Enviar código"
-                android:textAllCaps="false"
-                android:visibility="gone" />
 
-            <Button
-                android:id="@+id/btnResend"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_margin="8dp"
-                android:text="Solicitar nuevo código"
-                android:textAllCaps="false"
-                android:visibility="gone" />
+            </LinearLayout>
 
 
         </LinearLayout>
 
+    </ScrollView>
+
+
+    <LinearLayout
+        android:id="@+id/linLytBack"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btnLogin"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_margin="8dp"
+            android:background="@drawable/button_background"
+            android:fontFamily="@font/andika"
+            android:text="Iniciar sesión"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/btnContinue"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_margin="8dp"
+            android:background="@drawable/button_background"
+            android:fontFamily="@font/andika"
+            android:text="Enviar código"
+            android:textAllCaps="false"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/btnResend"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_margin="8dp"
+            android:background="@drawable/button_background"
+            android:fontFamily="@font/andika"
+            android:text="Solicitar nuevo código"
+            android:textAllCaps="false"
+            android:visibility="gone" />
 
     </LinearLayout>
 

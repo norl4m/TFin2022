@@ -20,7 +20,7 @@ limitations under the License. -->
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".individualChat.view.IndividualChatActivity">
+    tools:context=".individualChat.view.no.IndividualChatActivity">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewMensajes"

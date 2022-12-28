@@ -4,6 +4,7 @@
     android:layout_height="wrap_content">
 
     <LinearLayout
+        android:id="@+id/linLytBack"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
@@ -55,8 +56,8 @@
             android:layout_weight="0.2"
             android:hint="0"
             android:inputType="number"
-            android:maxLength="2"
-            android:text="17"
+            android:maxLength="3"
+            android:text="170"
             android:textAlignment="center"
             android:textSize="16sp" />
 

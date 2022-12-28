@@ -30,13 +30,11 @@ import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.marlon.apolo.tfinal2022.R;
-import com.marlon.apolo.tfinal2022.herramientas.DataValidation;
 import com.marlon.apolo.tfinal2022.individualChat.model.ChatPoc;
-import com.marlon.apolo.tfinal2022.individualChat.model.Mensajito;
 import com.marlon.apolo.tfinal2022.individualChat.model.MessageCloudPoc;
+import com.marlon.apolo.tfinal2022.individualChat.view.no.CamActivity;
 import com.marlon.apolo.tfinal2022.model.Usuario;
 
-import java.io.File;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;

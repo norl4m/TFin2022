@@ -7,12 +7,13 @@ import java.io.Serializable;
 @IgnoreExtraProperties
 public class Item implements Serializable {
     private String detail;
-    private float price;
+    private Double price;
+    private String priceFormat;
 
     public Item() {
     }
 
-    public Item(String detail, float price) {
+    public Item(String detail, Double price) {
         this.detail = detail;
         this.price = price;
     }
@@ -25,12 +26,21 @@ public class Item implements Serializable {
         this.detail = detail;
     }
 
-    public float getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(Double price) {
         this.price = price;
+    }
+
+    public String getPriceFormat() {
+        return priceFormat;
+    }
+
+
+    public void setPriceFormat(String priceFormat) {
+        this.priceFormat = priceFormat;
     }
 
     @Override
@@ -38,6 +48,7 @@ public class Item implements Serializable {
         return "Item{" +
                 "detail='" + detail + '\'' +
                 ", price=" + price +
+                ", priceFormat='" + priceFormat + '\'' +
                 '}';
     }
 }

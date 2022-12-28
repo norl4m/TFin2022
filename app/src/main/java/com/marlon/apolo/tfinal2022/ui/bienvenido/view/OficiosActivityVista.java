@@ -14,17 +14,23 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.buscador.view.BuscadorActivity;
 import com.marlon.apolo.tfinal2022.config.ConfiguracionActivity;
 import com.marlon.apolo.tfinal2022.model.Oficio;
+import com.marlon.apolo.tfinal2022.ui.bienvenido.BienvenidoViewModel;
+import com.marlon.apolo.tfinal2022.ui.bienvenido.adaptadores.OficioArchiVistaListAdapter;
 import com.marlon.apolo.tfinal2022.ui.bienvenido.viewModel.OficioListAdapter;
 import com.marlon.apolo.tfinal2022.ui.bienvenido.viewModel.OficioViewModel;
 
 import java.util.Collections;
 
 public class OficiosActivityVista extends AppCompatActivity {
+
+    private BienvenidoViewModel bienvenidoViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,34 +57,68 @@ public class OficiosActivityVista extends AppCompatActivity {
         // Re-created activities receive the same MyViewModel instance created by the first activity.
 
         OficioViewModel oficioViewModel = new ViewModelProvider(this).get(OficioViewModel.class);
-        oficioViewModel.getAllOficios().observe(this, oficios -> {
-            // update UI
+
+
+        bienvenidoViewModel = new ViewModelProvider(this).get(BienvenidoViewModel.class);
+
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            loadOficiosWithArchi(recyclerViewOficios, progressBar);
+        } else {
+            oficioViewModel.getAllOficios().observe(this, oficios -> {
+                // update UI
 //            oficios = null;
 //            oficioVistaListAdapter.setOficios(null);
 
+                if (oficios != null) {
+
+
+                    Collections.sort(oficios, (t1, t2) -> (t1.getNombre()).compareTo(t2.getNombre()));
+
+                    oficioVistaListAdapter.setWords(oficios);
+                    progressBar.setVisibility(View.GONE);
+                    oficioVistaListAdapter.setOnItemClickListener(new OficioListAdapter.ClickListener() {
+                        @Override
+                        public void onItemClick(View v, int position) {
+                            Oficio oficioSlected = oficioVistaListAdapter.getWordAtPosition(position);
+                            Intent intent = new Intent(getApplicationContext(), BuscadorActivity.class);
+                            intent.setAction("android.intent.action.SEARCH");
+                            intent.putExtra(SearchManager.QUERY, oficioSlected.getNombre());
+                            intent.putExtra("offset", 1);
+                            intent.putExtra("searchMode", 0);
+                            startActivity(intent);
+                        }
+                    });
+                } else {
+                    //oficioVistaListAdapter.setNoResultados();
+//                Toast.makeText(getApplicationContext(), R.string.no_resultados, Toast.LENGTH_LONG).show();
+                    progressBar.setVisibility(View.GONE);
+                }
+            });
+        }
+    }
+
+    private void loadOficiosWithArchi(RecyclerView recyclerView3, ProgressBar progressBar) {
+//        RecyclerView recyclerView3 = root.findViewById(R.id.fragHomeRecyclerView3);
+//        recyclerView3.setVisibility(View.GONE);
+//        ProgressBar progressBar3 = root.findViewById(R.id.fragHomeProgressBar3);
+
+        OficioArchiVistaListAdapter oficioArchiVistaListAdapter = new OficioArchiVistaListAdapter(this);
+        recyclerView3.setAdapter(oficioArchiVistaListAdapter);
+//        recyclerView3.setLayoutManager(new LinearLayoutManager(requireActivity()));
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        recyclerView3.setLayoutManager(layoutManager);
+
+
+        bienvenidoViewModel.getAllOficios().observe(this, oficios -> {
             if (oficios != null) {
-
-
                 Collections.sort(oficios, (t1, t2) -> (t1.getNombre()).compareTo(t2.getNombre()));
 
-                oficioVistaListAdapter.setWords(oficios);
+
+                oficioArchiVistaListAdapter.setOficios(oficios);
                 progressBar.setVisibility(View.GONE);
-                oficioVistaListAdapter.setOnItemClickListener(new OficioListAdapter.ClickListener() {
-                    @Override
-                    public void onItemClick(View v, int position) {
-                        Oficio oficioSlected = oficioVistaListAdapter.getWordAtPosition(position);
-                        Intent intent = new Intent(getApplicationContext(), BuscadorActivity.class);
-                        intent.setAction("android.intent.action.SEARCH");
-                        intent.putExtra(SearchManager.QUERY, oficioSlected.getNombre());
-                        intent.putExtra("offset", 1);
-                        intent.putExtra("searchMode", 0);
-                        startActivity(intent);
-                    }
-                });
-            } else {
-                //oficioVistaListAdapter.setNoResultados();
-//                Toast.makeText(getApplicationContext(), R.string.no_resultados, Toast.LENGTH_LONG).show();
-                progressBar.setVisibility(View.GONE);
+                recyclerView3.setVisibility(View.VISIBLE);
+
             }
         });
 

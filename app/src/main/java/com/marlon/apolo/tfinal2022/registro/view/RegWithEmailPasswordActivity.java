@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
 
@@ -14,7 +15,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -22,15 +25,20 @@ import android.provider.OpenableColumns;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
@@ -48,6 +56,8 @@ import com.marlon.apolo.tfinal2022.ui.trabajadores.TrabajadorViewModel;
 
 import org.json.JSONObject;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -83,6 +93,13 @@ public class RegWithEmailPasswordActivity extends AppCompatActivity implements V
     private String message;
     private Usuario usuarioEmpleador;
     private AlertDialog alertDialogVar;
+    private LinearLayout linearLayout;
+    private TextView textViewHeading;
+
+    private RelativeLayout relativeLayoutBack;
+
+    private TextInputLayout textInputLayoutEmail;
+    private TextInputLayout textInputLayoutPassword;
 
     public static boolean issPref() {
         return sPref;
@@ -91,7 +108,8 @@ public class RegWithEmailPasswordActivity extends AppCompatActivity implements V
     public static void setsPref(boolean sPref) {
         RegWithEmailPasswordActivity.sPref = sPref;
     }
-//
+
+    //
 //    public void showCustomProgressDialog(String title, String message) {
 //        try {
 //            closeCustomAlertDialog();
@@ -128,11 +146,25 @@ public class RegWithEmailPasswordActivity extends AppCompatActivity implements V
 //
 //        }
 //    }
-
+    private void hideSystemBars() {
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//        WindowInsetsControllerCompat windowInsetsController =
+//                ViewCompat.getWindowInsetsController(getWindow().getDecorView());
+//        if (windowInsetsController == null) {
+//            return;
+//        }
+//        // Configure the behavior of the hidden system bars
+//        windowInsetsController.setSystemBarsBehavior(
+//                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+//        );
+//        // Hide both the status bar and the navigation bar
+//        windowInsetsController.hide(WindowInsetsCompat.Type.systemBars());
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        hideSystemBars();
         setContentView(R.layout.activity_email_password);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -153,6 +185,36 @@ public class RegWithEmailPasswordActivity extends AppCompatActivity implements V
 
         networkTool = new NetworkTool(this);
 
+        linearLayout = findViewById(R.id.linLytMain);
+
+        TypedValue typedValue = new TypedValue();
+        getTheme().resolveAttribute(R.attr.colorPrimaryVariant, typedValue, true);
+        int colorPrimaryVariant = typedValue.data;
+        //linearLayout.setBackgroundColor(colorSecondaryVariant);
+
+        textViewHeading = findViewById(R.id.textViewHeading);
+        relativeLayoutBack = findViewById(R.id.rltLytItems);
+
+        getTheme().resolveAttribute(R.attr.colorOnPrimary, typedValue, true);
+        int colorOnPrimary = typedValue.data;
+
+        getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
+        int colorPrimary = typedValue.data;
+
+        textViewHeading.setTextColor(ContextCompat.getColor(this, R.color.white_smoke));
+
+        getTheme().resolveAttribute(R.attr.colorSecondary, typedValue, true);
+        int colorSecondary = typedValue.data;
+
+        getTheme().resolveAttribute(R.attr.colorSecondaryVariant, typedValue, true);
+        int colorSecondaryVariant = typedValue.data;
+
+        Drawable drawable = ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background);
+        drawable.setTint(colorOnPrimary);
+        relativeLayoutBack.setBackground(drawable);
+
+        linearLayout.setBackgroundColor(colorPrimaryVariant);
+
 
         trabajadorListByEmail = new ArrayList<>();
         empleadorListByEmail = new ArrayList<>();
@@ -162,9 +224,11 @@ public class RegWithEmailPasswordActivity extends AppCompatActivity implements V
         buttonFinish.setOnClickListener(this);
 
         textInputEditTextEmail = findViewById(R.id.editTextEmail);
+        textInputLayoutEmail = findViewById(R.id.textFieldEmail);
+        textInputLayoutPassword = findViewById(R.id.textFieldPassword);
         textInputEditTextPassword = findViewById(R.id.editTextPassword);
 
-        findViewById(R.id.buttonInfo).setOnClickListener(this);
+//        findViewById(R.id.buttonInfo).setOnClickListener(this);
 
         email = "";
         password = "";
@@ -218,6 +282,7 @@ public class RegWithEmailPasswordActivity extends AppCompatActivity implements V
         try {
             String emailTemp = myPreferences.getString("emailTemp", null);
 
+
             if (emailTemp != null) {
                 textInputEditTextEmail.setText(emailTemp);
 
@@ -231,12 +296,43 @@ public class RegWithEmailPasswordActivity extends AppCompatActivity implements V
                 password = passwordTemp;
             }
 
+            if (!email.isEmpty() && !password.isEmpty()) {
+                buttonFinish.setEnabled(true);
+            } else {
+                buttonFinish.setEnabled(false);
+            }
+
 //            textInputEditTextPassword.setText(passwordTemp);
 //            password = passwordTemp;
-            buttonFinish.setEnabled(true);
+//            buttonFinish.setEnabled(true);
         } catch (Exception e) {
-
+            Log.e(TAG, e.toString());
         }
+
+
+        //textInputEditTextEmail.setTextColor(colorNight);
+//        try {
+        // field = textInputLayoutEmail.getClass().getDeclaredField("mFocusedTextColor");
+        //field.setAccessible(true);
+        int[][] states = new int[][]{
+                new int[]{}
+        };
+        int[] colors = new int[]{
+                colorSecondaryVariant
+        };
+        ColorStateList myList = new ColorStateList(states, colors);
+//            textInputLayoutEmail.set(textInputLayoutEmail, myList);
+
+//            textInputLayoutEmail.setHintTextColor(myList);
+        //textInputLayoutEmail.setDefaultHintTextColor(myList);
+
+        //Method method = textInputLayoutEmail.getClass().getDeclaredMethod("updateLabelState", boolean.class);
+        //method.setAccessible(true);
+        //method.invoke(textInputLayoutEmail, true);
+
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
 
         textInputEditTextEmail.addTextChangedListener(new TextWatcher() {
@@ -265,6 +361,16 @@ public class RegWithEmailPasswordActivity extends AppCompatActivity implements V
 
             }
         });
+        int[][] states1 = new int[][]{
+                new int[]{}
+        };
+        int[] colors1 = new int[]{
+                R.color.white
+        };
+        ColorStateList myList2 = new ColorStateList(states1, colors1);
+//            textInputLayoutEmail.set(textInputLayoutEmail, myList);
+
+        //textInputLayoutPassword.setDefaultHintTextColor(myList);
 
         textInputEditTextPassword.addTextChangedListener(new TextWatcher() {
             @Override
@@ -304,7 +410,13 @@ public class RegWithEmailPasswordActivity extends AppCompatActivity implements V
         showProgress(title, message);
 //        showCustomProgressDialog(title, message);
 //            Toast.makeText(getApplicationContext(), "Normalin", Toast.LENGTH_LONG).show();
-        normalReg(email, password);
+
+        if (email != null && password != null) {
+            normalReg(email, password);
+        } else {
+            Toast.makeText(getApplicationContext(), "Se produjo un error, por favor revise que la información ingresada sea correcta.", Toast.LENGTH_SHORT).show();
+            closeProgress();
+        }
 
         /*if (FirebaseAuth.getInstance().getCurrentUser() != null) {
 
@@ -586,7 +698,7 @@ public class RegWithEmailPasswordActivity extends AppCompatActivity implements V
                     usuarioEmpleador.setIdUsuario(user.getUid());
                     if (photoFlag) {
 //                        Toast.makeText(getApplicationContext(), usuarioTrabajador.toString(), Toast.LENGTH_LONG).show();
-//                        closeProgress();
+                        closeProgress();
 //                        closeCustomAlertDialog();
                         title = "Por favor espere";
                         message = "Su cuenta ya casi está lista...";
@@ -630,7 +742,7 @@ public class RegWithEmailPasswordActivity extends AppCompatActivity implements V
                     usuarioTrabajador.setIdUsuario(user.getUid());
                     if (photoFlag) {
 //                        Toast.makeText(getApplicationContext(), usuarioTrabajador.toString(), Toast.LENGTH_LONG).show();
-//                        closeProgress();
+                        closeProgress();
 //                        closeCustomAlertDialog();
                         title = "Por favor espere";
                         message = "Su cuenta ya casi está lista...";

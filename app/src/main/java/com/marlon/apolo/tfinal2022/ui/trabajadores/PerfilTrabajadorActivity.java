@@ -1,7 +1,6 @@
 package com.marlon.apolo.tfinal2022.ui.trabajadores;
 
 import android.Manifest;
-import android.app.SearchManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -15,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -38,8 +36,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import com.marlon.apolo.tfinal2022.R;
+import com.marlon.apolo.tfinal2022.comunnication.video.AgoraVideoCallActivity;
+import com.marlon.apolo.tfinal2022.comunnication.voice.AgoraOnlyVoiceCallActivity;
 import com.marlon.apolo.tfinal2022.individualChat.view.CrazyIndividualChatActivity;
-import com.marlon.apolo.tfinal2022.individualChat.view.IndividualChatActivity;
 import com.marlon.apolo.tfinal2022.llamadaVoz.LlamadaVozActivity;
 import com.marlon.apolo.tfinal2022.model.Administrador;
 import com.marlon.apolo.tfinal2022.model.Chat;
@@ -51,7 +50,6 @@ import com.marlon.apolo.tfinal2022.model.Usuario;
 import com.marlon.apolo.tfinal2022.ui.datosPersonales.view.FotoActivity;
 import com.marlon.apolo.tfinal2022.ui.empleadores.EmpleadorViewModel;
 import com.marlon.apolo.tfinal2022.ui.oficios.OficioViewModel;
-import com.marlon.apolo.tfinal2022.ui.oficios.OficioVistaListAdapter;
 import com.marlon.apolo.tfinal2022.videoLlamada.VideoLlamadaActivity;
 
 import java.util.ArrayList;
@@ -186,11 +184,27 @@ public class PerfilTrabajadorActivity extends AppCompatActivity {
 //
 //        startActivity(videoCall);
 
-        Intent intentVideollamada = new Intent(this, VideoLlamadaActivity.class);
-        intentVideollamada.putExtra("usuarioTo", (Usuario) trabajadorSelected);
-        intentVideollamada.putExtra("usuarioFrom", usuarioLocal);
-        intentVideollamada.putExtra("callStatus", 0);
+//        Intent intentVideollamada = new Intent(this, VideoLlamadaActivity.class);
+//        intentVideollamada.putExtra("usuarioTo", (Usuario) trabajadorSelected);
+//        intentVideollamada.putExtra("usuarioFrom", usuarioLocal);
+//        intentVideollamada.putExtra("callStatus", 0);
+//        startActivity(intentVideollamada);
+//
+//
+
+
+        Intent intentVideollamada = new Intent(this, AgoraVideoCallActivity.class);
+        intentVideollamada.putExtra("usuarioRemoto", (Usuario) trabajadorSelected);
+        intentVideollamada.putExtra("usuarioLocal", (Usuario) usuarioLocal);
+        String channelName = FirebaseDatabase.getInstance().getReference().child("videoCalls")
+                .push().getKey();
+        intentVideollamada.putExtra("channelName", channelName);
+        intentVideollamada.putExtra("callStatus", "llamadaSaliente");
+
+//                        intentVideollamada.putExtra("callStatus", 0);
         startActivity(intentVideollamada);
+
+
     }
 
     private void requestCameraAndAudioPermissions() {
@@ -232,12 +246,24 @@ public class PerfilTrabajadorActivity extends AppCompatActivity {
 //
 
 
-        Intent intent = new Intent(this, LlamadaVozActivity.class);
-        intent.putExtra("usuarioTo", (Usuario) trabajadorSelected);
-        intent.putExtra("usuarioFrom", usuarioLocal);
-        intent.putExtra("callStatus", 0
-        );
-        startActivity(intent);
+//        Intent intent = new Intent(this, LlamadaVozActivity.class);
+//        intent.putExtra("usuarioTo", (Usuario) trabajadorSelected);
+//        intent.putExtra("usuarioFrom", usuarioLocal);
+//        intent.putExtra("callStatus", 0
+//        );
+//        startActivity(intent);
+//
+
+        Intent intentllamadaVoz = new Intent(this, AgoraOnlyVoiceCallActivity.class);
+        intentllamadaVoz.putExtra("usuarioRemoto", (Usuario) trabajadorSelected);
+        intentllamadaVoz.putExtra("usuarioLocal", usuarioLocal);
+        String channelName = FirebaseDatabase.getInstance().getReference().child("voiceCalls").push().getKey();
+        intentllamadaVoz.putExtra("channelName", channelName);
+        intentllamadaVoz.putExtra("callStatus", "llamadaSaliente");
+
+        startActivity(intentllamadaVoz);
+
+
 //
 //        try {
 //            dialogVar.dismiss();
@@ -410,9 +436,19 @@ public class PerfilTrabajadorActivity extends AppCompatActivity {
                         linearLayoutPhone.setVisibility(View.VISIBLE);
                     }
 
-                    ratingBar.setRating((float) trabajador.getCalificacion());
 
-                    textViewCalif.setText(String.format("Calificación: %.2f / 5.00", trabajador.getCalificacion()));
+                    if (trabajador.getCalificacion() > 0.0) {
+                        ratingBar.setRating((float) trabajador.getCalificacion());
+
+                        textViewCalif.setText(String.format("Calificación: %.2f / 5.00", trabajador.getCalificacion()));
+
+                    } else {
+                        textViewCalif.setText(PerfilTrabajadorActivity.this.getString(R.string.text_no_trabajo));
+//            holder.ratingBar.setRating((float) current.getCalificacion());
+                        ratingBar.setVisibility(View.GONE);
+                    }
+
+
                     oficioViewModel.getAllOficios().observe(PerfilTrabajadorActivity.this, oficios -> {
                         ArrayList<Oficio> oficioArrayList = new ArrayList<>();
                         OficioHabilidadVistaListAdapter oficioListAdapter = new OficioHabilidadVistaListAdapter(PerfilTrabajadorActivity.this);

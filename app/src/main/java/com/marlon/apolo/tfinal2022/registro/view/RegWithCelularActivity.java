@@ -27,6 +27,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -111,6 +112,7 @@ public class RegWithCelularActivity extends AppCompatActivity implements View.On
     private String message;
     private AlertDialog alertDialogVar;
     private AlertDialog alertDialogVarAuth;
+    private LinearLayout linearLayout;
 
 
     @Override
@@ -122,6 +124,7 @@ public class RegWithCelularActivity extends AppCompatActivity implements View.On
         empleadors = new ArrayList<>();
         trabajadorListByCelular = new ArrayList<>();
         empleadorListByCelular = new ArrayList<>();
+
 
         txtProgress = (TextView) findViewById(R.id.tv);
         progressBar = (ProgressBar) findViewById(R.id.circularProgressbar);
@@ -203,6 +206,8 @@ public class RegWithCelularActivity extends AppCompatActivity implements View.On
         textInputLayoutCelular = findViewById(R.id.textFieldCelular);
         textInputLayoutCode = findViewById(R.id.textFieldCode);
         textInputLayoutCode.setEnabled(false);
+        textInputLayoutCode.setVisibility(View.GONE);
+
 
         buttonEnviarCode = findViewById(R.id.buttonEnviarCode);
         buttonSolicitarNuevoCode = findViewById(R.id.buttonSolicitarNuevoCode);
@@ -264,6 +269,7 @@ public class RegWithCelularActivity extends AppCompatActivity implements View.On
                 } catch (Exception ex) {
                     Log.d(TAG, ex.toString());
                 }
+                textInputLayoutCelular.setEnabled(true);
 
                 // Show a message and update the UI
             }
@@ -288,10 +294,16 @@ public class RegWithCelularActivity extends AppCompatActivity implements View.On
                 buttonSolicitarNuevoCode.setVisibility(View.GONE);
                 buttonVerificarCelular.setVisibility(View.GONE);
                 textInputLayoutCode.setEnabled(true);
+                textInputLayoutCode.setVisibility(View.VISIBLE);
+                buttonVerificarCelular.setEnabled(false);
 //                Toast.makeText(getApplicationContext(), "Se ha enviado un código a su aplicación de mensajes. Para continuar ingrese el código de 6 dìgitos ", Toast.LENGTH_LONG).show();
+
+                textInputLayoutCelular.setEnabled(false);
+
                 closeProgressDialog();
 
                 alertDialogInfoEnvioCodigo();
+
 
             }
 
@@ -320,12 +332,16 @@ public class RegWithCelularActivity extends AppCompatActivity implements View.On
                     Log.d(TAG, ex.toString());
                 }
 
-                textViewContador.setText("Su código ha expirado, por favor solicite un nuevo código.");
+                textViewContador.setText(R.string.code_expiration);
                 textViewContador.setVisibility(View.VISIBLE);
 
-                Toast.makeText(getApplicationContext(), "El tiempo de espera se ha terminado, por favor inténtelo mas tarde", Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(), "El tiempo de espera se ha terminado, por favor inténtelo mas tarde", Toast.LENGTH_LONG).show();
                 buttonEnviarCode.setVisibility(View.GONE);
                 buttonSolicitarNuevoCode.setVisibility(View.VISIBLE);
+                textInputLayoutCode.setVisibility(View.GONE);
+                textInputLayoutCode.getEditText().setText("");
+
+                textInputLayoutCelular.setEnabled(true);
 
 
             }
@@ -349,7 +365,10 @@ public class RegWithCelularActivity extends AppCompatActivity implements View.On
 
 //            textInputEditTextPassword.setText(passwordTemp);
 //            password = passwordTemp;
-            buttonVerificarCelular.setEnabled(true);
+            if (!phoneTemp.isEmpty()) {
+                buttonVerificarCelular.setEnabled(true);
+
+            }
         } catch (Exception e) {
 
         }
@@ -373,7 +392,7 @@ public class RegWithCelularActivity extends AppCompatActivity implements View.On
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String phone = s.toString();
-                if (!phone.isEmpty()) {
+                if (phone.length() == 10) {
                     buttonVerificarCelular.setEnabled(true);
                 } else {
                     buttonVerificarCelular.setEnabled(false);
@@ -408,7 +427,7 @@ public class RegWithCelularActivity extends AppCompatActivity implements View.On
             }
         });
 
-        findViewById(R.id.buttonInfo).setOnClickListener(this);
+//        findViewById(R.id.buttonInfo).setOnClickListener(this);
 
     }
 
@@ -533,6 +552,7 @@ public class RegWithCelularActivity extends AppCompatActivity implements View.On
 
     // [START sign_in_with_phone]
     private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
+        closeProgressDialog();
         title = "Por favor espere";
         message = "Cachuelito se encuentra verificando su información personal...";
         showProgress(title, message);
@@ -638,9 +658,10 @@ public class RegWithCelularActivity extends AppCompatActivity implements View.On
                     }
                     /*Paso 2*/
                     empleador.setIdUsuario(user.getUid());
-//                    title = "Por favor espere";
-//                    message = "Su cuenta ya casi está lista...";
-//                    showCustomProgressDialog(title, message);
+                    closeProgressDialog();
+                    title = "Por favor espere";
+                    message = "Su cuenta ya casi está lista...";
+                    showProgress(title, message);
                     if (photoFlag) {
 //                        Toast.makeText(getApplicationContext(), usuarioTrabajador.toString(), Toast.LENGTH_LONG).show();
 //                        closeProgress();
@@ -682,9 +703,10 @@ public class RegWithCelularActivity extends AppCompatActivity implements View.On
                     }
                     /*Paso 2*/
                     trabajador.setIdUsuario(user.getUid());
-//                    title = "Por favor espere";
-//                    message = "Su cuenta ya casi está lista...";
-//                    showCustomProgressDialog(title, message);
+                    closeProgressDialog();
+                    title = "Por favor espere";
+                    message = "Su cuenta ya casi está lista...";
+                    showProgress(title, message);
                     if (photoFlag) {
 //                        Toast.makeText(getApplicationContext(), usuarioTrabajador.toString(), Toast.LENGTH_LONG).show();
 //                        closeProgress();
@@ -738,6 +760,7 @@ public class RegWithCelularActivity extends AppCompatActivity implements View.On
             case R.id.buttonSolicitarNuevoCode:
                 String phone = textInputLayoutCelular.getEditText().getText().toString();
                 textInputLayoutCode.getEditText().setText("");
+                textViewContador.setVisibility(View.GONE);
                 if (phone.length() == 10) {
                     resendVerificationCode(phone, mResendToken);
                 } else {

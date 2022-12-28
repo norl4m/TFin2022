@@ -35,7 +35,9 @@
             app:key="sync_theme"
             app:summaryOff="Claro"
             app:summaryOn="Oscuro"
-            app:title="Tema" />
+            app:title="Tema"
+            app:enabled="false"
+            app:isPreferenceVisible="false"/>
 
 
         <SwitchPreferenceCompat

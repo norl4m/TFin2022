@@ -17,7 +17,8 @@ import com.marlon.apolo.tfinal2022.videoLlamada.VideoChatViewActivity;
 
 import java.io.Serializable;
 
-import io.agora.rtc.RtcEngine;
+import io.agora.rtc2.RtcEngine;
+
 
 @IgnoreExtraProperties
 public class VideoLlamada implements Serializable {

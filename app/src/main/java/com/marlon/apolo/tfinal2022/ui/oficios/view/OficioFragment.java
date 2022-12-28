@@ -3,16 +3,20 @@ package com.marlon.apolo.tfinal2022.ui.oficios.view;
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -32,6 +36,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.FirebaseDatabase;
 import com.marlon.apolo.tfinal2022.R;
@@ -39,12 +44,19 @@ import com.marlon.apolo.tfinal2022.model.Habilidad;
 import com.marlon.apolo.tfinal2022.model.Oficio;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
 import com.marlon.apolo.tfinal2022.ui.bienvenido.BienvenidoViewModel;
+import com.marlon.apolo.tfinal2022.ui.oficioArchi.adapters.OficioArchiCRUDListAdapter;
+import com.marlon.apolo.tfinal2022.ui.oficioArchi.model.OficioArchiModel;
+import com.marlon.apolo.tfinal2022.ui.oficioArchi.view.NuevoOficioArchiActivity;
+import com.marlon.apolo.tfinal2022.ui.oficioArchi.view.OficioArchiActivity;
+import com.marlon.apolo.tfinal2022.ui.oficioArchi.viewModel.OficioArchiViewModel;
 import com.marlon.apolo.tfinal2022.ui.oficios.OficioViewModel;
 import com.marlon.apolo.tfinal2022.ui.oficios.adaptadores.OficioRegistroCRUDListAdapter;
 import com.marlon.apolo.tfinal2022.ui.trabajadores.TrabajadorViewModel;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public class OficioFragment extends Fragment {
 
@@ -293,6 +305,14 @@ public class OficioFragment extends Fragment {
 
         RecyclerView recyclerView = root.findViewById(R.id.recyclerViewOficios);
 
+        FloatingActionButton floatingActionButton = root.findViewById(R.id.fabAddOficio);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(requireActivity(), NuevoOficioArchiActivity.class);
+                startActivity(intent);
+            }
+        });
         trabajadorArrayList = new ArrayList<>();
 
         ArrayList<Oficio> oficioArrayList = new ArrayList<>();
@@ -375,6 +395,7 @@ public class OficioFragment extends Fragment {
 //        FirebaseDatabase.getInstance().getReference().child("oficios")
 //                .addChildEventListener(oficioChildEventListener);
 
+        /*******************************/
 
         oficioRegistroListAdapter = new OficioRegistroCRUDListAdapter(requireActivity());
         recyclerView.setAdapter(oficioRegistroListAdapter);
@@ -392,25 +413,63 @@ public class OficioFragment extends Fragment {
                 Collections.sort(oficios, (t1, t2) -> (t1.getNombre()).compareTo(t2.getNombre()));
 
                 oficioRegistroListAdapter.setOficios(oficios);
-//                oficioRegistroListAdapter.setOnItemClickListener(new OficioRegistroCRUDListAdapter.ClickListener() {
-//                    @Override
-//                    public void onItemClickEdit(View v, int position) {
-//                        Oficio oficio = oficioRegistroListAdapter.getOficioAtPosition(position);
-//                        launchUpdateOficioActivity(oficio);
-//                    }
-//
-//                    @Override
-//                    public void onItemClickDelete(View v, int position) {
-//                        Oficio oficio = oficioRegistroListAdapter.getOficioAtPosition(position);
-//                        launchDeleteOficioActivity(oficio);
-//                    }
-//                });
+
             }
 
         });
+        /*******************************/
 
+//        loadOficiosSpecial(root);
 
         return root;
+    }
+
+    private void loadOficiosSpecial(View root) {
+
+        RecyclerView recyclerView3 = root.findViewById(R.id.recyclerViewOficios);
+//        ProgressBar progressBar3 = root.findViewById(R.id.fragHomeProgressBar3);
+        int gridColumnCount = getResources().getInteger(R.integer.grid_column_count);
+
+        OficioArchiCRUDListAdapter oficioArchiCRUDListAdapter = new OficioArchiCRUDListAdapter(requireActivity());
+        recyclerView3.setAdapter(oficioArchiCRUDListAdapter);
+        recyclerView3.setLayoutManager(new GridLayoutManager(requireActivity(), gridColumnCount));
+
+
+        OficioArchiViewModel oficioArchiViewModel = new ViewModelProvider(this).get(OficioArchiViewModel.class);
+
+
+        oficioArchiViewModel.getNumberOficios().observe(requireActivity(), new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                if (integer == 0) {
+                    ArrayList<OficioArchiModel> oficioArchiModels = new ArrayList<>();
+                    OficioArchiModel oficioArchiModel = new OficioArchiModel();
+                    oficioArchiModel.setIdOficio("noResultados");
+                    oficioArchiModel.setNombre("Lo sentimos no se encontraron resultados.");
+                    oficioArchiModels.add(oficioArchiModel);
+                    oficioArchiCRUDListAdapter.setOficios(oficioArchiModels);
+//                    progressBar3.setVisibility(View.GONE);
+
+                } else {
+                    oficioArchiViewModel.getAllOficios().observe(getViewLifecycleOwner(), new Observer<List<OficioArchiModel>>() {
+                        @Override
+                        public void onChanged(List<OficioArchiModel> oficioArchiModels) {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                Collections.sort(oficioArchiModels, Comparator.comparing(OficioArchiModel::getNombre));
+                            } else {
+                                Collections.sort(oficioArchiModels, (t1, t2) -> (t1.getNombre()).compareTo(t2.getNombre()));
+                            }
+
+                            oficioArchiCRUDListAdapter.setOficios(oficioArchiModels);
+//                            progressBar3.setVisibility(View.GONE);
+
+                        }
+                    });
+                }
+            }
+        });
+
+
     }
 
     public void alertDialogEditarOficio(Oficio oficio) {
@@ -587,7 +646,9 @@ public class OficioFragment extends Fragment {
         switch (id) {
             case R.id.mnu_add_oficio:
 //                Toast.makeText(requireActivity(), "Add oficio", Toast.LENGTH_SHORT).show();
-                alertDialogNuevoOficio();
+//                alertDialogNuevoOficio();
+                Intent intent = new Intent(requireActivity(), NuevoOficioArchiActivity.class);
+                startActivity(intent);
                 break;
 //            case R.id.mnu_add_habilidad:
 ////                Toast.makeText(requireActivity(), "Add habilidad", Toast.LENGTH_SHORT).show();

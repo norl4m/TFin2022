@@ -27,7 +27,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.marlon.apolo.tfinal2022.MainNavigationActivity;
 import com.marlon.apolo.tfinal2022.R;
-import com.marlon.apolo.tfinal2022.citasTrabajo.CitaTrabajoActivity;
+import com.marlon.apolo.tfinal2022.citasTrabajo.NuevaCitaTrabajoActivity;
 import com.marlon.apolo.tfinal2022.citasTrabajo.DetalleServicioActivity;
 import com.marlon.apolo.tfinal2022.registro.view.RegWithEmailPasswordActivity;
 import com.marlon.apolo.tfinal2022.registro.view.RegWithCelularActivity;
@@ -703,7 +703,7 @@ public class Trabajador extends Usuario {
     }
 
 
-    public void enviarCita(Cita cita, CitaTrabajoActivity citaActivity) {
+    public void enviarCita(Cita cita, NuevaCitaTrabajoActivity citaActivity) {
 
         Cita citaAux = cita;
         Log.d(TAG, "ENVIANDO CITA DE TRABAJO");

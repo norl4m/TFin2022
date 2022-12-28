@@ -1,8 +1,7 @@
-package com.marlon.apolo.tfinal2022.individualChat.view;
+package com.marlon.apolo.tfinal2022.individualChat.view.no;
 
 import android.Manifest;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -44,7 +43,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -59,25 +57,23 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.marlon.apolo.tfinal2022.R;
-import com.marlon.apolo.tfinal2022.citasTrabajo.CitaTrabajoActivity;
+import com.marlon.apolo.tfinal2022.citasTrabajo.NuevaCitaTrabajoActivity;
+import com.marlon.apolo.tfinal2022.comunnication.video.AgoraVideoCallActivity;
 import com.marlon.apolo.tfinal2022.individualChat.adaptador.SpecialMensajeNubeListAdapter;
+import com.marlon.apolo.tfinal2022.individualChat.view.MensajeNube;
+import com.marlon.apolo.tfinal2022.individualChat.view.MensajeNubeRepository;
 import com.marlon.apolo.tfinal2022.individualChat.view.location.LocationActivity;
 import com.marlon.apolo.tfinal2022.llamadaVoz.LlamadaVozActivity;
 import com.marlon.apolo.tfinal2022.model.Administrador;
 import com.marlon.apolo.tfinal2022.model.Chat;
 import com.marlon.apolo.tfinal2022.model.Empleador;
-import com.marlon.apolo.tfinal2022.model.LlamadaVoz;
 import com.marlon.apolo.tfinal2022.model.Participante;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
 import com.marlon.apolo.tfinal2022.model.Usuario;
 //import com.marlon.apolo.tfinal2022.videoLlamada.VideoChatViewActivity;
-import com.marlon.apolo.tfinal2022.videoLlamada.VideoLlamadaActivity;
-
-import org.checkerframework.checker.units.qual.C;
 
 import java.io.File;
 import java.io.IOException;
@@ -1408,10 +1404,12 @@ public class IndividualChatActivity extends AppCompatActivity implements View.On
                 break;
             case R.id.imageViewVideoCall:
 //                Intent intentVideollamada = new Intent(IndividualChatActivity.this, VideoChatViewActivity.class);
-                Intent intentVideollamada = new Intent(IndividualChatActivity.this, VideoLlamadaActivity.class);
+//                Intent intentVideollamada = new Intent(IndividualChatActivity.this, VideoLlamadaActivity.class);
+                //Paso 1: Iniciando el activity de videollamadas
+                Toast.makeText(getApplicationContext(), "Paso 1: Iniciando el activity de videollamadas", Toast.LENGTH_SHORT).show();
+                Intent intentVideollamada = new Intent(IndividualChatActivity.this, AgoraVideoCallActivity.class);
                 intentVideollamada.putExtra("usuarioTo", usuarioTo);
                 intentVideollamada.putExtra("usuarioFrom", usuarioLocal);
-                intentVideollamada.putExtra("callStatus", 0);
                 startActivity(intentVideollamada);
                 break;
         }
@@ -2447,7 +2445,7 @@ public class IndividualChatActivity extends AppCompatActivity implements View.On
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.mnu_crear_cita:
-                Intent intent = new Intent(IndividualChatActivity.this, CitaTrabajoActivity.class);
+                Intent intent = new Intent(IndividualChatActivity.this, NuevaCitaTrabajoActivity.class);
                 intent.putExtra("usuarioFrom", usuarioLocal);
                 intent.putExtra("usuarioTo", usuarioTo);
                 startActivity(intent);

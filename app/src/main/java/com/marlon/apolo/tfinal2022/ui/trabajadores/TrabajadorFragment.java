@@ -99,7 +99,9 @@ public class TrabajadorFragment extends Fragment {
 
 
         /*Carga de datos oficios*/
-        OficioViewModel oficioViewModel = new ViewModelProvider(this).get(OficioViewModel.class);
+        OficioViewModel oficioViewModel = new ViewModelProvider(requireActivity()).get(OficioViewModel.class);
+        trabajadorViewModel = new ViewModelProvider(requireActivity()).get(TrabajadorViewModel.class);
+
         oficioViewModel.getAllOficios().observe(requireActivity(), oficios -> {
 
             trabajadorListAdapter.setOficioList(oficios);
@@ -107,15 +109,20 @@ public class TrabajadorFragment extends Fragment {
 //            TrabajadorCRUDListAdapter trabajadorListAdapter = new TrabajadorCRUDListAdapter(requireActivity(), (ArrayList<Oficio>) oficios);
 //            recyclerView1.setAdapter(trabajadorListAdapter);
 //            recyclerView1.setLayoutManager(new LinearLayoutManager(requireActivity()));
-            trabajadorViewModel = new ViewModelProvider(this).get(TrabajadorViewModel.class);
-            trabajadorViewModel.getAllTrabajadores().observe(requireActivity(), trabajadors -> {
-                if (trabajadors != null) {
-                    Collections.sort(trabajadors, (o1, o2) -> Double.compare(o2.getCalificacion(), o1.getCalificacion()));
 
-                    trabajadorListAdapter.setTrabajadores(trabajadors);
+            try {
+                trabajadorViewModel.getAllTrabajadores().observe(requireActivity(), trabajadors -> {
+                    if (trabajadors != null) {
+                        Collections.sort(trabajadors, (o1, o2) -> Double.compare(o2.getCalificacion(), o1.getCalificacion()));
 
-                }
-            });
+                        trabajadorListAdapter.setTrabajadores(trabajadors);
+
+                    }
+                });
+            } catch (Exception e) {
+
+            }
+
 
             /*Carga de datos trabajadores*/
         });

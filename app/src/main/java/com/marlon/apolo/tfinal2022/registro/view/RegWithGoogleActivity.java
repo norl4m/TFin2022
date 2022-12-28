@@ -216,7 +216,7 @@ public class RegWithGoogleActivity extends AppCompatActivity implements View.OnC
             }
         });
 
-        findViewById(R.id.buttonInfo).setOnClickListener(this);
+//        findViewById(R.id.buttonInfo).setOnClickListener(this);
     }
 
 
@@ -320,6 +320,7 @@ public class RegWithGoogleActivity extends AppCompatActivity implements View.OnC
         LayoutInflater inflater = this.getLayoutInflater();
         View promptsView = inflater.inflate(R.layout.dialog_info, null);
         builder.setView(promptsView);
+        builder.setCancelable(false);
 
         // set prompts.xml to alertdialog builder
         final TextView textViewInfo = promptsView.findViewById(R.id.textViewInfo);
@@ -330,7 +331,7 @@ public class RegWithGoogleActivity extends AppCompatActivity implements View.OnC
         // Pass null as the parent view because its going in the dialog layout
         builder.setView(promptsView)
                 // Add action buttons
-                .setPositiveButton("Entendido", new DialogInterface.OnClickListener() {
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         // sign in the user ...
@@ -340,17 +341,65 @@ public class RegWithGoogleActivity extends AppCompatActivity implements View.OnC
 
                         }
 
+/**
+ *
+ * dgfasdfdsf
+ *
+ * sdfsaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+ * adfssssssssssssssssssssssssssssssssssssssssssssssssss
+ * sdfaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+ * */
 
-                        if (isOnlineWithWifi()) {
-                            signIn();
-                        } else {
-                            if (isOnlineWithData()) {
+                        networkFlag = myPreferences.getBoolean("networkFlag", false);
+                        sPref = defaultSharedPreferences.getBoolean("sync_network", true);
+
+
+                        if (((!sPref) && (networkFlag)) || ((sPref) && (networkFlag))) {
+
+
+
+                            ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+                            boolean isMetered = cm.isActiveNetworkMetered();
+
+
+                            if (isMetered) {
                                 alertDialogCont();
                             } else {
-                                Toast.makeText(getApplicationContext(), "Parece que no se encuentra conectado a Internet.", Toast.LENGTH_LONG).show();
-
+                                signIn();
                             }
+
+
+                        } else {
+                            networkTool.alertDialogNoConectadoInfo();
                         }
+
+
+
+
+
+
+//
+//                        if (isOnlineWithWifi()) {
+//                            signIn();
+//                        } else {
+//                            if (isOnlineWithData()) {
+//                                alertDialogCont();
+//                            } else {
+//                                Toast.makeText(getApplicationContext(), "Parece que no se encuentra conectado a Internet.", Toast.LENGTH_LONG).show();
+//
+//                            }
+//                        }
+
+
+
+                        /**
+                         *
+                         * asdddddddddddddddddddddddddddddddddddddd
+                         * adsssssssssssssssssssssssssssss
+                         * asdasdadssssssssssss
+                         *
+                         * */
                     }
                 });
         return builder.create();
@@ -415,8 +464,17 @@ public class RegWithGoogleActivity extends AppCompatActivity implements View.OnC
     }
     // [END signin]
 
+    public void closeProgress() {
+        try {
+            progressDialog.dismiss();
+        } catch (Exception e) {
+
+        }
+    }
+
     private void updateUI(FirebaseUser user) {
         if (user != null) {
+            closeProgressDialog();
             switch (regUsuario) {
                 case 1:
                     empleador.setEmail(user.getEmail());
@@ -485,20 +543,34 @@ public class RegWithGoogleActivity extends AppCompatActivity implements View.OnC
 
                         if (((!sPref) && (networkFlag)) || ((sPref) && (networkFlag))) {
                             // AsyncTask subclass
-                            if (networkTool.isOnlineWithWifi()) {
-                                registrarEnFirebase(user);
-                            } else {
-                                if (networkTool.isOnlineWithData()) {
-                                    if (!sPref) {
-                                        alertDialogContinuarRegistroConDatos();
-                                    } else {
-                                        networkTool.alertDialogNoConectadoWifiInfo();
-                                    }
+//                            if (networkTool.isOnlineWithWifi()) {
+//                                registrarEnFirebase(user);
+//                            } else {
+//                                if (networkTool.isOnlineWithData()) {
+//                                    if (!sPref) {
+//                                        alertDialogContinuarRegistroConDatos();
+//                                    } else {
 //                                        networkTool.alertDialogNoConectadoWifiInfo();
-                                } else {
-                                    networkTool.alertDialogNoConectadoInfo();
-                                }
+//                                    }
+////                                        networkTool.alertDialogNoConectadoWifiInfo();
+//                                } else {
+//                                    networkTool.alertDialogNoConectadoInfo();
+//                                }
+//                            }
+
+
+                            ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+                            boolean isMetered = cm.isActiveNetworkMetered();
+
+
+                            if (isMetered) {
+                                alertDialogContinuarRegistroConDatos();
+                            } else {
+                                registrarEnFirebase(user);
                             }
+
+
                         } else {
                             networkTool.alertDialogNoConectadoInfo();
                         }
@@ -596,20 +668,33 @@ public class RegWithGoogleActivity extends AppCompatActivity implements View.OnC
 
                         if (((!sPref) && (networkFlag)) || ((sPref) && (networkFlag))) {
                             // AsyncTask subclass
-                            if (networkTool.isOnlineWithWifi()) {
-                                registrarEnFirebase(user);
-                            } else {
-                                if (networkTool.isOnlineWithData()) {
-                                    if (!sPref) {
-                                        alertDialogContinuarRegistroConDatos();
-                                    } else {
-                                        networkTool.alertDialogNoConectadoWifiInfo();
-                                    }
+//                            if (networkTool.isOnlineWithWifi()) {
+//                                registrarEnFirebase(user);
+//                            } else {
+//                                if (networkTool.isOnlineWithData()) {
+//                                    if (!sPref) {
+//                                        alertDialogContinuarRegistroConDatos();
+//                                    } else {
 //                                        networkTool.alertDialogNoConectadoWifiInfo();
-                                } else {
-                                    networkTool.alertDialogNoConectadoInfo();
-                                }
+//                                    }
+////                                        networkTool.alertDialogNoConectadoWifiInfo();
+//                                } else {
+//                                    networkTool.alertDialogNoConectadoInfo();
+//                                }
+//                            }
+
+
+                            ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+                            boolean isMetered = cm.isActiveNetworkMetered();
+
+
+                            if (isMetered) {
+                                alertDialogContinuarRegistroConDatos();
+                            } else {
+                                registrarEnFirebase(user);
                             }
+
                         } else {
                             networkTool.alertDialogNoConectadoInfo();
                         }
@@ -659,10 +744,10 @@ public class RegWithGoogleActivity extends AppCompatActivity implements View.OnC
                 empleador.setIdUsuario(firebaseUser.getUid());
                 if (photoFlag) {
 //                        Toast.makeText(getApplicationContext(), usuarioTrabajador.toString(), Toast.LENGTH_LONG).show();
-//                    closeProgress();
-//                    title = "Por favor espere";
-//                    message = "Su cuenta ya casi está lista!";
-//                    showProgress(title, message);
+                    closeProgress();
+                    title = "Por favor espere";
+                    message = "Su cuenta ya casi está lista!";
+                    showProgress(title, message);
                     empleador.registrarseEnFirebaseConFoto(RegWithGoogleActivity.this, 2);
                 } else {
                     empleador.setFotoPerfil(null);
@@ -702,10 +787,10 @@ public class RegWithGoogleActivity extends AppCompatActivity implements View.OnC
                 trabajador.setCalificacion(0.5);
                 if (photoFlag) {
 //                        Toast.makeText(getApplicationContext(), usuarioTrabajador.toString(), Toast.LENGTH_LONG).show();
-//                    closeProgress();
-//                    title = "Por favor espere";
-//                    message = "Su cuenta ya casi está lista!";
-//                    showProgress(title, message);
+                    closeProgress();
+                    title = "Por favor espere";
+                    message = "Su cuenta ya casi está lista!";
+                    showProgress(title, message);
                     trabajador.registrarseEnFirebaseConFoto(RegWithGoogleActivity.this, 2);
                 } else {
                     trabajador.setFotoPerfil(null);
@@ -869,7 +954,7 @@ public class RegWithGoogleActivity extends AppCompatActivity implements View.OnC
                 Log.w(TAG, "signInWithPhone:failure -- " + e.getMessage());
                 Log.w(TAG, "signInWithPhone:failure -- " + e.getStatus());
 
-                Toast.makeText(getApplicationContext(), "Por favor seleccione una cuenta de Google para completar su registro", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Por favor seleccione una cuenta de Google para completar su registro.", Toast.LENGTH_LONG).show();
                 buttonSelectAccount.setEnabled(true);
                 buttonSelectAccount.setVisibility(View.VISIBLE);
 
@@ -962,7 +1047,7 @@ public class RegWithGoogleActivity extends AppCompatActivity implements View.OnC
         // Pass null as the parent view because its going in the dialog layout
         builder.setView(promptsView)
                 // Add action buttons
-                .setPositiveButton("Entendido", new DialogInterface.OnClickListener() {
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         // sign in the user ...

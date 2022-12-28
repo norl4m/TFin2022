@@ -83,8 +83,8 @@ public class InformacionInicialActivity extends AppCompatActivity implements Vie
 
         for (int i = 0; i < dots.length; i++) {
             dots[i] = new TextView(this);
-            dots[i].setText(Html.fromHtml("&#8226;"));
-            dots[i].setTextSize(35);
+//            dots[i].setText(Html.fromHtml("&#8226;"));
+//            dots[i].setTextSize(35);
 
             dotsLayout.addView(dots[i]);
 

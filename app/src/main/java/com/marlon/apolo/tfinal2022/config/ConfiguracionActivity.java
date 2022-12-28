@@ -5,10 +5,12 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -60,10 +62,30 @@ public class ConfiguracionActivity extends AppCompatActivity {
         public void onCreate(@Nullable Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             mPreferences = this.getActivity().getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
+
+
             Preference preferenceNightMode = this.findPreference("sync_theme");
             Preference preferenceNetwork = this.findPreference("sync_network");
             NetworkTool networkTool = new NetworkTool(requireActivity());
 
+//
+//            switch (this.getActivity().getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) {
+//                case Configuration.UI_MODE_NIGHT_YES:
+//                    preferenceNightMode.setSummary("Oscuro");
+//                    SharedPreferences.Editor preferencesEditor1 = mPreferences.edit();
+//                    preferencesEditor1.putString("summary", "Oscuro").apply();
+//                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);/* recrea las actividades*/
+//
+//                    break;
+//                case Configuration.UI_MODE_NIGHT_NO:
+//                    //someColor = ContextCompat.getColor(activity, R.color.happy_color);
+//                    preferenceNightMode.setSummary("Claro");
+//                    SharedPreferences.Editor preferencesEditor2 = mPreferences.edit();
+//                    preferencesEditor2.putString("summary", "Claro").apply();
+//                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);/* recrea las actividades*/
+//
+//                    break;
+//            }
             preferenceNightMode
                     .setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                         @Override
@@ -82,6 +104,9 @@ public class ConfiguracionActivity extends AppCompatActivity {
                                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);/* recrea las actividades*/
 
                             }
+
+
+
                             return true;
                         }
                     });

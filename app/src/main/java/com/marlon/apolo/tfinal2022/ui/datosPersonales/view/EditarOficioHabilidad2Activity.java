@@ -27,6 +27,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -45,6 +47,7 @@ import org.checkerframework.checker.units.qual.A;
 import org.checkerframework.checker.units.qual.C;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class EditarOficioHabilidad2Activity extends AppCompatActivity implements View.OnClickListener {
 
@@ -73,7 +76,7 @@ public class EditarOficioHabilidad2Activity extends AppCompatActivity implements
         oficioViewModel = new ViewModelProvider(this).get(OficioViewModel.class);
 
         trabajador = (Trabajador) getIntent().getSerializableExtra("trabajador");
-//        Toast.makeText(getApplicationContext(), trabajador.toString(), Toast.LENGTH_LONG).show();
+        //Toast.makeText(getApplicationContext(), trabajador.toString(), Toast.LENGTH_LONG).show();
         oficioArrayListFilter = new ArrayList<>();
         Log.d(TAG, trabajador.toString());
         oficioSelected = "";
@@ -105,6 +108,9 @@ public class EditarOficioHabilidad2Activity extends AppCompatActivity implements
                                 }
                             }
                             oficios.add(oficio);
+
+                            Collections.sort(oficios, (t1, t2) -> (t1.getNombre()).compareTo(t2.getNombre()));
+
 
                         }
                         if (oficioSuperSpecialListAdapter.getOficioArrayList() != null) {
@@ -1028,11 +1034,10 @@ public class EditarOficioHabilidad2Activity extends AppCompatActivity implements
                         habilidad.setNombreHabilidad(nombreHab);
                         habilidad.setHabilidadSeleccionada(false);
 
-                        FirebaseDatabase.getInstance().getReference()
-                                .child("habilidades")
-                                .child(idOficio)
-                                .child(habilidad.getIdHabilidad())
-                                .setValue(habilidad);
+
+                        alertDialogConfirmar(idOficio, habilidad).show();
+
+
                     }
                 });
                 builder2.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -1086,6 +1091,7 @@ public class EditarOficioHabilidad2Activity extends AppCompatActivity implements
                                 Toast.makeText(getApplicationContext(), "Registro fallido!", Toast.LENGTH_LONG).show();
                                 exit = 0;
                             } else {
+                                Toast.makeText(getApplicationContext(), "Registrando...", Toast.LENGTH_LONG).show();
                                 oficioViewModel.addOficioToFirebase(EditarOficioHabilidad2Activity.this, oficio);
 //                                String idOficio = FirebaseDatabase.getInstance().getReference().child("oficios").push().getKey();
 //                                oficio.setIdOficio(idOficio);
@@ -1268,7 +1274,24 @@ public class EditarOficioHabilidad2Activity extends AppCompatActivity implements
 //                                oficioUpdate.setHabilidadArrayList(new ArrayList<>());
 //                                oficioUpdate.getHabilidadArrayList().add(habilidad);
 //                            }
-                            oficioViewModel.addHabilidadToOficioTofirebase(EditarOficioHabilidad2Activity.this, oficioUpdate, habilidad);
+
+                            FirebaseDatabase.getInstance().getReference()
+                                    .child("habilidades")
+                                    .child(idOficio)
+                                    .child(habilidad.getIdHabilidad())
+                                    .setValue(habilidad).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                Toast.makeText(getApplicationContext(), "Registro existoso", Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                Toast.makeText(getApplicationContext(), "Registro fallido", Toast.LENGTH_SHORT).show();
+
+                                            }
+                                        }
+                                    });
+
+//                            oficioViewModel.addHabilidadToOficioTofirebase(EditarOficioHabilidad2Activity.this, oficioUpdate, habilidad);
                         } else {
                             Toast.makeText(EditarOficioHabilidad2Activity.this, "No se ha podido registrar la habilidad", Toast.LENGTH_LONG).show();
                         }

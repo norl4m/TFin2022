@@ -1,7 +1,6 @@
 package com.marlon.apolo.tfinal2022.ui.citaTrabajo;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.DialogFragment;
@@ -10,30 +9,21 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.InputType;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.citasTrabajo.CitaListAdapter;
 import com.marlon.apolo.tfinal2022.citasTrabajo.CitaViewModel;
+import com.marlon.apolo.tfinal2022.citasTrabajo.SeleccionarEmpleadorActivity;
 import com.marlon.apolo.tfinal2022.model.Cita;
-import com.marlon.apolo.tfinal2022.model.Habilidad;
-import com.marlon.apolo.tfinal2022.model.Oficio;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -50,6 +40,8 @@ public class CitaTrabajoViewActivity extends AppCompatActivity {
     private ArrayList<Cita> citas;
     private CitaListAdapter citaListAdapter;
     private String TAG = CitaTrabajoViewActivity.class.getSimpleName();
+    private SharedPreferences myPreferences;
+    private SharedPreferences.Editor editorPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +55,7 @@ public class CitaTrabajoViewActivity extends AppCompatActivity {
                 finish();
             }
         });
+//        Toast.makeText(getApplicationContext(), "aaaaaa", Toast.LENGTH_LONG).show();
 
         mViewModel = new ViewModelProvider(this).get(CitaViewModel.class);
         recyclerView = findViewById(R.id.recyclerViewCitas);
@@ -89,6 +82,26 @@ public class CitaTrabajoViewActivity extends AppCompatActivity {
                     }
 
                 });
+
+        FloatingActionButton floatingActionButton = findViewById(R.id.fab);
+        floatingActionButton.setVisibility(View.GONE);
+        myPreferences = this.getSharedPreferences("MyPreferences", MODE_PRIVATE);
+
+//        startActivity(new Intent(this, PoCActivity.class));
+        editorPref = myPreferences.edit();
+        int usuario = myPreferences.getInt("usuario", -1);
+        if (usuario == 2) {
+
+            floatingActionButton.setVisibility(View.VISIBLE);
+            floatingActionButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(CitaTrabajoViewActivity.this, SeleccionarEmpleadorActivity.class);
+                    startActivity(intent);
+                }
+            });
+        }
+
 //        mViewModel = new ViewModelProvider(this).get(CitaTrabajoViewModel.class);
         // TODO: Use the ViewModel
 //        requireActivity().startActivity(new Intent(requireActivity(), CitaTrabajoActivity.class));

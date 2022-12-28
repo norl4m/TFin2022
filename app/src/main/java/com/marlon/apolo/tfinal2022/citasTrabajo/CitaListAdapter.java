@@ -2,6 +2,7 @@ package com.marlon.apolo.tfinal2022.citasTrabajo;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.marlon.apolo.tfinal2022.R;
@@ -69,10 +71,47 @@ public class CitaListAdapter extends RecyclerView.Adapter<CitaListAdapter.CitaVi
                 holder.imageView.setImageResource(R.drawable.ic_baseline_schedule_24);
 
             }
+            try {
+                if (cita.getObservaciones() == null) {
+                    holder.textViewObs.setText(String.format("Observaciones: %s", "Ninguna"));
+
+                } else {
+                    holder.textViewObs.setText(String.format("Observaciones: %s", cita.getObservaciones()));
+
+                }
+
+                switch (cita.getObservaciones()) {
+                    case "Trabajador no asistió":
+                        holder.imageView.setImageResource(R.drawable.ic_no_vino);
+                        break;
+                    case "Trabajador incumplido":
+                        holder.imageView.setImageResource(R.drawable.ic_incompleto);
+                        break;
+
+                }
+            } catch (Exception e) {
+                Log.d(TAG, e.toString());
+            }
             holder.textViewFechaCita.setText(String.format("Fecha: %s", cita.getFechaCita()));
             holder.textViewTrabjador.setText(String.format("Trabajador: %s", cita.getNombreTrabajador()));
             holder.textViewEmpleador.setText(String.format("Empleador: %s", cita.getNombreEmpleador()));
             holder.textViewTotal.setText(String.format("Total: $ %.2f", cita.getTotal()));
+            holder.textViewCalif.setText(String.format("Calificación: %.1f", cita.getCalificacion()));
+            int someColorFrom = 0;
+
+
+            switch (context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) {
+                case Configuration.UI_MODE_NIGHT_YES:
+//                someColorFrom = ContextCompat.getColor(activity, R.color.black_minus);
+                    someColorFrom = ContextCompat.getColor(context, R.color.purple_200);
+                    break;
+                case Configuration.UI_MODE_NIGHT_NO:
+                    someColorFrom = ContextCompat.getColor(context, R.color.purple_700);
+                    break;
+            }
+
+//        holder.linearLayout.setBackgroundColor(someColorTo);
+            holder.imageView.setColorFilter(someColorFrom);
 
 
         }
@@ -94,6 +133,8 @@ public class CitaListAdapter extends RecyclerView.Adapter<CitaListAdapter.CitaVi
         private final TextView textViewTrabjador;
         private final TextView textViewFechaCita;
         private final TextView textViewTotal;
+        private final TextView textViewCalif;
+        private final TextView textViewObs;
         private final ImageView imageView;
 
 
@@ -105,6 +146,8 @@ public class CitaListAdapter extends RecyclerView.Adapter<CitaListAdapter.CitaVi
             textViewFechaCita = itemView.findViewById(R.id.textViewFechaCitadialog);
             textViewTotal = itemView.findViewById(R.id.textViewCostoTotalDialog);
             imageView = itemView.findViewById(R.id.imageViewStatus);
+            textViewCalif = itemView.findViewById(R.id.textViewCalificacion);
+            textViewObs = itemView.findViewById(R.id.textViewObsv);
 
 
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -128,6 +171,7 @@ public class CitaListAdapter extends RecyclerView.Adapter<CitaListAdapter.CitaVi
 
                     citaPass.setState(cita.isState());
                     citaPass.setStateReceive(cita.isStateReceive());
+                    citaPass.setObservaciones(cita.getObservaciones());
 //                    citaPass.setParticipants(cita.getParticipants());
 
                     citaPass.setState(cita.isState());

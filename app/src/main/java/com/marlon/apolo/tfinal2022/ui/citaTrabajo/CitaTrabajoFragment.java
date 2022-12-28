@@ -4,7 +4,6 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -21,16 +20,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.citasTrabajo.CitaListAdapter;
-import com.marlon.apolo.tfinal2022.citasTrabajo.CitaTrabajoActivity;
 import com.marlon.apolo.tfinal2022.citasTrabajo.CitaViewModel;
 import com.marlon.apolo.tfinal2022.model.Cita;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class CitaTrabajoFragment extends Fragment {
 
@@ -53,6 +50,7 @@ public class CitaTrabajoFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.cita_trabajo_fragment, container, false);
         recyclerView = root.findViewById(R.id.fragHomeRecyclerViewCitas);
+
 
         return root;
     }

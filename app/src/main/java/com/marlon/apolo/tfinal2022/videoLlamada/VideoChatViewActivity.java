@@ -21,12 +21,11 @@
  */
 package com.marlon.apolo.tfinal2022.videoLlamada;
 
-import static io.agora.rtc.video.VideoEncoderConfiguration.FRAME_RATE.FRAME_RATE_FPS_15;
-import static io.agora.rtc.video.VideoEncoderConfiguration.FRAME_RATE.FRAME_RATE_FPS_30;
-import static io.agora.rtc.video.VideoEncoderConfiguration.VD_320x240;
-import static io.agora.rtc.video.VideoEncoderConfiguration.VD_640x360;
-import static io.agora.rtc.video.VideoEncoderConfiguration.VD_640x480;
-import static io.agora.rtc.video.VideoEncoderConfiguration.VD_840x480;
+
+
+import static io.agora.rtc2.video.VideoEncoderConfiguration.FRAME_RATE.FRAME_RATE_FPS_15;
+import static io.agora.rtc2.video.VideoEncoderConfiguration.VD_640x360;
+import static io.agora.rtc2.video.VideoEncoderConfiguration.VD_640x480;
 
 import android.Manifest;
 import android.content.BroadcastReceiver;
@@ -62,10 +61,10 @@ import com.marlon.apolo.tfinal2022.model.VideoLlamada;
 
 import java.util.Locale;
 
-import io.agora.rtc.IRtcEngineEventHandler;
-import io.agora.rtc.RtcEngine;
-import io.agora.rtc.video.VideoCanvas;
-import io.agora.rtc.video.VideoEncoderConfiguration;
+import io.agora.rtc2.IRtcEngineEventHandler;
+import io.agora.rtc2.RtcEngine;
+import io.agora.rtc2.video.VideoCanvas;
+import io.agora.rtc2.video.VideoEncoderConfiguration;
 
 
 /**

@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
@@ -34,7 +33,6 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.webkit.MimeTypeMap;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -74,16 +72,16 @@ import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.marlon.apolo.tfinal2022.R;
-import com.marlon.apolo.tfinal2022.citasTrabajo.CitaTrabajoActivity;
+import com.marlon.apolo.tfinal2022.citasTrabajo.NuevaCitaTrabajoActivity;
+import com.marlon.apolo.tfinal2022.comunnication.voice.AgoraOnlyVoiceCallActivity;
+import com.marlon.apolo.tfinal2022.comunnication.video.AgoraVideoCallActivity;
 import com.marlon.apolo.tfinal2022.individualChat.model.ChatPoc;
 import com.marlon.apolo.tfinal2022.individualChat.model.MessageCloudPoc;
 import com.marlon.apolo.tfinal2022.individualChat.view.location.LocationActivity;
-import com.marlon.apolo.tfinal2022.llamadaVoz.LlamadaVozActivity;
 import com.marlon.apolo.tfinal2022.model.Administrador;
 import com.marlon.apolo.tfinal2022.model.Empleador;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
 import com.marlon.apolo.tfinal2022.model.Usuario;
-import com.marlon.apolo.tfinal2022.videoLlamada.VideoLlamadaActivity;
 
 import java.io.File;
 import java.io.IOException;
@@ -1282,7 +1280,7 @@ public class CrazyIndividualChatActivity extends AppCompatActivity implements Vi
         switch (item.getItemId()) {
             case R.id.mnu_agendar_cita:
 //            case R.id.mnu_crear_cita:
-                Intent intent = new Intent(CrazyIndividualChatActivity.this, CitaTrabajoActivity.class);
+                Intent intent = new Intent(CrazyIndividualChatActivity.this, NuevaCitaTrabajoActivity.class);
                 intent.putExtra("usuarioFrom", usuarioLocal);
                 intent.putExtra("usuarioTo", usuarioRemoto);
                 startActivity(intent);
@@ -1385,68 +1383,81 @@ public class CrazyIndividualChatActivity extends AppCompatActivity implements Vi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.imageButtonVideoCall:
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-                        Intent intentVideollamada = new Intent(CrazyIndividualChatActivity.this, VideoLlamadaActivity.class);
-                        intentVideollamada.putExtra("usuarioTo", usuarioRemoto);
-                        intentVideollamada.putExtra("usuarioFrom", usuarioLocal);
-                        intentVideollamada.putExtra("callStatus", 0);
-                        startActivity(intentVideollamada);
-                    } else if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
-
-                        Snackbar.make(fabMessageMic, "Permiso de cámara y micrófono necesario",
-                                Snackbar.LENGTH_INDEFINITE).setAction(R.string.ok, new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                // Request the permission
-                                Toast.makeText(getApplicationContext(), "GG permisos", Toast.LENGTH_LONG).show();
-                                requestPermissions(new String[]{Manifest.permission.CAMERA}, 8000);
-                            }
-                        }).show();
-                    } else {
-
-
-                        /* 10 - 11 - 12 */
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//        builder.setTitle("");
-                            builder.setMessage(R.string.permiso_video_call_text);
-                            // Add the buttons
-                            builder.setPositiveButton("Ajustes", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    // User clicked OK button
-
-                                    Intent intent = new Intent();
-                                    intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                                    intent.setData(Uri.parse("package:" + getPackageName()));
-                                    startActivity(intent);
-                                }
-                            });
-                            builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    // User cancelled the dialog
-                                }
-                            });
-                            // Set other dialog properties
-
-                            // Create the AlertDialog
-                            AlertDialog dialog = builder.create();
-                            dialog.show();
-
-                        } else {
-                            // You can directly ask for the permission.
-                            Snackbar.make(fabMessageMic, "Permiso de cámara y micrófono no concedido", Snackbar.LENGTH_LONG).show();
-
-                            requestPermissions(new String[]{Manifest.permission.CAMERA}, 8000);
-                        }
-
-
-                    }
-
-                } else {
-
-                }
+                Intent intentVideollamada = new Intent(CrazyIndividualChatActivity.this, AgoraVideoCallActivity.class);
+                intentVideollamada.putExtra("usuarioRemoto", usuarioRemoto);
+                intentVideollamada.putExtra("usuarioLocal", usuarioLocal);
+                String channelNamea = FirebaseDatabase.getInstance().getReference().child("videoCalls")
+                        .push().getKey();
+                intentVideollamada.putExtra("channelName", channelNamea);
+                intentVideollamada.putExtra("callStatus", "llamadaSaliente");
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                    if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+////                        Intent intentVideollamada = new Intent(CrazyIndividualChatActivity.this, VideoLlamadaActivity.class);
+//                        Intent intentVideollamada = new Intent(CrazyIndividualChatActivity.this, AgoraVideoCallActivity.class);
+//                        intentVideollamada.putExtra("usuarioRemoto", usuarioRemoto);
+//                        intentVideollamada.putExtra("usuarioLocal", usuarioLocal);
+//                        String channelName = FirebaseDatabase.getInstance().getReference().child("videoCalls")
+//                                .push().getKey();
+//                        intentVideollamada.putExtra("channelName", channelName);
+//                        intentVideollamada.putExtra("callStatus", "llamadaSaliente");
+//
+////                        intentVideollamada.putExtra("callStatus", 0);
+                startActivity(intentVideollamada);
+//                    } else if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
+//
+//                        Snackbar.make(fabMessageMic, "Permiso de cámara y micrófono necesario",
+//                                Snackbar.LENGTH_INDEFINITE).setAction(R.string.ok, new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View view) {
+//                                // Request the permission
+//                                Toast.makeText(getApplicationContext(), "GG permisos", Toast.LENGTH_LONG).show();
+//                                requestPermissions(new String[]{Manifest.permission.CAMERA}, 8000);
+//                            }
+//                        }).show();
+//                    } else {
+//
+//
+//                        /* 10 - 11 - 12 */
+//                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+//                            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+////        builder.setTitle("");
+//                            builder.setMessage(R.string.permiso_video_call_text);
+//                            // Add the buttons
+//                            builder.setPositiveButton("Ajustes", new DialogInterface.OnClickListener() {
+//                                public void onClick(DialogInterface dialog, int id) {
+//                                    // User clicked OK button
+//
+//                                    Intent intent = new Intent();
+//                                    intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+//                                    intent.setData(Uri.parse("package:" + getPackageName()));
+//                                    startActivity(intent);
+//                                }
+//                            });
+//                            builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+//                                public void onClick(DialogInterface dialog, int id) {
+//                                    // User cancelled the dialog
+//                                }
+//                            });
+//                            // Set other dialog properties
+//
+//                            // Create the AlertDialog
+//                            AlertDialog dialog = builder.create();
+//                            dialog.show();
+//
+//                        } else {
+//                            // You can directly ask for the permission.
+//                            Snackbar.make(fabMessageMic, "Permiso de cámara y micrófono no concedido", Snackbar.LENGTH_LONG).show();
+//
+//                            requestPermissions(new String[]{Manifest.permission.CAMERA}, 8000);
+//                        }
+//
+//
+//                    }
+//
+//                } else {
+//
+//                }
+                /*************************/
 
 //                if (ContextCompat.checkSelfPermission(
 //                        this, Manifest.permission.CAMERA) ==
@@ -1481,11 +1492,20 @@ public class CrazyIndividualChatActivity extends AppCompatActivity implements Vi
                     if (checkSelfPermission(Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
 
 
-                        Intent intent = new Intent(CrazyIndividualChatActivity.this, LlamadaVozActivity.class);
-                        intent.putExtra("usuarioTo", usuarioRemoto);
-                        intent.putExtra("usuarioFrom", usuarioLocal);
-                        intent.putExtra("callStatus", 0);
+//                        Intent intent = new Intent(CrazyIndividualChatActivity.this, LlamadaVozActivity.class);
+                        Intent intent = new Intent(CrazyIndividualChatActivity.this, AgoraOnlyVoiceCallActivity.class);
+//                        intent.putExtra("usuarioTo", usuarioRemoto);
+//                        intent.putExtra("usuarioFrom", usuarioLocal);
+//                        intent.putExtra("callStatus", 0);
+                        intent.putExtra("usuarioRemoto", usuarioRemoto);
+                        intent.putExtra("usuarioLocal", usuarioLocal);
+                        String channelName = FirebaseDatabase.getInstance().getReference().child("voiceCalls")
+                                .push().getKey();
+                        intent.putExtra("channelName", channelName);
+                        intent.putExtra("callStatus", "llamadaSaliente");
+
                         startActivity(intent);
+
 
                     } else if (shouldShowRequestPermissionRationale(Manifest.permission.RECORD_AUDIO)) {
 
@@ -1625,12 +1645,13 @@ public class CrazyIndividualChatActivity extends AppCompatActivity implements Vi
                         MessageCloudPoc messageCloudPoc = new MessageCloudPoc();
                         //mensajeNube.setIdMensaje();
                         //mensajeNube.setIdChat("-N5Jb_EbmyyX7RXVyhs");
-                        messageCloudPoc.setContenido(message);
+                        messageCloudPoc.setContenido(message.trim());
                         messageCloudPoc.setFrom(FirebaseAuth.getInstance().getCurrentUser().getUid());
                         messageCloudPoc.setTo(usuarioRemoto.getIdUsuario());
                         messageCloudPoc.setEstadoLectura(false);
                         messageCloudPoc.setType(0);/*0 texto */
-                        Log.d(TAG, messageCloudPoc.toString());
+                        Log.e(TAG, "@######################################");
+                        Log.e(TAG, messageCloudPoc.toString());
                         sendMessage(messageCloudPoc);
 //                        if (chat == null) {
 //                            String idChat = FirebaseDatabase.getInstance().getReference()

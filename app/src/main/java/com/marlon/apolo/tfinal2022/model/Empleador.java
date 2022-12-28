@@ -1068,16 +1068,21 @@ public class Empleador extends Usuario {
         childUpdates.put("/citas/" + idCita, postValues);
 
 
-        FirebaseDatabase
-                .getInstance()
-                .getReference()
-                .updateChildren(childUpdates)
+        FirebaseDatabase.getInstance().getReference().child("citas")
+                .child(cita.getIdCita())
+                .child("calificacion")
+                .setValue(cita.getCalificacion())
+
+//        FirebaseDatabase
+//                .getInstance()
+//                .getReference()
+//                .updateChildren(childUpdates)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(@NonNull Void unused) {
                         Log.d("TAG", "Cita actualizada");
 
-//                        Toast.makeText(detalleServicioActivity, "Cita actualizada!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(detalleServicioActivity, "Cita actualizada!", Toast.LENGTH_LONG).show();
 //                        citaActivity.finish();
                         updateCalifOnTrabajador(cita.getFrom());
                     }

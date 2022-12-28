@@ -47,7 +47,7 @@ import com.marlon.apolo.tfinal2022.herramientas.DataValidation;
 import com.marlon.apolo.tfinal2022.individualChat.model.ChatPocData;
 import com.marlon.apolo.tfinal2022.individualChat.model.MessageCloudPoc;
 import com.marlon.apolo.tfinal2022.individualChat.view.CrazyIndividualChatActivity;
-import com.marlon.apolo.tfinal2022.individualChat.view.IndividualChatActivity;
+import com.marlon.apolo.tfinal2022.individualChat.view.no.IndividualChatActivity;
 import com.marlon.apolo.tfinal2022.llamadaVoz.LlamadaVozActivity;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
 import com.marlon.apolo.tfinal2022.model.Usuario;

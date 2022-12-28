@@ -18,7 +18,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.preference.PreferenceManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -27,18 +26,12 @@ import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.marlon.apolo.tfinal2022.R;
-import com.marlon.apolo.tfinal2022.individualChat.view.IndividualChatActivity;
+import com.marlon.apolo.tfinal2022.individualChat.view.no.IndividualChatActivity;
 import com.marlon.apolo.tfinal2022.llamadaVoz.LlamadaVozActivity;
-import com.marlon.apolo.tfinal2022.model.Chat;
-import com.marlon.apolo.tfinal2022.model.Oficio;
-import com.marlon.apolo.tfinal2022.model.Participante;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
 import com.marlon.apolo.tfinal2022.model.Usuario;
-import com.marlon.apolo.tfinal2022.ui.oficios.OficioTrabajadorVistaListAdapter;
-import com.marlon.apolo.tfinal2022.ui.trabajadores.TrabajadorListAdapter;
 import com.marlon.apolo.tfinal2022.videoLlamada.VideoLlamadaActivity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class BienvenidoTrabajadorListAdapter extends RecyclerView.Adapter<BienvenidoTrabajadorListAdapter.TrabajadorViewHolder> {
@@ -59,6 +52,8 @@ public class BienvenidoTrabajadorListAdapter extends RecyclerView.Adapter<Bienve
         this.context = context;
         this.inflater = LayoutInflater.from(context);
     }
+
+
 
 
     @NonNull

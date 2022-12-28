@@ -9,22 +9,28 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="4dp"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/uid"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:textColor="@color/white" />
 
         <TextView
             android:id="@+id/email"
+
             android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:textColor="@color/white" />
 
         <TextView
             android:id="@+id/phone"
+
             android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:textColor="@color/white" />
 
         <RelativeLayout
             android:layout_width="match_parent"

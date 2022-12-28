@@ -8,7 +8,6 @@
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
-        style="@style/Widget.MaterialComponents.Toolbar.Primary"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:elevation="4dp"
@@ -120,6 +119,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="40dp"
                             android:layout_margin="2dp"
+                            android:background="@drawable/button_background"
                             android:text="Fecha de cita: "
                             android:textAllCaps="false"
                             android:textSize="16sp" />
@@ -148,6 +148,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="40dp"
                             android:layout_margin="2dp"
+                            android:background="@drawable/button_background"
                             android:text="Hora de cita: "
                             android:textAllCaps="false"
                             android:textSize="16sp" />
@@ -297,6 +298,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
+        android:background="@drawable/button_background"
         android:inputType="textCapSentences"
         android:text="Guardar cambios"
         android:visibility="gone"

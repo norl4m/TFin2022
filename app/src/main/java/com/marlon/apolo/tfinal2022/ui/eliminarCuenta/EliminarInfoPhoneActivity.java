@@ -12,8 +12,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -243,6 +245,11 @@ public class EliminarInfoPhoneActivity extends AppCompatActivity implements View
         });
 
         findViewById(R.id.buttonInfo).setOnClickListener(this);
+
+        TypedValue typedValue = new TypedValue();
+        this.getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
+        int colorNight = typedValue.data;
+        ((ImageView) findViewById(R.id.acLoginImageViewLogo)).setColorFilter(colorNight);
 
 
         textInputLayoutPhone = findViewById(R.id.textInputLayoutPhone);

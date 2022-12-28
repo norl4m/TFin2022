@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HabilidadCRUDListAdapterAaaaaaaa extends RecyclerView.Adapter<HabilidadCRUDListAdapterAaaaaaaa.HabilidadViewHolder> {
+    private static final String TAG = HabilidadCRUDListAdapterAaaaaaaa.class.getSimpleName();
     private List<Habilidad> habilidadList; // Cached copy of words
     private List<Trabajador> trabajadorList; // Cached copy of words
     private Context context;
@@ -137,8 +138,12 @@ public class HabilidadCRUDListAdapterAaaaaaaa extends RecyclerView.Adapter<Habil
     }
 
     public void alertDialogEditarHabilidad(Habilidad habilidad, Oficio oficio) {
+        for (Habilidad h : habilidadList) {
+            Log.d(TAG, h.toString());
+        }
+
         final EditText input = new EditText(context);
-        input.setHint("Nombre de habilidad:");
+        input.setHint("Nombrex de habilidad:");
         input.setText(habilidad.getNombreHabilidad());
         input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
         dialogNuevoOficio = new AlertDialog.Builder(context)
@@ -151,29 +156,53 @@ public class HabilidadCRUDListAdapterAaaaaaaa extends RecyclerView.Adapter<Habil
                         if (!input.getText().toString().equals("")) {
                             habilidad.setNombreHabilidad(input.getText().toString());
                             int index = 0;
+                            boolean flagExitID = false;
+                            boolean flagExitNombre = false;
                             for (Habilidad h : habilidadList) {
+//                                if (h.getNombreHabilidad().toUpperCase().equals(h.getNombreHabilidad().toUpperCase())) {
+//                                    flagExit = true;
+//                                    break;
+//                                } else {
+//                                    if (h.getIdHabilidad().equals(habilidad.getIdHabilidad())) {
+//                                        habilidadList.set(index, habilidad);
+//                                        flagExit = false;
+//                                        break;
+//                                    }
+//                                }
                                 if (h.getIdHabilidad().equals(habilidad.getIdHabilidad())) {
                                     habilidadList.set(index, habilidad);
+                                    flagExitID = true;
                                     break;
+                                } else {
+                                    if (h.getNombreHabilidad().toUpperCase().equals(habilidad.getNombreHabilidad().toUpperCase())) {
+                                        flagExitNombre = true;
+                                        break;
+                                    }
                                 }
                                 index++;
                             }
 
-                            oficio.setHabilidadArrayList((ArrayList<Habilidad>) habilidadList);
+                            if (flagExitNombre) {
+                                Toast.makeText(context, "El oficio NO ha podido ser actualizado", Toast.LENGTH_LONG).show();
+                            } else {
+                                oficio.setHabilidadArrayList((ArrayList<Habilidad>) habilidadList);
 
-                            FirebaseDatabase.getInstance().getReference()
-                                    .child("habilidades")
-                                    .child(oficio.getIdOficio())
-                                    .child(habilidad.getIdHabilidad())
-                                    .setValue(habilidad)
-                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            if (task.isSuccessful()) {
-                                                Toast.makeText(context, "Habilidad actualizada", Toast.LENGTH_LONG).show();
+                                FirebaseDatabase.getInstance().getReference()
+                                        .child("habilidades")
+                                        .child(oficio.getIdOficio())
+                                        .child(habilidad.getIdHabilidad())
+                                        .setValue(habilidad)
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                    Toast.makeText(context, "Habilidad actualizada", Toast.LENGTH_LONG).show();
+                                                }
                                             }
-                                        }
-                                    });
+                                        });
+                            }
+
+
                         } else {
 //                            oficioViewModel.addOficioToFirebase(requireActivity(), oficio);
                             Toast.makeText(context, "No se ha ingresado ningún nombre." +

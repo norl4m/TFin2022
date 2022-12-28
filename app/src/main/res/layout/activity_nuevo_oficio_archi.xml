@@ -14,7 +14,6 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:elevation="8dp"
-        app:menu="@menu/menu_oficio_archi_nuevo"
         app:navigationIcon="@drawable/ic_baseline_arrow_back_24"
         app:title="" />
 
@@ -75,18 +74,21 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textCapWords" />
+                android:inputType="textCapSentences"
+                android:digits="@string/letras_espacio"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
         </com.google.android.material.textfield.TextInputLayout>
 
 
         <Button
             android:id="@+id/buttonSave"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:layout_margin="8dp"
             android:text="Guardar"
             android:textAllCaps="false"
-            android:visibility="gone" />
+            android:visibility="visible"
+            android:background="@drawable/cilindro" />
     </LinearLayout>
 
 </LinearLayout>

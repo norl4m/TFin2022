@@ -2,14 +2,15 @@ package com.marlon.apolo.tfinal2022.ui.oficioArchi.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import androidx.appcompat.content.res.AppCompatResources;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -17,16 +18,16 @@ import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.ui.oficioArchi.model.OficioArchiModel;
 import com.marlon.apolo.tfinal2022.ui.oficioArchi.view.OficioArchiEditDeleteActivity;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
-public class OficioArchiListAdapter extends RecyclerView.Adapter<OficioArchiListAdapter.OficioArchiViewHolder> {
+public class OficioArchiCRUDListAdapter extends RecyclerView.Adapter<OficioArchiCRUDListAdapter.OficioArchiViewHolder> {
 
     private final LayoutInflater mInflater;
     private List<OficioArchiModel> mWords; // Cached copy of words
     private Context contextInstance; // Cached copy of words
 
-    public OficioArchiListAdapter(Context context) {
+    public OficioArchiCRUDListAdapter(Context context) {
         mInflater = LayoutInflater.from(context);
         contextInstance = context;
     }
@@ -44,6 +45,16 @@ public class OficioArchiListAdapter extends RecyclerView.Adapter<OficioArchiList
         if (mWords != null) {
             OficioArchiModel current = mWords.get(position);
             holder.wordItemView.setText(current.getNombre());
+            int itemsColor = ContextCompat.getColor(contextInstance, R.color.white);
+            holder.wordItemView.setTextColor(itemsColor);
+            Drawable[] itrems = new Drawable[]{AppCompatResources.getDrawable(contextInstance, R.drawable.bg1),
+                    AppCompatResources.getDrawable(contextInstance, R.drawable.bg2),
+                    AppCompatResources.getDrawable(contextInstance, R.drawable.bg3)};
+            final int min = 0;
+            final int max = itrems.length - 1;
+            int random = new Random().nextInt((max - min) + 1) + min;
+            holder.itemView.setBackground(itrems[random]);
+            holder.imageView.setColorFilter(itemsColor);
             if (current.getUriPhoto() != null) {
                 Glide.with(contextInstance)
                         .load(current.getUriPhoto())
@@ -98,7 +109,7 @@ public class OficioArchiListAdapter extends RecyclerView.Adapter<OficioArchiList
 
             //Toast.makeText(contextInstance, element.toString(), Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(contextInstance, OficioArchiEditDeleteActivity.class);
-            intent.putExtra("oficioModel",element);
+            intent.putExtra("oficioModel", element);
             contextInstance.startActivity(intent);
 
         }

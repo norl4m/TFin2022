@@ -1,6 +1,7 @@
 package com.marlon.apolo.tfinal2022.citasTrabajo;
 
 import android.app.AlertDialog;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -18,23 +19,26 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
-
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.model.Administrador;
 import com.marlon.apolo.tfinal2022.model.Cita;
 import com.marlon.apolo.tfinal2022.model.Empleador;
-import com.marlon.apolo.tfinal2022.model.Habilidad;
 import com.marlon.apolo.tfinal2022.model.Item;
-import com.marlon.apolo.tfinal2022.model.Oficio;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
 
 import java.text.DateFormat;
@@ -54,8 +58,15 @@ public class DetalleServicioActivity extends AppCompatActivity {
     private TextView textViewNombreTrabajador;
     private TextView textViewFechaCita;
     private TextView textViewHoraCita;
-    private float precioTotal;
+    private Double precioTotal;
     private AlertDialog alertD;
+    private Menu menuLoco;
+    private MenuItem mnuCalifTrab;
+    private MenuItem mnuObseraciones;
+    //    private MenuItem o1;
+//    private MenuItem o2;
+//    private MenuItem o3;
+    private MenuItem mnuFin;
 
     public TextView getTextViewTotal() {
         return textViewTotal;
@@ -87,6 +98,23 @@ public class DetalleServicioActivity extends AppCompatActivity {
     private Administrador administradorLocal;
     private int usuario;
 
+    private void cancelNotification(int idNotification) {
+
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+
+            NotificationManager notificationManagerX = getSystemService(NotificationManager.class);
+            notificationManagerX.cancel(idNotification);
+
+        } else {
+
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+            notificationManager.cancel(idNotification);
+        }
+
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,7 +128,7 @@ public class DetalleServicioActivity extends AppCompatActivity {
 
         usuario = prefs.getInt("usuario", -1);
         Log.i(TAG, String.format("USUARIO: %d", usuario));
-        //Toast.makeText(getApplicationContext(), String.valueOf(usuario), Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getApplicationContext(), String.valueOf(usuario), Toast.LENGTH_SHORT).show();
 
         switch (usuario) {
             case 0:
@@ -117,6 +145,8 @@ public class DetalleServicioActivity extends AppCompatActivity {
                 trabajadorLocal.setIdUsuario(FirebaseAuth.getInstance().getCurrentUser().getUid());
                 break;
         }
+
+
 //        TrabajadorViewModel trabajadorViewModel = new ViewModelProvider(this).get(TrabajadorViewModel.class);
 //
 //        trabajadorViewModel
@@ -140,8 +170,94 @@ public class DetalleServicioActivity extends AppCompatActivity {
         buttonHoraCita.setEnabled(false);
 
         try {
+            int idnot = getIntent().getIntExtra("notificationId", -1);
+            cancelNotification(idnot);
+        } catch (Exception e) {
+            Log.d(TAG, e.toString());
+        }
+
+        try {
             Cita cita = (Cita) getIntent().getSerializableExtra("cita");
+
+//
+//            FirebaseDatabase.getInstance().getReference().child("citas")
+//                    .child(cita.getIdCita())
+
+
             citaLocal = cita;
+            FirebaseDatabase.getInstance().getReference().child("citas")
+                    .child(cita.getIdCita())
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            Cita citaDB = snapshot.getValue(Cita.class);
+                            citaLocal = citaDB;
+//                            Toast.makeText(getApplicationContext(), "Set cita local a lo bien", Toast.LENGTH_SHORT).show();
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+//            Toast.makeText(getApplicationContext(), citaLocal.toString(), Toast.LENGTH_LONG).show();
+            try {
+//                changeMenuVisibilityObservaciones();
+
+            } catch (Exception e) {
+                Log.d(TAG, e.toString());
+            }
+
+
+            FirebaseDatabase.getInstance().getReference().child("citas")
+                    .addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                            Cita citaDb = snapshot.getValue(Cita.class);
+                        }
+
+                        @Override
+                        public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                            Cita citaDb = snapshot.getValue(Cita.class);
+                            if (citaDb.getIdCita().equals(citaLocal.getIdCita())) {
+                                if (citaDb.isState()) {
+                                    if (usuario == 1) {
+                                        changeEmpleadorMenuVisibility();
+                                    }
+
+                                }
+                                try {
+                                    if (!citaDb.getObservaciones().isEmpty()) {
+                                        if (usuario == 2) {
+                                            changeTrabajadorMenuVisibility(citaDb);
+                                        }
+
+                                    }
+                                } catch (Exception e) {
+                                    Log.d(TAG, e.toString());
+                                }
+
+                            }
+                        }
+
+                        @Override
+                        public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+                        }
+
+                        @Override
+                        public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
+
             chatID = cita.getChatID();
 //             Toast.makeText(this, cita.toString() + chatID, Toast.LENGTH_LONG).show();
             textViewFechaCita.setText(String.format("%s", cita.getFechaCita()));
@@ -230,12 +346,14 @@ public class DetalleServicioActivity extends AppCompatActivity {
             }
         });
         itemAdapter = new ItemAdapter(this, 0);
+        recyclerView.setAdapter(itemAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         citaViewModel.getItems(citaLocal.getIdCita()).observe(this, items -> {
 
 //            itemAdapter = new ItemAdapter(this, usuario);
-            recyclerView.setAdapter(itemAdapter);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+//            recyclerView.setAdapter(itemAdapter);
+//            recyclerView.setLayoutManager(new LinearLayoutManager(this));
 //            for (Item item : items) {
 //                Log.e(TAG, item.toString());
 //            }
@@ -294,7 +412,7 @@ public class DetalleServicioActivity extends AppCompatActivity {
                 //citaLocal.finalizarTrabajo(chatID);
                 citaLocal.setFechaCita(textViewFechaCita.getText().toString() + " " + textViewHoraCita.getText().toString());
                 citaLocal.setItems(itemAdapter.getItemArrayList());
-                precioTotal = 0;
+                precioTotal = 0.0;
                 for (Item i : itemAdapter.getItemArrayList()) {
                     precioTotal = precioTotal + i.getPrice();
                 }
@@ -307,10 +425,12 @@ public class DetalleServicioActivity extends AppCompatActivity {
                 }
 
 
-                recyclerView.setAdapter(itemAdapter);
-                recyclerView.setLayoutManager(new LinearLayoutManager(DetalleServicioActivity.this));
+//                recyclerView.setAdapter(itemAdapter);
+//                recyclerView.setLayoutManager(new LinearLayoutManager(DetalleServicioActivity.this));
 
-                itemAdapter.setItems(citaLocal.getItems());
+                // Toast.makeText(DetalleServicioActivity.this, "MMMMMMM", Toast.LENGTH_SHORT).show();
+//                itemAdapter.setItems(citaLocal.getItems());
+                itemAdapter.setItems(itemAdapter.getItemArrayList());
             }
         });
 
@@ -322,10 +442,36 @@ public class DetalleServicioActivity extends AppCompatActivity {
 //        item.setDetail("Pastel familiar");
                         item.setDetail("");
 //        item.setPrice(56.0f);
-                        item.setPrice(0.0f);
+                        item.setPrice(0.0);
+                        item.setPriceFormat("0.00");
                         itemAdapter.addItem(item);
                     }
                 });
+    }
+
+    private void changeTrabajadorMenuVisibility(Cita cita) {
+        citaLocal.setObservaciones(cita.getObservaciones());
+
+//        Toast.makeText(getApplicationContext(), "Changed state", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getApplicationContext(), cita.getObservaciones(), Toast.LENGTH_SHORT).show();
+
+//        switch (cita.getObservaciones()) {
+//            case "Trabajador no asistió":
+//                mnuFin.setVisible(true);
+//                break;
+//            case "Trabajador incumplido":
+//                mnuFin.setVisible(true);
+//                break;
+//            case "Ninguna":
+//                mnuFin.setVisible(false);
+//                break;
+////            default:
+////                mnuFin.setVisible(true);
+////                break;
+//        }
+
+        invalidateOptionsMenu();/*resetea el menu*/
+
     }
 
     /**
@@ -417,7 +563,42 @@ public class DetalleServicioActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.mnu_detail, menu);
+        menuLoco = menu;
+
         return true;
+    }
+
+    public void changeEmpleadorMenuVisibility() {
+        citaLocal.setState(true);/*muy necesario*/
+        //mnuCalifTrab.setVisible(true);
+        try {
+//            changeMenuVisibilityObservaciones();
+
+        } catch (Exception e) {
+            Log.d(TAG, e.toString());
+        }
+
+        invalidateOptionsMenu();/*resetea el menu*/
+
+    }
+
+    public void changeMenuVisibilityObservaciones() {
+
+//        switch (citaLocal.getObservaciones()) {
+//            case "Trabajador no asistió":
+//                o1.setChecked(true);
+//                break;
+//            case "Trabajador incumplido":
+//                o2.setChecked(true);
+//                break;
+//            case "Ninguna":
+//                o3.setChecked(true);
+//                break;
+//        }
+
+
+//        invalidateOptionsMenu();/*resetea el menu*/
+
     }
 
     public android.app.AlertDialog alertDialogConfirmar() {
@@ -432,7 +613,7 @@ public class DetalleServicioActivity extends AppCompatActivity {
                         Log.e(TAG, "Eliminando cita");
                         citaLocal.setFechaCita(textViewFechaCita.getText().toString() + " " + textViewHoraCita.getText().toString());
                         citaLocal.setItems(itemAdapter.getItemArrayList());
-                        precioTotal = 0;
+                        precioTotal = 0.0;
                         for (Item i : itemAdapter.getItemArrayList()) {
                             precioTotal = precioTotal + i.getPrice();
                         }
@@ -460,7 +641,7 @@ public class DetalleServicioActivity extends AppCompatActivity {
                 citaLocal.setState(true);
                 citaLocal.setFechaCita(textViewFechaCita.getText().toString() + " " + textViewHoraCita.getText().toString());
                 citaLocal.setItems(itemAdapter.getItemArrayList());
-                precioTotal = 0;
+                precioTotal = 0.0;
                 for (Item i : itemAdapter.getItemArrayList()) {
                     precioTotal = precioTotal + i.getPrice();
                 }
@@ -529,6 +710,49 @@ public class DetalleServicioActivity extends AppCompatActivity {
                     alertD.show();
                 }
                 return true;
+            case R.id.o1:
+
+                if (item.isChecked()) {
+//                    citaLocal.setObservaciones("Trabajdor no asistió");
+                    item.setChecked(false);
+                } else {
+                    item.setChecked(true);
+                }
+                citaLocal.setObservaciones("Trabajador no asistió");
+
+//                Toast.makeText(getApplicationContext(), citaLocal.toString(), Toast.LENGTH_LONG).show();
+                FirebaseDatabase.getInstance().getReference().child("citas").child(citaLocal.getIdCita())
+                        .child("observaciones")
+                        .setValue(citaLocal.getObservaciones());
+                return true;
+            case R.id.o2:
+
+                if (item.isChecked()) {
+                    item.setChecked(false);
+                } else {
+                    item.setChecked(true);
+                }
+                citaLocal.setObservaciones("Trabajador incumplido");
+
+//                Toast.makeText(getApplicationContext(), citaLocal.toString(), Toast.LENGTH_LONG).show();
+                FirebaseDatabase.getInstance().getReference().child("citas").child(citaLocal.getIdCita())
+                        .child("observaciones")
+                        .setValue(citaLocal.getObservaciones());
+                return true;
+            case R.id.o3:
+
+                if (item.isChecked()) {
+                    item.setChecked(false);
+                } else {
+                    item.setChecked(true);
+                }
+//                Toast.makeText(getApplicationContext(), citaLocal.toString(), Toast.LENGTH_LONG).show();
+                citaLocal.setObservaciones("Ninguna");
+
+                FirebaseDatabase.getInstance().getReference().child("citas").child(citaLocal.getIdCita())
+                        .child("observaciones")
+                        .setValue(citaLocal.getObservaciones());
+                return true;
             default:
                 // Do nothing
         }
@@ -549,9 +773,15 @@ public class DetalleServicioActivity extends AppCompatActivity {
         super.onPrepareOptionsMenu(menu);
         MenuItem editCita = menu.findItem(R.id.mnu_editar_cita);
         MenuItem mnuEliminarCita = menu.findItem(R.id.mnu_eliminar_cita);
-        MenuItem mnuFin = menu.findItem(R.id.mnu_finalizar_trabajo);
+        mnuFin = menu.findItem(R.id.mnu_finalizar_trabajo);
 //        MenuItem mnuGuardarCita = menu.findItem(R.id.mnu_guardar);
-        MenuItem mnuCalifTrab = menu.findItem(R.id.mnu_calif_trab);
+        mnuCalifTrab = menu.findItem(R.id.mnu_calif_trab);
+        mnuObseraciones = menu.findItem(R.id.action_observaciones);
+        MenuItem o1 = mnuObseraciones.getSubMenu().findItem(R.id.o1);
+        MenuItem o2 = mnuObseraciones.getSubMenu().findItem(R.id.o2);
+        MenuItem o3 = mnuObseraciones.getSubMenu().findItem(R.id.o3);
+//        o2 = menu.findItem(R.id.o2);
+//        o3 = menu.findItem(R.id.o3);
 
 
         switch (usuario) {
@@ -563,6 +793,7 @@ public class DetalleServicioActivity extends AppCompatActivity {
 //                mnuGuardarCita.setVisible(false);
                 editCita.setVisible(false);
                 mnuCalifTrab.setVisible(true);
+                mnuObseraciones.setVisible(false);
                 break;
             case 1:
                 Log.d(TAG, "Empleador");
@@ -572,15 +803,73 @@ public class DetalleServicioActivity extends AppCompatActivity {
 //                mnuGuardarCita.setVisible(false);
                 editCita.setVisible(false);
                 Log.d(TAG, String.valueOf(citaLocal.isState()));
+
                 mnuCalifTrab.setVisible(citaLocal.isState());
+
+                mnuObseraciones.setVisible(true);
+//                Toast.makeText(detalleServicioActivity, citaLocal.getObservaciones(), Toast.LENGTH_SHORT).show();
+
+                try {
+                    switch (citaLocal.getObservaciones()) {
+                        case "Trabajador no asistió":
+                            o1.setChecked(true);
+                            break;
+                        case "Trabajador incumplido":
+                            o2.setChecked(true);
+                            break;
+                        case "Ninguna":
+                            o3.setChecked(true);
+                            break;
+                    }
+                } catch (Exception e) {
+                    Log.d(TAG, e.toString());
+                    o1.setChecked(false);
+                    o2.setChecked(false);
+                    o3.setChecked(false);
+
+
+                }
+
+
                 break;
             case 2:
                 Log.d(TAG, "Trabajador");
+//                Toast.makeText(detalleServicioActivity, "Menu de mrda", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(detalleServicioActivity, citaLocal.getObservaciones(), Toast.LENGTH_SHORT).show();
 
                 mnuFin.setVisible(!citaLocal.isState());
                 mnuEliminarCita.setVisible(true);
                 mnuCalifTrab.setVisible(false);
                 editCita.setVisible(!citaLocal.isState());
+                mnuObseraciones.setVisible(false);
+
+//                mnuFin.setVisible(false);
+
+                try {
+
+                    switch (citaLocal.getObservaciones()) {
+                        case "Trabajador no asistió":
+                        case "Trabajador incumplido":
+                            mnuFin.setVisible(false);
+                            mnuEliminarCita.setVisible(false);
+                            editCita.setVisible(false);
+
+                            break;
+                        case "Ninguna":
+                        default:
+//                            mnuFin.setVisible(true);
+//                            mnuFin.setVisible(!citaLocal.isState());
+
+                            //mnuEliminarCita.setVisible(true);
+                            //editCita.setVisible(true);
+                            break;
+                    }
+                } catch (Exception e) {
+                    //mnuFin.setVisible(true);
+                    Log.d(TAG, e.toString());
+                }
+
+
 //                mnuGuardarCita.setVisible(!citaLocal.isState());
                 break;
         }

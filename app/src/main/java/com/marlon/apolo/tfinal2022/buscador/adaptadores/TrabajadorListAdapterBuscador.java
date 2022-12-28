@@ -7,6 +7,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.InsetDrawable;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -27,8 +30,11 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.buscador.OficioTrabajadorVistaMiniListAdapter;
+import com.marlon.apolo.tfinal2022.comunnication.video.AgoraVideoCallActivity;
+import com.marlon.apolo.tfinal2022.comunnication.voice.AgoraOnlyVoiceCallActivity;
 import com.marlon.apolo.tfinal2022.individualChat.view.CrazyIndividualChatActivity;
 import com.marlon.apolo.tfinal2022.llamadaVoz.LlamadaVozActivity;
 import com.marlon.apolo.tfinal2022.model.Chat;
@@ -89,6 +95,7 @@ public class TrabajadorListAdapterBuscador extends RecyclerView.Adapter<Trabajad
         holder.textViewNombre.setText(String.format("%s %s", current.getNombre(), current.getApellido()));
         if (current.getFotoPerfil() != null) {
 //            Glide.with(context).load(current.getFotoPerfil()).placeholder(R.drawable.ic_baseline_person_24).circleCrop().into(holder.imageViewTrabajador);
+            holder.imageViewTrabajador.setColorFilter(null);
 
             Glide
                     .with(context)
@@ -283,7 +290,8 @@ public class TrabajadorListAdapterBuscador extends RecyclerView.Adapter<Trabajad
             imageViewTrabajador = itemView.findViewById(R.id.imageViewTrabajador);
             ratingBar = itemView.findViewById(R.id.ratingBar);
             textViewContacto = itemView.findViewById(R.id.textViewContacto);
-            imageViewTrabajador.setOnClickListener(new View.OnClickListener() {
+//            imageViewTrabajador.setOnClickListener(new View.OnClickListener() {
+            itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
@@ -444,12 +452,22 @@ public class TrabajadorListAdapterBuscador extends RecyclerView.Adapter<Trabajad
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(context, LlamadaVozActivity.class);
-                intent.putExtra("usuarioTo", (Usuario) trabajador);
-                intent.putExtra("usuarioFrom", usuarioFrom);
-                intent.putExtra("callStatus", 0
-                );
-                context.startActivity(intent);
+//                Intent intent = new Intent(context, LlamadaVozActivity.class);
+//                intent.putExtra("usuarioTo", (Usuario) trabajador);
+//                intent.putExtra("usuarioFrom", usuarioFrom);
+//                intent.putExtra("callStatus", 0
+//                );
+//                context.startActivity(intent);
+
+
+                Intent intentllamadaVoz = new Intent(context, AgoraOnlyVoiceCallActivity.class);
+                intentllamadaVoz.putExtra("usuarioRemoto", (Usuario) trabajador);
+                intentllamadaVoz.putExtra("usuarioLocal", usuarioFrom);
+                String channelName = FirebaseDatabase.getInstance().getReference().child("voiceCalls").push().getKey();
+                intentllamadaVoz.putExtra("channelName", channelName);
+                intentllamadaVoz.putExtra("callStatus", "llamadaSaliente");
+
+                context.startActivity(intentllamadaVoz);
 
                 try {
                     dialogVar.dismiss();
@@ -463,12 +481,24 @@ public class TrabajadorListAdapterBuscador extends RecyclerView.Adapter<Trabajad
             @Override
             public void onClick(View v) {
 //                Toast.makeText(context, "Video Call", Toast.LENGTH_SHORT).show();
-                Intent intentVideollamada = new Intent(context, VideoLlamadaActivity.class);
-                intentVideollamada.putExtra("usuarioTo", (Usuario) trabajador);
-                intentVideollamada.putExtra("usuarioFrom", usuarioFrom);
-                intentVideollamada.putExtra("callStatus", 0);
+//                Intent intentVideollamada = new Intent(context, VideoLlamadaActivity.class);
+//                intentVideollamada.putExtra("usuarioTo", (Usuario) trabajador);
+//                intentVideollamada.putExtra("usuarioFrom", usuarioFrom);
+//                intentVideollamada.putExtra("callStatus", 0);
+//
+//
+//                context.startActivity(intentVideollamada);
 
 
+                Intent intentVideollamada = new Intent(context, AgoraVideoCallActivity.class);
+                intentVideollamada.putExtra("usuarioRemoto", (Usuario) trabajador);
+                intentVideollamada.putExtra("usuarioLocal", (Usuario) usuarioFrom);
+                String channelName = FirebaseDatabase.getInstance().getReference().child("videoCalls")
+                        .push().getKey();
+                intentVideollamada.putExtra("channelName", channelName);
+                intentVideollamada.putExtra("callStatus", "llamadaSaliente");
+
+//                        intentVideollamada.putExtra("callStatus", 0);
                 context.startActivity(intentVideollamada);
                 try {
                     dialogVar.dismiss();
@@ -518,6 +548,9 @@ public class TrabajadorListAdapterBuscador extends RecyclerView.Adapter<Trabajad
 
 //        return builder.create();
         dialogVar = builder.create();
+        ColorDrawable back = new ColorDrawable(Color.TRANSPARENT);
+        InsetDrawable inset = new InsetDrawable(back, 180);
+        dialogVar.getWindow().setBackgroundDrawable(inset);
         dialogVar.show();
     }
 

@@ -5,16 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.datosPersonales.view.EditarOficioHabilidadActivity">
+    tools:context=".ui.datosPersonales.EditarOficioHabilidadActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:elevation="4dp"
+        app:menu="@menu/menu_editar_oficios_y_habilidades"
         app:navigationIcon="@drawable/ic_baseline_arrow_back_24"
-        app:title="Oficios y habilidades"
-        app:menu="@menu/menu_editar_oficios_y_habilidades"/>
+        app:title="Oficios y habilidades" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewOficiosYHabilidades"
@@ -22,14 +22,18 @@
         android:layout_height="match_parent"
         android:layout_above="@id/buttonUpdateOficiosHabilidades"
         android:layout_below="@id/toolbar"
-        android:layout_margin="4dp" />
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="4dp" />
 
     <Button
         android:id="@+id/buttonUpdateOficiosHabilidades"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:layout_alignParentBottom="true"
         android:layout_margin="4dp"
+        android:background="@drawable/button_background"
         android:text="Actualizar oficios y habilidades"
         android:textAllCaps="false" />
 

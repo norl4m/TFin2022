@@ -31,7 +31,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.marlon.apolo.tfinal2022.MainNavigationActivity;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.individualChat.repository.MensajitoRepository;
-import com.marlon.apolo.tfinal2022.individualChat.view.IndividualChatActivity;
+import com.marlon.apolo.tfinal2022.individualChat.view.no.IndividualChatActivity;
 import com.marlon.apolo.tfinal2022.individualChat.view.MensajeNube;
 import com.marlon.apolo.tfinal2022.llamadaVoz.LlamadaVozActivity;
 import com.marlon.apolo.tfinal2022.model.Administrador;

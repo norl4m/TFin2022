@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.google.android.material.textfield.TextInputLayout;
 import com.marlon.apolo.tfinal2022.R;
+import com.marlon.apolo.tfinal2022.model.Oficio;
 import com.marlon.apolo.tfinal2022.ui.oficioArchi.model.OficioArchiModel;
 import com.marlon.apolo.tfinal2022.ui.oficioArchi.viewModel.OficioArchiViewModel;
 
@@ -112,19 +113,8 @@ public class NuevoOficioArchiActivity extends AppCompatActivity implements View.
             @Override
             public void onChanged(List<OficioArchiModel> oficioArchiModels) {
                 oficioArchiModelsDB = (ArrayList<OficioArchiModel>) oficioArchiModels;
-
             }
         });
-
-        // trims the trailing and leading spaces
-        //string with single trailing and leading spaces
-        String s = " Hey! Let us learn Java! ";
-        System.out.println(s.trim());
-
-        //string with multiple trailing and leading spaces
-        String s1 = "    Learning Java is fun!   ";
-        System.out.println(s1.trim());
-
     }
 
 
@@ -146,7 +136,7 @@ public class NuevoOficioArchiActivity extends AppCompatActivity implements View.
                 escogerDesdeGaleria();
                 break;
             case R.id.buttonSave:
-                OficioArchiModel oficioArchiModel = new OficioArchiModel();
+                Oficio oficioArchiModel = new Oficio();
                 oficioArchiModel.setNombre(textInputLayoutNombre.getEditText().getText().toString().trim());
 //                oficioArchiModel.setUriPhoto(uriPhoto.toString());
                 try {
@@ -171,7 +161,8 @@ public class NuevoOficioArchiActivity extends AppCompatActivity implements View.
 //                        }
 
                         if (oficioArchiModel.getNombre().toLowerCase().equals(ofDB.getNombre().toLowerCase())) {
-                            Toast.makeText(getApplicationContext(), "El oficio ingresado ya se encuentra registrado.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), R.string.oficio_duplicado, Toast.LENGTH_LONG).show();
+//                            Toast.makeText(getApplicationContext(), "El oficio ingresado ya se encuentra registrado.", Toast.LENGTH_LONG).show();
                             flagExit = true;
                             break;
                         }
@@ -229,7 +220,7 @@ public class NuevoOficioArchiActivity extends AppCompatActivity implements View.
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.action_nuevo:
-                OficioArchiModel oficioArchiModel = new OficioArchiModel();
+                Oficio oficioArchiModel = new Oficio();
                 oficioArchiModel.setNombre(textInputLayoutNombre.getEditText().getText().toString().trim());
 //                oficioArchiModel.setUriPhoto(uriPhoto.toString());
                 try {

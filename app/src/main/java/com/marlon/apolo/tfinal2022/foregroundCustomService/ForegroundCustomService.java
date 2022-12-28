@@ -36,7 +36,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.marlon.apolo.tfinal2022.MainNavigationActivity;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.citasTrabajo.AlarmReceiver;
-import com.marlon.apolo.tfinal2022.individualChat.view.IndividualChatActivity;
+import com.marlon.apolo.tfinal2022.individualChat.view.no.IndividualChatActivity;
 import com.marlon.apolo.tfinal2022.individualChat.view.MensajeNube;
 import com.marlon.apolo.tfinal2022.llamadaVoz.LlamadaVozActivity;
 import com.marlon.apolo.tfinal2022.model.Administrador;
@@ -282,7 +282,7 @@ public class ForegroundCustomService extends Service {
                                     programarAlarmaLocal(cita);
 //                                showNotificationCita(cita);
                                     cita.setStateReceive(true);
-                                    cita.actualizarCita();
+                                    cita.actualizarCitaEstado();
                                 }
 
 //                                programarAlarmaLocal(cita);

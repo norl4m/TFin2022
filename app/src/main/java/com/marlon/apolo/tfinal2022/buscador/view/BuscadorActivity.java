@@ -31,6 +31,7 @@ import com.marlon.apolo.tfinal2022.buscador.MySuggestionProvider;
 import com.marlon.apolo.tfinal2022.buscador.adaptadores.TrabajadorListAdapterBuscador;
 import com.marlon.apolo.tfinal2022.buscador.adaptadores.TrabajadorListAdapterResultados;
 import com.marlon.apolo.tfinal2022.model.Administrador;
+import com.marlon.apolo.tfinal2022.model.Cita;
 import com.marlon.apolo.tfinal2022.model.Empleador;
 import com.marlon.apolo.tfinal2022.model.Oficio;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
@@ -162,6 +163,25 @@ public class BuscadorActivity extends AppCompatActivity {
 //        } catch (Exception e) {
 
 //        }
+
+
+        FirebaseDatabase.getInstance().getReference().child("citas")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        ArrayList<Cita> citaArrayList = new ArrayList<>();
+                        for (DataSnapshot data : snapshot.getChildren()) {
+                            Cita cita = data.getValue(Cita.class);
+                            citaArrayList.add(cita);
+                        }
+                        trabajadorListAdapterResultados.setCitaList(citaArrayList);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
 
 
         ChatViewModel chatViewModel = new ViewModelProvider(this).get(ChatViewModel.class);

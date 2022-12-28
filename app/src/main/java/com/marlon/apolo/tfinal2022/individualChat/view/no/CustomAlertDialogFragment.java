@@ -1,4 +1,4 @@
-package com.marlon.apolo.tfinal2022.individualChat.view;
+package com.marlon.apolo.tfinal2022.individualChat.view.no;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

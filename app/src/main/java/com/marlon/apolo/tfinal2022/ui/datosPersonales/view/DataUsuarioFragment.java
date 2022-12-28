@@ -104,6 +104,7 @@ public class DataUsuarioFragment extends Fragment implements View.OnClickListene
     private RelativeLayout relativeLayoutCalif;
     private LinearLayout linearLayout;
     private ArrayList<Cita> citaArrayList;
+    private ValueEventListener valueEventListenerCitasCrazys;
 
 
     @Override
@@ -249,37 +250,77 @@ public class DataUsuarioFragment extends Fragment implements View.OnClickListene
 
                 TextView textViewCalif = relativeLayoutCalif.findViewById(R.id.textViewCalif);
                 TextView textViewTrabComple = linearLayout.findViewById(R.id.textViewTrabComple);
+                TextView textViewTrabIncom = linearLayout.findViewById(R.id.textViewTrabIncom);
+                TextView textViewTrabNoAsist = linearLayout.findViewById(R.id.textViewNoAsist);
+                TextView textViewNoCalif = linearLayout.findViewById(R.id.textViewNoCalif);
                 RatingBar ratingBar = relativeLayoutCalif.findViewById(R.id.ratingBar);
                 textViewCalif.setText(String.format(Locale.getDefault(), "Calificación: %.1f ", trabajador.getCalificacion()));
                 ratingBar.setRating((float) trabajador.getCalificacion());
-                FirebaseDatabase.getInstance().getReference().child("citas")
-                        .addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                Log.d(TAG, "Number of messages: " + snapshot.getChildrenCount());
-                                //textViewCalif.setText("Trabajos completados: " + String.valueOf(snapshot.getChildrenCount()));
+                valueEventListenerCitasCrazys = new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Log.d(TAG, "Number of messages: " + snapshot.getChildrenCount());
+                        //textViewCalif.setText("Trabajos completados: " + String.valueOf(snapshot.getChildrenCount()));
 
-                                citaArrayList = new ArrayList<>();
-                                for (DataSnapshot data : snapshot.getChildren()) {
-                                    Cita citaDB = data.getValue(Cita.class);
-                                    Log.d(TAG, citaDB.toString());
-                                    if (citaDB.getFrom().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
-                                        if (citaDB.getCalificacion() > 0) {
-                                            citaArrayList.add(citaDB);
-                                        }
-                                    }
+                        citaArrayList = new ArrayList<>();
+                        ArrayList<Cita> citaArrayListNoAsist = new ArrayList<>();
+                        ArrayList<Cita> citaArrayListIncomple = new ArrayList<>();
+                        ArrayList<Cita> citaArrayListCalif = new ArrayList<>();
+                        for (DataSnapshot data : snapshot.getChildren()) {
+                            Cita citaDB = data.getValue(Cita.class);
+                            Log.d(TAG, citaDB.toString());
+                            if (citaDB.getFrom().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                                if (citaDB.getCalificacion() == 0) {
+//                                            citaArrayList.add(citaDB);
+                                    citaArrayListCalif.add(citaDB);
                                 }
-                                Log.d(TAG, "Number of messages: " + String.valueOf(citaArrayList.size()));
 
-                                textViewTrabComple.setText("Trabajos completados: " + String.valueOf(citaArrayList.size()));
+                                if (citaDB.isState()) {
+                                    citaArrayList.add(citaDB);
+                                }
 
+                                try {
+
+                                    switch (citaDB.getObservaciones()) {
+                                        case "Trabajador no asistió":
+                                            citaArrayListNoAsist.add(citaDB);
+                                            break;
+                                        case "Trabajador incumplido":
+                                            citaArrayListIncomple.add(citaDB);
+                                            break;
+                                        case "Ninguna":
+                                        default:
+//                            mnuFin.setVisible(true);
+//                            mnuFin.setVisible(!citaLocal.isState());
+
+                                            //mnuEliminarCita.setVisible(true);
+                                            //editCita.setVisible(true);
+                                            break;
+                                    }
+                                } catch (Exception e) {
+                                    //mnuFin.setVisible(true);
+                                    Log.d(TAG, e.toString());
+                                }
                             }
+                        }
+                        Log.d(TAG, "Number of messages: " + String.valueOf(citaArrayList.size()));
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
+                        textViewTrabComple.setText("Trabajos completados: " + String.valueOf(citaArrayList.size()));
+                        textViewTrabIncom.setText("Trabajos incompletos: " + String.valueOf(citaArrayListIncomple.size()));
+                        textViewTrabNoAsist.setText("Trabajos no asistidos: " + String.valueOf(citaArrayListNoAsist.size()));
+                        textViewNoCalif.setText("Trabajos no calificados: " + String.valueOf(citaArrayListCalif.size()));
 
-                            }
-                        });
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                };
+
+                FirebaseDatabase.getInstance().getReference().child("citas")
+                        .addValueEventListener(valueEventListenerCitasCrazys);
+
             }
         });
         EmpleadorViewModel empleadorViewModel = new ViewModelProvider(this).get(EmpleadorViewModel.class);
@@ -807,6 +848,7 @@ public class DataUsuarioFragment extends Fragment implements View.OnClickListene
 
                 Glide.with(requireActivity()).load(uriPhoto).circleCrop().into(imageViewProfile);
                 // Toast.makeText(getApplicationContext(), uriPhoto.toString(), Toast.LENGTH_SHORT).show();
+                imageViewProfile.setColorFilter(null);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -841,6 +883,9 @@ public class DataUsuarioFragment extends Fragment implements View.OnClickListene
                 uriPhotoHttp = imageUri;
 
                 Glide.with(requireActivity()).load(uriPhoto).circleCrop().into(imageViewProfile);
+                // Toast.makeText(getApplicationContext(), uriPhoto.toString(), Toast.LENGTH_SHORT).show();
+
+                imageViewProfile.setColorFilter(null);
             } catch (Exception e) {
                 Log.e(TAG, e.toString());
                 e.printStackTrace();
@@ -912,6 +957,11 @@ public class DataUsuarioFragment extends Fragment implements View.OnClickListene
         super.onDestroy();
         try {
             adminViewModel.removeValueEventListener();
+        } catch (Exception e) {
+
+        }
+        try {
+            FirebaseDatabase.getInstance().getReference().child("citas").removeEventListener(valueEventListenerCitasCrazys);
         } catch (Exception e) {
 
         }

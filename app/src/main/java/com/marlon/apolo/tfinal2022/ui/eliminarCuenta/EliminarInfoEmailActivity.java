@@ -12,9 +12,11 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,6 +54,12 @@ public class EliminarInfoEmailActivity extends AppCompatActivity implements View
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_eliminar_info_email);
+
+
+        TypedValue typedValue = new TypedValue();
+        this.getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
+        int colorNight = typedValue.data;
+        ((ImageView) findViewById(R.id.acLoginImageViewLogo)).setColorFilter(colorNight);
 
 
         firebaseAuth = FirebaseAuth.getInstance();

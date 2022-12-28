@@ -5,7 +5,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
@@ -15,16 +14,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.google.android.exoplayer2.util.Log;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.marlon.apolo.tfinal2022.R;
-import com.marlon.apolo.tfinal2022.ui.oficioArchi.adapters.OficioArchiListAdapter;
+import com.marlon.apolo.tfinal2022.ui.oficioArchi.adapters.OficioArchiCRUDListAdapter;
 import com.marlon.apolo.tfinal2022.ui.oficioArchi.model.OficioArchiModel;
 import com.marlon.apolo.tfinal2022.ui.oficioArchi.viewModel.OficioArchiViewModel;
-
-import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -56,7 +51,7 @@ public class OficioArchiActivity extends AppCompatActivity {
         int gridColumnCount = getResources().getInteger(R.integer.grid_column_count);
 
         RecyclerView recyclerView = findViewById(R.id.recyclerview);
-        final OficioArchiListAdapter adapter = new OficioArchiListAdapter(this);
+        final OficioArchiCRUDListAdapter adapter = new OficioArchiCRUDListAdapter(this);
         recyclerView.setAdapter(adapter);
         // recyclerView.setHasFixedSize(true);
 //        recyclerView.setLayoutManager(new LinearLayoutManager(this));

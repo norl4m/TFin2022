@@ -15,6 +15,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -68,10 +69,10 @@ public class LoginGoogleActivity extends AppCompatActivity {
 
         SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         boolean mode = mPrefs.getBoolean("sync_theme", false);
-        if (mode) {
-//            ((ImageView) findViewById(R.id.acLoginImageViewLogo)).setColorFilter(getResources().getColor(R.color.white));
-            ((ImageView) findViewById(R.id.acLoginImageViewLogo)).setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.white));
-        }
+//        if (mode) {
+////            ((ImageView) findViewById(R.id.acLoginImageViewLogo)).setColorFilter(getResources().getColor(R.color.white));
+//            ((ImageView) findViewById(R.id.acLoginImageViewLogo)).setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.white));
+//        }
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -80,6 +81,12 @@ public class LoginGoogleActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        TypedValue typedValue = new TypedValue();
+        this.getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
+        int colorNight = typedValue.data;
+        ((ImageView) findViewById(R.id.acLoginImageViewLogo)).setColorFilter(colorNight);
+
 
         bienvenidoViewModel = new ViewModelProvider(this).get(BienvenidoViewModel.class);
         bienvenidoViewModel.getAllEmpleadoresByEmail().observe(this, empleadors -> {
@@ -160,6 +167,7 @@ public class LoginGoogleActivity extends AppCompatActivity {
 
     }
 
+
     public void showProgress(String title, String message) {
         progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
@@ -198,6 +206,7 @@ public class LoginGoogleActivity extends AppCompatActivity {
                     }
                 } catch (ApiException e) {
                     // ...
+
                 }
                 break;
         }
@@ -301,6 +310,7 @@ public class LoginGoogleActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
                     Log.d(TAG, "Cuenta eliminada de Firebase Authentication");
+                    finish();
                 } else {
                     Log.d(TAG, "Error al eliminar cuenta de Firebase Authentication");
                 }

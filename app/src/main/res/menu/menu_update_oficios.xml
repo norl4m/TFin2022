@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ui.datosPersonales.view.EditarOficioHabilidadActivity">
+    tools:context=".ui.datosPersonales.EditarOficioHabilidadActivity">
 
     <item
         android:id="@+id/mnu_add_oficio"

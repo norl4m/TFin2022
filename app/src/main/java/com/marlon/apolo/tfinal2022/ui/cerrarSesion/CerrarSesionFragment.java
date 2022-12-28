@@ -1,14 +1,17 @@
 package com.marlon.apolo.tfinal2022.ui.cerrarSesion;
 
+import static android.content.Context.ACTIVITY_SERVICE;
 import static android.content.Context.MODE_PRIVATE;
 
 import androidx.core.app.NotificationManagerCompat;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.ActivityManager;
 import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -32,6 +35,7 @@ import com.marlon.apolo.tfinal2022.login.LoginEmailPasswordActivity;
 import com.marlon.apolo.tfinal2022.model.Administrador;
 
 import java.io.File;
+import java.util.Objects;
 
 public class CerrarSesionFragment extends Fragment {
 
@@ -135,8 +139,15 @@ public class CerrarSesionFragment extends Fragment {
                         editor.putInt("usuario", -1);
                         editor.apply();
 
-                        clearApplicationData();
+
                         firebaseAuth.signOut();
+
+                        clearApplicationData();
+                        try {
+                            clearApplicationData();
+                        }catch (Exception e){
+                            Log.d(TAG, e.toString());
+                        }
 
                         Intent intent = new Intent(requireActivity(), MainNavigationActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -164,8 +175,13 @@ public class CerrarSesionFragment extends Fragment {
     }
 
     public void clearApplicationData() {
-        File cache = this.getActivity().getCacheDir();
-        File appDir = new File(cache.getParent());
+        Log.d(TAG,"clearApplicationData");
+//        File cache = this.getActivity().getCacheDir();
+//        File appDir = new File(cache.getParent());
+
+        File cache = requireActivity().getCacheDir();
+        File appDir = new File(Objects.requireNonNull(cache.getParent()));
+
         Log.d(TAG, cache.toString());
         Log.d(TAG, appDir.toString());
         if (appDir.exists()) {
@@ -192,5 +208,23 @@ public class CerrarSesionFragment extends Fragment {
 
         return dir.delete();
     }
+
+    private void clearAppData() {
+        Log.d(TAG,"clearAppData");
+        try {
+            // clearing app data
+            if (Build.VERSION_CODES.KITKAT <= Build.VERSION.SDK_INT) {
+                ((ActivityManager)requireActivity().getSystemService(ACTIVITY_SERVICE)).clearApplicationUserData(); // note: it has a return value!
+            } else {
+                String packageName = requireActivity().getApplicationContext().getPackageName();
+                Runtime runtime = Runtime.getRuntime();
+                runtime.exec("pm clear "+packageName);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }

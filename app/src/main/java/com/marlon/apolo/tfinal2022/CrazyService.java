@@ -1,14 +1,15 @@
 package com.marlon.apolo.tfinal2022;
 
 import static android.app.PendingIntent.FLAG_MUTABLE;
+import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
 
-import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -39,6 +40,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.marlon.apolo.tfinal2022.citasTrabajo.AlarmReceiver;
+import com.marlon.apolo.tfinal2022.citasTrabajo.DetalleServicioActivity;
+import com.marlon.apolo.tfinal2022.comunnication.video.AcceptVideoCallBroadcastReceiver;
+import com.marlon.apolo.tfinal2022.comunnication.voice.AcceptVoiceCallBroadcastReceiver;
+import com.marlon.apolo.tfinal2022.comunnication.voice.AgoraOnlyVoiceCallActivity;
+import com.marlon.apolo.tfinal2022.comunnication.video.AgoraVideoCallActivity;
+import com.marlon.apolo.tfinal2022.comunnication.video.RejectVideoCallBroadcastReceiver;
+import com.marlon.apolo.tfinal2022.comunnication.voice.RejectVoiceCallBroadcastReceiver;
 import com.marlon.apolo.tfinal2022.foregroundCustomService.ForegrounAcceptVideoCallReceiver;
 import com.marlon.apolo.tfinal2022.foregroundCustomService.ForegroundAcceptCallReceiver;
 import com.marlon.apolo.tfinal2022.foregroundCustomService.ForegroundRejectCallReceiver;
@@ -55,6 +63,7 @@ import com.marlon.apolo.tfinal2022.model.LlamadaVideo;
 import com.marlon.apolo.tfinal2022.model.LlamadaVoz;
 import com.marlon.apolo.tfinal2022.model.NotificacionCustomLlamada;
 import com.marlon.apolo.tfinal2022.model.NotificacionCustomVideoLlamada;
+import com.marlon.apolo.tfinal2022.model.Participante;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
 import com.marlon.apolo.tfinal2022.model.Usuario;
 import com.marlon.apolo.tfinal2022.puntoEntrada.view.MainActivity;
@@ -66,6 +75,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Random;
@@ -86,6 +96,11 @@ public class CrazyService extends Service {
     private static final String ACTION_ACEPTAR_VIDEO_LLAMADA = "ACTION_ACEPTAR_VIDEO_LLAMADA";
     private static final String ACTION_RECHAZAR_VIDEO_LLAMADA = "ACTION_RECHAZAR_VIDEO_LLAMADA";
 
+
+    private static final String VIDEO_CALLS_CHANNEL_ID = "VIDEO_CALLS_CHANNEL_ID";
+    private static final String NOTIF_TEMPORALES_CHANNEL_ID = "NOTIFICACIONES_TEMPORALES";
+
+
     private DatabaseReference databaseReference;
 
     private DatabaseReference mNotificacionesRef;
@@ -105,7 +120,6 @@ public class CrazyService extends Service {
     private CrazyDeleteBroadcastReceiver crazyDeleteBroadcastReceiver;
     private CrazyReplyBroadcastReceiver crazyReplyBroadcastReceiver;
     private SharedPreferences myPreferences;
-    private ChildEventListener LlamadaDeVozListener;
     private Usuario usuarioLocal;
     private ForegroundAcceptCallReceiver foregroundAcceptCallReceiver;
     private ForegroundRejectCallReceiver foregroundRejectCallReceiver;
@@ -113,11 +127,25 @@ public class CrazyService extends Service {
     private ArrayList<NotificacionCustomVideoLlamada> notificacionCustomVideoLlamadaArrayList;
     private ForegrounAcceptVideoCallReceiver foregrounAcceptVideoCallReceiver;
     private ForegroundRejectVideoCallReceiver foregroundRejectVideoCallReceiver;
-    private ChildEventListener LlamadaDeVideoListener;
-    private ChildEventListener childEventListenerCitasTrabajo;
+
     private SharedPreferences defaultSharedPreferences;
     private MediaPlayer mediaPlayerCallTone;
+    private int startIdLocal;
 
+
+    private ChildEventListener childEventListenerNotificacionesConMensajesLocas;
+    private ChildEventListener childEventListenerCitasTrabajo;
+    private ChildEventListener LlamadaDeVideoListener;
+    private ChildEventListener LlamadaDeVozListener;
+    private ChildEventListener childEventListenerVideoCalls;
+    //    private ArrayList<Integer> arrayListNotificationIds;
+    private BroadcastReceiver acceptVideoCallBroadcastReceiver;
+    private BroadcastReceiver rejectVideoCallBroadcastReceiver;
+    private HashMap<String, Integer> meMap;
+    private HashMap<String, Integer> meMapVoice;
+    private ChildEventListener childEventListenerVoiceCalls;
+    private BroadcastReceiver rejectVoiceCallBroadcastReceiver;
+    private BroadcastReceiver acceptVoiceCallBroadcastReceiver;
 
     public class NotificacionStack {
         ArrayList<MessageCloudPoc> mensajeNubes;
@@ -254,7 +282,8 @@ public class CrazyService extends Service {
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             Notification notification = new Notification.Builder(this, FOREGROUND_CHANNEL_ID)
-                    .setContentTitle(getText(R.string.notification_title) + "-" + String.valueOf(Build.VERSION.SDK_INT))
+//                    .setContentTitle(getText(R.string.notification_title) + "-" + String.valueOf(Build.VERSION.SDK_INT))
+                    .setContentTitle(getText(R.string.notification_title))
                     .setContentText(getText(R.string.notification_message))
                     .setSmallIcon(R.drawable.ic_oficios)
                     .setContentIntent(pendingIntent)
@@ -313,7 +342,61 @@ public class CrazyService extends Service {
 
         createNotificationChannel();
         createLlamadasVozNotificationChannel();
+        createVideoCallChannel();
+        createNotificationsTempChannel();
 
+    }
+
+    private void createVideoCallChannel() {
+        Log.d(TAG, "########################################");
+        Log.d(TAG, "createVideoCallChannel");
+        Log.d(TAG, "########################################");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+
+            Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+            CharSequence name = "Notificaciones de videollamadas";
+            String description = "Notificaciones  de videollamadas entrantes y salientes";
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel(VIDEO_CALLS_CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            channel.setSound(defaultSoundUri, null);
+            channel.enableVibration(true);
+            channel.enableLights(true);
+            channel.setLightColor(Color.RED);
+
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    private void createNotificationsTempChannel() {
+        Log.d(TAG, "########################################");
+        Log.d(TAG, "createVideoCallChannel");
+        Log.d(TAG, "########################################");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+
+            Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+            CharSequence name = "Notificaciones temporales";
+            String description = "Notificaciones temporales de recordatorios";
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel(NOTIF_TEMPORALES_CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            channel.setSound(defaultSoundUri, null);
+            channel.enableVibration(true);
+            channel.enableLights(true);
+            channel.setLightColor(Color.RED);
+
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 
     public void stopService(Context context) {
@@ -329,42 +412,42 @@ public class CrazyService extends Service {
 
     private void listenerForegroundAdminFunctions() {
         FirebaseDatabase.getInstance().getReference()
-                        .child("usuariosEliminados")
-                                .addChildEventListener(new ChildEventListener() {
-                                    @Override
-                                    public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                                        String key = snapshot.getKey();
-                                        try {
-                                            if (key.equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
-                                                stopService(contextInstance);
-                                                FirebaseAuth.getInstance().signOut();
+                .child("usuariosEliminados")
+                .addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                        String key = snapshot.getKey();
+                        try {
+                            if (key.equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                                stopService(contextInstance);
+                                FirebaseAuth.getInstance().signOut();
 
-                                            }
-                                        } catch (Exception e) {
-                                            Log.d(TAG, e.toString());
-                                        }
-                                    }
+                            }
+                        } catch (Exception e) {
+                            Log.d(TAG, e.toString());
+                        }
+                    }
 
-                                    @Override
-                                    public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                    @Override
+                    public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
 
-                                    }
+                    }
 
-                                    @Override
-                                    public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+                    @Override
+                    public void onChildRemoved(@NonNull DataSnapshot snapshot) {
 
-                                    }
+                    }
 
-                                    @Override
-                                    public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                    @Override
+                    public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
 
-                                    }
+                    }
 
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError error) {
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
 
-                                    }
-                                });
+                    }
+                });
 
 //
 //        FirebaseDatabase.getInstance().getReference()
@@ -448,6 +531,8 @@ public class CrazyService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
+        startIdLocal = startId;
         contextInstance = this;
 //        Toast.makeText(this, "CRAZY service starting", Toast.LENGTH_SHORT).show();
         sendForegroundNotification();
@@ -458,6 +543,7 @@ public class CrazyService extends Service {
         foregroundRejectCallReceiver = new ForegroundRejectCallReceiver();
         foregrounAcceptVideoCallReceiver = new ForegrounAcceptVideoCallReceiver();
         foregroundRejectVideoCallReceiver = new ForegroundRejectVideoCallReceiver();
+
 
         loadUsuarioLocal();
 
@@ -470,9 +556,503 @@ public class CrazyService extends Service {
         listenerNotificacionesDeVideoLlamadas();
         listenerNotificacionesDeCitasTrabajo();
 
+        listenerVideoCalls();
+        listenerVoiceCalls();
+
 
         // If we get killed, after returning from here, restart
         return START_STICKY;
+    }
+
+    private void listenerVoiceCalls() {
+        meMapVoice = new HashMap<String, Integer>();
+//        meMap.put("Color2","Blue");
+//        meMap.put("Color3","Green");
+//        meMap.put("Color4","White");
+
+
+        /*1. Crear el receiver*/
+        acceptVoiceCallBroadcastReceiver = new AcceptVoiceCallBroadcastReceiver();
+        /*2. Registrar el receiver y la acción*/
+//        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        IntentFilter filterAnswer = new IntentFilter();
+        filterAnswer.addAction(contextInstance.getString(R.string.filter_incoing_voice_call));
+        this.registerReceiver(acceptVoiceCallBroadcastReceiver, filterAnswer);
+
+        /*1. Crear el receiver*/
+        rejectVoiceCallBroadcastReceiver = new RejectVoiceCallBroadcastReceiver();
+        /*2. Registrar el receiver y la acción*/
+//        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        IntentFilter filterReject = new IntentFilter();
+        filterReject.addAction(contextInstance.getString(R.string.filter_reject_voice_call));
+        this.registerReceiver(rejectVoiceCallBroadcastReceiver, filterReject);
+
+
+        childEventListenerVoiceCalls = new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                LlamadaVoz llamadaVoz = snapshot.getValue(LlamadaVoz.class);
+                Participante participanteDestiny = llamadaVoz.getParticipanteDestiny();
+                if (participanteDestiny.getIdParticipante().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                    final int min = 10000;
+                    final int max = 10999;
+                    int notificationId = new Random().nextInt((max - min) + 1) + min;
+                    //arrayListNotificationIds.add(notificationId);
+                    meMapVoice.put(llamadaVoz.getId(), notificationId);
+                    NotificationCompat.Builder videoCallNotification = createVoiceCallNotification(llamadaVoz, notificationId);
+                    showVoiceCallNotification(videoCallNotification, notificationId);
+                }
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                LlamadaVoz llamadaVozChanged = snapshot.getValue(LlamadaVoz.class);
+                Participante participanteDestiny = llamadaVozChanged.getParticipanteDestiny();
+                if (participanteDestiny.getIdParticipante().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                    //*contestando llamada*/
+                    if (llamadaVozChanged.isDestinyStatus() && llamadaVozChanged.isChannelConnectedStatus()) {
+                        stopPlaying();
+                    }
+                    //*rechanzando llamada*/
+                    if (llamadaVozChanged.isRejectCallStatus()) {
+                        stopPlaying();
+                    }
+                }
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+                LlamadaVoz llamadaVozRemoved = snapshot.getValue(LlamadaVoz.class);
+                Participante participanteDestiny = llamadaVozRemoved.getParticipanteDestiny();
+                if (participanteDestiny.getIdParticipante().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                    cancelNotification(meMapVoice.get(llamadaVozRemoved.getId()));
+//                    arrayListNotificationIds.remove(0);
+                    stopPlaying();
+                    meMapVoice.remove(llamadaVozRemoved.getId());
+                }
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        };
+
+        FirebaseDatabase.getInstance().getReference().child("voiceCalls")
+                .addChildEventListener(childEventListenerVoiceCalls);
+    }
+
+    private void listenerVideoCalls() {
+
+        Log.d(TAG, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+        Log.d(TAG, "listenerVideoCalls");
+        Log.d(TAG, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+//        arrayListNotificationIds = new ArrayList<>();
+
+
+        /*1. Crear el receiver*/
+        acceptVideoCallBroadcastReceiver = new AcceptVideoCallBroadcastReceiver();
+        /*2. Registrar el receiver y la acción*/
+//        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        IntentFilter filterAnswer = new IntentFilter();
+        filterAnswer.addAction(contextInstance.getString(R.string.filter_incoing_call));
+        this.registerReceiver(acceptVideoCallBroadcastReceiver, filterAnswer);
+
+        /*1. Crear el receiver*/
+        rejectVideoCallBroadcastReceiver = new RejectVideoCallBroadcastReceiver();
+        /*2. Registrar el receiver y la acción*/
+//        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        IntentFilter filterReject = new IntentFilter();
+        filterReject.addAction(contextInstance.getString(R.string.filter_reject_call));
+        this.registerReceiver(rejectVideoCallBroadcastReceiver, filterReject);
+
+
+        meMap = new HashMap<String, Integer>();
+//        meMap.put("Color2","Blue");
+//        meMap.put("Color3","Green");
+//        meMap.put("Color4","White");
+
+
+        childEventListenerVideoCalls = new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                LlamadaVideo llamadaVideo = snapshot.getValue(LlamadaVideo.class);
+                Participante participanteDestiny = llamadaVideo.getParticipanteDestiny();
+                if (participanteDestiny.getIdParticipante().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                    final int min = 8000;
+                    final int max = 9999;
+                    int notificationId = new Random().nextInt((max - min) + 1) + min;
+                    //arrayListNotificationIds.add(notificationId);
+                    meMap.put(llamadaVideo.getId(), notificationId);
+                    NotificationCompat.Builder videoCallNotification = createVideoCallNotification(llamadaVideo, notificationId);
+                    showVideoCallNotification(videoCallNotification, notificationId);
+                }
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                LlamadaVideo llamadaVideoChanged = snapshot.getValue(LlamadaVideo.class);
+                Participante participanteDestiny = llamadaVideoChanged.getParticipanteDestiny();
+                if (participanteDestiny.getIdParticipante().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                    //*contestando llamada*/
+                    if (llamadaVideoChanged.isDestinyStatus() && llamadaVideoChanged.isChannelConnectedStatus()) {
+                        stopPlaying();
+                    }
+                    //*rechanzando llamada*/
+                    if (llamadaVideoChanged.isRejectCallStatus()) {
+                        stopPlaying();
+                    }
+                }
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+                LlamadaVideo llamadaVideo = snapshot.getValue(LlamadaVideo.class);
+                Participante participanteDestiny = llamadaVideo.getParticipanteDestiny();
+                if (participanteDestiny.getIdParticipante().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                    cancelNotification(meMap.get(llamadaVideo.getId()));
+//                    arrayListNotificationIds.remove(0);
+                    stopPlaying();
+                    meMap.remove(llamadaVideo.getId());
+                }
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        };
+
+        FirebaseDatabase.getInstance().getReference().child("videoCalls")
+                .addChildEventListener(childEventListenerVideoCalls);
+    }
+
+    private NotificationCompat.Builder createVideoCallNotification(LlamadaVideo llamadaVideo, int notificationId) {
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, VIDEO_CALLS_CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_oficios)
+                .setContentTitle("Videollamada entrante...")
+                .setContentText(llamadaVideo.getParticipanteCaller().getNombreParticipante())
+                .setPriority(NotificationCompat.PRIORITY_HIGH);
+
+        // Build a PendingIntent for the reply action to trigger.
+
+        Intent answerIntent = new Intent(contextInstance.getString(R.string.filter_incoing_call));
+        answerIntent.putExtra("callStatus", "llamadaEntrante");
+        answerIntent.putExtra("llamadaVideo", llamadaVideo);
+        answerIntent.putExtra("notificationId", notificationId);
+
+        Intent rejectIntent = new Intent(contextInstance.getString(R.string.filter_reject_call));
+        rejectIntent.putExtra("callStatus", "llamadaEntrante");
+        rejectIntent.putExtra("llamadaVideo", llamadaVideo);
+        rejectIntent.putExtra("notificationId", notificationId);
+
+        PendingIntent rejectPendingIntent = null;
+        PendingIntent answerPendingIntent = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            rejectPendingIntent = PendingIntent.getBroadcast(contextInstance, notificationId, rejectIntent, FLAG_MUTABLE);
+
+            answerPendingIntent =
+                    PendingIntent.getBroadcast(contextInstance, notificationId, answerIntent, FLAG_MUTABLE);
+        } else {
+            rejectPendingIntent = PendingIntent.getBroadcast(contextInstance, notificationId, rejectIntent, FLAG_UPDATE_CURRENT);
+
+            answerPendingIntent =
+                    PendingIntent.getBroadcast(contextInstance, notificationId, answerIntent, FLAG_UPDATE_CURRENT);
+            /*Bandera mala: PendingIntent.FLAG_IMMUTABLE*/
+//
+        }
+
+
+        Intent fullScreenIntent = new Intent(this, AgoraVideoCallActivity.class);
+        fullScreenIntent.putExtra("callStatus", "llamadaEntrante");
+        fullScreenIntent.putExtra("llamadaVideo", llamadaVideo);
+//        fullScreenIntent.putExtra("joinValue", "false");
+        //fullScreenIntent.putExtra("extraJoin", "noconectar");
+
+
+        PendingIntent fullScreenPendingIntent = null;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            fullScreenPendingIntent = PendingIntent.getActivity(this, notificationId,
+                    fullScreenIntent, PendingIntent.FLAG_MUTABLE);
+        } else {
+            fullScreenPendingIntent = PendingIntent.getActivity(this, notificationId,
+                    fullScreenIntent, FLAG_UPDATE_CURRENT);
+            /*Bandera mala: PendingIntent.FLAG_IMMUTABLE*/
+//
+        }
+
+
+//        Intent aIntent = new Intent(this, AgoraVideoCallActivity.class);
+//        aIntent.putExtra("callStatus", "llamadaEntrante");
+//        aIntent.putExtra("llamadaVideo", llamadaVideo);
+////        fullScreenIntent.putExtra("joinValue", "false");
+//        aIntent.putExtra("extraJoin", "conectar");
+//
+//
+//        PendingIntent aPendingIntent = null;
+//
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+//            aPendingIntent = PendingIntent.getActivity(this, notificationId,
+//                    aIntent, PendingIntent.FLAG_MUTABLE);
+//        } else {
+//            aPendingIntent = PendingIntent.getActivity(this, notificationId,
+//                    aIntent, FLAG_UPDATE_CURRENT);
+//            /*Bandera mala: PendingIntent.FLAG_IMMUTABLE*/
+////
+//        }
+
+
+//        Intent fullScreenIntentAccept = new Intent(this, AgoraVideoCallActivity.class);
+//        fullScreenIntentAccept.putExtra("callStatus", "llamadaEntrante");
+//        fullScreenIntentAccept.putExtra("llamadaVideo", llamadaVideo);
+//        //fullScreenIntentAccept.putExtra("join", "true");
+//
+//
+//        PendingIntent fullScreenPendingIntentAccept = null;
+//
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+//            fullScreenPendingIntentAccept = PendingIntent.getActivity(this, notificationId,
+//                    fullScreenIntentAccept, PendingIntent.FLAG_MUTABLE);
+//        } else {
+//            fullScreenPendingIntentAccept = PendingIntent.getActivity(this, notificationId,
+//                    fullScreenIntentAccept, FLAG_UPDATE_CURRENT);
+//            /*Bandera mala: PendingIntent.FLAG_IMMUTABLE*/
+////
+//        }
+//
+//        // Create the reply action and add the remote input.
+        NotificationCompat.Action actionAccept =
+                new NotificationCompat.Action.Builder(R.drawable.ic_baseline_navigate_next_24,
+                        "Contestar",
+                        answerPendingIntent)
+                        .build();
+        builder.addAction(actionAccept);
+
+        NotificationCompat.Action actionReject =
+                new NotificationCompat.Action.Builder(R.drawable.ic_baseline_navigate_next_24,
+                        "Rechazar",
+                        rejectPendingIntent)
+                        .build();
+
+        builder.addAction(actionReject);
+
+
+        builder.setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_CALL)
+                .setDeleteIntent(rejectPendingIntent)
+                .setFullScreenIntent(fullScreenPendingIntent, true);
+
+        return builder;
+    }
+
+
+    private NotificationCompat.Builder createVoiceCallNotification(LlamadaVoz llamadaVideo, int notificationId) {
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, VIDEO_CALLS_CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_oficios)
+                .setContentTitle("Llamada entrante...")
+                .setContentText(llamadaVideo.getParticipanteCaller().getNombreParticipante())
+                .setPriority(NotificationCompat.PRIORITY_HIGH);
+
+        // Build a PendingIntent for the reply action to trigger.
+
+        Intent answerIntent = new Intent(contextInstance.getString(R.string.filter_incoing_voice_call));
+        answerIntent.putExtra("callStatus", "llamadaEntrante");
+        answerIntent.putExtra("llamadaVoz", llamadaVideo);
+        answerIntent.putExtra("notificationId", notificationId);
+
+        Intent rejectIntent = new Intent(contextInstance.getString(R.string.filter_reject_voice_call));
+        rejectIntent.putExtra("callStatus", "llamadaEntrante");
+        rejectIntent.putExtra("llamadaVoz", llamadaVideo);
+        rejectIntent.putExtra("notificationId", notificationId);
+
+        PendingIntent rejectPendingIntent = null;
+        PendingIntent answerPendingIntent = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            rejectPendingIntent = PendingIntent.getBroadcast(contextInstance, notificationId, rejectIntent, FLAG_MUTABLE);
+
+            answerPendingIntent =
+                    PendingIntent.getBroadcast(contextInstance, notificationId, answerIntent, FLAG_MUTABLE);
+        } else {
+            rejectPendingIntent = PendingIntent.getBroadcast(contextInstance, notificationId, rejectIntent, FLAG_UPDATE_CURRENT);
+
+            answerPendingIntent =
+                    PendingIntent.getBroadcast(contextInstance, notificationId, answerIntent, FLAG_UPDATE_CURRENT);
+            /*Bandera mala: PendingIntent.FLAG_IMMUTABLE*/
+//
+        }
+
+
+        Intent fullScreenIntent = new Intent(this, AgoraOnlyVoiceCallActivity.class);
+        fullScreenIntent.putExtra("callStatus", "llamadaEntrante");
+        fullScreenIntent.putExtra("llamadaVoz", llamadaVideo);
+//        fullScreenIntent.putExtra("joinValue", "false");
+        //fullScreenIntent.putExtra("extraJoin", "noconectar");
+
+
+        PendingIntent fullScreenPendingIntent = null;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            fullScreenPendingIntent = PendingIntent.getActivity(this, notificationId,
+                    fullScreenIntent, PendingIntent.FLAG_MUTABLE);
+        } else {
+            fullScreenPendingIntent = PendingIntent.getActivity(this, notificationId,
+                    fullScreenIntent, FLAG_UPDATE_CURRENT);
+            /*Bandera mala: PendingIntent.FLAG_IMMUTABLE*/
+//
+        }
+
+
+//
+//        // Create the reply action and add the remote input.
+        NotificationCompat.Action actionAccept =
+                new NotificationCompat.Action.Builder(R.drawable.ic_baseline_navigate_next_24,
+                        "Contestar",
+                        answerPendingIntent)
+                        .build();
+        builder.addAction(actionAccept);
+
+        NotificationCompat.Action actionReject =
+                new NotificationCompat.Action.Builder(R.drawable.ic_baseline_navigate_next_24,
+                        "Rechazar",
+                        rejectPendingIntent)
+                        .build();
+
+        builder.addAction(actionReject);
+
+
+        builder.setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_CALL)
+                .setDeleteIntent(rejectPendingIntent)
+                .setFullScreenIntent(fullScreenPendingIntent, true);
+
+        return builder;
+    }
+
+    public void showTempNotification(NotificationCompat.Builder builder, int notificationId) {
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(contextInstance);
+
+        // notificationId is a unique int for each notification that you must define
+        notificationManager.notify(notificationId, builder.build());
+
+
+    }
+
+
+    public void showVideoCallNotification(NotificationCompat.Builder builder, int notificationId) {
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(contextInstance);
+
+        // notificationId is a unique int for each notification that you must define
+        notificationManager.notify(notificationId, builder.build());
+
+
+        playingInconmingVideoCallAudio();
+//        mediaPlayerCallTone = MediaPlayer.create(contextInstance, R.raw.skype_caller_tone);
+//        mediaPlayerCallTone.setAudioStreamType(AudioManager.STREAM_MUSIC);
+//        try {
+//            mediaPlayerCallTone.prepare();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        mediaPlayerCallTone.setLooping(true);
+//        mediaPlayerCallTone.start(); // no need to call prepare(); create() does that for you
+
+
+    }
+
+    public void showVoiceCallNotification(NotificationCompat.Builder builder, int notificationId) {
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(contextInstance);
+
+        // notificationId is a unique int for each notification that you must define
+        notificationManager.notify(notificationId, builder.build());
+
+
+        playingInconmingCallAudio();
+//        mediaPlayerCallTone = MediaPlayer.create(contextInstance, R.raw.skype_caller_tone);
+//        mediaPlayerCallTone.setAudioStreamType(AudioManager.STREAM_MUSIC);
+//        try {
+//            mediaPlayerCallTone.prepare();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        mediaPlayerCallTone.setLooping(true);
+//        mediaPlayerCallTone.start(); // no need to call prepare(); create() does that for you
+
+
+    }
+
+    private NotificationCompat.Builder createTempNotification(Cita cita, int notificationId) {
+
+        Intent contentIntent = new Intent(this, DetalleServicioActivity.class);
+        contentIntent.putExtra("cita", cita);
+        contentIntent.putExtra("notificationId", notificationId);
+        PendingIntent contentPendingIntent = null;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            contentPendingIntent = PendingIntent.getActivity
+                    (contextInstance, notificationId, contentIntent, FLAG_MUTABLE);
+        } else {
+            contentPendingIntent = PendingIntent.getActivity
+                    (contextInstance, notificationId, contentIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        }
+        String text = "";
+
+        SharedPreferences mPreferences = contextInstance.getSharedPreferences("MyPreferences", MODE_PRIVATE);
+        int usuario = mPreferences.getInt("usuario", -1);
+
+        switch (usuario) {
+            case 0:
+                text = "Usted tiene una cita de trabajo con: " + cita.getNombreTrabajador() + " el " + cita.getFechaCita();
+            case 1:
+                text = "Usted tiene una cita de trabajo con: " + cita.getNombreTrabajador() + " el " + cita.getFechaCita();
+                break;
+            case 2:
+                text = "Usted tiene una cita de trabajo con: " + cita.getNombreEmpleador() + " el " + cita.getFechaCita();
+                break;
+        }
+
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, NOTIF_TEMPORALES_CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_oficios)
+                .setPriority(NotificationCompat.PRIORITY_HIGH);
+
+
+        builder.setContentTitle("Recordatorio!")
+                .setContentText(text)
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText(text))
+                .setContentIntent(contentPendingIntent);
+
+
+        builder.setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_CALL);
+
+        return builder;
+    }
+
+
+    public void cancelVideoCallNotification(int notificationId) {
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+
+        // notificationId is a unique int for each notification that you must define
+        notificationManager.cancel(notificationId);
     }
 
     private void loadUsuarioLocal() {
@@ -872,8 +1452,16 @@ public class CrazyService extends Service {
                 });
     }
 
-    public void playingAudio() {
-        mediaPlayerCallTone = MediaPlayer.create(contextInstance, R.raw.beat_it_gameboy);
+    public void playingInconmingCallAudio() {
+//        mediaPlayerCallTone = MediaPlayer.create(contextInstance, R.raw.beat_it_gameboy);
+        mediaPlayerCallTone = MediaPlayer.create(contextInstance, R.raw.katyusha_8_bit);
+        mediaPlayerCallTone.setLooping(true);
+        mediaPlayerCallTone.start(); // no need to call prepare(); create() does that for you
+    }
+
+    public void playingInconmingVideoCallAudio() {
+//        mediaPlayerCallTone = MediaPlayer.create(contextInstance, R.raw.beat_it_gameboy);
+        mediaPlayerCallTone = MediaPlayer.create(contextInstance, R.raw.skype_caller_tone);
         mediaPlayerCallTone.setLooping(true);
         mediaPlayerCallTone.start(); // no need to call prepare(); create() does that for you
     }
@@ -889,7 +1477,7 @@ public class CrazyService extends Service {
     }
 
     private void showVideoCallNotification(LlamadaVideo llamadaVideo, Usuario usuarioTo) {
-        playingAudio();
+        playingInconmingCallAudio();
 
         final int min = 6000;
         final int max = 6999;
@@ -909,7 +1497,7 @@ public class CrazyService extends Service {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             notifyPendingIntent = PendingIntent.getActivity(this, idNotification, notifyIntent, FLAG_MUTABLE);
         } else {
-            notifyPendingIntent = PendingIntent.getActivity(this, idNotification, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            notifyPendingIntent = PendingIntent.getActivity(this, idNotification, notifyIntent, FLAG_UPDATE_CURRENT);
         }
 
         Intent replyIntent = new Intent(ACTION_ACEPTAR_VIDEO_LLAMADA);
@@ -932,7 +1520,7 @@ public class CrazyService extends Service {
                     PendingIntent.getBroadcast(getApplicationContext(),
                             idNotification,
                             replyIntent,
-                            PendingIntent.FLAG_UPDATE_CURRENT);
+                            FLAG_UPDATE_CURRENT);
         }
 
 
@@ -1010,7 +1598,7 @@ public class CrazyService extends Service {
                     PendingIntent.getBroadcast(getApplicationContext(),
                             idNotification,
                             rejectIntent,
-                            PendingIntent.FLAG_UPDATE_CURRENT);
+                            FLAG_UPDATE_CURRENT);
         }
 
         NotificationCompat.Action actionRechazar =
@@ -1227,7 +1815,7 @@ public class CrazyService extends Service {
         } else {
             notifyPendingIntent = PendingIntent.getBroadcast
                     (getApplicationContext(), random, alarmIntent,
-                            PendingIntent.FLAG_UPDATE_CURRENT);
+                            FLAG_UPDATE_CURRENT);
             /*Bandera de mrda: PendingIntent.FLAG_IMMUTABLE*/
 //
         }
@@ -1403,7 +1991,7 @@ public class CrazyService extends Service {
         } else {
             alarmIntent = PendingIntent.getBroadcast
                     (getApplicationContext(), random, intent,
-                            PendingIntent.FLAG_UPDATE_CURRENT);
+                            FLAG_UPDATE_CURRENT);
 //
         }
 
@@ -1425,6 +2013,14 @@ public class CrazyService extends Service {
             calendarz.setTime(date);
             alarmMgr.set(AlarmManager.RTC_WAKEUP, calendarz.getTimeInMillis(), alarmIntent);
             Log.e(TAG, "ALARMA CONFIGURADA");
+
+
+            final int minx = 10000;
+            final int maxx = 10999;
+            int notificationIdx = new Random().nextInt((maxx - minx) + 1) + minx;
+            NotificationCompat.Builder tempNotification = createTempNotification(cita, notificationIdx);
+            showTempNotification(tempNotification, notificationIdx);
+
 
         } catch (ParseException e) {
             Log.e(TAG, "fecha de mrda: " + e);
@@ -1759,7 +2355,7 @@ public class CrazyService extends Service {
 
 
                                 cita.setStateReceive(true);
-                                cita.actualizarCita();
+                                cita.actualizarCitaEstado();
 //                                Log.d(TAG, "ACTUALIZANDO CITA");
 //                                FirebaseDatabase.getInstance()
 //                                        .getReference()
@@ -1779,6 +2375,7 @@ public class CrazyService extends Service {
 //                                                }
 //                                            }
 //                                        });
+
 
                                 programarAlarmaLocal(cita);
 
@@ -2011,7 +2608,7 @@ public class CrazyService extends Service {
 //        int idNotification = new Random().nextInt((max - min) + 1) + min;
 
 
-        playingAudio();
+        playingInconmingCallAudio();
 
         Log.d(TAG, "Llamada entrante:");
         Log.d(TAG, usuarioRemoto.getNombre() + " " + usuarioRemoto.getApellido());
@@ -2092,10 +2689,10 @@ public class CrazyService extends Service {
 
         } else {
             // Create an explicit intent for an Activity in your app
-            declinePendingIntent = PendingIntent.getBroadcast(contextInstance, notificacionCustomLlamada.getIdNotification(), declineIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-            answerPendingIntent = PendingIntent.getBroadcast(contextInstance, notificacionCustomLlamada.getIdNotification(), answerIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            declinePendingIntent = PendingIntent.getBroadcast(contextInstance, notificacionCustomLlamada.getIdNotification(), declineIntent, FLAG_UPDATE_CURRENT);
+            answerPendingIntent = PendingIntent.getBroadcast(contextInstance, notificacionCustomLlamada.getIdNotification(), answerIntent, FLAG_UPDATE_CURRENT);
             fullScreenPendingIntent = PendingIntent.getActivity(contextInstance, notificacionCustomLlamada.getIdNotification(),
-                    fullScreenIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    fullScreenIntent, FLAG_UPDATE_CURRENT);
 
 
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
@@ -2264,7 +2861,7 @@ public class CrazyService extends Service {
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
         // [START child_event_listener_recycler]
-        ChildEventListener childEventListener = new ChildEventListener() {
+        childEventListenerNotificacionesConMensajesLocas = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
                 Log.d(TAG, "onChildAdded:" + dataSnapshot.getKey());
@@ -2392,7 +2989,7 @@ public class CrazyService extends Service {
                         Toast.LENGTH_SHORT).show();
             }
         };
-        mNotificacionesRef.addChildEventListener(childEventListener);
+        mNotificacionesRef.addChildEventListener(childEventListenerNotificacionesConMensajesLocas);
         // [END child_event_listener_recycler]
     }
 
@@ -2451,7 +3048,7 @@ public class CrazyService extends Service {
                                         PendingIntent.FLAG_MUTABLE);
                             } else {
                                 pendingIntent = PendingIntent.getActivity(contextInstance, notificacionStack.getIdNotification(), intent,
-                                        PendingIntent.FLAG_UPDATE_CURRENT);
+                                        FLAG_UPDATE_CURRENT);
                                 /*Bandera mala: PendingIntent.FLAG_IMMUTABLE*/
 //
                             }
@@ -2474,7 +3071,7 @@ public class CrazyService extends Service {
                                         PendingIntent.getBroadcast(contextInstance,
                                                 notificacionStack.getIdNotification(),
                                                 deleteIntent,
-                                                PendingIntent.FLAG_UPDATE_CURRENT);
+                                                FLAG_UPDATE_CURRENT);
                             }
 
                             // Key for the string that's delivered in the action's intent.
@@ -2512,7 +3109,7 @@ public class CrazyService extends Service {
                                         PendingIntent.getBroadcast(getApplicationContext(),
                                                 notificacionStack.getIdNotification(),
                                                 updateIntent,
-                                                PendingIntent.FLAG_UPDATE_CURRENT | FLAG_MUTABLE);
+                                                FLAG_UPDATE_CURRENT | FLAG_MUTABLE);
 
 
                                 final Icon icon =
@@ -2591,7 +3188,7 @@ public class CrazyService extends Service {
                                         PendingIntent.getBroadcast(getApplicationContext(),
                                                 notificacionStack.getIdNotification(),
                                                 updateIntent,
-                                                PendingIntent.FLAG_UPDATE_CURRENT);
+                                                FLAG_UPDATE_CURRENT);
 
 
                                 // Create the reply action and add the remote input.
@@ -2662,7 +3259,7 @@ public class CrazyService extends Service {
                                         PendingIntent.FLAG_MUTABLE);
                             } else {
                                 pendingIntent = PendingIntent.getActivity(contextInstance, notificacionStack.getIdNotification(), intent,
-                                        PendingIntent.FLAG_UPDATE_CURRENT);
+                                        FLAG_UPDATE_CURRENT);
                                 /*Bandera mala: PendingIntent.FLAG_IMMUTABLE*/
 //
                             }
@@ -2689,7 +3286,7 @@ public class CrazyService extends Service {
                                         PendingIntent.getBroadcast(contextInstance,
                                                 notificacionStack.getIdNotification(),
                                                 deleteIntent,
-                                                PendingIntent.FLAG_UPDATE_CURRENT);
+                                                FLAG_UPDATE_CURRENT);
                             }
 
 
@@ -2720,7 +3317,7 @@ public class CrazyService extends Service {
                                         PendingIntent.getBroadcast(getApplicationContext(),
                                                 notificacionStack.getIdNotification(),
                                                 updateIntent,
-                                                PendingIntent.FLAG_UPDATE_CURRENT | FLAG_MUTABLE);
+                                                FLAG_UPDATE_CURRENT | FLAG_MUTABLE);
 
                                 final Icon icon =
                                         Icon.createWithResource(contextInstance,
@@ -2798,7 +3395,7 @@ public class CrazyService extends Service {
                                         PendingIntent.getBroadcast(getApplicationContext(),
                                                 notificacionStack.getIdNotification(),
                                                 updateIntent,
-                                                PendingIntent.FLAG_UPDATE_CURRENT | FLAG_MUTABLE);
+                                                FLAG_UPDATE_CURRENT | FLAG_MUTABLE);
 
                                 // Create the reply action and add the remote input.
                                 NotificationCompat.Action action =
@@ -2866,7 +3463,7 @@ public class CrazyService extends Service {
                                         PendingIntent.FLAG_MUTABLE);
                             } else {
                                 pendingIntent = PendingIntent.getActivity(contextInstance, notificacionStackFound.getIdNotification(), intent,
-                                        PendingIntent.FLAG_UPDATE_CURRENT);
+                                        FLAG_UPDATE_CURRENT);
                                 /*Bandera mala: PendingIntent.FLAG_IMMUTABLE*/
 //
                             }
@@ -2893,7 +3490,7 @@ public class CrazyService extends Service {
                                         PendingIntent.getBroadcast(contextInstance,
                                                 notificacionStackFound.getIdNotification(),
                                                 deleteIntent,
-                                                PendingIntent.FLAG_UPDATE_CURRENT);
+                                                FLAG_UPDATE_CURRENT);
                             }
 
                             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
@@ -2925,7 +3522,7 @@ public class CrazyService extends Service {
                                         PendingIntent.getBroadcast(getApplicationContext(),
                                                 notificacionStackFound.getIdNotification(),
                                                 updateIntent,
-                                                PendingIntent.FLAG_UPDATE_CURRENT | FLAG_MUTABLE);
+                                                FLAG_UPDATE_CURRENT | FLAG_MUTABLE);
 
 
                                 final Icon icon =
@@ -2999,7 +3596,7 @@ public class CrazyService extends Service {
                                         PendingIntent.getBroadcast(getApplicationContext(),
                                                 notificacionStackFound.getIdNotification(),
                                                 updateIntent,
-                                                PendingIntent.FLAG_UPDATE_CURRENT | FLAG_MUTABLE);
+                                                FLAG_UPDATE_CURRENT | FLAG_MUTABLE);
 
                                 // Create the reply action and add the remote input.
                                 NotificationCompat.Action action =
@@ -3061,7 +3658,7 @@ public class CrazyService extends Service {
                                         PendingIntent.FLAG_MUTABLE);
                             } else {
                                 pendingIntent = PendingIntent.getActivity(contextInstance, notificacionStackFound.getIdNotification(), intent,
-                                        PendingIntent.FLAG_UPDATE_CURRENT);
+                                        FLAG_UPDATE_CURRENT);
                                 /*Bandera mala: PendingIntent.FLAG_IMMUTABLE*/
 //
                             }
@@ -3088,7 +3685,7 @@ public class CrazyService extends Service {
                                         PendingIntent.getBroadcast(contextInstance,
                                                 notificacionStackFound.getIdNotification(),
                                                 deleteIntent,
-                                                PendingIntent.FLAG_UPDATE_CURRENT);
+                                                FLAG_UPDATE_CURRENT);
                             }
 
                             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
@@ -3120,7 +3717,7 @@ public class CrazyService extends Service {
                                         PendingIntent.getBroadcast(getApplicationContext(),
                                                 notificacionStackFound.getIdNotification(),
                                                 updateIntent,
-                                                PendingIntent.FLAG_UPDATE_CURRENT | FLAG_MUTABLE);
+                                                FLAG_UPDATE_CURRENT | FLAG_MUTABLE);
 
 
                                 final Icon icon =
@@ -3194,7 +3791,7 @@ public class CrazyService extends Service {
                                         PendingIntent.getBroadcast(getApplicationContext(),
                                                 notificacionStackFound.getIdNotification(),
                                                 updateIntent,
-                                                PendingIntent.FLAG_UPDATE_CURRENT | FLAG_MUTABLE);
+                                                FLAG_UPDATE_CURRENT | FLAG_MUTABLE);
 
                                 // Create the reply action and add the remote input.
                                 NotificationCompat.Action action =
@@ -3327,12 +3924,44 @@ public class CrazyService extends Service {
 
 //        Toast.makeText(this, "CRAZY service done", Toast.LENGTH_SHORT).show();
 
+        databaseReference
+                .child("notificaciones")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .removeEventListener(childEventListenerNotificacionesConMensajesLocas);
+
+        databaseReference
+                .child("llamadasDeVideo")
+                .removeEventListener(LlamadaDeVideoListener);
+
+        FirebaseDatabase.getInstance().getReference()
+                .child("citas")
+                .removeEventListener(childEventListenerCitasTrabajo);
+
+        FirebaseDatabase.getInstance().getReference()
+                .child("llamadasDeVoz")
+                .removeEventListener(LlamadaDeVozListener);
+
         contextInstance.unregisterReceiver(crazyDeleteBroadcastReceiver);
         contextInstance.unregisterReceiver(crazyReplyBroadcastReceiver);
         contextInstance.unregisterReceiver(foregroundAcceptCallReceiver);
         contextInstance.unregisterReceiver(foregroundRejectCallReceiver);
         contextInstance.unregisterReceiver(foregrounAcceptVideoCallReceiver);
         contextInstance.unregisterReceiver(foregroundRejectVideoCallReceiver);
+
+
+        contextInstance.unregisterReceiver(acceptVideoCallBroadcastReceiver);
+        contextInstance.unregisterReceiver(rejectVideoCallBroadcastReceiver);
+
+        contextInstance.unregisterReceiver(acceptVoiceCallBroadcastReceiver);
+        contextInstance.unregisterReceiver(rejectVoiceCallBroadcastReceiver);
+        try {
+            stopForeground(true);
+            stopSelfResult(startIdLocal);
+        } catch (Exception e) {
+            Log.d(TAG, e.toString());
+        }
+
+
 //        unregisterReceiver(crazyDeleteBroadcastReceiver);
 //        unregisterReceiver(crazyReplyBroadcastReceiver);
 //        unregisterReceiver(foregroundAcceptCallReceiver);

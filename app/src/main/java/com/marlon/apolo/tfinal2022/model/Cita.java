@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -34,13 +35,14 @@ public class Cita implements Serializable {
     private String fechaCita;
     private String finalizacionTrabajo;
     private ArrayList<Item> items;
-    private float total;
+    private Double total;
     private String chatID;
     private Calendar calendaHoraCita;
     private float calificacion;
     private boolean state;
     private String from;
     private String to;
+    private String observaciones;/*--*/
 
     public String getFrom() {
         return from;
@@ -119,11 +121,11 @@ public class Cita implements Serializable {
         this.items = items;
     }
 
-    public float getTotal() {
+    public Double getTotal() {
         return total;
     }
 
-    public void setTotal(float total) {
+    public void setTotal(Double total) {
         this.total = total;
     }
 
@@ -141,6 +143,14 @@ public class Cita implements Serializable {
 
     public void setState(boolean state) {
         this.state = state;
+    }
+
+    public String getObservaciones() {
+        return observaciones;
+    }
+
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
     }
 
     public void finalizarTrabajo(String chatID) {
@@ -173,14 +183,17 @@ public class Cita implements Serializable {
                 });
     }
 
-    public void actualizarCita() {
+    public void actualizarCitaEstado() {
         Log.e("CITA", "actualizando cita");
 
         FirebaseDatabase.getInstance()
                 .getReference()
-                .child("citas")
-                .child(this.getIdCita())
-                .setValue(this)
+                                                        .child("citas")
+                                        .child(this.getIdCita())
+                                        .child("stateReceive")
+
+
+                .setValue(this.stateReceive)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(@NonNull Void unused) {
@@ -203,11 +216,12 @@ public class Cita implements Serializable {
 //            validacion = false;
 //            arrayListErrores.add("La cita debe contener al menos un detalle del servicio");
 //        }
-        if (cita.getItems().isEmpty()) {
+        /*if (cita.getItems().isEmpty()) {
 //            Log.d(TAG, "Cita no tiene items");
             validacion = false;
             arrayListErrores.add("La cita debe contener al menos un detalle");
-        }
+        }*/
+
         DateFormat format = new SimpleDateFormat("dd MMMM yyyy HH:mm a", new Locale("es", "ES"));
         //Calendar calendar = Calendar.getInstance();
         //calendar.set(localYear, localMonth, localDay, localHourDay, localMinute, 0);
@@ -265,17 +279,26 @@ public class Cita implements Serializable {
                 validarItems = false;
             }
         }
+
+        if (cita.getItems().size() == 0) {
+            // Toast.makeText(activity, String.valueOf(cita.getItems().size()), Toast.LENGTH_SHORT).show();
+
+            validacion = false;
+            arrayListErrores.add("La cita debe contener al menos un detalle");
+        }
+
         if (!validarItems) {
             arrayListErrores.add("Los detalles no pueden ir en blanco");
             validacion = false;
         }
+        //Toast.makeText(activity, String.valueOf(validacion), Toast.LENGTH_LONG).show();
 
         if (!validacion) {
             String errores = "";
             for (String error : arrayListErrores) {
                 errores = errores + error + "\n";
             }
-//            Toast.makeText(CitaActivity.this, errores, Toast.LENGTH_LONG).show();
+            //Toast.makeText(activity, errores, Toast.LENGTH_LONG).show();
 
             erroresCita(errores, activity).show();
         }
@@ -317,6 +340,7 @@ public class Cita implements Serializable {
         result.put("calificacion", calificacion);
         result.put("from", from);
         result.put("to", to);
+        result.put("observaciones", observaciones);
         result.put("stateReceive", stateReceive);
 
         return result;
@@ -378,6 +402,7 @@ public class Cita implements Serializable {
                 ", state=" + state +
                 ", from='" + from + '\'' +
                 ", to='" + to + '\'' +
+                ", observaciones='" + observaciones + '\'' +
                 ", stateReceive=" + stateReceive +
                 '}';
     }

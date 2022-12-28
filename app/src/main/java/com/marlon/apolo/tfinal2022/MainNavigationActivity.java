@@ -1,5 +1,6 @@
 package com.marlon.apolo.tfinal2022;
 
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.NotificationManager;
@@ -43,6 +44,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.marlon.apolo.tfinal2022.admin.AdminViewModel;
 import com.marlon.apolo.tfinal2022.buscador.view.BuscadorActivity;
+import com.marlon.apolo.tfinal2022.comunnication.video.AgoraVideoCallActivity;
 import com.marlon.apolo.tfinal2022.config.ConfiguracionActivity;
 import com.marlon.apolo.tfinal2022.databinding.ActivityMainNavigationBinding;
 import com.marlon.apolo.tfinal2022.individualChat.receiver.EliminarNotificationReceiver;
@@ -120,13 +122,18 @@ public class MainNavigationActivity extends AppCompatActivity {
                                 Log.d(TAG, "#################################");
                                 Log.d(TAG, "LOKURA");
                                 alertD = califTrabajador(cita);
-                                alertD.show();
+                                try {
+                                    alertD.show();
+
+                                } catch (Exception e) {
+                                    Log.e(TAG, e.toString());
+                                }
                             }
                         }
                     }
 
                 } catch (Exception e) {
-
+                    Log.e(TAG, e.toString());
                 }
             }
 
@@ -381,23 +388,45 @@ public class MainNavigationActivity extends AppCompatActivity {
         }
 
 
-        if (firebaseUser != null) {
+        if (!isMyServiceRunning(CrazyService.class)) { //método que determina si el servicio ya está corriendo o no
+//            Intent serv = new Intent(getApplicationContext(),CrazyService.class); //serv de tipo Intent
+//            this.startService(serv); // tipo Context
+            Log.d(TAG, "Service started");
+            if (firebaseUser != null) {
 //            Intent intent = new Intent(this, ServicioNotificacionCustom.class);
 //            Intent intent = new Intent(this, OffLaneService.class);
 //            Intent intent = new Intent(this, ForegroundCustomService.class);
-            Context context = getApplicationContext();
-            //Toast.makeText(getApplicationContext(), "GG SERVICIO", Toast.LENGTH_LONG).show();
-            Intent intentPoc = new Intent(this, CrazyService.class); // Build the intent for the service
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                Context context = getApplicationContext();
+                //Toast.makeText(getApplicationContext(), "GG SERVICIO", Toast.LENGTH_LONG).show();
+                Intent intentPoc = new Intent(this, CrazyService.class); // Build the intent for the service
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 //                startForegroundService(intent);
-                startForegroundService(intentPoc);
+                    startForegroundService(intentPoc);
 
 
-            } else {
-                startService(intentPoc);
+                } else {
+                    startService(intentPoc);
 //                startService(intent);
+                }
+            }
+        } else {
+            Log.d(TAG, "Service already running");
+
+
+        }
+
+
+    }
+
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
             }
         }
+        return false;
     }
 
 
@@ -541,7 +570,7 @@ public class MainNavigationActivity extends AppCompatActivity {
                 setEmpleadorUI();
                 editorPref.putInt("usuario", 1);
                 editorPref.apply();
-                listenerNotificacionesDeCitasTrabajo();
+//                listenerNotificacionesDeCitasTrabajo();
             }
         });
 
@@ -649,6 +678,9 @@ public class MainNavigationActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_settings:
+//                startActivity(new Intent(MainNavigationActivity.this, AgoraVideoCallActivity.class));
+
+
                 startActivity(new Intent(MainNavigationActivity.this, ConfiguracionActivity.class));
 //                startActivity(new Intent(MainNavigationActivity.this, SettingsActivity.class));
                 break;

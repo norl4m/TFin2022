@@ -2,6 +2,7 @@ package com.marlon.apolo.tfinal2022.citasTrabajo;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -9,8 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -97,6 +100,41 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
         holder.detailItemPrice.setEnabled(false);
         holder.detailItemPriceCents1.setEnabled(false);
         holder.imageButtonQuitarItem.setEnabled(false);*/
+
+        int someColorFrom = 0;
+        int someColorTo = 0;
+//        if (mode) {
+//////            holder.textViewContenido.settint.setColorFilter(activity.getResources().getColor(R.color.teal_700));
+////
+////            DrawableCompat.setTint(holder.textViewContenido.getBackground(), activity.getResources().getColor(R.color.black_minus));
+////            holder.textViewContenido.setBackground(holder.textViewContenido.getBackground());
+//            someColor = ContextCompat.getColor(activity, R.color.black_minus);
+//
+//        } else {
+//            someColor = ContextCompat.getColor(activity, R.color.happy_color);
+//
+//        }
+
+        switch (context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) {
+            case Configuration.UI_MODE_NIGHT_YES:
+//                someColorFrom = ContextCompat.getColor(activity, R.color.black_minus);
+                someColorFrom = ContextCompat.getColor(context, R.color.white);
+                someColorTo = ContextCompat.getColor(context, R.color.green_minus);
+
+                break;
+            case Configuration.UI_MODE_NIGHT_NO:
+                someColorFrom = ContextCompat.getColor(context, R.color.black_minus);
+                someColorTo = ContextCompat.getColor(context, R.color.teal_100);
+
+                break;
+        }
+
+//        holder.linearLayout.setBackgroundColor(someColorTo);
+        holder.detailItem.setTextColor(someColorFrom);
+        holder.detailItemPrice.setTextColor(someColorFrom);
+        holder.detailItemPriceCents1.setTextColor(someColorFrom);
+
+
     }
 
     @Override
@@ -115,6 +153,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
         private final TextInputEditText detailItemPriceCents1;
         private final ItemAdapter mAdapter;
         private final ImageButton imageButtonQuitarItem;
+        private final LinearLayout linearLayout;
 
         String parteEntera = "0";
         String parteDecimal = "00";
@@ -127,6 +166,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
             detailItemPrice = itemView.findViewById(R.id.cardViewItemTextPrice);
             detailItemPriceCents1 = itemView.findViewById(R.id.cardViewItemTextPriceCents1);
             imageButtonQuitarItem = itemView.findViewById(R.id.imgButtonQuitarItem);
+            linearLayout = itemView.findViewById(R.id.linLytBack);
 
             this.mAdapter = jobAdapter;
             /*detailItem.setEnabled(false);
@@ -185,15 +225,15 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
 
                     completePrice = parteEntera + "." + parteDecimal;
 
-                    element.setPrice(Float.parseFloat(completePrice));
+                    element.setPrice(Double.parseDouble(completePrice));
                     itemArrayList.set(mPosition, element);
                     Log.d(TAG, element.toString());
                     //snackBar(itemView);
-                    CitaTrabajoActivity citaActivity = null;
+                    NuevaCitaTrabajoActivity citaActivity = null;
 
                     try {
-                        citaActivity = CitaTrabajoActivity.citaActivity;
-                        float precio = 0;
+                        citaActivity = NuevaCitaTrabajoActivity.citaActivity;
+                        Double precio = 0.0;
                         for (Item item : itemArrayList) {
                             precio = precio + item.getPrice();
                             citaActivity.setPrecio(precio);
@@ -213,7 +253,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
 
                     try {
                         detalleServicioActivity = detalleServicioActivity.detalleServicioActivity;
-                        float precio = 0;
+                        Double precio = 0.0;
                         for (Item item : itemArrayList) {
                             precio = precio + item.getPrice();
                         }
@@ -266,9 +306,9 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
 //                    }
                     if (completePrice.length() == 1 && completePrice.contains(".")) {
                         Log.d(TAG, "ENCERar");
-                        element.setPrice(0);
+                        element.setPrice(0.0);
                     } else {
-                        element.setPrice(Float.parseFloat(completePrice));
+                        element.setPrice(Double.parseDouble(completePrice));
 
                     }
 
@@ -280,11 +320,11 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
 //                    } catch (Exception e) {
 //
 //                    }
-                    CitaTrabajoActivity citaActivity = null;
+                    NuevaCitaTrabajoActivity citaActivity = null;
 
                     try {
-                        citaActivity = CitaTrabajoActivity.citaActivity;
-                        float precio = 0;
+                        citaActivity = NuevaCitaTrabajoActivity.citaActivity;
+                        Double precio = 0.0;
                         for (Item item : itemArrayList) {
                             precio = precio + item.getPrice();
                             citaActivity.setPrecio(precio);
@@ -321,7 +361,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
 
                     try {
                         detalleServicioActivity = detalleServicioActivity.detalleServicioActivity;
-                        float precio = 0;
+                        Double precio = 0.0;
                         for (Item item : itemArrayList) {
                             precio = precio + item.getPrice();
                         }
@@ -343,8 +383,8 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
             itemArrayList.remove(element);
             if (itemArrayList.size() == 0) {
                 try {
-                    CitaTrabajoActivity citaActivity = CitaTrabajoActivity.citaActivity;
-                    citaActivity.setPrecio(0);
+                    NuevaCitaTrabajoActivity citaActivity = NuevaCitaTrabajoActivity.citaActivity;
+                    citaActivity.setPrecio(0.0);
                     citaActivity.getTextViewTotal().setText(String.format("Total: $ %.2f", citaActivity.getPrecio()));
                 } catch (Exception e) {
 
@@ -362,11 +402,11 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
                 }
             } else {
                 //snackBar(itemView);
-                CitaTrabajoActivity citaActivity = null;
+                NuevaCitaTrabajoActivity citaActivity = null;
 
                 try {
-                    citaActivity = CitaTrabajoActivity.citaActivity;
-                    float precio = 0;
+                    citaActivity = NuevaCitaTrabajoActivity.citaActivity;
+                    Double precio = 0.0;
                     for (Item item : itemArrayList) {
                         precio = precio + item.getPrice();
                         citaActivity.setPrecio(precio);
@@ -379,7 +419,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
 
                 try {
                     detalleServicioActivity = detalleServicioActivity.detalleServicioActivity;
-                    float precio = 0;
+                    Double precio = 0.0;
                     for (Item item : itemArrayList) {
                         precio = precio + item.getPrice();
                     }
@@ -400,7 +440,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
 
 
     public void setItems(ArrayList<Item> items) {
-        itemArrayList = new ArrayList<>();
+//        itemArrayList = new ArrayList<>();
         itemArrayList = items;
         notifyDataSetChanged();
     }

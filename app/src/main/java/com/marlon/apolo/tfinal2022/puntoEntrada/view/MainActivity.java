@@ -18,18 +18,12 @@
 package com.marlon.apolo.tfinal2022.puntoEntrada.view;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-import androidx.core.view.WindowInsetsControllerCompat;
-import androidx.preference.PreferenceManager;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -37,11 +31,14 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.firebase.database.FirebaseDatabase;
+import com.marlon.apolo.tfinal2022.BuildConfig;
 import com.marlon.apolo.tfinal2022.MainNavigationActivity;
 import com.marlon.apolo.tfinal2022.R;
+import com.marlon.apolo.tfinal2022.citasTrabajoArchi.CitaTrabajoArchiActivity;
 import com.marlon.apolo.tfinal2022.infoInicial.InformacionInicialActivity;
-import com.marlon.apolo.tfinal2022.ui.oficioArchi.view.OficioArchiActivity;
+import com.marlon.apolo.tfinal2022.ui.trabajadores.eliminar.DeleteUserAsyncActivity;
+
+import java.util.Locale;
 
 /**
  * Esta clase es el punto de entrada a la aplicación.
@@ -83,12 +80,16 @@ public class MainActivity extends AppCompatActivity {
         ImageView imageViewLogo = findViewById(R.id.imageViewLogo);
         TextView textViewWelcome = findViewById(R.id.textView1);
         TextView textViewSlogan = findViewById(R.id.textView2);
-
+        TextView textViewVersionCode = findViewById(R.id.textViewVersionCode);
+        int versionCode = BuildConfig.VERSION_CODE;
+        String versionName = BuildConfig.VERSION_NAME;
         // Setting animations
         imageViewLogo.setAnimation(topAnimation);
 //        textViewWelcome.setAnimation(bottomAnimation);
         textViewWelcome.setAnimation(topAnimation);
         textViewSlogan.setAnimation(bottomAnimation);
+//        textViewVersionCode.setText(String.format(Locale.getDefault(), "Versión: %d", versionCode));
+        textViewVersionCode.setText(String.format("Versión: %s", versionName));
 //        if (mode) {
         /* Permite cambiar el ìcono de color dentro del ícono en un ImageView*/
 //            imageViewLogo.setColorFilter(getResources().getColor(R.color.white));
@@ -107,7 +108,16 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 if (getInfoInicialActivityFlag()) {
                     startActivity(new Intent(MainActivity.this, MainNavigationActivity.class));
+//                    startActivity(new Intent(MainActivity.this, CitaTrabajoArchiActivity.class));
+//                    startActivity(new Intent(MainActivity.this, DeleteUserAsyncActivity.class));
+//                    startActivity(new Intent(MainActivity.this, VideoCallUIKitActivity.class));
+//                    startActivity(new Intent(MainActivity.this, AgoraVideoCallActivity.class));
+//                    startActivity(new Intent(MainActivity.this, PerfilActivity.class));
+//                    startActivity(new Intent(MainActivity.this, MetodoRegActivity.cla   ss));
+//                    startActivity(new Intent(MainActivity.this, RegNombreUsuarioActivity.class));
 //                    startActivity(new Intent(MainActivity.this, OficioArchiActivity.class));
+//                    startActivity(new Intent(MainActivity.this, LoginPoCActivity.class));
+//                    startActivity(new Intent(MainActivity.this, RegWithEmailPasswordActivity.class));
                 } else {
                     startActivity(new Intent(MainActivity.this, InformacionInicialActivity.class));
                 }

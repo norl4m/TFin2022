@@ -25,35 +25,57 @@
                     android:layout_height="wrap_content"
                     android:text="Cita de trabajo"
                     android:textAlignment="center"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    android:fontFamily="@font/andika"/>
 
                 <TextView
                     android:id="@+id/textViewEmpleadorDialog"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Empleador: Marlon Apolo"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    android:fontFamily="@font/andika"/>
 
                 <TextView
                     android:id="@+id/textViewTrabajadorDialog"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Trabajador: Nelson Calvopiña"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    android:fontFamily="@font/andika"/>
 
                 <TextView
                     android:id="@+id/textViewFechaCitadialog"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Fecha de cita: 2021-02-10 10:35 A.M."
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    android:fontFamily="@font/andika"/>
 
                 <TextView
                     android:id="@+id/textViewCostoTotalDialog"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Costo total del trabajo: $ 25.00"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    android:fontFamily="@font/andika"/>
+
+                <TextView
+                    android:id="@+id/textViewCalificacion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Calificación: 2.0"
+                    android:textAlignment="textEnd"
+                    android:textSize="18sp"
+                    android:fontFamily="@font/andika"/>
+                <TextView
+                    android:id="@+id/textViewObsv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Observaciones: Ninguna"
+                    android:textAlignment="textEnd"
+                    android:textSize="18sp"
+                    android:fontFamily="@font/andika"/>
             </LinearLayout>
 
             <ImageView

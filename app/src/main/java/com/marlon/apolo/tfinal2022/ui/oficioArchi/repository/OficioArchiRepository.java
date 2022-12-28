@@ -31,6 +31,7 @@ import com.google.firebase.storage.UploadTask;
 import com.marlon.apolo.tfinal2022.MainNavigationActivity;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.model.Empleador;
+import com.marlon.apolo.tfinal2022.model.Oficio;
 import com.marlon.apolo.tfinal2022.registro.view.RegWithEmailPasswordActivity;
 import com.marlon.apolo.tfinal2022.registro.view.regMethod.RegistrarseConCelularActivity;
 import com.marlon.apolo.tfinal2022.ui.oficioArchi.model.OficioArchiModel;
@@ -44,7 +45,7 @@ import java.util.List;
 public class OficioArchiRepository {
 
     private static final String TAG = OficioArchiRepository.class.getSimpleName();
-    private static final String OFICIO_REF_ON_FIREBASE = "OFICIOS";
+    private static final String OFICIO_REF_ON_FIREBASE = "oficios";
 
     // [START declare_database_ref]
     private DatabaseReference mDatabase; /*TIPO interface DAO O LINQ, MAPEO*/
@@ -77,7 +78,7 @@ public class OficioArchiRepository {
         return totalSize;
     }
 
-    public void writeNewOficioWithTaskListeners(OficioArchiModel oficioArchiModel, NuevoOficioArchiActivity nuevoOficioArchiActivity, ProgressDialog progressDialog) {
+    public void writeNewOficioWithTaskListeners(Oficio oficioArchiModel, NuevoOficioArchiActivity nuevoOficioArchiActivity, ProgressDialog progressDialog) {
 
         boolean photoFlag = false;
 
@@ -112,39 +113,7 @@ public class OficioArchiRepository {
         boolean finalPhotoFlag = photoFlag;
 
         if (!finalPhotoFlag) {
-            mDatabase.child(OFICIO_REF_ON_FIREBASE)
-                    .child(oficioArchiModel.getIdOficio())
-                    .setValue(oficioArchiModel)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            // Write was successful!
-                            // ...
-                            Log.d(TAG, "Oficio registrado existosamente");
-                            try {
-                                progressDialog.dismiss();
-                            } catch (Exception e) {
-                                Log.d(TAG, e.toString());
-                            }
-                            nuevoOficioArchiActivity.getTextInputLayoutNombre().getEditText().setText("");
-                            Glide.with(nuevoOficioArchiActivity)
-                                    .load(R.drawable.ic_oficios)
-                                    .into(nuevoOficioArchiActivity.getImageViewIcono());
-
-                            Toast.makeText(nuevoOficioArchiActivity, "Oficio registrado existosamente.", Toast.LENGTH_LONG).show();
-
-
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            // Write failed
-                            // ...
-                            Log.d(TAG, "Registro de oficio fallido");
-                        }
-                    });
-            // [END rtdb_write_new_user_task]
+            writeOnFirebase(oficioArchiModel, nuevoOficioArchiActivity, progressDialog);
 
         } else {
 
@@ -203,33 +172,7 @@ public class OficioArchiRepository {
                     if (task.isSuccessful()) {
                         Uri downloadUri = task.getResult();
                         oficioArchiModel.setUriPhoto(downloadUri.toString());
-                        mDatabase
-                                .child(OFICIO_REF_ON_FIREBASE)
-                                .child(oficioArchiModel.getIdOficio())
-                                .setValue(oficioArchiModel).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@androidx.annotation.NonNull Task<Void> task) {
-                                        if (task.isSuccessful()) {
-//                                        Log.d(TAG, "Oficios registrado con foto existosamente");
-                                            try {
-                                                progressDialog.dismiss();
-                                            } catch (Exception e) {
-                                                Log.d(TAG, e.toString());
-                                            }
-
-                                            nuevoOficioArchiActivity.getTextInputLayoutNombre().getEditText().setText("");
-                                            Glide.with(nuevoOficioArchiActivity)
-                                                    .load(R.drawable.ic_oficios)
-                                                    .into(nuevoOficioArchiActivity.getImageViewIcono());
-                                            Toast.makeText(nuevoOficioArchiActivity, "Oficio registrado existosamente.", Toast.LENGTH_LONG).show();
-
-                                        } else {
-                                            Log.d(TAG, "Registro de oficio con foto fallido");
-
-                                        }
-                                    }
-                                });
-
+                        writeOnFirebase(oficioArchiModel, nuevoOficioArchiActivity, progressDialog);
 
                     } else {
                         // Handle failures
@@ -242,6 +185,45 @@ public class OficioArchiRepository {
 
     }
 
+
+    public void writeOnFirebase(Oficio oficio, NuevoOficioArchiActivity nuevoOficioArchiActivity, ProgressDialog progressDialog) {
+        mDatabase.child(OFICIO_REF_ON_FIREBASE)
+                .child(oficio.getIdOficio())
+                .setValue(oficio)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        // Write was successful!
+                        // ...
+                        Log.d(TAG, "Oficio registrado existosamente");
+                        try {
+                            progressDialog.dismiss();
+                        } catch (Exception e) {
+                            Log.d(TAG, e.toString());
+                        }
+                        nuevoOficioArchiActivity.getTextInputLayoutNombre().getEditText().setText("");
+                        Glide.with(nuevoOficioArchiActivity)
+                                .load(R.drawable.ic_oficios)
+                                .into(nuevoOficioArchiActivity.getImageViewIcono());
+
+                        Toast.makeText(nuevoOficioArchiActivity, "Oficio registrado existosamente.", Toast.LENGTH_LONG).show();
+
+                        nuevoOficioArchiActivity.finish();
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Write failed
+                        // ...
+                        Log.d(TAG, "Registro de oficio fallido");
+                    }
+                });
+        // [END rtdb_write_new_user_task]
+
+
+    }
 
     public void deleteOficio(OficioArchiModel oficioArchiModel, OficioArchiEditDeleteActivity oficioArchiEditDeleteActivity, ProgressDialog progressDialog) {
         mDatabase.child(OFICIO_REF_ON_FIREBASE)
@@ -282,41 +264,179 @@ public class OficioArchiRepository {
 
     }
 
-    public void updateOficio(OficioArchiModel oficioArchiModel, OficioArchiEditDeleteActivity oficioArchiEditDeleteActivity, ProgressDialog progressDialog) {
-        mDatabase.child(OFICIO_REF_ON_FIREBASE)
-                .child(oficioArchiModel.getIdOficio())
-                .setValue(oficioArchiModel)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        // Write was successful!
-                        // ...
-                        Log.d(TAG, "Oficio actualizado existosamente");
-                        try {
-                            progressDialog.dismiss();
-                        } catch (Exception e) {
-                            Log.d(TAG, e.toString());
-                        }
-//                        nuevoOficioArchiActivity.getTextInputLayoutNombre().getEditText().setText("");
-//                        Glide.with(nuevoOficioArchiActivity)
-//                                .load(R.drawable.ic_oficios)
-//                                .into(nuevoOficioArchiActivity.getImageViewIcono());
+    public void updateOficio(Oficio oficio, OficioArchiEditDeleteActivity oficioArchiEditDeleteActivity, ProgressDialog progressDialog) {
+//        mDatabase.child(OFICIO_REF_ON_FIREBASE)
+//                .child(oficio.getIdOficio())
+//                .setValue(oficio)
+//                .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                    @Override
+//                    public void onSuccess(Void aVoid) {
+//                        // Write was successful!
+//                        // ...
+//                        Log.d(TAG, "Oficio actualizado existosamente");
+//                        try {
+//                            progressDialog.dismiss();
+//                        } catch (Exception e) {
+//                            Log.d(TAG, e.toString());
+//                        }
+////                        nuevoOficioArchiActivity.getTextInputLayoutNombre().getEditText().setText("");
+////                        Glide.with(nuevoOficioArchiActivity)
+////                                .load(R.drawable.ic_oficios)
+////                                .into(nuevoOficioArchiActivity.getImageViewIcono());
+//
+//                        Toast.makeText(oficioArchiEditDeleteActivity, "Oficio actualizado.", Toast.LENGTH_LONG).show();
+//
+//
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        // Write failed
+//                        // ...
+//                        Log.d(TAG, "Actualización de oficio fallido");
+//                    }
+//                });
+//        // [END rtdb_write_new_user_task]
+//
 
-                        Toast.makeText(oficioArchiEditDeleteActivity, "Oficio actualizado.", Toast.LENGTH_LONG).show();
+        boolean photoFlag = false;
 
+        if (oficio.getUriPhoto() != null) {
+            Uri returnUri = Uri.parse(oficio.getUriPhoto().toString());
+            Cursor returnCursor = oficioArchiEditDeleteActivity.getContentResolver().query(returnUri, null, null, null, null);
+            /*
+             * Get the column indexes of the data in the Cursor,
+             * move to the first row in the Cursor, get the data,
+             * and display it.
+             */
 
+            if (oficio.getUriPhoto().contains("https://")) {
+                photoFlag = false;
+            } else {
+                int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                int sizeIndex = returnCursor.getColumnIndex(OpenableColumns.SIZE);
+                returnCursor.moveToFirst();
+                Log.d(TAG, returnCursor.getString(nameIndex));
+                Log.d(TAG, String.format("Tamaño de archivo: %s", Long.toString(returnCursor.getLong(sizeIndex))));
+
+                if (returnCursor.getLong(sizeIndex) > 0) {
+                    //Toast.makeText(getApplicationContext(), "Registro con foto", Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, String.format("Tamaño de archivo: %s", Long.toString(returnCursor.getLong(sizeIndex))));
+                    photoFlag = true;
+                } else {
+                    //Toast.makeText(getApplicationContext(), "Registro normal", Toast.LENGTH_SHORT).show();
+                    photoFlag = false;
+                }
+            }
+
+        } else {
+            photoFlag = false;
+        }
+
+        // [START rtdb_write_new_user_task]
+        boolean finalPhotoFlag = photoFlag;
+
+        if (!finalPhotoFlag) {
+            mCRUDOficioOnFirebase(oficio, oficioArchiEditDeleteActivity, progressDialog);
+            // [END rtdb_write_new_user_task]
+
+        } else {
+
+            Log.e(TAG, "REGISTRANDO FOTO");
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            // Create the file metadata
+            StorageMetadata metadata = new StorageMetadata.Builder()
+                    .setContentType("image/jpg")
+                    .build();
+
+            String baseReference = "gs://tfinal2022-afc91.appspot.com";
+            String imagePath = baseReference + "/" + OFICIO_REF_ON_FIREBASE + "/" + oficio.getIdOficio() + "/" + "fotoPerfil.jpg";
+            Log.d(TAG, "Path reference on fireStorage");
+            StorageReference storageRef = storage.getReferenceFromUrl(imagePath);
+
+            UploadTask uploadTask = storageRef.putFile(Uri.parse(oficio.getUriPhoto()), metadata);
+
+            // Listen for state changes, errors, and completion of the upload.
+            uploadTask.addOnProgressListener(taskSnapshot -> {
+                double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                Log.d(TAG, "Upload is " + progress + "% done");
+
+            }).addOnPausedListener(new OnPausedListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onPaused(UploadTask.TaskSnapshot taskSnapshot) {
+                    Log.d(TAG, "Upload is paused");
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@androidx.annotation.NonNull Exception exception) {
+                    // Handle unsuccessful uploads
+                    Log.d(TAG, "on failure Foto complete...");
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    // Handle successful uploads on complete
+                    // ...
+                    Log.d(TAG, "Upload is complete...");
+                    //  registroActivity.limpiarUI();
+
+                }
+            }).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                @Override
+                public Task<Uri> then(@androidx.annotation.NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if (!task.isSuccessful()) {
+                        throw task.getException();
                     }
-                })
-                .addOnFailureListener(new OnFailureListener() {
+
+                    // Continue with the task to get the download URL
+                    return storageRef.getDownloadUrl();
+                }
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@androidx.annotation.NonNull Task<Uri> task) {
+                    if (task.isSuccessful()) {
+                        Uri downloadUri = task.getResult();
+                        oficio.setUriPhoto(downloadUri.toString());
+                        mCRUDOficioOnFirebase(oficio, oficioArchiEditDeleteActivity, progressDialog);
+
+
+                    } else {
+                        // Handle failures
+                        Log.d(TAG, "Registro de oficio con foto fallido");
+                    }
+                }
+            });
+        }
+
+
+    }
+
+    public void mCRUDOficioOnFirebase(Oficio oficio, OficioArchiEditDeleteActivity oficioArchiEditDeleteActivity, ProgressDialog progressDialog) {
+        mDatabase
+                .child(OFICIO_REF_ON_FIREBASE)
+                .child(oficio.getIdOficio())
+                .setValue(oficio).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
-                    public void onFailure(@NonNull Exception e) {
-                        // Write failed
-                        // ...
-                        Log.d(TAG, "Actualización de oficio fallido");
+                    public void onComplete(@androidx.annotation.NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+//                                        Log.d(TAG, "Oficios registrado con foto existosamente");
+                            try {
+                                progressDialog.dismiss();
+                            } catch (Exception e) {
+                                Log.d(TAG, e.toString());
+                            }
+
+
+                            Toast.makeText(oficioArchiEditDeleteActivity, "Oficio actualizado.", Toast.LENGTH_LONG).show();
+                            oficioArchiEditDeleteActivity.setUriPhoto(null);
+
+                        } else {
+                            Log.d(TAG, "Registro de oficio con foto fallido");
+
+                        }
                     }
                 });
-        // [END rtdb_write_new_user_task]
-
     }
 
 

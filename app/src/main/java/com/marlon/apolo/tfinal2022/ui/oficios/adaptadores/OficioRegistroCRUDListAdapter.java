@@ -23,6 +23,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.model.Oficio;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
+import com.marlon.apolo.tfinal2022.ui.oficioArchi.model.OficioArchiModel;
+import com.marlon.apolo.tfinal2022.ui.oficioArchi.view.OficioArchiEditDeleteActivity;
 import com.marlon.apolo.tfinal2022.ui.oficios.view.HabilidadActivity;
 
 import java.util.ArrayList;
@@ -151,11 +153,18 @@ public class OficioRegistroCRUDListAdapter extends RecyclerView.Adapter<OficioRe
 
 
     public void launchUpdateOficioActivity(Oficio oficio) {
-        alertDialogEditarOficio(oficio);
+//        alertDialogEditarOficio(oficio);
+        Intent intent = new Intent(context, OficioArchiEditDeleteActivity.class);
+        intent.putExtra("oficioModel", oficio);
+        context.startActivity(intent);
     }
 
     public void launchDeleteOficioActivity(Oficio oficio) {
         alertDialogConfirmar(oficio.getIdOficio());
+        // Use that to access the affected item in mWordList.
+//        OficioArchiModel element = mWords.get(mPosition);
+
+        //Toast.makeText(contextInstance, element.toString(), Toast.LENGTH_SHORT).show();
     }
 
     public void alertDialogConfirmar(String idOficio) {

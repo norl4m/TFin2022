@@ -26,6 +26,7 @@
                     android:text="Cita de trabajo"
                     android:textAlignment="center"
                     android:textSize="18sp" />
+
                 <TextView
                     android:id="@+id/textViewEmpleadorDialog"
                     android:layout_width="match_parent"

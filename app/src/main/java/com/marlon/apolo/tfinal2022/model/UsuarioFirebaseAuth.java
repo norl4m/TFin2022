@@ -6,8 +6,26 @@ public class UsuarioFirebaseAuth {
     private String email;
     private String phoneNumber;
     private String password;
+    private String extraLol;
+    private Usuario extraUsuarioLol;
+
+    public Usuario getExtraUsuarioLol() {
+        return extraUsuarioLol;
+    }
+
+    public void setExtraUsuarioLol(Usuario extraUsuarioLol) {
+        this.extraUsuarioLol = extraUsuarioLol;
+    }
 
     public UsuarioFirebaseAuth() {
+    }
+
+    public String getExtraLol() {
+        return extraLol;
+    }
+
+    public void setExtraLol(String extraLol) {
+        this.extraLol = extraLol;
     }
 
     public String getUid() {

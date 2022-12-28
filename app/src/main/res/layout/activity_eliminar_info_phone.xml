@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.eliminarCuenta.EliminarInfoPhoneActivity">
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -24,6 +25,7 @@
             android:textAllCaps="false" />
 
     </androidx.appcompat.widget.Toolbar>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -46,6 +48,7 @@
                 android:src="@drawable/ic_oficios" />
 
             <TextView
+                android:fontFamily="@font/andika"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/acLoginImageViewLogo"
@@ -60,6 +63,8 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayoutPhone"
+
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
@@ -71,12 +76,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:digits="@string/numbers_validation"
+                android:fontFamily="@font/andika"
                 android:inputType="phone"
                 android:maxLength="10" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayoutPassword"
+
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
@@ -88,6 +96,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:digits="@string/validate_complete_email"
+                android:fontFamily="@font/andika"
                 android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -96,6 +105,8 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_margin="8dp"
+            android:background="@drawable/button_background"
+            android:fontFamily="@font/andika"
             android:text="Eliminar cuenta"
             android:textAllCaps="false" />
 
@@ -104,6 +115,8 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_margin="8dp"
+            android:background="@drawable/button_background"
+            android:fontFamily="@font/andika"
             android:text="Enviar código"
             android:textAllCaps="false"
             android:visibility="gone" />
@@ -113,6 +126,8 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_margin="8dp"
+            android:background="@drawable/button_background"
+            android:fontFamily="@font/andika"
             android:text="Solicitar nuevo código"
             android:textAllCaps="false"
             android:visibility="gone" />

@@ -4,66 +4,209 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/purple_700"
     android:orientation="vertical"
+    android:weightSum="4"
     tools:context=".registro.view.RegNombreUsuarioActivity">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:elevation="4dp"
-        android:visibility="visible"
-        app:navigationIcon="@drawable/ic_baseline_arrow_back_24"
-        app:title="@string/no_nothing_text">
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:elevation="4dp"
+            android:theme="@style/Theme.TFinal2022.AppBarOverlay"
+            android:visibility="visible"
+            app:navigationIcon="@drawable/ic_baseline_arrow_back_24"
+            app:popupTheme="@style/Theme.TFinal2022.PopupOverlay"
+            app:title="@string/no_nothing_text" />
 
 
-        <Button
-            android:id="@+id/buttonNext"
-            android:layout_width="wrap_content"
+        <!--            <Button-->
+        <!--                android:id="@+id/buttonNext"-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:layout_gravity="end"-->
+        <!--                android:text="Siguiente"-->
+        <!--                android:textAllCaps="false" />-->
+
+
+        <!--    </androidx.appcompat.widget.Toolbar>-->
+
+        <TextView
+            android:id="@+id/textViewHeading"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:text="Siguiente"
-            android:textAllCaps="false" />
+            android:layout_below="@id/toolbar"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="@font/andika"
+            android:text="Registro de datos personales"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+            android:textColor="@color/white" />
+
+    </RelativeLayout>
+
+    <!--    <TextView-->
+    <!--        android:id="@+id/textViewHeading"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_below="@id/toolbar"-->
+    <!--        android:layout_margin="8dp"-->
+    <!--        android:fontFamily="@font/andika"-->
+    <!--        android:text="Registro de datos personales"-->
+    <!--        android:textAppearance="@style/TextAppearance.AppCompat.Headline" />-->
+
+    <!--    <ScrollView-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content">-->
+
+    <!--        <LinearLayout-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_margin="8dp"-->
+    <!--            android:divider="@drawable/divider_20p"-->
+    <!--            android:orientation="vertical"-->
+    <!--            android:padding="16dp"-->
+    <!--            android:showDividers="middle">-->
+
+    <!--            <RelativeLayout-->
+    <!--                android:id="@+id/rltLytFotoPerfil"-->
+    <!--                android:layout_width="match_parent"-->
+    <!--                android:layout_height="wrap_content">-->
+
+    <!--                <TextView-->
+    <!--                    android:id="@+id/textViewFotoP"-->
+    <!--                    android:layout_width="match_parent"-->
+    <!--                    android:layout_height="wrap_content"-->
+    <!--                    android:layout_margin="4dp"-->
+    <!--                    android:text="Foto de perfil (opcional)"-->
+    <!--                    android:textAlignment="center"-->
+    <!--                    android:textAppearance="@style/TextAppearance.AppCompat.Title" />-->
+
+    <!--                <ImageView-->
+    <!--                    android:id="@+id/imageViewProfile"-->
+    <!--                    android:layout_width="156dp"-->
+    <!--                    android:layout_height="156dp"-->
+    <!--                    android:layout_below="@id/textViewFotoP"-->
+    <!--                    android:layout_centerHorizontal="true"-->
+    <!--                    android:layout_margin="4dp"-->
+    <!--                    android:layout_marginStart="4dp"-->
+    <!--                    android:layout_marginTop="4dp"-->
+    <!--                    android:layout_marginEnd="4dp"-->
+    <!--                    android:layout_marginBottom="4dp"-->
+    <!--                    android:scaleType="fitXY"-->
+    <!--                    android:src="@drawable/ic_usuario" />-->
 
 
-    </androidx.appcompat.widget.Toolbar>
+    <!--                <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+    <!--                    android:id="@+id/fabSeleccionarFoto"-->
+    <!--                    android:layout_width="wrap_content"-->
+    <!--                    android:layout_height="wrap_content"-->
+    <!--                    android:layout_below="@id/imageViewProfile"-->
+    <!--                    android:layout_marginStart="-60dp"-->
+    <!--                    android:layout_marginTop="-60dp"-->
+    <!--                    android:layout_toEndOf="@id/imageViewProfile"-->
+    <!--                    android:src="@drawable/ic_menu_camera" />-->
 
-    <TextView
-        android:id="@+id/textViewHeading"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/toolbar"
-        android:layout_margin="8dp"
-        android:text="Registro de datos personales"
-        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-        android:textStyle="bold" />
+
+    <!--            </RelativeLayout>-->
+
+
+    <!--            <com.google.android.material.textfield.TextInputLayout-->
+    <!--                android:id="@+id/textInputLayoutNombre"-->
+    <!--                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
+    <!--                android:layout_width="match_parent"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:hint="Nombre"-->
+    <!--                app:errorEnabled="true"-->
+    <!--                app:helperText="@string/text_campo_necesario"-->
+    <!--                app:helperTextEnabled="true">-->
+
+
+    <!--                <com.google.android.material.textfield.TextInputEditText-->
+    <!--                    android:id="@+id/editTextNombre"-->
+    <!--                    android:layout_width="match_parent"-->
+    <!--                    android:layout_height="wrap_content"-->
+    <!--                    android:digits="@string/validate_names_and_lastname"-->
+    <!--                    android:inputType="textCapSentences|textPersonName" />-->
+
+    <!--            </com.google.android.material.textfield.TextInputLayout>-->
+
+
+    <!--            <com.google.android.material.textfield.TextInputLayout-->
+    <!--                android:id="@+id/textInputLayoutApellido"-->
+    <!--                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
+    <!--                android:layout_width="match_parent"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:hint="Apellido"-->
+    <!--                app:helperText="@string/text_campo_necesario"-->
+    <!--                app:helperTextEnabled="true">-->
+
+
+    <!--                <com.google.android.material.textfield.TextInputEditText-->
+    <!--                    android:id="@+id/editTextApellido"-->
+    <!--                    android:layout_width="match_parent"-->
+    <!--                    android:layout_height="wrap_content"-->
+    <!--                    android:digits="@string/validate_names_and_lastname"-->
+    <!--                    android:inputType="textCapSentences" />-->
+
+
+    <!--            </com.google.android.material.textfield.TextInputLayout>-->
+
+    <!--            &lt;!&ndash;            <Button&ndash;&gt;-->
+    <!--            &lt;!&ndash;                android:id="@+id/buttonNext"&ndash;&gt;-->
+    <!--            &lt;!&ndash;                android:layout_width="match_parent"&ndash;&gt;-->
+    <!--            &lt;!&ndash;                android:layout_height="wrap_content"&ndash;&gt;-->
+    <!--            &lt;!&ndash;                android:layout_below="@id/textFieldApellido"&ndash;&gt;-->
+    <!--            &lt;!&ndash;                android:layout_margin="8dp"&ndash;&gt;-->
+    <!--            &lt;!&ndash;                android:layout_marginStart="8dp"&ndash;&gt;-->
+    <!--            &lt;!&ndash;                android:layout_marginTop="8dp"&ndash;&gt;-->
+    <!--            &lt;!&ndash;                android:layout_marginEnd="8dp"&ndash;&gt;-->
+    <!--            &lt;!&ndash;                android:layout_marginBottom="8dp"&ndash;&gt;-->
+    <!--            &lt;!&ndash;                android:text="Continuar"&ndash;&gt;-->
+    <!--            &lt;!&ndash;                android:textAllCaps="false" />&ndash;&gt;-->
+
+    <!--        </LinearLayout>-->
+
+    <!--    </ScrollView>-->
+
 
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="0dp"
+        android:layout_weight="3"
+
+        android:background="@drawable/card_background">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:divider="@drawable/divider_20p"
-            android:orientation="vertical"
-            android:padding="16dp"
-            android:showDividers="middle">
+            android:orientation="vertical">
 
             <RelativeLayout
-                android:id="@+id/rltLytFotoPerfil"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <TextView
+                    android:fontFamily="@font/andika"
                     android:id="@+id/textViewFotoP"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="4dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
                     android:text="Foto de perfil (opcional)"
                     android:textAlignment="center"
                     android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
 
                 <ImageView
                     android:id="@+id/imageViewProfile"
@@ -71,11 +214,10 @@
                     android:layout_height="156dp"
                     android:layout_below="@id/textViewFotoP"
                     android:layout_centerHorizontal="true"
-                    android:layout_margin="4dp"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginEnd="4dp"
-                    android:layout_marginBottom="4dp"
+                    android:layout_marginStart="1dp"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_marginBottom="1dp"
                     android:scaleType="fitXY"
                     android:src="@drawable/ic_usuario" />
 
@@ -85,11 +227,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/imageViewProfile"
-                    android:layout_marginStart="-60dp"
-                    android:layout_marginTop="-60dp"
+                    android:layout_marginStart="-40dp"
+                    android:layout_marginLeft="-40dp"
+                    android:layout_marginTop="-40dp"
                     android:layout_toEndOf="@id/imageViewProfile"
                     android:src="@drawable/ic_menu_camera" />
-
 
             </RelativeLayout>
 
@@ -99,17 +241,18 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="8dp"
                 android:hint="Nombre"
-                app:errorEnabled="true"
-                app:helperText="@string/text_campo_necesario"
-                app:helperTextEnabled="true">
-
+                app:startIconDrawable="@drawable/ic_baseline_person_24">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editTextNombre"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:digits="@string/validate_names_and_lastname"
+                    android:fontFamily="@font/andika"
                     android:inputType="textCapSentences|textPersonName" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -120,37 +263,46 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Apellido"
-                app:helperText="@string/text_campo_necesario"
-                app:helperTextEnabled="true">
-
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="8dp"
+                android:hint="@string/last_name"
+                android:visibility="visible"
+                app:startIconDrawable="@drawable/ic_baseline_person_24">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editTextApellido"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:digits="@string/validate_names_and_lastname"
-                    android:inputType="textCapSentences" />
-
-
+                    android:fontFamily="@font/andika"
+                    android:inputType="textCapSentences|textPersonName" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!--            <Button-->
-            <!--                android:id="@+id/buttonNext"-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:layout_below="@id/textFieldApellido"-->
-            <!--                android:layout_margin="8dp"-->
-            <!--                android:layout_marginStart="8dp"-->
-            <!--                android:layout_marginTop="8dp"-->
-            <!--                android:layout_marginEnd="8dp"-->
-            <!--                android:layout_marginBottom="8dp"-->
-            <!--                android:text="Continuar"-->
-            <!--                android:textAllCaps="false" />-->
 
         </LinearLayout>
 
     </ScrollView>
+
+
+    <LinearLayout
+        android:id="@+id/linLytBack"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+
+        <Button
+            android:id="@+id/buttonNext"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="@font/andika"
+            android:text="Continuar"
+            android:textAllCaps="false" />
+    </LinearLayout>
 
 
 </LinearLayout>

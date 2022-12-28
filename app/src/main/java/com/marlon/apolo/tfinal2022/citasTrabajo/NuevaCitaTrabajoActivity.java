@@ -21,7 +21,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.SystemClock;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -30,14 +31,15 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.textfield.TextInputEditText;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.model.Cita;
 import com.marlon.apolo.tfinal2022.model.Item;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
 import com.marlon.apolo.tfinal2022.model.Usuario;
 
-import java.text.BreakIterator;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -47,9 +49,9 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.Random;
 
-public class CitaTrabajoActivity extends AppCompatActivity implements View.OnClickListener {
+public class NuevaCitaTrabajoActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private static final String TAG = CitaTrabajoActivity.class.getSimpleName();
+    private static final String TAG = NuevaCitaTrabajoActivity.class.getSimpleName();
     private static final int NOTIFICATION_ID = 1700;
     private Usuario usuarioFrom;
     private Usuario usuarioTo;
@@ -64,18 +66,18 @@ public class CitaTrabajoActivity extends AppCompatActivity implements View.OnCli
     private String dateSelected;
     private TextView textViewFechaCita;
     private TextView textViewTotal;
-    private ItemAdapter itemAdapter;
-    public static CitaTrabajoActivity citaActivity;
-    private float precio;
+    private ItemAdapterPoCCreate itemAdapter;
+    public static NuevaCitaTrabajoActivity citaActivity;
+    private Double precio;
     private RecyclerView recyclerView;
     private int usuario;
     private Calendar objCalendarPoCLoco;
 
-    public float getPrecio() {
+    public Double getPrecio() {
         return precio;
     }
 
-    public void setPrecio(float precio) {
+    public void setPrecio(Double precio) {
         this.precio = precio;
     }
 
@@ -86,6 +88,13 @@ public class CitaTrabajoActivity extends AppCompatActivity implements View.OnCli
     public void setTextViewTotal(TextView textViewTotal) {
         this.textViewTotal = textViewTotal;
     }
+
+
+    public String formatNumber(String number) {
+        DecimalFormat formatter = new DecimalFormat("###,###,##0.00");
+        return formatter.format(Double.parseDouble(number));
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +122,36 @@ public class CitaTrabajoActivity extends AppCompatActivity implements View.OnCli
         textViewHoraCita = findViewById(R.id.textViewHoraIni);
         textViewFechaCita = findViewById(R.id.textViewFechaIni);
         textViewTotal = findViewById(R.id.textViewTotal);
+//
+//        TextInputEditText textInputEditText = findViewById(R.id.pocCurrency);
+//        textInputEditText.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                String value = s.toString();
+//                if (!value.equals("")) {
+//                    try {
+//                        Log.d(TAG, formatNumber(value));
+//                        textViewTotal.setText("$ " + formatNumber(value));
+//
+//                    } catch (Exception e) {
+//                        Log.e(TAG, e.toString());
+//
+//                    }
+////                    textInputEditText.setText(formatNumber(value));
+//                }
+//
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//
+//            }
+//        });
 
         findViewById(R.id.buttonCrearCita).setOnClickListener(this);
         findViewById(R.id.buttonHoraCita).setOnClickListener(this);
@@ -120,12 +159,13 @@ public class CitaTrabajoActivity extends AppCompatActivity implements View.OnCli
 
         recyclerView = findViewById(R.id.recyclerViewItems);
 
+
         usuarioFrom = (Usuario) getIntent().getSerializableExtra("usuarioFrom");
         usuarioTo = (Usuario) getIntent().getSerializableExtra("usuarioTo");
         Log.d(TAG, "usuarioFrom.toString()");
         Log.d(TAG, usuarioFrom.toString());
-        Log.d(TAG, usuarioTo.toString());
         Log.d(TAG, "usuarioTo.toString()");
+        Log.d(TAG, usuarioTo.toString());
         if (usuarioFrom != null) {
             textViewTrabajador.setText(String.format("Trabajador: %s %s", usuarioFrom.getNombre(), usuarioFrom.getApellido()));
         }
@@ -137,7 +177,11 @@ public class CitaTrabajoActivity extends AppCompatActivity implements View.OnCli
         SharedPreferences.Editor editor = prefs.edit();
 
         usuario = prefs.getInt("usuario", -1);
-        itemAdapter = new ItemAdapter(this, usuario);
+
+//        Toast.makeText(getApplicationContext(), String.valueOf(usuario)+"ccdxx", Toast.LENGTH_SHORT).show();
+
+        itemAdapter = new ItemAdapterPoCCreate(this, usuario);
+
         recyclerView.setAdapter(itemAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         ArrayList<Item> itemArrayList = new ArrayList<>();
@@ -158,7 +202,8 @@ public class CitaTrabajoActivity extends AppCompatActivity implements View.OnCli
 //        item.setDetail("Pastel familiar");
                         item.setDetail("");
 //        item.setPrice(56.0f);
-                        item.setPrice(0.0f);
+                        item.setPrice(0.0);
+                        item.setPriceFormat("");
                         itemAdapter.addItem(item);
                     }
                 });
@@ -183,12 +228,14 @@ public class CitaTrabajoActivity extends AppCompatActivity implements View.OnCli
         final TextView textViewTrabajador = promptsView.findViewById(R.id.textViewTrabajadorDialog);
         final TextView textViewFechaCita = promptsView.findViewById(R.id.textViewFechaCitadialog);
         final TextView textViewTotal = promptsView.findViewById(R.id.textViewCostoTotalDialog);
+        final TextView textViewCalif = promptsView.findViewById(R.id.textViewCalificacion);
 
         textViewEmpleador.setText(String.format("Empleador: %s", cita.getNombreEmpleador()));
         textViewTrabajador.setText(String.format("Trabajador: %s", cita.getNombreTrabajador()));
         textViewFechaCita.setText(String.format("Fecha: %s", cita.getFechaCita()));
 //        textViewTotal.setText(cita.getTotal());
         textViewTotal.setText(String.format("Total: $ %.2f", cita.getTotal()));
+        textViewCalif.setText(String.format("Calificación: %.1f", cita.getCalificacion()));
 
         builder.setPositiveButton("Enviar", new DialogInterface.OnClickListener() {
             @Override
@@ -198,9 +245,10 @@ public class CitaTrabajoActivity extends AppCompatActivity implements View.OnCli
 //                cita.setFechaCita("");
 //                cita.setFechaCita(fec);
 
-                if (cita.validarCita(CitaTrabajoActivity.this, 0)) {
+                if (cita.validarCita(NuevaCitaTrabajoActivity.this, 0)) {
                     Trabajador trabajador = (Trabajador) usuarioFrom;
-                    trabajador.enviarCita(cita, CitaTrabajoActivity.this);
+                    cita.setObservaciones("Ninguna");
+                    trabajador.enviarCita(cita, NuevaCitaTrabajoActivity.this);
                     Log.d(TAG, cita.toString());
                 }
 
@@ -221,7 +269,7 @@ public class CitaTrabajoActivity extends AppCompatActivity implements View.OnCli
 
     public Dialog erroresCita(String errores) {
 
-        androidx.appcompat.app.AlertDialog.Builder builder = new AlertDialog.Builder(CitaTrabajoActivity.this);
+        androidx.appcompat.app.AlertDialog.Builder builder = new AlertDialog.Builder(NuevaCitaTrabajoActivity.this);
         builder.setTitle("Error")
                 .setMessage(errores)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -300,7 +348,7 @@ public class CitaTrabajoActivity extends AppCompatActivity implements View.OnCli
 //                cita.setParticipants(participants);
 //                cita.setFrom(idTrabajador);
 //                cita.setTo(idEmpleador);
-                float precioTotal = 0;
+                Double precioTotal = 0.0;
                 for (Item itemAux : itemAdapter.getItemArrayList()) {
                     precioTotal = precioTotal + itemAux.getPrice();
                 }
@@ -350,7 +398,7 @@ public class CitaTrabajoActivity extends AppCompatActivity implements View.OnCli
 //                cita.setParticipants(participants);
 //                cita.setFrom(idTrabajador);
 //                cita.setTo(idEmpleador);
-                float precioTotal = 0;
+                Double precioTotal = 0.0;
                 for (Item itemAux : itemAdapter.getItemArrayList()) {
                     precioTotal = precioTotal + itemAux.getPrice();
                 }
@@ -728,7 +776,7 @@ public class CitaTrabajoActivity extends AppCompatActivity implements View.OnCli
 
 
         final AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        Intent alarmIntent = new Intent(CitaTrabajoActivity.this, AlarmReceiver.class);
+        Intent alarmIntent = new Intent(NuevaCitaTrabajoActivity.this, AlarmReceiver.class);
         Log.d(TAG, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
         Log.d(TAG, "CONFIGURANDO ALARMA LOCAL LOCOx");
         Log.d(TAG, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");

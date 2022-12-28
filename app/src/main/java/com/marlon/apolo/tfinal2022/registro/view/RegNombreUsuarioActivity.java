@@ -5,6 +5,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
 
 import android.Manifest;
@@ -15,6 +16,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -30,6 +32,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -63,6 +66,8 @@ public class RegNombreUsuarioActivity extends AppCompatActivity implements View.
     private ImageView imageViewFoto;
     private Uri uriPhoto;
     private int colorPrimary;
+    private ScrollView scrollView;
+    private LinearLayout linearLayout;
 
 
     private void hideSystemBars() {
@@ -180,9 +185,21 @@ public class RegNombreUsuarioActivity extends AppCompatActivity implements View.
 
 
         buttonNext = findViewById(R.id.buttonNext);
+        scrollView = findViewById(R.id.scrollView);
+        linearLayout = findViewById(R.id.linLytBack);
+
         buttonNext.setEnabled(false);
         buttonNext.setOnClickListener(this);
 
+
+        getTheme().resolveAttribute(R.attr.colorOnPrimary, typedValue, true);
+        int colorOnPrimary = typedValue.data;
+
+        Drawable drawable = ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background);
+        drawable.setTint(colorOnPrimary);
+        scrollView.setBackground(drawable);
+//        linearLayout.setBackground(drawable);
+        linearLayout.setBackgroundColor(colorOnPrimary);
 
         textInputEditTextNombre = findViewById(R.id.editTextNombre);
         textInputEditTextApellido = findViewById(R.id.editTextApellido);

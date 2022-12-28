@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.textfield.TextInputEditText xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:id="@+id/editTextNombre"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:digits="@string/letras_espacio"
+    android:fontFamily="@font/andika"
+    android:hint="Nombre de oficio"
+    android:inputType="textCapSentences|textPersonName">
+
+</com.google.android.material.textfield.TextInputEditText>

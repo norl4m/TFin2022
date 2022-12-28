@@ -17,10 +17,16 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.model.Habilidad;
 import com.marlon.apolo.tfinal2022.model.Oficio;
+import com.marlon.apolo.tfinal2022.registro.view.RegistroOficioActivity;
 import com.marlon.apolo.tfinal2022.ui.bienvenido.BienvenidoViewModel;
 import com.marlon.apolo.tfinal2022.ui.oficios.adaptadores.HabilidadCRUDListAdapterAaaaaaaa;
 import com.marlon.apolo.tfinal2022.ui.oficios.HabilidadViewModel;
@@ -36,6 +42,7 @@ public class HabilidadActivity extends AppCompatActivity {
     private HabilidadViewModel habilidadViewModel;
     //    private OficioViewModel oficioViewModel;
     private BienvenidoViewModel bienvenidoViewModel;
+    private ArrayList<Oficio> oficiosLocal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +114,29 @@ public class HabilidadActivity extends AppCompatActivity {
             if (habilidads != null) {
 
                 habilidadCRUDListAdapter.setHabilidades(habilidads);
+
+            }
+        });
+
+        bienvenidoViewModel.getAllOficios().observe(this, oficios -> {
+            if (oficios != null) {
+                oficiosLocal = oficios;
+            }
+        });
+
+        FirebaseDatabase.getInstance().getReference().child("habilidades").child(oficio.getIdOficio()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ArrayList<Habilidad> habilidadArrayList = new ArrayList<>();
+                for (DataSnapshot data : snapshot.getChildren()) {
+                    Habilidad h = data.getValue(Habilidad.class);
+                    habilidadArrayList.add(h);
+                }
+                oficio.setHabilidadArrayList(habilidadArrayList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
@@ -216,33 +246,33 @@ public class HabilidadActivity extends AppCompatActivity {
                         if (!input.getText().toString().equals("")) {
 
 
-                            Oficio oficioUpdate = oficio;
                             String idHabilidad = FirebaseDatabase.getInstance().getReference().child("habilidades").child(oficio.getIdOficio()).push().getKey();
                             habilidad.setIdHabilidad(idHabilidad);
+                            alertDialogConfirmar(oficio.getIdOficio(), habilidad).show();
 
-                            int exitFlag = 0;
-                            try {
-                                for (Habilidad h : oficioUpdate.getHabilidadArrayList()) {
-                                    if (h.getNombreHabilidad().toUpperCase().equals(habilidad.getNombreHabilidad().toUpperCase())) {
-                                        exitFlag = 1;
-                                        break;
-                                    }
-                                }
-                            } catch (Exception e) {
-
-                            }
-
-                            if (exitFlag == 0) {
-                                if (oficioUpdate.getHabilidadArrayList() != null) {
-                                    oficioUpdate.getHabilidadArrayList().add(habilidad);
-                                } else {
-                                    oficioUpdate.setHabilidadArrayList(new ArrayList<>());
-                                    oficioUpdate.getHabilidadArrayList().add(habilidad);
-                                }
-                                bienvenidoViewModel.addHabilidadToOficioTofirebase(HabilidadActivity.this, oficioUpdate, habilidad);
-                            } else {
-                                Toast.makeText(HabilidadActivity.this, "No se ha podido registrar la habilidad", Toast.LENGTH_LONG).show();
-                            }
+//                            int exitFlag = 0;
+//                            try {
+//                                for (Habilidad h : oficioUpdate.getHabilidadArrayList()) {
+//                                    if (h.getNombreHabilidad().toUpperCase().equals(habilidad.getNombreHabilidad().toUpperCase())) {
+//                                        exitFlag = 1;
+//                                        break;
+//                                    }
+//                                }
+//                            } catch (Exception e) {
+//
+//                            }
+//
+//                            if (exitFlag == 0) {
+//                                if (oficioUpdate.getHabilidadArrayList() != null) {
+//                                    oficioUpdate.getHabilidadArrayList().add(habilidad);
+//                                } else {
+//                                    oficioUpdate.setHabilidadArrayList(new ArrayList<>());
+//                                    oficioUpdate.getHabilidadArrayList().add(habilidad);
+//                                }
+//                                bienvenidoViewModel.addHabilidadToOficioTofirebase(HabilidadActivity.this, oficioUpdate, habilidad);
+//                            } else {
+//                                Toast.makeText(HabilidadActivity.this, "No se ha podido registrar la habilidad", Toast.LENGTH_LONG).show();
+//                            }
 
 
                         } else {
@@ -256,6 +286,80 @@ public class HabilidadActivity extends AppCompatActivity {
                 .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         input.setText("");
+                    }
+                }).create();
+    }
+
+
+    public android.app.AlertDialog alertDialogConfirmar(String idOficio, Habilidad habilidad) {
+
+        return new android.app.AlertDialog.Builder(this)
+                .setIcon(R.drawable.ic_oficios)
+                .setTitle("Nueva habilidad:")
+                .setMessage("¿Está seguro que desea guardar su habilidad?")
+                .setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        //habilidadViewModel.guardarHabilidadEnFirebase(idOficio, habilidad, requireActivity());
+//                        Oficio oficioUpdate = new Oficio();
+//                        for (Oficio o : oficiosLocal) {
+//                            if (o.getIdOficio().equals(idOficio)) {
+//                                oficioUpdate = o;
+//                            }
+//                        }
+                        String idHabilidad = FirebaseDatabase.getInstance().getReference().child("oficios").child(idOficio).child("habilidades").push().getKey();
+                        habilidad.setIdHabilidad(idHabilidad);
+
+                        int exitFlag = 0;
+                        try {
+                            for (Habilidad h : oficio.getHabilidadArrayList()) {
+                                if (h.getNombreHabilidad().toUpperCase().equals(habilidad.getNombreHabilidad().toUpperCase())) {
+                                    exitFlag = 1;
+                                    break;
+                                }
+                            }
+                        } catch (Exception e) {
+
+                        }
+
+                        if (exitFlag == 0) {
+//                            if (oficioUpdate.getHabilidadArrayList() != null) {
+//                                oficioUpdate.getHabilidadArrayList().add(habilidad);
+//                            } else {
+//                                oficioUpdate.setHabilidadArrayList(new ArrayList<>());
+//                                oficioUpdate.getHabilidadArrayList().add(habilidad);
+//                            }
+//                            oficioViewModel.addHabilidadToOficioTofirebase(RegistroOficioActivity.this, oficioUpdate, habilidad);
+
+                            FirebaseDatabase.getInstance().getReference()
+                                    .child("habilidades")
+                                    .child(idOficio)
+                                    .child(habilidad.getIdHabilidad())
+                                    .setValue(habilidad)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                Toast.makeText(getApplicationContext(), "Registro existoso", Toast.LENGTH_LONG).show();
+
+                                            } else {
+                                                Toast.makeText(getApplicationContext(), "Registro fallido", Toast.LENGTH_LONG).show();
+
+                                            }
+                                        }
+                                    });
+
+
+                        } else {
+                            Toast.makeText(HabilidadActivity.this, "No se ha podido registrar la habilidad", Toast.LENGTH_LONG).show();
+                        }
+
+
+                    }
+                })
+                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+
                     }
                 }).create();
     }

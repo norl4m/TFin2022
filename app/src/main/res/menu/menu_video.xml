@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item android:id="@+id/action_sd"
+            android:title="SD"
+            android:checked="true"/>
+        <item android:id="@+id/action_hd"
+            android:title="HD" />
+    </group>
+    <!--    <item-->
+    <!--        android:id="@+id/action_calidad"-->
+    <!--        android:icon="@drawable/ic_baseline_video_settings_24"-->
+    <!--        android:title="Calidad" />-->
+
+<!--    <group-->
+<!--        android:id="@+id/group"-->
+<!--        android:checkableBehavior="single">-->
+<!--        <item-->
+<!--            android:id="@+id/vibrate"-->
+<!--            android:title="1" />-->
+<!--        <item-->
+<!--            android:id="@+id/dont_vibrate"-->
+<!--            android:title="2" />-->
+<!--    </group>-->
+<!--    <item-->
+<!--        android:id="@+id/action_calidad"-->
+<!--        android:title="Calidad">-->
+<!--        &lt;!&ndash; "file" submenu &ndash;&gt;-->
+<!--        <menu>-->
+<!--            <group-->
+<!--                android:id="@+id/groupCalidad"-->
+<!--                android:checkableBehavior="single">-->
+<!--                <item-->
+<!--                    android:id="@+id/resolution_360p"-->
+<!--                    android:title="360p" />-->
+<!--                <item-->
+<!--                    android:id="@+id/resolution_720p"-->
+<!--                    android:title="720p" />-->
+<!--            </group>-->
+<!--        </menu>-->
+<!--    </item>-->
+
+<!--    <item-->
+<!--        android:id="@+id/action_server"-->
+<!--        android:title="Servidor de video">-->
+<!--        &lt;!&ndash; "file" submenu &ndash;&gt;-->
+<!--        <menu>-->
+<!--            <group-->
+<!--                android:id="@+id/groupServer"-->
+<!--                android:checkableBehavior="single">-->
+<!--                <item-->
+<!--                    android:id="@+id/java"-->
+<!--                    android:title="Java" />-->
+<!--                <item-->
+<!--                    android:id="@+id/nodejs"-->
+<!--                    android:title="NodeJs" />-->
+<!--            </group>-->
+<!--        </menu>-->
+<!--    </item>-->
+</menu>

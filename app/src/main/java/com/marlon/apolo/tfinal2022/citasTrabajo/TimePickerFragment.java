@@ -49,11 +49,11 @@ public class TimePickerFragment extends DialogFragment
     public void onTimeSet(TimePicker timePicker, int hourOfDay, int minute) {
 
 
-        CitaTrabajoActivity citaActivity;
+        NuevaCitaTrabajoActivity citaActivity;
         DetalleServicioActivity detalleServicioActivity;
 
         try {
-            citaActivity = (CitaTrabajoActivity) getActivity();
+            citaActivity = (NuevaCitaTrabajoActivity) getActivity();
             citaActivity.processTimePickerResult(hourOfDay, minute);
 
         } catch (Exception e) {

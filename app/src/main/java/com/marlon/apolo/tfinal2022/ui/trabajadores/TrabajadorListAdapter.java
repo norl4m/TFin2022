@@ -19,12 +19,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
-import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -33,21 +31,21 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 import com.marlon.apolo.tfinal2022.R;
+import com.marlon.apolo.tfinal2022.comunnication.video.AgoraVideoCallActivity;
+import com.marlon.apolo.tfinal2022.comunnication.voice.AgoraOnlyVoiceCallActivity;
 import com.marlon.apolo.tfinal2022.individualChat.view.CrazyIndividualChatActivity;
-import com.marlon.apolo.tfinal2022.individualChat.view.IndividualChatActivity;
-import com.marlon.apolo.tfinal2022.llamadaVoz.LlamadaVozActivity;
 import com.marlon.apolo.tfinal2022.model.Chat;
+import com.marlon.apolo.tfinal2022.model.Cita;
 import com.marlon.apolo.tfinal2022.model.Oficio;
 import com.marlon.apolo.tfinal2022.model.Participante;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
 import com.marlon.apolo.tfinal2022.model.Usuario;
 import com.marlon.apolo.tfinal2022.ui.oficios.OficioTrabajadorVistaListAdapter;
-import com.marlon.apolo.tfinal2022.videoLlamada.VideoLlamadaActivity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class TrabajadorListAdapter extends RecyclerView.Adapter<TrabajadorListAdapter.TrabajadorViewHolder> {
 
@@ -57,6 +55,7 @@ public class TrabajadorListAdapter extends RecyclerView.Adapter<TrabajadorListAd
     //    private List<Trabajador> trabajadorsAux;
     private List<Oficio> oficioList;
     private List<Chat> chatList;
+    private List<Cita> citaList;
     private String TAG;
     private Dialog dialogVar;
 
@@ -77,6 +76,14 @@ public class TrabajadorListAdapter extends RecyclerView.Adapter<TrabajadorListAd
         oficioList = oficioArrayList;
     }
 
+    public List<Cita> getCitaList() {
+        return citaList;
+    }
+
+    public void setCitaList(List<Cita> citaList) {
+        this.citaList = citaList;
+    }
+
     @NonNull
     @Override
     public TrabajadorViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -87,8 +94,35 @@ public class TrabajadorListAdapter extends RecyclerView.Adapter<TrabajadorListAd
     @Override
     public void onBindViewHolder(@NonNull TrabajadorViewHolder holder, int position) {
         Trabajador current = trabajadors.get(position);
+        holder.textViewComplete.setVisibility(View.GONE);
+        holder.textViewInComplete.setVisibility(View.GONE);
+        holder.textViewNoAssit.setVisibility(View.GONE);
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            SharedPreferences myPreferences = context.getSharedPreferences("MyPreferences", MODE_PRIVATE);
+            int usuario = myPreferences.getInt("usuario", -1);
+
+            switch (usuario) {
+                case 0:/*admin*/
+                case 1:/*empleador*/
+                    holder.textViewComplete.setVisibility(View.VISIBLE);
+                    holder.textViewInComplete.setVisibility(View.VISIBLE);
+                    holder.textViewNoAssit.setVisibility(View.VISIBLE);
+                    break;
+                case 2:
+                    break;
+            }
+        } else {
+            holder.textViewComplete.setVisibility(View.GONE);
+            holder.textViewInComplete.setVisibility(View.GONE);
+            holder.textViewNoAssit.setVisibility(View.GONE);
+
+        }
+
+
         holder.textViewNombre.setText(String.format("%s %s", current.getNombre(), current.getApellido()));
         if (current.getFotoPerfil() != null) {
+            holder.imageViewTrabajador.setColorFilter(null);
             Glide.with(context).load(current.getFotoPerfil()).placeholder(R.drawable.ic_baseline_person_24).circleCrop().into(holder.imageViewTrabajador);
         } else {
             TypedValue typedValue = new TypedValue();
@@ -154,6 +188,58 @@ public class TrabajadorListAdapter extends RecyclerView.Adapter<TrabajadorListAd
 
         }
 
+
+        try {
+
+            ArrayList<Cita> citaArrayListNoAsist = new ArrayList<>();
+            ArrayList<Cita> citaArrayListIncomple = new ArrayList<>();
+            ArrayList<Cita> citaArrayList = new ArrayList<>();
+            for (Cita data : citaList) {
+                Cita citaDB = data;
+                Log.d(TAG, citaDB.toString());
+                if (citaDB.getFrom().equals(current.getIdUsuario())) {
+
+
+                    if (citaDB.isState()) {
+                        citaArrayList.add(citaDB);
+                    }
+
+                    try {
+
+                        switch (citaDB.getObservaciones()) {
+                            case "Trabajador no asistió":
+                                citaArrayListNoAsist.add(citaDB);
+                                break;
+                            case "Trabajador incumplido":
+                                citaArrayListIncomple.add(citaDB);
+                                break;
+                            case "Ninguna":
+                            default:
+//                            mnuFin.setVisible(true);
+//                            mnuFin.setVisible(!citaLocal.isState());
+
+                                //mnuEliminarCita.setVisible(true);
+                                //editCita.setVisible(true);
+                                break;
+                        }
+                    } catch (Exception e) {
+                        //mnuFin.setVisible(true);
+                        Log.d(TAG, e.toString());
+                    }
+                }
+            }
+
+            holder.textViewComplete.setText("Trabajos completados: " + String.valueOf(citaArrayList.size()));
+            holder.textViewInComplete.setText("Trabajos incompletos: " + String.valueOf(citaArrayListIncomple.size()));
+            holder.textViewNoAssit.setText("Trabajos no asistidos: " + String.valueOf(citaArrayListNoAsist.size()));
+
+        } catch (Exception e) {
+            Log.d(TAG, e.toString());
+            holder.textViewComplete.setText("Trabajos completados: " + "0");
+            holder.textViewInComplete.setText("Trabajos incompletos: " + "0");
+            holder.textViewNoAssit.setText("Trabajos no asistidos: " + "0");
+
+        }
     }
 
     @Override
@@ -208,6 +294,9 @@ public class TrabajadorListAdapter extends RecyclerView.Adapter<TrabajadorListAd
         private final ImageView imageViewTrabajador;
         private RatingBar ratingBar;
         private final TextView textViewContacto;
+        private final TextView textViewComplete;
+        private final TextView textViewInComplete;
+        private final TextView textViewNoAssit;
 
 
         public TrabajadorViewHolder(@NonNull View itemView) {
@@ -219,8 +308,13 @@ public class TrabajadorListAdapter extends RecyclerView.Adapter<TrabajadorListAd
             ratingBar = itemView.findViewById(R.id.ratingBar);
             textViewContacto = itemView.findViewById(R.id.textViewContacto);
 
+            textViewComplete = itemView.findViewById(R.id.textViewTrabComple);
+            textViewInComplete = itemView.findViewById(R.id.textViewTrabIncom);
+            textViewNoAssit = itemView.findViewById(R.id.textViewNoAsist);
 
-            imageViewTrabajador.setOnClickListener(new View.OnClickListener() {
+
+//            imageViewTrabajador.setOnClickListener(new View.OnClickListener() {
+            itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
@@ -391,11 +485,24 @@ public class TrabajadorListAdapter extends RecyclerView.Adapter<TrabajadorListAd
         imageButtonCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intentllamadaVoz = new Intent(context, LlamadaVozActivity.class);
-                intentllamadaVoz.putExtra("usuarioTo", (Usuario) trabajador);
-                intentllamadaVoz.putExtra("usuarioFrom", (Usuario) usuarioFrom);
-                intentllamadaVoz.putExtra("callStatus", 0);
+//                Intent intentllamadaVoz = new Intent(context, LlamadaVozActivity.class);
+//                intentllamadaVoz.putExtra("usuarioTo", (Usuario) trabajador);
+//                intentllamadaVoz.putExtra("usuarioFrom", (Usuario) usuarioFrom);
+//                intentllamadaVoz.putExtra("callStatus", 0);
+//                context.startActivity(intentllamadaVoz);
+
+
+                //                        Intent intent = new Intent(CrazyIndividualChatActivity.this, LlamadaVozActivity.class);
+                Intent intentllamadaVoz = new Intent(context, AgoraOnlyVoiceCallActivity.class);
+                intentllamadaVoz.putExtra("usuarioRemoto", (Usuario) trabajador);
+                intentllamadaVoz.putExtra("usuarioLocal", usuarioFrom);
+                String channelName = FirebaseDatabase.getInstance().getReference().child("voiceCalls").push().getKey();
+                intentllamadaVoz.putExtra("channelName", channelName);
+                intentllamadaVoz.putExtra("callStatus", "llamadaSaliente");
+
                 context.startActivity(intentllamadaVoz);
+
+
 //
 //                Intent intent = new Intent(context, LlamadaVozActivity.class);
 //                intent.putExtra("usuarioTo", (Usuario) trabajador);
@@ -424,11 +531,25 @@ public class TrabajadorListAdapter extends RecyclerView.Adapter<TrabajadorListAd
             @Override
             public void onClick(View v) {
 
-                Intent intentVideollamada = new Intent(context, VideoLlamadaActivity.class);
-                intentVideollamada.putExtra("usuarioTo", (Usuario) trabajador);
-                intentVideollamada.putExtra("usuarioFrom", (Usuario) usuarioFrom);
-                intentVideollamada.putExtra("callStatus", 0);
+//                Intent intentVideollamada = new Intent(context, VideoLlamadaActivity.class);
+//                intentVideollamada.putExtra("usuarioTo", (Usuario) trabajador);
+//                intentVideollamada.putExtra("usuarioFrom", (Usuario) usuarioFrom);
+//                intentVideollamada.putExtra("callStatus", 0);
+//                context.startActivity(intentVideollamada);
+
+
+                Intent intentVideollamada = new Intent(context, AgoraVideoCallActivity.class);
+                intentVideollamada.putExtra("usuarioRemoto", (Usuario) trabajador);
+                intentVideollamada.putExtra("usuarioLocal", (Usuario) usuarioFrom);
+                String channelName = FirebaseDatabase.getInstance().getReference().child("videoCalls")
+                        .push().getKey();
+                intentVideollamada.putExtra("channelName", channelName);
+                intentVideollamada.putExtra("callStatus", "llamadaSaliente");
+
+//                        intentVideollamada.putExtra("callStatus", 0);
                 context.startActivity(intentVideollamada);
+
+
 //                Toast.makeText(context, "Video Call", Toast.LENGTH_SHORT).show();
 //                Intent intentVideollamada = new Intent(context, VideoLlamadaActivity.class);
 //                intentVideollamada.putExtra("usuarioTo", (Usuario) trabajador);

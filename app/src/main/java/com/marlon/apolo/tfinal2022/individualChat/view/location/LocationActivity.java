@@ -8,8 +8,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
-import android.media.MediaMetadataRetriever;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -22,7 +20,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.lifecycle.ViewModelProvider;
 
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -38,10 +35,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.individualChat.model.ChatPoc;
 import com.marlon.apolo.tfinal2022.individualChat.model.MessageCloudPoc;
-import com.marlon.apolo.tfinal2022.individualChat.view.IndividualChatActivity;
-import com.marlon.apolo.tfinal2022.individualChat.view.MensajeNube;
 import com.marlon.apolo.tfinal2022.model.Chat;
-import com.marlon.apolo.tfinal2022.model.Participante;
 import com.marlon.apolo.tfinal2022.model.Usuario;
 
 

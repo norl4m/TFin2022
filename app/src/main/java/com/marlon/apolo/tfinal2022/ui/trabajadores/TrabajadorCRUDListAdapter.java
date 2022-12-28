@@ -25,7 +25,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.coloros.ocs.base.a.e;
 import com.google.firebase.auth.FirebaseAuth;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.herramientasAsíncronas.DeleteAsyncTask;

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".comunnication.VideoCallUIKitActivity">
+
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:elevation="8dp"
+        app:layout_scrollFlags="scroll|enterAlways"
+        app:menu="@menu/menu_video"
+        app:title="Videollamada" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="4">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3.6"
+            android:orientation="vertical">
+
+
+            <FrameLayout
+                android:id="@+id/remote_video_view_container"
+                android:layout_width="match_parent"
+                android:layout_height="720dp"
+                android:background="@color/purple_200" />
+
+            <FrameLayout
+                android:id="@+id/local_video_view_container"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                android:background="@color/purple_700"
+                android:onClick="onLocalContainerClick" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/editChannelName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="Channel name"
+                    android:inputType="text"
+                    android:text=""
+                    android:visibility="visible" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/networkLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Network Status: " />
+
+                    <TextView
+                        android:id="@+id/networkStatus"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp" />
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/leaveButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:onClick="leaveChannel"
+                    android:text="Leave" />
+            </LinearLayout>
+
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/control_panel"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.4">
+
+            <ImageView
+                android:id="@+id/btn_call"
+                android:layout_width="@dimen/call_button_size"
+                android:layout_height="@dimen/call_button_size"
+                android:layout_centerInParent="true"
+                android:onClick="joinChannel"
+
+                android:scaleType="centerCrop"
+                android:src="@drawable/btn_startcall_normal" />
+
+            <ImageView
+                android:id="@+id/btn_switch_camera"
+                android:layout_width="@dimen/other_button_size"
+                android:layout_height="@dimen/other_button_size"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/control_bottom_horizontal_margin"
+                android:layout_toEndOf="@id/btn_call"
+                android:layout_toRightOf="@id/btn_call"
+                android:scaleType="centerCrop"
+                android:src="@drawable/btn_switch_camera_normal" />
+
+            <ImageView
+                android:id="@+id/btn_mute"
+                android:layout_width="@dimen/other_button_size"
+                android:layout_height="@dimen/other_button_size"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/control_bottom_horizontal_margin"
+                android:layout_toStartOf="@id/btn_call"
+                android:layout_toLeftOf="@id/btn_call"
+                android:scaleType="centerCrop"
+                android:src="@drawable/btn_unmute_normal" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.google.android.material.textfield.TextInputLayout;
 import com.marlon.apolo.tfinal2022.R;
+import com.marlon.apolo.tfinal2022.model.Oficio;
 import com.marlon.apolo.tfinal2022.ui.oficioArchi.model.OficioArchiModel;
 import com.marlon.apolo.tfinal2022.ui.oficioArchi.viewModel.OficioArchiViewModel;
 
@@ -40,7 +41,24 @@ public class OficioArchiEditDeleteActivity extends AppCompatActivity implements 
     private OficioArchiViewModel oficioArchiViewModel;
     private ArrayList<OficioArchiModel> oficioArchiModelsDB;
     private ProgressDialog progressDialog;
-    private OficioArchiModel oficioArchiModelSelected;
+    private Oficio oficioArchiModelSelected;
+
+    public Oficio getOficioArchiModelSelected() {
+        return oficioArchiModelSelected;
+    }
+
+    public void setOficioArchiModelSelected(Oficio oficioArchiModelSelected) {
+        this.oficioArchiModelSelected = oficioArchiModelSelected;
+    }
+
+
+    public Uri getUriPhoto() {
+        return uriPhoto;
+    }
+
+    public void setUriPhoto(Uri uriPhoto) {
+        this.uriPhoto = uriPhoto;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +81,7 @@ public class OficioArchiEditDeleteActivity extends AppCompatActivity implements 
             }
         });
 
-        oficioArchiModelSelected = (OficioArchiModel) getIntent().getSerializableExtra("oficioModel");
+        oficioArchiModelSelected = (Oficio) getIntent().getSerializableExtra("oficioModel");
         if (oficioArchiModelSelected.getUriPhoto() != null) {
             uriPhoto = Uri.parse(oficioArchiModelSelected.getUriPhoto());
             Glide.with(getApplicationContext())
@@ -109,8 +127,8 @@ public class OficioArchiEditDeleteActivity extends AppCompatActivity implements 
 //                        finish();
                         String title = "Por favor espere";
                         String message = "Eliminando oficio...";
-                        showProgress(title,message);
-                        oficioArchiViewModel.delete(oficioArchiModelSelected, OficioArchiEditDeleteActivity.this, progressDialog);
+                        showProgress(title, message);
+                        // oficioArchiViewModel.delete(oficioArchiModelSelected, OficioArchiEditDeleteActivity.this, progressDialog);
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -151,7 +169,16 @@ public class OficioArchiEditDeleteActivity extends AppCompatActivity implements 
 
 
                                 if (oficioArchiModelSelected.getNombre().toLowerCase().equals(ofDB.getNombre().toLowerCase())) {
-                                    Toast.makeText(getApplicationContext(), "El oficio ingresado ya se encuentra registrado.", Toast.LENGTH_LONG).show();
+                                    Log.d(TAG, "Local " + oficioArchiModelSelected.toString());
+                                    Log.d(TAG, "DB " + ofDB.toString());
+                                    if (oficioArchiModelSelected.getUriPhoto() != null) {
+                                        if (!oficioArchiModelSelected.getUriPhoto().equals(ofDB.getUriPhoto())) {
+                                            flagExit = false;
+                                            break;
+                                        }
+                                    }
+                                    Toast.makeText(getApplicationContext(), R.string.oficio_duplicado, Toast.LENGTH_LONG).show();
+//                                    Toast.makeText(getApplicationContext(), "Por favor ingrese otro nombre.", Toast.LENGTH_LONG).show();
                                     flagExit = true;
                                     break;
                                 }
@@ -162,6 +189,7 @@ public class OficioArchiEditDeleteActivity extends AppCompatActivity implements 
                                 String title = "Por favor espere";
                                 String message = "Actualizando oficio...";
                                 showProgress(title, message);
+
                                 oficioArchiViewModel.update(oficioArchiModelSelected, OficioArchiEditDeleteActivity.this, progressDialog);
                             }
                         } else {
@@ -211,43 +239,8 @@ public class OficioArchiEditDeleteActivity extends AppCompatActivity implements 
                 escogerDesdeGaleria();
                 break;
             case R.id.buttonSave:
-                OficioArchiModel oficioArchiModel = new OficioArchiModel();
-                oficioArchiModel.setNombre(textInputLayoutNombre.getEditText().getText().toString().trim());
-//                oficioArchiModel.setUriPhoto(uriPhoto.toString());
-                try {
-                    if (!uriPhoto.toString().isEmpty()) {
-                        oficioArchiModel.setUriPhoto(uriPhoto.toString());
-                    }
-                } catch (Exception e) {
-                    Log.e(TAG, e.toString());
-
-
-                }
-
-
-                if (!oficioArchiModel.getNombre().isEmpty()) {
-                    boolean flagExit = false;
-                    for (OficioArchiModel ofDB : oficioArchiModelsDB) {
-
-
-                        if (oficioArchiModel.getNombre().toLowerCase().equals(ofDB.getNombre().toLowerCase())) {
-                            Toast.makeText(getApplicationContext(), "El oficio ingresado ya se encuentra registrado.", Toast.LENGTH_LONG).show();
-                            flagExit = true;
-                            break;
-                        }
-
-
-                    }
-                    if (!flagExit) {
-                        String title = "Por favor espere";
-                        String message = "Registrando nuevo oficio...";
-                        showProgress(title, message);
-                        //oficioArchiViewModel.insert(oficioArchiModel, NuevoOficioArchiActivity.this, progressDialog);
-                    }
-                } else {
-                    Toast.makeText(getApplicationContext(), "El nombre ingresado es inválido", Toast.LENGTH_LONG).show();
-                }
-
+                Dialog updateDialog = updateDialog();
+                updateDialog.show();
                 break;
         }
     }

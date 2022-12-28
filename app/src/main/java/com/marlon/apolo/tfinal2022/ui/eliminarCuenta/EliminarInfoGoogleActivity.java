@@ -12,8 +12,10 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,6 +62,13 @@ public class EliminarInfoGoogleActivity extends AppCompatActivity implements Vie
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_eliminar_info_google);
         firebaseAuth = FirebaseAuth.getInstance();
+
+
+        TypedValue typedValue = new TypedValue();
+        this.getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
+        int colorNight = typedValue.data;
+        ((ImageView) findViewById(R.id.acLoginImageViewLogo)).setColorFilter(colorNight);
+
 
         FirebaseDatabase.getInstance().getReference()
                 .child("trabajadores")

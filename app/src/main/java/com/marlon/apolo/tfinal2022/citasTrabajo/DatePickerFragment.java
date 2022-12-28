@@ -51,11 +51,11 @@ public class DatePickerFragment extends DialogFragment
     @Override
     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
         // Set the activity to the Main Activity.
-        CitaTrabajoActivity citaActivity;
+        NuevaCitaTrabajoActivity citaActivity;
         DetalleServicioActivity detalleServicioActivity;
 
         try {
-            citaActivity = (CitaTrabajoActivity) getActivity();
+            citaActivity = (NuevaCitaTrabajoActivity) getActivity();
             citaActivity.processDatePickerResult(year, month, day);
 
         } catch (Exception e) {

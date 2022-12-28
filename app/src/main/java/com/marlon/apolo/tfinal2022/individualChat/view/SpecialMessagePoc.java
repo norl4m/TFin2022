@@ -3,6 +3,7 @@ package com.marlon.apolo.tfinal2022.individualChat.view;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
@@ -464,24 +465,51 @@ public class SpecialMessagePoc extends RecyclerView.Adapter<SpecialMessagePoc.My
         holder.textViewFecha.setText(String.format("%s", date.toLocaleString()));
 
         // Cargamos una referencia a la preferencia para cambiar el tema
-//        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(activity);
-//        boolean mode = mPrefs.getBoolean("sync_theme", false);
+        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(activity);
+        boolean mode = mPrefs.getBoolean("sync_theme", false);
+        int someColorFrom = 0;
+        int someColorTo = 0;
 //        if (mode) {
-////            holder.textViewContenido.settint.setColorFilter(activity.getResources().getColor(R.color.teal_700));
+//////            holder.textViewContenido.settint.setColorFilter(activity.getResources().getColor(R.color.teal_700));
+////
+////            DrawableCompat.setTint(holder.textViewContenido.getBackground(), activity.getResources().getColor(R.color.black_minus));
+////            holder.textViewContenido.setBackground(holder.textViewContenido.getBackground());
+//            someColor = ContextCompat.getColor(activity, R.color.black_minus);
 //
-//            DrawableCompat.setTint(holder.textViewContenido.getBackground(), activity.getResources().getColor(R.color.black_minus));
-//            holder.textViewContenido.setBackground(holder.textViewContenido.getBackground());
+//        } else {
+//            someColor = ContextCompat.getColor(activity, R.color.happy_color);
+//
 //        }
 
+        switch (activity.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) {
+            case Configuration.UI_MODE_NIGHT_YES:
+//                someColorFrom = ContextCompat.getColor(activity, R.color.black_minus);
+                someColorFrom = ContextCompat.getColor(activity, R.color.black_minus);
+                someColorTo = ContextCompat.getColor(activity, R.color.green_minus);
 
+                break;
+            case Configuration.UI_MODE_NIGHT_NO:
+                someColorFrom = ContextCompat.getColor(activity, R.color.purple_100);
+                someColorTo = ContextCompat.getColor(activity, R.color.teal_100);
+
+                break;
+        }
+
+
+//        int someColor = ContextCompat.getColor(activity, R.color.black_minus);
         /*Esto es una maravilla*/
         TypedValue typedValue = new TypedValue();
-        activity.getTheme().resolveAttribute(R.attr.colorOnPrimary, typedValue, true);
-        int colorPrimary = typedValue.data;
+//        activity.getTheme().resolveAttribute(R.attr.color6PrimaryVariant, typedValue, true);
+//        activity.getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
+        activity.getTheme().resolveAttribute(R.attr.colorPrimaryInverse, typedValue, true);
+//        int colorPrimary = typedValue.data;
+        int colorPrimary = someColorFrom;
 
         TypedValue typedValue2 = new TypedValue();
-        activity.getTheme().resolveAttribute(R.attr.colorSecondaryVariant, typedValue2, true);
-        int colorSecondary = typedValue2.data;
+//        activity.getTheme().resolveAttribute(R.attr.colorSecondaryVariant, typedValue2, true);
+        activity.getTheme().resolveAttribute(R.attr.colorSecondary, typedValue2, true);
+        //int colorSecondary = typedValue2.data;
+        int colorSecondary = someColorTo;
 //        DrawableCompat.setTint(holder.textViewContenido.getBackground(), activity.getResources().getColor(R.color.black_minus));
         try {
             switch (current.getType()) {
@@ -512,7 +540,7 @@ public class SpecialMessagePoc extends RecyclerView.Adapter<SpecialMessagePoc.My
 
             }
 
-            holder.textViewContenido.setBackground(holder.textViewContenido.getBackground());
+            //holder.textViewContenido.setBackground(holder.textViewContenido.getBackground());
 
 //            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
 //                DrawableCompat.setTint(holder.textViewContenido.getBackground(), colorTheme);

@@ -55,6 +55,7 @@
     <!--    Login Activity-->
 
     <!--Validations-->
+    <string name="letras_espacio">abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZáéíóúÁÉÍÓÚ" "</string>
     <string name="validate_names_and_lastname">abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZáéíóúÁÉÍÓÚ</string>
     <string name="numbers_validation">0123456789</string>
     <string name="validate_complete_email">abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ0123456789.-/@"!#$%^*+-/=?^_`{|}</string>
@@ -66,17 +67,17 @@
     <string name="lorem_ipsum3"><![CDATA[Intentar hasta lograrlo]]></string>
 
     <string name="perfil_empleador">
-        <b>Los empleadores pueden realizar lo siguiente dentro de &appname;:</b>
+        Los empleadores pueden realizar lo siguiente dentro de &appname;:
         \n\n
         - Buscar y contratar a un trabajador para completar una determinada tarea.
-        \n\n
+        \n
         - Comunicación directa con trabajadores confiables y seguros.
     </string>
     <string name="perfil_trabajador">
-        <b>Los trabajadores acceden a los siguientes beneficios dentro de &appname;:</b>
+        Los trabajadores acceden a los siguientes beneficios dentro de &appname;:
         \n\n
         - Comunicación directa con los empleadores registrados en la aplicación.
-        \n\n
+        \n
         - Obtención de una remuneración por los servicios prestados.
     </string>
     <string name="name">Nombre</string>
@@ -413,8 +414,6 @@
     <string name="text_select_trabjador_no_login">
         \n
         Para continuar por favor inicie sesión dentro de la aplicación.
-        \n\n
-        Los usuarios registrados dentro de la aplicación son los únicos que pueden enviar mensajes y realizar llamadas de voz o videollamadas.
     </string>
     <string name="channel_name">Notificación desde Firebase</string>
     <string name="channel_description">Notificación de mensaje</string>
@@ -485,7 +484,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
-    <string name="text_info_enviado_code">"Se ha enviado un código  de  6 dìgitos a su aplicación de mensajería. Para continuar por favor ingrese el código de 6 dìgitos. "</string>
+    <string name="text_info_enviado_code">"Se ha enviado un código de verificación  de  6 dígitos a su aplicación de mensajería. Para continuar por favor ingrese el código de verificación. "</string>
     <string name="cancel">Cancelar</string>
     <string name="incoming_call_text">Llamada entrante</string>
 
@@ -524,6 +523,46 @@
     <string name="text_campo_necesario">*Requerido</string>
     <string name="text_no_trabajo">*El usuario todavía no ha realizado trabajos en Cachuelito</string>
     <string name="gg_client_id">299262505124-56887uu0pge1go2355rhu4thf0oagr55.apps.googleusercontent.com</string>
+    <string name="code_expiration">Su código ha expirado, por favor solicite un nuevo código.</string>
+    <string name="version_app">Versión: 3.0</string>
+    <string name="filter_incoing_call">ACCEPT_INCOMING_CALL</string>
+    <string name="filter_reject_call">REJECT_INCOMING_CALL</string>
 
+    <string name="filter_incoing_voice_call">ACCEPT_INCOMING_VOICE_CALL</string>
+    <string name="filter_reject_voice_call">REJECT_INCOMING_VOICE_CALL</string>
+
+    <string-array name="fps_10_array">
+        <item>240x180</item>
+        <item>320x240</item>
+        <item>640x360</item>
+    </string-array>
+
+    <string-array name="fps_15_array">
+        <item>320x240</item>
+        <item>640x360</item>
+        <item>1280x720</item>
+    </string-array>
+
+    <string-array name="fps_30_array">
+        <item>960x720</item>
+        <item>1280x720</item>
+        <item>1920x1080</item>
+    </string-array>
+    <string-array name="resolution">
+        <item>360p</item>
+        <item>720p</item>
+    </string-array>
+
+    <!-- Strings in activity_main view -->
+    <string name="instructions">Enter a book name to find out who wrote the book. </string>
+    <string name="button_text">Search Books</string>
+    <string name="input_hint">Book Title</string>
+
+    <!-- User messages for in-process queries and error results. -->
+    <!--    <string name="loading">Loading…</string>-->
+    <string name="no_results">"No Results Found"</string>
+    <string name="no_search_term">Please enter a search term</string>
+    <string name="no_network">Please check your network connection and try again.</string>
+    <string name="oficio_duplicado">Error: ya existe otro oficio registrado con ese nombre.</string>
 
 </resources>

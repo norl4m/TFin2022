@@ -27,7 +27,7 @@ import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.individualChat.receiver.EliminarNotificationReceiver;
 import com.marlon.apolo.tfinal2022.individualChat.receiver.RespuestaDirectaReceiver;
 import com.marlon.apolo.tfinal2022.individualChat.repository.MensajitoRepository;
-import com.marlon.apolo.tfinal2022.individualChat.view.IndividualChatActivity;
+import com.marlon.apolo.tfinal2022.individualChat.view.no.IndividualChatActivity;
 import com.marlon.apolo.tfinal2022.individualChat.view.MensajeNube;
 import com.marlon.apolo.tfinal2022.model.Administrador;
 import com.marlon.apolo.tfinal2022.model.Chat;

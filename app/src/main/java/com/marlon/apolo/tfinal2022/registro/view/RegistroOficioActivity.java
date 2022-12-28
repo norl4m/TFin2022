@@ -1,14 +1,5 @@
 package com.marlon.apolo.tfinal2022.registro.view;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -30,16 +21,28 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.model.Empleador;
 import com.marlon.apolo.tfinal2022.model.Habilidad;
 import com.marlon.apolo.tfinal2022.model.Oficio;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
+import com.marlon.apolo.tfinal2022.registro.adaptadores.OficioCrazyRegistroListAdapter;
 import com.marlon.apolo.tfinal2022.ui.bienvenido.BienvenidoViewModel;
 import com.marlon.apolo.tfinal2022.ui.datosPersonales.adaptadores.OficioSuperSpecialListAdapter;
 import com.marlon.apolo.tfinal2022.ui.oficios.OficioViewModel;
@@ -62,9 +65,11 @@ public class RegistroOficioActivity extends AppCompatActivity implements View.On
     private boolean click;
     private int c;
     private ArrayList<Oficio> oficioArrayListSelected;
-    private OficioSuperSpecialListAdapter oficioSuperSpecialListAdapter;
+    //    private OficioSuperSpecialListAdapter oficioSuperSpecialListAdapter;
     private String idOficioSelected;
     private String nombreHab;
+    private BienvenidoViewModel bienvenidoViewModel;
+    private OficioCrazyRegistroListAdapter oficioCrazyRegistroListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +86,10 @@ public class RegistroOficioActivity extends AppCompatActivity implements View.On
 
         oficioViewModel = new ViewModelProvider(this).get(OficioViewModel.class);
 
-        BienvenidoViewModel bienvenidoViewModel = new ViewModelProvider(this).get(BienvenidoViewModel.class);
+        bienvenidoViewModel = new ViewModelProvider(this).get(BienvenidoViewModel.class);
+        oficioViewModel = new ViewModelProvider(this).get(OficioViewModel.class);
+
+
         bienvenidoViewModel.getAllOficios().observe(this, oficios -> {
             if (oficios != null) {
 //                try {
@@ -101,254 +109,496 @@ public class RegistroOficioActivity extends AppCompatActivity implements View.On
         });
 
 
-        oficioSuperSpecialListAdapter = new OficioSuperSpecialListAdapter(this);
-        recyclerView.setAdapter(oficioSuperSpecialListAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+//        oficioSuperSpecialListAdapter = new OficioSuperSpecialListAdapter(this);
+//        recyclerView.setAdapter(oficioSuperSpecialListAdapter);
+//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        FirebaseDatabase.getInstance().getReference()
-                .child("oficios")
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        ArrayList<Oficio> oficios = new ArrayList<>();
-                        for (DataSnapshot data : snapshot.getChildren()) {
-                            Oficio oficio = data.getValue(Oficio.class);
-//                            for (String idOf : trabajador.getIdOficios()) {
-//                                if (idOf.equals(oficio.getIdOficio())) {
-//                                    oficio.setEstadoRegistro(true);
+        loadCrazyOficiosFinalBoss(recyclerView);
+
+        /*******************************/
+
+
+//        bienvenidoViewModel.getAllOficios().observe(this, oficiosDB -> {
+//            if (oficiosDB != null) {
+//
+//                ArrayList<Oficio> oficios = oficiosDB;
+//
+//                Collections.sort(oficios, (t1, t2) -> (t1.getNombre()).compareTo(t2.getNombre()));
+//
+//
+//                if (oficioSuperSpecialListAdapter.getOficioArrayList() != null) {
+//
+//                    /*Si son iguales**************************/
+//                    if (oficios.size() == oficioSuperSpecialListAdapter.getOficioArrayList().size()) {
+//
+//                        int indexOf = 0;
+//                        for (Oficio oxOne : oficioSuperSpecialListAdapter.getOficioArrayList()) {
+//                            for (Oficio oDB : oficios) {
+//                                if (oxOne.getIdOficio().equals(oDB.getIdOficio())) {
+//                                    oxOne.setNombre(oDB.getNombre());
+////                                            oficioSuperSpecialListAdapter.getOficioArrayList().set(indexOf, oxOne);
+//                                    oficioSuperSpecialListAdapter.updateViewWithOficio(indexOf, oxOne);
 //                                    break;
 //                                }
 //                            }
-                            oficios.add(oficio);
-
-                        }
-                        Collections.sort(oficios, (t1, t2) -> (t1.getNombre()).compareTo(t2.getNombre()));
-
-                        if (oficioSuperSpecialListAdapter.getOficioArrayList() != null) {
-
-                            /*Si son iguales**************************/
-                            if (oficios.size() == oficioSuperSpecialListAdapter.getOficioArrayList().size()) {
-
-                                int indexOf = 0;
-                                for (Oficio oxOne : oficioSuperSpecialListAdapter.getOficioArrayList()) {
-                                    for (Oficio oDB : oficios) {
-                                        if (oxOne.getIdOficio().equals(oDB.getIdOficio())) {
-                                            oxOne.setNombre(oDB.getNombre());
-//                                            oficioSuperSpecialListAdapter.getOficioArrayList().set(indexOf, oxOne);
-                                            oficioSuperSpecialListAdapter.updateViewWithOficio(indexOf, oxOne);
-                                            break;
-                                        }
-                                    }
-                                    indexOf++;
-                                }
-
-
-//                                for (Oficio ox : oficios) {
-//                                    int index = 0;
-//                                    for (Oficio oxOne : oficioSuperSpecialListAdapter.getOficioArrayList()) {
-//                                        if (ox.getIdOficio().equals(oxOne.getIdOficio())) {
-//                                            oxOne.setNombre(ox.getNombre());
-//                                            oficioSuperSpecialListAdapter.getOficioArrayList().set(index, oxOne);
-//                                            break;
-//                                        }
-//                                        index++;
-//                                    }
-//                                }
-                            }
-
-                            if (oficios.size() > oficioSuperSpecialListAdapter.getOficioArrayList().size()) {
-                                oficioSuperSpecialListAdapter.getOficioArrayList().add(oficios.get(oficios.size() - 1));
-                            }
-
-                            ArrayList<Oficio> oficioArrayListFiltrados = new ArrayList<>();
-                            if (oficios.size() < oficioSuperSpecialListAdapter.getOficioArrayList().size()) {
-                                for (Oficio ha : oficioSuperSpecialListAdapter.getOficioArrayList()) {
-                                    for (Oficio hag : oficios) {
-                                        if (hag.getIdOficio().equals(ha.getIdOficio())) {
-                                            oficioArrayListFiltrados.add(ha);
-                                        }
-                                    }
-                                }
-//                                oficio.setHabilidadArrayList(habilidadArrayList);
-                                oficioSuperSpecialListAdapter.setOficioArrayList(oficioArrayListFiltrados);
-
-                            }
-                        } else {
-                            oficioSuperSpecialListAdapter.setOficioArrayList(oficios);
-                        }
-
-
-                        FirebaseDatabase.getInstance().getReference()
-                                .child("habilidades")
-                                .addChildEventListener(new ChildEventListener() {
-                                    @Override
-                                    public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                                        String key = snapshot.getKey();
-                                        ArrayList<Habilidad> habilidadArrayList = new ArrayList<>();
-                                        try {
-                                            for (DataSnapshot data : snapshot.getChildren()) {
-                                                Habilidad habilidad = data.getValue(Habilidad.class);
-                                                Log.i(TAG, habilidad.toString());
-//                                if (trabajador.getIdHabilidades() != null) {
-//                                    for (String idHab : trabajador.getIdHabilidades()) {
-//                                        if (idHab.equals(habilidad.getIdHabilidad())) {
-//                                            habilidad.setHabilidadSeleccionada(true);
-//                                            break;
-//                                        }
-//                                    }
-//                                }
-
-                                                habilidadArrayList.add(habilidad);
-                                            }
-                                        } catch (Exception e) {
-                                            Log.d(TAG + "HAB", e.toString());
-                                        }
-                                        try {
-                                            Log.w(TAG, "@@@@@@@@@@@@@@@@@@@@@@@@@");
-                                            Log.d(TAG, String.valueOf(oficioSuperSpecialListAdapter.getOficioArrayList()));
-
-                                            for (Oficio oficio : oficioSuperSpecialListAdapter.getOficioArrayList()) {
-                                                Log.w(TAG, "@@@@@@@@@@@@@@@@@@@@@@@@@");
-
-                                                if (oficio.getIdOficio().equals(key)) {
-                                                    if (oficio.getHabilidadArrayList() != null) {
-//                                        if (oficio.getHabilidadArrayList().size() == habilidadArrayList.size()) {
+//                            indexOf++;
+//                        }
 //
+//
+////                                for (Oficio ox : oficios) {
+////                                    int index = 0;
+////                                    for (Oficio oxOne : oficioSuperSpecialListAdapter.getOficioArrayList()) {
+////                                        if (ox.getIdOficio().equals(oxOne.getIdOficio())) {
+////                                            oxOne.setNombre(ox.getNombre());
+////                                            oficioSuperSpecialListAdapter.getOficioArrayList().set(index, oxOne);
+////                                            break;
+////                                        }
+////                                        index++;
+////                                    }
+////                                }
+//                    }
+//
+//                    if (oficios.size() > oficioSuperSpecialListAdapter.getOficioArrayList().size()) {
+//                        oficioSuperSpecialListAdapter.getOficioArrayList().add(oficios.get(oficios.size() - 1));
+//                    }
+//
+//                    ArrayList<Oficio> oficioArrayListFiltrados = new ArrayList<>();
+//                    if (oficios.size() < oficioSuperSpecialListAdapter.getOficioArrayList().size()) {
+//                        for (Oficio ha : oficioSuperSpecialListAdapter.getOficioArrayList()) {
+//                            for (Oficio hag : oficios) {
+//                                if (hag.getIdOficio().equals(ha.getIdOficio())) {
+//                                    oficioArrayListFiltrados.add(ha);
+//                                }
+//                            }
+//                        }
+////                                oficio.setHabilidadArrayList(habilidadArrayList);
+//                        oficioSuperSpecialListAdapter.setOficioArrayList(oficioArrayListFiltrados);
+//
+//                    }
+//                } else {
+//                    oficioSuperSpecialListAdapter.setOficioArrayList(oficios);
+//                }
+//
+//
+////                oficioSuperSpecialListAdapter.setOficioArrayList(oficios);
+//
+//
+//                FirebaseDatabase.getInstance().getReference()
+//                        .child("habilidades")
+//                        .addChildEventListener(new ChildEventListener() {
+//                            @Override
+//                            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+//                                String key = snapshot.getKey();
+//                                ArrayList<Habilidad> habilidadArrayList = new ArrayList<>();
+//                                try {
+//                                    for (DataSnapshot data : snapshot.getChildren()) {
+//                                        Habilidad habilidad = data.getValue(Habilidad.class);
+//                                        Log.i(TAG, habilidad.toString());
+////                                if (trabajador.getIdHabilidades() != null) {
+////                                    for (String idHab : trabajador.getIdHabilidades()) {
+////                                        if (idHab.equals(habilidad.getIdHabilidad())) {
+////                                            habilidad.setHabilidadSeleccionada(true);
+////                                            break;
+////                                        }
+////                                    }
+////                                }
+//
+//                                        habilidadArrayList.add(habilidad);
+//                                    }
+//                                } catch (Exception e) {
+//                                    Log.d(TAG + "HAB", e.toString());
+//                                }
+//                                try {
+//                                    Log.w(TAG, "@@@@@@@@@@@@@@@@@@@@@@@@@");
+//                                    Log.d(TAG, String.valueOf(oficioSuperSpecialListAdapter.getOficioArrayList()));
+//
+//                                    for (Oficio oficio : oficioSuperSpecialListAdapter.getOficioArrayList()) {
+//                                        Log.w(TAG, "@@@@@@@@@@@@@@@@@@@@@@@@@");
+//
+//                                        if (oficio.getIdOficio().equals(key)) {
+//                                            if (oficio.getHabilidadArrayList() != null) {
+////                                        if (oficio.getHabilidadArrayList().size() == habilidadArrayList.size()) {
+////
+////                                        }
+////                                        if (oficio.getHabilidadArrayList().size() < habilidadArrayList.size()) {
+////                                            for (Habilidad ha : oficio.getHabilidadArrayList()) {
+////                                                for (Habilidad hag : habilidadArrayList) {
+////                                                    if (hag.getIdHabilidad().equals(ha.getIdHabilidad())) {
+////                                                        ha.setHabilidadSeleccionada(hag.isHabilidadSeleccionada());
+////                                                    }
+////                                                }
+////                                            }
+////                                        }
+//                                                if (oficio.getHabilidadArrayList().size() < habilidadArrayList.size()) {
+//                                                    oficio.getHabilidadArrayList().add(habilidadArrayList.get(habilidadArrayList.size() - 1));
+//                                                }
+//                                            } else {
+//                                                oficio.setHabilidadArrayList(habilidadArrayList);
+//                                            }
+//                                            Log.w(TAG, oficio.toString());
 //                                        }
-//                                        if (oficio.getHabilidadArrayList().size() < habilidadArrayList.size()) {
-//                                            for (Habilidad ha : oficio.getHabilidadArrayList()) {
-//                                                for (Habilidad hag : habilidadArrayList) {
-//                                                    if (hag.getIdHabilidad().equals(ha.getIdHabilidad())) {
-//                                                        ha.setHabilidadSeleccionada(hag.isHabilidadSeleccionada());
+//                                    }
+//                                } catch (Exception e) {
+//                                    Log.e(TAG, "########################");
+//                                    Log.e(TAG, e.toString());
+//                                    Log.e(TAG, "########################");
+//
+//                                }
+//                                oficioSuperSpecialListAdapter.setOficioArrayList(oficioSuperSpecialListAdapter.getOficioArrayList());
+//                            }
+//
+//                            @Override
+//                            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+//                                String key = snapshot.getKey();
+//                                Log.d(TAG, "onChildChanged");
+//
+//                                ArrayList<Habilidad> habilidadArrayList = new ArrayList<>();
+//                                try {
+//                                    for (DataSnapshot data : snapshot.getChildren()) {
+//                                        Habilidad habilidad = data.getValue(Habilidad.class);
+//                                        Log.i(TAG, habilidad.toString());
+//                                        habilidadArrayList.add(habilidad);
+//                                    }
+//                                } catch (Exception e) {
+//                                    Log.d(TAG, e.toString());
+//                                }
+//                                try {
+//                                    for (Oficio oficio : oficioSuperSpecialListAdapter.getOficioArrayList()) {
+//                                        if (oficio.getIdOficio().equals(key)) {
+//                                            if (oficio.getHabilidadArrayList() != null) {
+//                                                if (oficio.getHabilidadArrayList().size() == habilidadArrayList.size()) {
+//                                                    for (Habilidad haX : oficio.getHabilidadArrayList()) {
+//                                                        for (Habilidad haY : habilidadArrayList) {
+//                                                            if (haX.getIdHabilidad().equals(haY.getIdHabilidad())) {
+//                                                                haX.setNombreHabilidad(haY.getNombreHabilidad());
+//                                                            }
+//                                                        }
 //                                                    }
 //                                                }
+//                                                if (oficio.getHabilidadArrayList().size() > habilidadArrayList.size()) {
+//                                                    Log.d(TAG, "oficio.getHabilidadArrayList().size() > habilidadArrayList.size()");
+//                                                    ArrayList<Habilidad> habilidadsFiltradas = new ArrayList<>();
+//
+//                                                    for (Habilidad ha : oficio.getHabilidadArrayList()) {
+//                                                        for (Habilidad hag : habilidadArrayList) {
+//                                                            if (hag.getIdHabilidad().equals(ha.getIdHabilidad())) {
+//                                                                hag.setHabilidadSeleccionada(ha.isHabilidadSeleccionada());
+//                                                                habilidadsFiltradas.add(ha);
+//                                                            }
+//                                                        }
+//                                                    }
+//
+////                                            oficio.setHabilidadArrayList(habilidadArrayList);
+//                                                    if (habilidadArrayList.size() == 0) {
+//                                                        habilidadsFiltradas = new ArrayList<>();
+//                                                    }
+//                                                    oficio.setHabilidadArrayList(habilidadsFiltradas);
+//
+//                                                }
+//
+//                                                if (oficio.getHabilidadArrayList().size() < habilidadArrayList.size()) {
+//                                                    oficio.getHabilidadArrayList().add(habilidadArrayList.get(habilidadArrayList.size() - 1));
+//                                                }
+//                                            } else {
+////                                        oficio.setHabilidadArrayList(habilidadArrayList);
 //                                            }
+//                                            Log.w(TAG, oficio.toString());
 //                                        }
-                                                        if (oficio.getHabilidadArrayList().size() < habilidadArrayList.size()) {
-                                                            oficio.getHabilidadArrayList().add(habilidadArrayList.get(habilidadArrayList.size() - 1));
-                                                        }
-                                                    } else {
-                                                        oficio.setHabilidadArrayList(habilidadArrayList);
-                                                    }
-                                                    Log.w(TAG, oficio.toString());
-                                                }
-                                            }
-                                        } catch (Exception e) {
-                                            Log.e(TAG, "########################");
-                                            Log.e(TAG, e.toString());
-                                            Log.e(TAG, "########################");
-
-                                        }
-                                        oficioSuperSpecialListAdapter.setOficioArrayList(oficioSuperSpecialListAdapter.getOficioArrayList());
-                                    }
-
-                                    @Override
-                                    public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                                        String key = snapshot.getKey();
-                                        Log.d(TAG, "onChildChanged");
-
-                                        ArrayList<Habilidad> habilidadArrayList = new ArrayList<>();
-                                        try {
-                                            for (DataSnapshot data : snapshot.getChildren()) {
-                                                Habilidad habilidad = data.getValue(Habilidad.class);
-                                                Log.i(TAG, habilidad.toString());
-                                                habilidadArrayList.add(habilidad);
-                                            }
-                                        } catch (Exception e) {
-                                            Log.d(TAG, e.toString());
-                                        }
-                                        try {
-                                            for (Oficio oficio : oficioSuperSpecialListAdapter.getOficioArrayList()) {
-                                                if (oficio.getIdOficio().equals(key)) {
-                                                    if (oficio.getHabilidadArrayList() != null) {
-                                                        if (oficio.getHabilidadArrayList().size() == habilidadArrayList.size()) {
-                                                            for (Habilidad haX : oficio.getHabilidadArrayList()) {
-                                                                for (Habilidad haY : habilidadArrayList) {
-                                                                    if (haX.getIdHabilidad().equals(haY.getIdHabilidad())) {
-                                                                        haX.setNombreHabilidad(haY.getNombreHabilidad());
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                        if (oficio.getHabilidadArrayList().size() > habilidadArrayList.size()) {
-                                                            Log.d(TAG, "oficio.getHabilidadArrayList().size() > habilidadArrayList.size()");
-                                                            ArrayList<Habilidad> habilidadsFiltradas = new ArrayList<>();
-
-                                                            for (Habilidad ha : oficio.getHabilidadArrayList()) {
-                                                                for (Habilidad hag : habilidadArrayList) {
-                                                                    if (hag.getIdHabilidad().equals(ha.getIdHabilidad())) {
-                                                                        hag.setHabilidadSeleccionada(ha.isHabilidadSeleccionada());
-                                                                        habilidadsFiltradas.add(ha);
-                                                                    }
-                                                                }
-                                                            }
-
-//                                            oficio.setHabilidadArrayList(habilidadArrayList);
-                                                            if (habilidadArrayList.size() == 0) {
-                                                                habilidadsFiltradas = new ArrayList<>();
-                                                            }
-                                                            oficio.setHabilidadArrayList(habilidadsFiltradas);
-
-                                                        }
-
-                                                        if (oficio.getHabilidadArrayList().size() < habilidadArrayList.size()) {
-                                                            oficio.getHabilidadArrayList().add(habilidadArrayList.get(habilidadArrayList.size() - 1));
-                                                        }
-                                                    } else {
-//                                        oficio.setHabilidadArrayList(habilidadArrayList);
-                                                    }
-                                                    Log.w(TAG, oficio.toString());
-                                                }
-                                            }
-                                        } catch (Exception e) {
-                                            Log.e(TAG, e.toString());
-
-                                        }
-                                        oficioSuperSpecialListAdapter.setOficioArrayList(oficioSuperSpecialListAdapter.getOficioArrayList());
-
-                                    }
-
-                                    @Override
-                                    public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-                                        String key = snapshot.getKey();
-
-                                        Log.d(TAG, "onChildRemoved");
-                                        try {
-                                            for (Oficio oficio : oficioSuperSpecialListAdapter.getOficioArrayList()) {
-                                                if (oficio.getIdOficio().equals(key)) {
-                                                    oficio.getHabilidadArrayList().clear();
-                                                    break;
-                                                }
-                                                Log.w(TAG, oficio.toString());
-                                            }
-
-                                        } catch (Exception e) {
-                                            Log.e(TAG, e.toString());
-
-                                        }
-                                        oficioSuperSpecialListAdapter.setOficioArrayList(oficioSuperSpecialListAdapter.getOficioArrayList());
-
-                                    }
-
-                                    @Override
-                                    public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-                                    }
-
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError error) {
-
-                                    }
-                                });
+//                                    }
+//                                } catch (Exception e) {
+//                                    Log.e(TAG, e.toString());
+//
+//                                }
+//                                oficioSuperSpecialListAdapter.setOficioArrayList(oficioSuperSpecialListAdapter.getOficioArrayList());
+//
+//                            }
+//
+//                            @Override
+//                            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+//                                String key = snapshot.getKey();
+//
+//                                Log.d(TAG, "onChildRemoved");
+//                                try {
+//                                    for (Oficio oficio : oficioSuperSpecialListAdapter.getOficioArrayList()) {
+//                                        if (oficio.getIdOficio().equals(key)) {
+//                                            oficio.getHabilidadArrayList().clear();
+//                                            break;
+//                                        }
+//                                        Log.w(TAG, oficio.toString());
+//                                    }
+//
+//                                } catch (Exception e) {
+//                                    Log.e(TAG, e.toString());
+//
+//                                }
+//                                oficioSuperSpecialListAdapter.setOficioArrayList(oficioSuperSpecialListAdapter.getOficioArrayList());
+//
+//                            }
+//
+//                            @Override
+//                            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+//
+//                            }
+//
+//                            @Override
+//                            public void onCancelled(@NonNull DatabaseError error) {
+//
+//                            }
+//                        });
+//
+//
+//            }
+//
+//        });
+        /*******************************/
 
 
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
+//        FirebaseDatabase.getInstance().getReference()
+//                .child("oficios")
+//                .addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                        ArrayList<Oficio> oficios = new ArrayList<>();
+//                        for (DataSnapshot data : snapshot.getChildren()) {
+//                            Oficio oficio = data.getValue(Oficio.class);
+////                            for (String idOf : trabajador.getIdOficios()) {
+////                                if (idOf.equals(oficio.getIdOficio())) {
+////                                    oficio.setEstadoRegistro(true);
+////                                    break;
+////                                }
+////                            }
+//                            oficios.add(oficio);
+//
+//                        }
+//                        Collections.sort(oficios, (t1, t2) -> (t1.getNombre()).compareTo(t2.getNombre()));
+//
+//
+//                        if (oficioSuperSpecialListAdapter.getOficioArrayList() != null) {
+//                            Log.d(TAG, String.valueOf(oficioSuperSpecialListAdapter.getOficioArrayList().size()));
+//                            Log.d(TAG, String.valueOf(oficios.size()));
+//                            /*Si son iguales**************************/
+//                            if (oficios.size() == oficioSuperSpecialListAdapter.getOficioArrayList().size()) {
+//
+//                                int indexOf = 0;
+//                                for (Oficio oxOne : oficioSuperSpecialListAdapter.getOficioArrayList()) {
+//                                    for (Oficio oDB : oficios) {
+//                                        if (oxOne.getIdOficio().equals(oDB.getIdOficio())) {
+//                                            oxOne.setNombre(oDB.getNombre());
+////                                            oficioSuperSpecialListAdapter.getOficioArrayList().set(indexOf, oxOne);
+//                                            oficioSuperSpecialListAdapter.updateViewWithOficio(indexOf, oxOne);
+//                                            break;
+//                                        }
+//                                    }
+//                                    indexOf++;
+//                                }
+//
+//
+////                                for (Oficio ox : oficios) {
+////                                    int index = 0;
+////                                    for (Oficio oxOne : oficioSuperSpecialListAdapter.getOficioArrayList()) {
+////                                        if (ox.getIdOficio().equals(oxOne.getIdOficio())) {
+////                                            oxOne.setNombre(ox.getNombre());
+////                                            oficioSuperSpecialListAdapter.getOficioArrayList().set(index, oxOne);
+////                                            break;
+////                                        }
+////                                        index++;
+////                                    }
+////                                }
+//                            }
+//
+//                            if (oficios.size() > oficioSuperSpecialListAdapter.getOficioArrayList().size()) {
+//                                oficioSuperSpecialListAdapter.getOficioArrayList().add(oficios.get(oficios.size() - 1));
+//                            }
+//
+//                            ArrayList<Oficio> oficioArrayListFiltrados = new ArrayList<>();
+//                            if (oficios.size() < oficioSuperSpecialListAdapter.getOficioArrayList().size()) {
+//                                for (Oficio ha : oficioSuperSpecialListAdapter.getOficioArrayList()) {
+//                                    for (Oficio hag : oficios) {
+//                                        if (hag.getIdOficio().equals(ha.getIdOficio())) {
+//                                            oficioArrayListFiltrados.add(ha);
+//                                        }
+//                                    }
+//                                }
+////                                oficio.setHabilidadArrayList(habilidadArrayList);
+//                                oficioSuperSpecialListAdapter.setOficioArrayList(oficioArrayListFiltrados);
+//
+//                            }
+//                        } else {
+//                            oficioSuperSpecialListAdapter.setOficioArrayList(oficios);
+//                        }
+//
+//
+//                        FirebaseDatabase.getInstance().getReference()
+//                                .child("habilidades")
+//                                .addChildEventListener(new ChildEventListener() {
+//                                    @Override
+//                                    public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+//                                        String key = snapshot.getKey();
+//                                        ArrayList<Habilidad> habilidadArrayList = new ArrayList<>();
+//                                        try {
+//                                            for (DataSnapshot data : snapshot.getChildren()) {
+//                                                Habilidad habilidad = data.getValue(Habilidad.class);
+//                                                Log.i(TAG, habilidad.toString());
+////                                if (trabajador.getIdHabilidades() != null) {
+////                                    for (String idHab : trabajador.getIdHabilidades()) {
+////                                        if (idHab.equals(habilidad.getIdHabilidad())) {
+////                                            habilidad.setHabilidadSeleccionada(true);
+////                                            break;
+////                                        }
+////                                    }
+////                                }
+//
+//                                                habilidadArrayList.add(habilidad);
+//                                            }
+//                                        } catch (Exception e) {
+//                                            Log.d(TAG + "HAB", e.toString());
+//                                        }
+//                                        try {
+//                                            Log.w(TAG, "@@@@@@@@@@@@@@@@@@@@@@@@@");
+//                                            Log.d(TAG, String.valueOf(oficioSuperSpecialListAdapter.getOficioArrayList()));
+//
+//                                            for (Oficio oficio : oficioSuperSpecialListAdapter.getOficioArrayList()) {
+//                                                Log.w(TAG, "@@@@@@@@@@@@@@@@@@@@@@@@@");
+//
+//                                                if (oficio.getIdOficio().equals(key)) {
+//                                                    if (oficio.getHabilidadArrayList() != null) {
+////                                        if (oficio.getHabilidadArrayList().size() == habilidadArrayList.size()) {
+////
+////                                        }
+////                                        if (oficio.getHabilidadArrayList().size() < habilidadArrayList.size()) {
+////                                            for (Habilidad ha : oficio.getHabilidadArrayList()) {
+////                                                for (Habilidad hag : habilidadArrayList) {
+////                                                    if (hag.getIdHabilidad().equals(ha.getIdHabilidad())) {
+////                                                        ha.setHabilidadSeleccionada(hag.isHabilidadSeleccionada());
+////                                                    }
+////                                                }
+////                                            }
+////                                        }
+//                                                        if (oficio.getHabilidadArrayList().size() < habilidadArrayList.size()) {
+//                                                            oficio.getHabilidadArrayList().add(habilidadArrayList.get(habilidadArrayList.size() - 1));
+//                                                        }
+//                                                    } else {
+//                                                        oficio.setHabilidadArrayList(habilidadArrayList);
+//                                                    }
+//                                                    Log.w(TAG, oficio.toString());
+//                                                }
+//                                            }
+//                                        } catch (Exception e) {
+//                                            Log.e(TAG, "########################");
+//                                            Log.e(TAG, e.toString());
+//                                            Log.e(TAG, "########################");
+//
+//                                        }
+//                                        oficioSuperSpecialListAdapter.setOficioArrayList(oficioSuperSpecialListAdapter.getOficioArrayList());
+//                                    }
+//
+//                                    @Override
+//                                    public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+//                                        String key = snapshot.getKey();
+//                                        Log.d(TAG, "onChildChanged");
+//
+//                                        ArrayList<Habilidad> habilidadArrayList = new ArrayList<>();
+//                                        try {
+//                                            for (DataSnapshot data : snapshot.getChildren()) {
+//                                                Habilidad habilidad = data.getValue(Habilidad.class);
+//                                                Log.i(TAG, habilidad.toString());
+//                                                habilidadArrayList.add(habilidad);
+//                                            }
+//                                        } catch (Exception e) {
+//                                            Log.d(TAG, e.toString());
+//                                        }
+//                                        try {
+//                                            for (Oficio oficio : oficioSuperSpecialListAdapter.getOficioArrayList()) {
+//                                                if (oficio.getIdOficio().equals(key)) {
+//                                                    if (oficio.getHabilidadArrayList() != null) {
+//                                                        if (oficio.getHabilidadArrayList().size() == habilidadArrayList.size()) {
+//                                                            for (Habilidad haX : oficio.getHabilidadArrayList()) {
+//                                                                for (Habilidad haY : habilidadArrayList) {
+//                                                                    if (haX.getIdHabilidad().equals(haY.getIdHabilidad())) {
+//                                                                        haX.setNombreHabilidad(haY.getNombreHabilidad());
+//                                                                    }
+//                                                                }
+//                                                            }
+//                                                        }
+//                                                        if (oficio.getHabilidadArrayList().size() > habilidadArrayList.size()) {
+//                                                            Log.d(TAG, "oficio.getHabilidadArrayList().size() > habilidadArrayList.size()");
+//                                                            ArrayList<Habilidad> habilidadsFiltradas = new ArrayList<>();
+//
+//                                                            for (Habilidad ha : oficio.getHabilidadArrayList()) {
+//                                                                for (Habilidad hag : habilidadArrayList) {
+//                                                                    if (hag.getIdHabilidad().equals(ha.getIdHabilidad())) {
+//                                                                        hag.setHabilidadSeleccionada(ha.isHabilidadSeleccionada());
+//                                                                        habilidadsFiltradas.add(ha);
+//                                                                    }
+//                                                                }
+//                                                            }
+//
+////                                            oficio.setHabilidadArrayList(habilidadArrayList);
+//                                                            if (habilidadArrayList.size() == 0) {
+//                                                                habilidadsFiltradas = new ArrayList<>();
+//                                                            }
+//                                                            oficio.setHabilidadArrayList(habilidadsFiltradas);
+//
+//                                                        }
+//
+//                                                        if (oficio.getHabilidadArrayList().size() < habilidadArrayList.size()) {
+//                                                            oficio.getHabilidadArrayList().add(habilidadArrayList.get(habilidadArrayList.size() - 1));
+//                                                        }
+//                                                    } else {
+////                                        oficio.setHabilidadArrayList(habilidadArrayList);
+//                                                    }
+//                                                    Log.w(TAG, oficio.toString());
+//                                                }
+//                                            }
+//                                        } catch (Exception e) {
+//                                            Log.e(TAG, e.toString());
+//
+//                                        }
+//                                        oficioSuperSpecialListAdapter.setOficioArrayList(oficioSuperSpecialListAdapter.getOficioArrayList());
+//
+//                                    }
+//
+//                                    @Override
+//                                    public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+//                                        String key = snapshot.getKey();
+//
+//                                        Log.d(TAG, "onChildRemoved");
+//                                        try {
+//                                            for (Oficio oficio : oficioSuperSpecialListAdapter.getOficioArrayList()) {
+//                                                if (oficio.getIdOficio().equals(key)) {
+//                                                    oficio.getHabilidadArrayList().clear();
+//                                                    break;
+//                                                }
+//                                                Log.w(TAG, oficio.toString());
+//                                            }
+//
+//                                        } catch (Exception e) {
+//                                            Log.e(TAG, e.toString());
+//
+//                                        }
+//                                        oficioSuperSpecialListAdapter.setOficioArrayList(oficioSuperSpecialListAdapter.getOficioArrayList());
+//
+//                                    }
+//
+//                                    @Override
+//                                    public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+//
+//                                    }
+//
+//                                    @Override
+//                                    public void onCancelled(@NonNull DatabaseError error) {
+//
+//                                    }
+//                                });
+//
+//
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//
+//                    }
+//                });
 
 /************************************************/
 //        FirebaseDatabase.getInstance().getReference()
@@ -571,6 +821,276 @@ public class RegistroOficioActivity extends AppCompatActivity implements View.On
         }
     }
 
+    private void loadCrazyOficiosFinalBoss(RecyclerView recyclerView) {
+        oficioCrazyRegistroListAdapter = new OficioCrazyRegistroListAdapter(this);
+        recyclerView.setAdapter(oficioCrazyRegistroListAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        ArrayList<Oficio> oficiosDB = new ArrayList<>();
+
+        FirebaseDatabase.getInstance().getReference().child("oficios")
+                .addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                        Oficio oficio = snapshot.getValue(Oficio.class);
+                        oficiosDB.add(oficio);
+
+                        oficioCrazyRegistroListAdapter.addOficio(oficio);
+
+                    }
+
+                    @Override
+                    public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                        Oficio oficioChanged = snapshot.getValue(Oficio.class);
+                        int index = 0;
+                        for (Oficio ofDB : oficioCrazyRegistroListAdapter.getOficioArrayList()) {
+                            if (ofDB.getIdOficio().equals(oficioChanged.getIdOficio())) {
+                                ofDB.setNombre(oficioChanged.getNombre());
+                                ofDB.setUriPhoto(oficioChanged.getUriPhoto());
+//                                oficiosDB.set(index, ofDB);
+                                break;
+                            }
+                            index++;
+                        }
+                        oficioCrazyRegistroListAdapter.updateOficioArrayList(index);
+
+                    }
+
+                    @Override
+                    public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+                        Oficio oficioRemoved = snapshot.getValue(Oficio.class);
+                        int index = 0;
+                        for (Oficio ofDB : oficioCrazyRegistroListAdapter.getOficioArrayList()) {
+                            if (ofDB.getIdOficio().equals(oficioRemoved.getIdOficio())) {
+//                                oficiosDB.remove(index);
+                                break;
+                            }
+                            index++;
+                        }
+//                        oficioCrazyRegistroListAdapter.setOficioArrayList(oficiosDB);
+                        oficioCrazyRegistroListAdapter.removeOficioArrayList(index);
+                    }
+
+                    @Override
+                    public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+        FirebaseDatabase.getInstance().getReference()
+                .child("habilidades")
+                .addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                        ArrayList<Habilidad> habilidadArrayList = new ArrayList<>();
+                        Log.d(TAG, "---------------------------------");
+                        Log.d(TAG, "------------" + snapshot.getKey() + "---------------------");
+
+                        for (DataSnapshot data : snapshot.getChildren()) {
+                            Habilidad habilidad = data.getValue(Habilidad.class);
+                            //Log.d(TAG, habilidad.toString());
+                            habilidadArrayList.add(habilidad);
+                        }
+                        int index = 0;
+
+//                        for (Oficio ofDB : oficioCrazyRegistroListAdapter.getOficioArrayList()) {
+                        for (Oficio ofDB : oficiosDB) {
+                            if (ofDB.getIdOficio().equals(snapshot.getKey())) {
+                                Log.d(TAG, "------------" + "(onChildAdded)actualizando habs" + "---------------------");
+                                ofDB.setHabilidadArrayList(habilidadArrayList);
+                                break;
+                            }
+                            index++;
+                        }
+                        oficioCrazyRegistroListAdapter.updateOficioArrayList(index);
+
+                    }
+
+                    @Override
+                    public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                        ArrayList<Habilidad> habilidadArrayListChanged = new ArrayList<>();
+
+                        Log.d(TAG, "---------------------------------");
+                        Log.d(TAG, "------------" + snapshot.getKey() + "---------------------");
+
+                        for (DataSnapshot data : snapshot.getChildren()) {
+                            Habilidad habilidad = data.getValue(Habilidad.class);
+//                            Log.d(TAG, habilidad.toString());
+                            habilidadArrayListChanged.add(habilidad);
+                        }
+
+                        int index = 0;
+                        for (Oficio ofDB : oficioCrazyRegistroListAdapter.getOficioArrayList()) {
+                            if (ofDB.getIdOficio().equals(snapshot.getKey())) {
+
+                                Log.d(TAG, "------------" + "(onChildChanged)actualizando habs" + "---------------------");
+                                Log.d(TAG, "------------" + ofDB.toString() + "---------------------");
+                                Log.d(TAG, "------------" + String.valueOf(habilidadArrayListChanged.size()) + "---------------------");
+                                Log.d(TAG, "------------" + String.valueOf(ofDB.getHabilidadArrayList().size()) + "---------------------");
+
+                                for (Habilidad hab : habilidadArrayListChanged) {
+                                    for (Habilidad jim : ofDB.getHabilidadArrayList()) {
+                                        if (hab.getIdHabilidad().equals(jim.getIdHabilidad())) {
+                                            hab.setHabilidadSeleccionada(jim.isHabilidadSeleccionada());
+                                        }
+                                    }
+                                }
+
+                                ofDB.setHabilidadArrayList(habilidadArrayListChanged);
+                                oficioCrazyRegistroListAdapter.updateOficioCrazy(index, ofDB);
+
+                                break;
+                            }
+                            index++;
+                        }
+//                        oficioCrazyRegistroListAdapter.updateOficioCrazy(index,of);
+//                        oficioCrazyRegistroListAdapter.setOficioArrayList(oficioCrazyRegistroListAdapter.getOficioArrayList());
+
+                    }
+
+                    @Override
+                    public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+                        Log.d(TAG, "---------------------------------");
+                        Log.d(TAG, "------------" + snapshot.getKey() + "---------------------");
+                        for (Oficio ofDB : oficioCrazyRegistroListAdapter.getOficioArrayList()) {
+                            if (ofDB.getIdOficio().equals(snapshot.getKey())) {
+                                Log.d(TAG, "------------" + "(onChildRemoved)eliminando habs" + "---------------------");
+                            }
+                        }
+                        for (DataSnapshot data : snapshot.getChildren()) {
+                            Habilidad habilidad = data.getValue(Habilidad.class);
+                            Log.d(TAG, habilidad.toString());
+                        }
+                    }
+
+                    @Override
+                    public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+
+//        FirebaseDatabase.getInstance().getReference().child("oficios")
+//                .addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                        ArrayList<Oficio> oficiosDB = new ArrayList<>();
+//                        for (DataSnapshot data : snapshot.getChildren()) {
+//                            Oficio of = data.getValue(Oficio.class);
+//                            oficiosDB.add(of);
+//                        }
+//
+//                        if (oficioCrazyRegistroListAdapter.getOficioArrayList() != null) {
+//                            oficioCrazyRegistroListAdapter.setOficioArrayList(oficiosDB);
+//                            if (oficiosDB.size() == oficioCrazyRegistroListAdapter.getOficioArrayList().size()) {
+//
+//                            }
+//
+//                        } else {
+//                            oficioCrazyRegistroListAdapter.setOficioArrayList(oficiosDB);
+//
+//                        }
+//
+////                        oficioCrazyRegistroListAdapter.setOficioArrayList(oficiosDB);
+//
+//                        FirebaseDatabase.getInstance().getReference()
+//                                .child("habilidades")
+//                                .addChildEventListener(new ChildEventListener() {
+//                                    @Override
+//                                    public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+//                                        Log.d(TAG, "---------------------------------");
+//                                        Log.d(TAG, "------------" + snapshot.getKey() + "---------------------");
+//                                        for (Oficio ofDB : oficiosDB) {
+//                                            if (ofDB.getIdOficio().equals(snapshot.getKey())) {
+//                                                Log.d(TAG, "------------" + "(onChildAdded)actualizando habs" + "---------------------");
+//                                            }
+//                                        }
+//                                        for (DataSnapshot data : snapshot.getChildren()) {
+//                                            Habilidad habilidad = data.getValue(Habilidad.class);
+//                                            Log.d(TAG, habilidad.toString());
+//                                        }
+//                                    }
+//
+//                                    @Override
+//                                    public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+//
+//                                    }
+//
+//                                    @Override
+//                                    public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+//
+//                                    }
+//
+//                                    @Override
+//                                    public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+//
+//                                    }
+//
+//                                    @Override
+//                                    public void onCancelled(@NonNull DatabaseError error) {
+//
+//                                    }
+//                                });
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//
+//                    }
+//                });
+
+//        bienvenidoViewModel.getAllOficios().observe(this, oficiosDB -> {
+//            if (oficiosDB != null) {
+//                oficioCrazyRegistroListAdapter.setOficioArrayList(oficiosDB);
+//
+//                FirebaseDatabase.getInstance().getReference()
+//                        .child("habilidades")
+//                        .addChildEventListener(new ChildEventListener() {
+//                            @Override
+//                            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+//                                Log.d(TAG, "---------------------------------");
+//                                Log.d(TAG, "------------" + snapshot.getKey() + "---------------------");
+//                                for (DataSnapshot data : snapshot.getChildren()) {
+//                                    Habilidad habilidad = data.getValue(Habilidad.class);
+//                                    Log.d(TAG, habilidad.toString());
+//                                }
+//                            }
+//
+//                            @Override
+//                            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+//
+//                            }
+//
+//                            @Override
+//                            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+//
+//                            }
+//
+//                            @Override
+//                            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+//
+//                            }
+//
+//                            @Override
+//                            public void onCancelled(@NonNull DatabaseError error) {
+//
+//                            }
+//                        });
+//
+//            }
+//        });
+    }
+
 
     @Override
     public void onClick(View v) {
@@ -581,8 +1101,8 @@ public class RegistroOficioActivity extends AppCompatActivity implements View.On
                 ArrayList<Oficio> oficiosReg = new ArrayList<>();
                 ArrayList<String> idOficiosReg = new ArrayList<>();
                 ArrayList<String> idHabilidadesReg = new ArrayList<>();
-                if (oficioSuperSpecialListAdapter.getItemCount() > 0) {
-                    for (Oficio o : oficioSuperSpecialListAdapter.getOficioArrayList()) {
+                if (oficioCrazyRegistroListAdapter.getItemCount() > 0) {
+                    for (Oficio o : oficioCrazyRegistroListAdapter.getOficioArrayList()) {
                         if (o.isEstadoRegistro()) {
                             oficiosReg.add(o);
                             idOficiosReg.add(o.getIdOficio());
@@ -726,10 +1246,10 @@ public class RegistroOficioActivity extends AppCompatActivity implements View.On
                 AlertDialog dialog = builder.create();
                 dialog.show();
 
-                String[] values = new String[oficioSuperSpecialListAdapter.getOficioArrayList().size()];
-                String[] ids = new String[oficioSuperSpecialListAdapter.getOficioArrayList().size()];
+                String[] values = new String[oficioCrazyRegistroListAdapter.getOficioArrayList().size()];
+                String[] ids = new String[oficioCrazyRegistroListAdapter.getOficioArrayList().size()];
                 int index = 0;
-                for (Oficio o : oficioSuperSpecialListAdapter.getOficioArrayList()) {
+                for (Oficio o : oficioCrazyRegistroListAdapter.getOficioArrayList()) {
                     values[index] = o.getNombre();
                     ids[index] = o.getIdOficio();
                     index++;
@@ -776,11 +1296,26 @@ public class RegistroOficioActivity extends AppCompatActivity implements View.On
                         habilidad.setNombreHabilidad(nombreHab);
                         habilidad.setHabilidadSeleccionada(false);
 
-                        FirebaseDatabase.getInstance().getReference()
-                                .child("habilidades")
-                                .child(idOficio)
-                                .child(habilidad.getIdHabilidad())
-                                .setValue(habilidad);
+//                        FirebaseDatabase.getInstance().getReference()
+//                                .child("habilidades")
+//                                .child(idOficio)
+//                                .child(habilidad.getIdHabilidad())
+//                                .setValue(habilidad)
+//                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                    @Override
+//                                    public void onComplete(@NonNull Task<Void> task) {
+//                                        if (task.isSuccessful()) {
+//                                            Toast.makeText(getApplicationContext(), "Registro existoso", Toast.LENGTH_LONG).show();
+//
+//                                        } else {
+//                                            Toast.makeText(getApplicationContext(), "Registro fallido", Toast.LENGTH_LONG).show();
+//
+//                                        }
+//                                    }
+//                                });
+                        alertDialogConfirmar(idOficio, habilidad).show();
+
+
                     }
                 });
                 builder2.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -836,24 +1371,33 @@ public class RegistroOficioActivity extends AppCompatActivity implements View.On
             }
         }*/
         Log.d("TAG", "Registrando nuevo oficio....");
-        final EditText input = new EditText(this);
-        input.setHint("Nombre de oficio");
-        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+//        final TextInputEditText input = new TextInputEditText(this);
+//        input.setHint("Nombre de oficio");
+//        input.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+
+        // Get the layout inflater
+        LayoutInflater inflater = LayoutInflater.from(this);
+
+
+        View promptsView = inflater.inflate(R.layout.textinput_custom, null);
+
+
         dialogNuevoOficio = new AlertDialog.Builder(this)
                 .setIcon(R.drawable.ic_oficios)
                 .setTitle("Nuevo oficio:")
-                .setView(input)
+                .setView(promptsView)
                 .setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
 
                     public void onClick(DialogInterface dialog, int whichButton) {
                         Oficio oficio = new Oficio();
+                        final TextInputEditText input = (TextInputEditText) promptsView;
                         oficio.setNombre(input.getText().toString());
                         if (!input.getText().toString().equals("")) {
 //                            mViewModel.registerJobOnFirebase(job, jobAdapter);
                             int exit = 0;
 
-                            if (oficioSuperSpecialListAdapter.getOficioArrayList() != null) {
-                                for (Oficio o : oficioSuperSpecialListAdapter.getOficioArrayList()) {
+                            if (oficioCrazyRegistroListAdapter.getOficioArrayList() != null) {
+                                for (Oficio o : oficioCrazyRegistroListAdapter.getOficioArrayList()) {
                                     if (o.getNombre().toUpperCase().equals(oficio.getNombre().toUpperCase())) {
                                         exit = 1;
                                         break;
@@ -867,6 +1411,7 @@ public class RegistroOficioActivity extends AppCompatActivity implements View.On
                                 Toast.makeText(getApplicationContext(), "Registro fallido!", Toast.LENGTH_LONG).show();
                                 exit = 0;
                             } else {
+                                oficio.setNombre(oficio.getNombre().trim());
                                 oficioViewModel.addOficioToFirebase(RegistroOficioActivity.this, oficio);
 //                                String idOficio = FirebaseDatabase.getInstance().getReference().child("oficios").push().getKey();
 //                                oficio.setIdOficio(idOficio);
@@ -894,6 +1439,8 @@ public class RegistroOficioActivity extends AppCompatActivity implements View.On
 //                                oficioViewModel.guadarOficioEnFirebase(oficio);
                                 //oficioViewModel.guardarOficioEnFirebase(oficio, getApplicationContext());
                             }
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Nombre de oficio inválido.", Toast.LENGTH_LONG).show();
                         }
                         try {
                             dialogNuevoOficio.dismiss();
@@ -907,6 +1454,7 @@ public class RegistroOficioActivity extends AppCompatActivity implements View.On
                 })
                 .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
+                        final TextInputEditText input = (TextInputEditText) promptsView;
                         input.setText("");
                         try {
                             dialogNuevoOficio.dismiss();
@@ -939,7 +1487,7 @@ public class RegistroOficioActivity extends AppCompatActivity implements View.On
 
 //                            LinearLayout layout = new LinearLayout(this);
 
-                            if (oficioSuperSpecialListAdapter.getOficioArrayList().size() > 0) {
+                            if (oficioCrazyRegistroListAdapter.getOficioArrayList().size() > 0) {
                                 spinnerSelectOficio(habilidad);
                             } else {
                                 Toast.makeText(RegistroOficioActivity.this, "No existen oficios registrados!.", Toast.LENGTH_LONG).show();
@@ -968,10 +1516,10 @@ public class RegistroOficioActivity extends AppCompatActivity implements View.On
         View layout = inflater.inflate(R.layout.spinner, null);
 
         String array_spinner[];
-        array_spinner = new String[oficioSuperSpecialListAdapter.getOficioArrayList().size()];
+        array_spinner = new String[oficioCrazyRegistroListAdapter.getOficioArrayList().size()];
 
         int index = 0;
-        for (Oficio o : oficioSuperSpecialListAdapter.getOficioArrayList()) {
+        for (Oficio o : oficioCrazyRegistroListAdapter.getOficioArrayList()) {
             array_spinner[index] = o.getNombre();
             index++;
         }
@@ -1006,7 +1554,7 @@ public class RegistroOficioActivity extends AppCompatActivity implements View.On
         builder.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
 
             public void onClick(DialogInterface dialog, int whichButton) {
-                alertDialogConfirmar(oficioSuperSpecialListAdapter.getOficioArrayList().get(positionSelected).getIdOficio(), habilidad).show();
+                alertDialogConfirmar(oficioCrazyRegistroListAdapter.getOficioArrayList().get(positionSelected).getIdOficio(), habilidad).show();
 //                habilidadViewModel.guardarHabilidadEnFirebase(allOficios.get(positionSelected).getIdOficio(), habilidad, getApplicationContext());
             }
         });
@@ -1030,7 +1578,7 @@ public class RegistroOficioActivity extends AppCompatActivity implements View.On
                     public void onClick(DialogInterface dialog, int whichButton) {
                         //habilidadViewModel.guardarHabilidadEnFirebase(idOficio, habilidad, requireActivity());
                         Oficio oficioUpdate = new Oficio();
-                        for (Oficio o : oficioSuperSpecialListAdapter.getOficioArrayList()) {
+                        for (Oficio o : oficioCrazyRegistroListAdapter.getOficioArrayList()) {
                             if (o.getIdOficio().equals(idOficio)) {
                                 oficioUpdate = o;
                             }
@@ -1051,13 +1599,33 @@ public class RegistroOficioActivity extends AppCompatActivity implements View.On
                         }
 
                         if (exitFlag == 0) {
-                            if (oficioUpdate.getHabilidadArrayList() != null) {
-                                oficioUpdate.getHabilidadArrayList().add(habilidad);
-                            } else {
-                                oficioUpdate.setHabilidadArrayList(new ArrayList<>());
-                                oficioUpdate.getHabilidadArrayList().add(habilidad);
-                            }
-                            oficioViewModel.addHabilidadToOficioTofirebase(RegistroOficioActivity.this, oficioUpdate, habilidad);
+//                            if (oficioUpdate.getHabilidadArrayList() != null) {
+//                                oficioUpdate.getHabilidadArrayList().add(habilidad);
+//                            } else {
+//                                oficioUpdate.setHabilidadArrayList(new ArrayList<>());
+//                                oficioUpdate.getHabilidadArrayList().add(habilidad);
+//                            }
+//                            oficioViewModel.addHabilidadToOficioTofirebase(RegistroOficioActivity.this, oficioUpdate, habilidad);
+
+                            FirebaseDatabase.getInstance().getReference()
+                                    .child("habilidades")
+                                    .child(idOficio)
+                                    .child(habilidad.getIdHabilidad())
+                                    .setValue(habilidad)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                Toast.makeText(getApplicationContext(), "Registro existoso", Toast.LENGTH_LONG).show();
+
+                                            } else {
+                                                Toast.makeText(getApplicationContext(), "Registro fallido", Toast.LENGTH_LONG).show();
+
+                                            }
+                                        }
+                                    });
+
+
                         } else {
                             Toast.makeText(RegistroOficioActivity.this, "No se ha podido registrar la habilidad", Toast.LENGTH_LONG).show();
                         }
