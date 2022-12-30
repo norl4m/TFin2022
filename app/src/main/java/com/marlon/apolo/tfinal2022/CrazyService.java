@@ -39,23 +39,19 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.marlon.apolo.tfinal2022.citasTrabajo.AlarmReceiver;
-import com.marlon.apolo.tfinal2022.citasTrabajo.DetalleServicioActivity;
-import com.marlon.apolo.tfinal2022.comunnication.video.AcceptVideoCallBroadcastReceiver;
-import com.marlon.apolo.tfinal2022.comunnication.voice.AcceptVoiceCallBroadcastReceiver;
-import com.marlon.apolo.tfinal2022.comunnication.voice.AgoraOnlyVoiceCallActivity;
-import com.marlon.apolo.tfinal2022.comunnication.video.AgoraVideoCallActivity;
-import com.marlon.apolo.tfinal2022.comunnication.video.RejectVideoCallBroadcastReceiver;
-import com.marlon.apolo.tfinal2022.comunnication.voice.RejectVoiceCallBroadcastReceiver;
-import com.marlon.apolo.tfinal2022.foregroundCustomService.ForegrounAcceptVideoCallReceiver;
-import com.marlon.apolo.tfinal2022.foregroundCustomService.ForegroundAcceptCallReceiver;
-import com.marlon.apolo.tfinal2022.foregroundCustomService.ForegroundRejectCallReceiver;
-import com.marlon.apolo.tfinal2022.foregroundCustomService.ForegroundRejectVideoCallReceiver;
+import com.marlon.apolo.tfinal2022.citasTrabajo.receivers.AlarmReceiver;
+import com.marlon.apolo.tfinal2022.citasTrabajo.view.DetalleServicioActivity;
+import com.marlon.apolo.tfinal2022.communicationAgora.video.AcceptVideoCallBroadcastReceiver;
+import com.marlon.apolo.tfinal2022.communicationAgora.voice.AcceptVoiceCallBroadcastReceiver;
+import com.marlon.apolo.tfinal2022.communicationAgora.voice.AgoraOnlyVoiceCallActivity;
+import com.marlon.apolo.tfinal2022.communicationAgora.video.AgoraVideoCallActivity;
+import com.marlon.apolo.tfinal2022.communicationAgora.video.RejectVideoCallBroadcastReceiver;
+import com.marlon.apolo.tfinal2022.communicationAgora.voice.RejectVoiceCallBroadcastReceiver;
+
 import com.marlon.apolo.tfinal2022.individualChat.model.MessageCloudPoc;
 import com.marlon.apolo.tfinal2022.individualChat.view.CrazyDeleteBroadcastReceiver;
 import com.marlon.apolo.tfinal2022.individualChat.view.CrazyIndividualChatActivity;
 import com.marlon.apolo.tfinal2022.individualChat.view.CrazyReplyBroadcastReceiver;
-import com.marlon.apolo.tfinal2022.llamadaVoz.LlamadaVozActivity;
 import com.marlon.apolo.tfinal2022.model.Administrador;
 import com.marlon.apolo.tfinal2022.model.Cita;
 import com.marlon.apolo.tfinal2022.model.Empleador;
@@ -67,7 +63,6 @@ import com.marlon.apolo.tfinal2022.model.Participante;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
 import com.marlon.apolo.tfinal2022.model.Usuario;
 import com.marlon.apolo.tfinal2022.puntoEntrada.view.MainActivity;
-import com.marlon.apolo.tfinal2022.videoLlamada.VideoLlamadaActivity;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -121,12 +116,10 @@ public class CrazyService extends Service {
     private CrazyReplyBroadcastReceiver crazyReplyBroadcastReceiver;
     private SharedPreferences myPreferences;
     private Usuario usuarioLocal;
-    private ForegroundAcceptCallReceiver foregroundAcceptCallReceiver;
-    private ForegroundRejectCallReceiver foregroundRejectCallReceiver;
+
     private ArrayList<NotificacionCustomLlamada> notificacionCustomLlamadas;
     private ArrayList<NotificacionCustomVideoLlamada> notificacionCustomVideoLlamadaArrayList;
-    private ForegrounAcceptVideoCallReceiver foregrounAcceptVideoCallReceiver;
-    private ForegroundRejectVideoCallReceiver foregroundRejectVideoCallReceiver;
+
 
     private SharedPreferences defaultSharedPreferences;
     private MediaPlayer mediaPlayerCallTone;
@@ -135,8 +128,6 @@ public class CrazyService extends Service {
 
     private ChildEventListener childEventListenerNotificacionesConMensajesLocas;
     private ChildEventListener childEventListenerCitasTrabajo;
-    private ChildEventListener LlamadaDeVideoListener;
-    private ChildEventListener LlamadaDeVozListener;
     private ChildEventListener childEventListenerVideoCalls;
     //    private ArrayList<Integer> arrayListNotificationIds;
     private BroadcastReceiver acceptVideoCallBroadcastReceiver;
@@ -539,11 +530,6 @@ public class CrazyService extends Service {
         crazyDeleteBroadcastReceiver = new CrazyDeleteBroadcastReceiver();
         crazyReplyBroadcastReceiver = new CrazyReplyBroadcastReceiver();
 
-        foregroundAcceptCallReceiver = new ForegroundAcceptCallReceiver();
-        foregroundRejectCallReceiver = new ForegroundRejectCallReceiver();
-        foregrounAcceptVideoCallReceiver = new ForegrounAcceptVideoCallReceiver();
-        foregroundRejectVideoCallReceiver = new ForegroundRejectVideoCallReceiver();
-
 
         loadUsuarioLocal();
 
@@ -552,8 +538,8 @@ public class CrazyService extends Service {
 
 
         listenerMessagePocNotificacionesFirebase();
-        listenerLlamadasDeVozFirebase();
-        listenerNotificacionesDeVideoLlamadas();
+//        listenerLlamadasDeVozFirebase();
+//        listenerNotificacionesDeVideoLlamadas();
         listenerNotificacionesDeCitasTrabajo();
 
         listenerVideoCalls();
@@ -1124,76 +1110,91 @@ public class CrazyService extends Service {
         //registerReceiver(crazyReplyBroadcastReceiver, new IntentFilter(ACTION_REPLY_NOTIFICATION));
 
 
-        registerReceiver(foregroundAcceptCallReceiver, new IntentFilter(ACTION_ACCEPT_CALL_VOICE));
-        registerReceiver(foregroundRejectCallReceiver, new IntentFilter(ACTION_DECLINE_CALL_VOICE));
-
-        childEventListenerLallamadasVoz();
+//        childEventListenerLallamadasVoz();
 
     }
 
-    private void childEventListenerLallamadasVoz() {
-
-        notificacionCustomLlamadas = new ArrayList<>();
-
-        LlamadaDeVozListener = new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                Log.d(TAG, "onChildAdded -- llamadas de voz");
-                try {
-                    LlamadaVoz llamadaVoz = new LlamadaVoz();
-                    llamadaVoz = snapshot.getValue(LlamadaVoz.class);
-                    final int min = 5000;
-                    final int max = 5999;
-                    int idNotification = new Random().nextInt((max - min) + 1) + min;
-
-
-                    if (llamadaVoz.getParticipanteDestiny().getIdParticipante().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
-
-                        NotificacionCustomLlamada notificacionCustomLlamada = new NotificacionCustomLlamada();
-                        notificacionCustomLlamada.setIdNotification(idNotification);
-                        notificacionCustomLlamada.setLlamadaVoz(llamadaVoz);
-                        notificacionCustomLlamada.setIdCall(llamadaVoz.getId());
-
-                        notificacionCustomLlamadas.add(notificacionCustomLlamada);
-
-//                        seleccionarUsuarioParaLlamada(llamadaVoz);
-                        seleccionarUsuarioParaLlamada(notificacionCustomLlamada);
-                    }
-                } catch (Exception e) {
-                    Log.d(TAG, e.toString());
-                }
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                Log.d(TAG, "onChildChanged -- llamadas de voz");
-                LlamadaVoz llamadaVoz = snapshot.getValue(LlamadaVoz.class);
-
-                try {
-                    if (llamadaVoz.getParticipanteDestiny().getIdParticipante().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
-
-                        if (llamadaVoz.isRejectCallStatus()) {
-                            stopPlaying();
-                        }
-
-                        if (llamadaVoz.isDestinyStatus()) {
-                            stopPlaying();
-                        }
-
-                    }
-                } catch (Exception e) {
-
-                }
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-
+//    private void childEventListenerLallamadasVoz() {
+//
+//        notificacionCustomLlamadas = new ArrayList<>();
+//
+//        LlamadaDeVozListener = new ChildEventListener() {
+//            @Override
+//            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+//                Log.d(TAG, "onChildAdded -- llamadas de voz");
+//                try {
+//                    LlamadaVoz llamadaVoz = new LlamadaVoz();
+//                    llamadaVoz = snapshot.getValue(LlamadaVoz.class);
+//                    final int min = 5000;
+//                    final int max = 5999;
+//                    int idNotification = new Random().nextInt((max - min) + 1) + min;
+//
+//
+//                    if (llamadaVoz.getParticipanteDestiny().getIdParticipante().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+//
+//                        NotificacionCustomLlamada notificacionCustomLlamada = new NotificacionCustomLlamada();
+//                        notificacionCustomLlamada.setIdNotification(idNotification);
+//                        notificacionCustomLlamada.setLlamadaVoz(llamadaVoz);
+//                        notificacionCustomLlamada.setIdCall(llamadaVoz.getId());
+//
+//                        notificacionCustomLlamadas.add(notificacionCustomLlamada);
+//
+////                        seleccionarUsuarioParaLlamada(llamadaVoz);
+//                        seleccionarUsuarioParaLlamada(notificacionCustomLlamada);
+//                    }
+//                } catch (Exception e) {
+//                    Log.d(TAG, e.toString());
+//                }
+//            }
+//
+//            @Override
+//            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+//                Log.d(TAG, "onChildChanged -- llamadas de voz");
+//                LlamadaVoz llamadaVoz = snapshot.getValue(LlamadaVoz.class);
+//
+//                try {
+//                    if (llamadaVoz.getParticipanteDestiny().getIdParticipante().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+//
+//                        if (llamadaVoz.isRejectCallStatus()) {
+//                            stopPlaying();
+//                        }
+//
+//                        if (llamadaVoz.isDestinyStatus()) {
+//                            stopPlaying();
+//                        }
+//
+//                    }
+//                } catch (Exception e) {
+//
+//                }
+//            }
+//
+//            @Override
+//            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+//
+////                String callDelete = snapshot.getKey();
+////                try {
+////                    for (NotificacionCustomLlamada nl : notificacionCustomLlamadas) {
+////                        if (nl.getIdCall().equals(callDelete)) {
+////                            cancelNotification(nl.getIdNotification());
+////                            notificacionCustomLlamadas.remove(nl);
+////                            break;
+////                        }
+////                    }
+////                } catch (Exception e) {
+////                    Log.d(TAG, e.toString());
+////                }
+//
+//
 //                String callDelete = snapshot.getKey();
 //                try {
 //                    for (NotificacionCustomLlamada nl : notificacionCustomLlamadas) {
 //                        if (nl.getIdCall().equals(callDelete)) {
-//                            cancelNotification(nl.getIdNotification());
+//                            try {
+//                                cancelNotification(nl.getIdNotification());
+//                            } catch (Exception e) {
+//
+//                            }
 //                            notificacionCustomLlamadas.remove(nl);
 //                            break;
 //                        }
@@ -1201,256 +1202,237 @@ public class CrazyService extends Service {
 //                } catch (Exception e) {
 //                    Log.d(TAG, e.toString());
 //                }
+//
+//            }
+//
+//            @Override
+//            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        };
+//        FirebaseDatabase.getInstance().getReference()
+//                .child("llamadasDeVoz")
+//                .addChildEventListener(LlamadaDeVozListener);
+//    }
 
+//    private void seleccionarUsuarioParaLlamada(NotificacionCustomLlamada notificacionCustomLlamada) {
+//
+//        FirebaseDatabase.getInstance().getReference()
+//                .child("administrador")
+//                .child(notificacionCustomLlamada.getLlamadaVoz().getParticipanteCaller().getIdParticipante())
+//                .addListenerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                        try {
+//                            Administrador administrador = snapshot.getValue(Administrador.class);
+//                            if (administrador != null) {
+//                                showCallNotification(notificacionCustomLlamada, administrador);
+//                            }
+//                        } catch (Exception e) {
+//
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//
+//                    }
+//                });
+//        FirebaseDatabase.getInstance().getReference()
+//                .child("empleadores")
+//                .child(notificacionCustomLlamada.getLlamadaVoz().getParticipanteCaller().getIdParticipante())
+//                .addListenerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                        try {
+//                            Empleador empleador = snapshot.getValue(Empleador.class);
+//                            if (empleador != null) {
+//                                showCallNotification(notificacionCustomLlamada, empleador);
+//                            }
+//                        } catch (Exception e) {
+//
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//
+//                    }
+//                });
+//        FirebaseDatabase.getInstance().getReference()
+//                .child("trabajadores")
+//                .child(notificacionCustomLlamada.getLlamadaVoz().getParticipanteCaller().getIdParticipante())
+//                .addListenerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                        try {
+//                            Trabajador trabajador = snapshot.getValue(Trabajador.class);
+//                            if (trabajador != null) {
+//                                showCallNotification(notificacionCustomLlamada, trabajador);
+//                            }
+//                        } catch (Exception e) {
+//
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//
+//                    }
+//                });
+//    }
 
-                String callDelete = snapshot.getKey();
-                try {
-                    for (NotificacionCustomLlamada nl : notificacionCustomLlamadas) {
-                        if (nl.getIdCall().equals(callDelete)) {
-                            try {
-                                cancelNotification(nl.getIdNotification());
-                            } catch (Exception e) {
+//    private void listenerNotificacionesDeVideoLlamadas() {
+//
+//        notificacionCustomVideoLlamadaArrayList = new ArrayList<>();
+//
+////        registerReceiver(foregroundRejectVideoCallReceiver, new IntentFilter(ACTION_RECHAZAR_VIDEO_LLAMADA);
+//
+//        LlamadaDeVideoListener = new ChildEventListener() {
+//            @Override
+//            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+//                Log.d(TAG, "");
+//                try {
+//                    LlamadaVideo videoLlamada = new LlamadaVideo();
+//                    videoLlamada = snapshot.getValue(LlamadaVideo.class);
+//                    if (videoLlamada.getParticipanteDestiny().getIdParticipante().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+//                        seleccionarUsuarioParaVideoLlamada(videoLlamada);
+//                    }
+//                } catch (Exception e) {
+//                    Log.d(TAG, e.toString());
+//                }
+//            }
+//
+//            @Override
+//            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+//                LlamadaVideo llamadaVideoDB = snapshot.getValue(LlamadaVideo.class);
+//
+//                try {
+//                    if (llamadaVideoDB.getParticipanteDestiny().getIdParticipante().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+//
+//                        if (llamadaVideoDB.isRejectCallStatus()) {
+//                            stopPlaying();
+//                        }
+//
+//                        if (llamadaVideoDB.isDestinyStatus()) {
+//                            stopPlaying();
+//                        }
+//
+//                    }
+//                } catch (Exception e) {
+//
+//                }
+//
+//
+//            }
+//
+//            @Override
+//            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+//
+//                String callDelete = snapshot.getKey();
+//                try {
+//                    for (NotificacionCustomVideoLlamada nl : notificacionCustomVideoLlamadaArrayList) {
+//                        if (nl.getIdCall().equals(callDelete)) {
+//                            try {
+//                                cancelNotification(nl.getIdNotification());
+//                            } catch (Exception e) {
+//                                Log.d(TAG, e.toString());
+//                            }
+//                            notificacionCustomLlamadas.remove(nl);
+//                            break;
+//                        }
+//                    }
+//                } catch (Exception e) {
+//                    Log.d(TAG, e.toString());
+//                }
+//            }
+//
+//            @Override
+//            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        };
+//        FirebaseDatabase.getInstance().getReference()
+//                .child("llamadasDeVideo")
+//                .addChildEventListener(LlamadaDeVideoListener);
+//    }
 
-                            }
-                            notificacionCustomLlamadas.remove(nl);
-                            break;
-                        }
-                    }
-                } catch (Exception e) {
-                    Log.d(TAG, e.toString());
-                }
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        };
-        FirebaseDatabase.getInstance().getReference()
-                .child("llamadasDeVoz")
-                .addChildEventListener(LlamadaDeVozListener);
-    }
-
-    private void seleccionarUsuarioParaLlamada(NotificacionCustomLlamada notificacionCustomLlamada) {
-
-        FirebaseDatabase.getInstance().getReference()
-                .child("administrador")
-                .child(notificacionCustomLlamada.getLlamadaVoz().getParticipanteCaller().getIdParticipante())
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        try {
-                            Administrador administrador = snapshot.getValue(Administrador.class);
-                            if (administrador != null) {
-                                showCallNotification(notificacionCustomLlamada, administrador);
-                            }
-                        } catch (Exception e) {
-
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-        FirebaseDatabase.getInstance().getReference()
-                .child("empleadores")
-                .child(notificacionCustomLlamada.getLlamadaVoz().getParticipanteCaller().getIdParticipante())
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        try {
-                            Empleador empleador = snapshot.getValue(Empleador.class);
-                            if (empleador != null) {
-                                showCallNotification(notificacionCustomLlamada, empleador);
-                            }
-                        } catch (Exception e) {
-
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-        FirebaseDatabase.getInstance().getReference()
-                .child("trabajadores")
-                .child(notificacionCustomLlamada.getLlamadaVoz().getParticipanteCaller().getIdParticipante())
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        try {
-                            Trabajador trabajador = snapshot.getValue(Trabajador.class);
-                            if (trabajador != null) {
-                                showCallNotification(notificacionCustomLlamada, trabajador);
-                            }
-                        } catch (Exception e) {
-
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-    }
-
-    private void listenerNotificacionesDeVideoLlamadas() {
-
-        notificacionCustomVideoLlamadaArrayList = new ArrayList<>();
-        registerReceiver(foregrounAcceptVideoCallReceiver, new IntentFilter(ACTION_ACEPTAR_VIDEO_LLAMADA));
-        registerReceiver(foregroundRejectVideoCallReceiver, new IntentFilter(ACTION_RECHAZAR_VIDEO_LLAMADA));
-//        registerReceiver(foregroundRejectVideoCallReceiver, new IntentFilter(ACTION_RECHAZAR_VIDEO_LLAMADA);
-
-        LlamadaDeVideoListener = new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                Log.d(TAG, "");
-                try {
-                    LlamadaVideo videoLlamada = new LlamadaVideo();
-                    videoLlamada = snapshot.getValue(LlamadaVideo.class);
-                    if (videoLlamada.getParticipanteDestiny().getIdParticipante().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
-                        seleccionarUsuarioParaVideoLlamada(videoLlamada);
-                    }
-                } catch (Exception e) {
-                    Log.d(TAG, e.toString());
-                }
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                LlamadaVideo llamadaVideoDB = snapshot.getValue(LlamadaVideo.class);
-
-                try {
-                    if (llamadaVideoDB.getParticipanteDestiny().getIdParticipante().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
-
-                        if (llamadaVideoDB.isRejectCallStatus()) {
-                            stopPlaying();
-                        }
-
-                        if (llamadaVideoDB.isDestinyStatus()) {
-                            stopPlaying();
-                        }
-
-                    }
-                } catch (Exception e) {
-
-                }
-
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-
-                String callDelete = snapshot.getKey();
-                try {
-                    for (NotificacionCustomVideoLlamada nl : notificacionCustomVideoLlamadaArrayList) {
-                        if (nl.getIdCall().equals(callDelete)) {
-                            try {
-                                cancelNotification(nl.getIdNotification());
-                            } catch (Exception e) {
-                                Log.d(TAG, e.toString());
-                            }
-                            notificacionCustomLlamadas.remove(nl);
-                            break;
-                        }
-                    }
-                } catch (Exception e) {
-                    Log.d(TAG, e.toString());
-                }
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        };
-        FirebaseDatabase.getInstance().getReference()
-                .child("llamadasDeVideo")
-                .addChildEventListener(LlamadaDeVideoListener);
-    }
-
-    private void seleccionarUsuarioParaVideoLlamada(LlamadaVideo llamadaVideo) {
-
-        FirebaseDatabase.getInstance().getReference()
-                .child("administrador")
-                .child(llamadaVideo.getParticipanteCaller().getIdParticipante())
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        try {
-                            Administrador administrador = snapshot.getValue(Administrador.class);
-                            if (administrador != null) {
-                                showVideoCallNotification(llamadaVideo, administrador);
-                            }
-                        } catch (Exception e) {
-
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-        FirebaseDatabase.getInstance().getReference()
-                .child("empleadores")
-                .child(llamadaVideo.getParticipanteCaller().getIdParticipante())
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        try {
-                            Empleador empleador = snapshot.getValue(Empleador.class);
-                            if (empleador != null) {
-                                showVideoCallNotification(llamadaVideo, empleador);
-                            }
-                        } catch (Exception e) {
-
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-        FirebaseDatabase.getInstance().getReference()
-                .child("trabajadores")
-                .child(llamadaVideo.getParticipanteCaller().getIdParticipante())
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        try {
-                            Trabajador trabajador = snapshot.getValue(Trabajador.class);
-                            if (trabajador != null) {
-                                showVideoCallNotification(llamadaVideo, trabajador);
-                            }
-                        } catch (Exception e) {
-
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-    }
+//    private void seleccionarUsuarioParaVideoLlamada(LlamadaVideo llamadaVideo) {
+//
+//        FirebaseDatabase.getInstance().getReference()
+//                .child("administrador")
+//                .child(llamadaVideo.getParticipanteCaller().getIdParticipante())
+//                .addListenerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                        try {
+//                            Administrador administrador = snapshot.getValue(Administrador.class);
+//                            if (administrador != null) {
+//                                showVideoCallNotification(llamadaVideo, administrador);
+//                            }
+//                        } catch (Exception e) {
+//
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//
+//                    }
+//                });
+//        FirebaseDatabase.getInstance().getReference()
+//                .child("empleadores")
+//                .child(llamadaVideo.getParticipanteCaller().getIdParticipante())
+//                .addListenerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                        try {
+//                            Empleador empleador = snapshot.getValue(Empleador.class);
+//                            if (empleador != null) {
+//                                showVideoCallNotification(llamadaVideo, empleador);
+//                            }
+//                        } catch (Exception e) {
+//
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//
+//                    }
+//                });
+//        FirebaseDatabase.getInstance().getReference()
+//                .child("trabajadores")
+//                .child(llamadaVideo.getParticipanteCaller().getIdParticipante())
+//                .addListenerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                        try {
+//                            Trabajador trabajador = snapshot.getValue(Trabajador.class);
+//                            if (trabajador != null) {
+//                                showVideoCallNotification(llamadaVideo, trabajador);
+//                            }
+//                        } catch (Exception e) {
+//
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//
+//                    }
+//                });
+//    }
 
     public void playingInconmingCallAudio() {
 //        mediaPlayerCallTone = MediaPlayer.create(contextInstance, R.raw.beat_it_gameboy);
@@ -1476,287 +1458,287 @@ public class CrazyService extends Service {
 
     }
 
-    private void showVideoCallNotification(LlamadaVideo llamadaVideo, Usuario usuarioTo) {
-        playingInconmingCallAudio();
-
-        final int min = 6000;
-        final int max = 6999;
-        int idNotification = new Random().nextInt((max - min) + 1) + min;
-
-
-        Intent notifyIntent = new Intent(this, VideoLlamadaActivity.class);
-        // Set the Activity to start in a new, empty task
-        notifyIntent.putExtra("callStatus", 1);
-        notifyIntent.putExtra("usuarioFrom", usuarioLocal);
-        notifyIntent.putExtra("usuarioTo", usuarioTo);
-        notifyIntent.putExtra("llamadaVideo", llamadaVideo);
-        notifyIntent.putExtra("channelNameShare", llamadaVideo.getId());
-        notifyIntent.putExtra("contest", 1);
-
-        PendingIntent notifyPendingIntent = null;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            notifyPendingIntent = PendingIntent.getActivity(this, idNotification, notifyIntent, FLAG_MUTABLE);
-        } else {
-            notifyPendingIntent = PendingIntent.getActivity(this, idNotification, notifyIntent, FLAG_UPDATE_CURRENT);
-        }
-
-        Intent replyIntent = new Intent(ACTION_ACEPTAR_VIDEO_LLAMADA);
-        replyIntent.putExtra("idNotification", idNotification);
-        replyIntent.putExtra("usuarioFrom", usuarioLocal);
-        replyIntent.putExtra("usuarioTo", usuarioTo);
-        replyIntent.putExtra("llamadaVideo", llamadaVideo);
-        replyIntent.putExtra("contestar", true);
-
-        PendingIntent replyPendingIntent = null;
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            replyPendingIntent =
-                    PendingIntent.getBroadcast(getApplicationContext(),
-                            idNotification,
-                            replyIntent,
-                            FLAG_MUTABLE);
-        } else {
-            replyPendingIntent =
-                    PendingIntent.getBroadcast(getApplicationContext(),
-                            idNotification,
-                            replyIntent,
-                            FLAG_UPDATE_CURRENT);
-        }
-
-
-        NotificationCompat.Action actionResponder =
-                new NotificationCompat.Action.Builder(R.drawable.ic_baseline_send_24,
-                        "Aceptar", replyPendingIntent)
-                        .build();
-
-
-//        Intent ggIntent = new Intent(this, VideoLlamadaActivity.class);
+//    private void showVideoCallNotification(LlamadaVideo llamadaVideo, Usuario usuarioTo) {
+//        playingInconmingCallAudio();
+//
+//        final int min = 6000;
+//        final int max = 6999;
+//        int idNotification = new Random().nextInt((max - min) + 1) + min;
+//
+//
+//        Intent notifyIntent = new Intent(this, VideoLlamadaActivity.class);
 //        // Set the Activity to start in a new, empty task
-//        ggIntent.putExtra("callStatus", 1);
-//        ggIntent.putExtra("usuarioFrom", usuarioLocal);
-//        ggIntent.putExtra("usuarioTo", usuarioTo);
-//        ggIntent.putExtra("llamadaVideo", llamadaVideo);
-//        ggIntent.putExtra("channelNameShare", llamadaVideo.getId());
-//        ggIntent.putExtra("contest", 0);
+//        notifyIntent.putExtra("callStatus", 1);
+//        notifyIntent.putExtra("usuarioFrom", usuarioLocal);
+//        notifyIntent.putExtra("usuarioTo", usuarioTo);
+//        notifyIntent.putExtra("llamadaVideo", llamadaVideo);
+//        notifyIntent.putExtra("channelNameShare", llamadaVideo.getId());
+//        notifyIntent.putExtra("contest", 1);
 //
-//        PendingIntent ggPendingIntent = PendingIntent.getActivity(this, idNotification, ggIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+//        PendingIntent notifyPendingIntent = null;
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+//            notifyPendingIntent = PendingIntent.getActivity(this, idNotification, notifyIntent, FLAG_MUTABLE);
+//        } else {
+//            notifyPendingIntent = PendingIntent.getActivity(this, idNotification, notifyIntent, FLAG_UPDATE_CURRENT);
+//        }
 //
-
 //        Intent replyIntent = new Intent(ACTION_ACEPTAR_VIDEO_LLAMADA);
 //        replyIntent.putExtra("idNotification", idNotification);
 //        replyIntent.putExtra("usuarioFrom", usuarioLocal);
 //        replyIntent.putExtra("usuarioTo", usuarioTo);
 //        replyIntent.putExtra("llamadaVideo", llamadaVideo);
-////        replyIntent.putExtra("contestar", true);
-//        replyIntent.putExtra("channelNameShare", llamadaVideo.getId());
-////        replyIntent.putExtra("callStatus", 1);
-
-
-//        Intent replyIntent = new Intent(ACTION_ACEPTAR_VIDEO_LLAMADA);
-//        // Set the Activity to start in a new, empty task
-//        replyIntent.putExtra("idNotification", idNotification);
-//        replyIntent.putExtra("usuarioFrom", usuarioLocal);
-//        replyIntent.putExtra("usuarioTo", usuarioTo);
-//        replyIntent.putExtra("llamadaVideo", llamadaVideo);
+//        replyIntent.putExtra("contestar", true);
+//
+//        PendingIntent replyPendingIntent = null;
+//
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+//            replyPendingIntent =
+//                    PendingIntent.getBroadcast(getApplicationContext(),
+//                            idNotification,
+//                            replyIntent,
+//                            FLAG_MUTABLE);
+//        } else {
+//            replyPendingIntent =
+//                    PendingIntent.getBroadcast(getApplicationContext(),
+//                            idNotification,
+//                            replyIntent,
+//                            FLAG_UPDATE_CURRENT);
+//        }
 //
 //
-//        PendingIntent replyPendingIntent = PendingIntent
-//                .getBroadcast(getApplicationContext(), idNotification, replyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-
-//
-//        PendingIntent replyPendingIntent =
-//                PendingIntent.getBroadcast(getApplicationContext(),
-//                        idNotification,
-//                        replyIntent,
-//                        PendingIntent.FLAG_UPDATE_CURRENT);
-
-
 //        NotificationCompat.Action actionResponder =
 //                new NotificationCompat.Action.Builder(R.drawable.ic_baseline_send_24,
-//                        "Aceptar", ggPendingIntent)
+//                        "Aceptar", replyPendingIntent)
 //                        .build();
-
-
-        Intent rejectIntent = new Intent(ACTION_RECHAZAR_VIDEO_LLAMADA);
-        rejectIntent.putExtra("idNotification", idNotification);
-        rejectIntent.putExtra("usuarioFrom", usuarioLocal);
-        rejectIntent.putExtra("usuarioTo", usuarioTo);
-        rejectIntent.putExtra("llamadaVideo", llamadaVideo);
-        rejectIntent.putExtra("contestar", false);
-        PendingIntent rejectPendingIntent = null;
-
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            rejectPendingIntent =
-                    PendingIntent.getBroadcast(getApplicationContext(),
-                            idNotification,
-                            rejectIntent,
-                            FLAG_MUTABLE);
-        } else {
-            rejectPendingIntent =
-                    PendingIntent.getBroadcast(getApplicationContext(),
-                            idNotification,
-                            rejectIntent,
-                            FLAG_UPDATE_CURRENT);
-        }
-
-        NotificationCompat.Action actionRechazar =
-                new NotificationCompat.Action.Builder(R.drawable.ic_baseline_send_24,
-                        "Rechazar", rejectPendingIntent)
-                        .build();
-
-
-        // Create a call style notification for an incoming call.
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-
-            final Icon icon =
-                    Icon.createWithResource(contextInstance,
-                            android.R.drawable.ic_dialog_info);
-
-            Notification.Action acceptAction =
-                    new Notification.Action.Builder(
-                            icon, "Contestar", replyPendingIntent)
-                            .build();
-
-
-            Notification.Action declineAction =
-                    new Notification.Action.Builder(
-                            icon, "Rechazar", rejectPendingIntent)
-                            .build();
-
-            Notification.Builder callNotification = new Notification.Builder(contextInstance, VOICE_CALL_NOTIFICATIONS_CHANNEL_ID)
-                    //                .setContentIntent(contentIntent)
-                    .setSmallIcon(R.drawable.ic_oficios)
-                    .setContentTitle(getString(R.string.incoming_video_call_text))
-                    .setContentText(llamadaVideo.getParticipanteCaller().getNombreParticipante())
-
-                    .setFullScreenIntent(notifyPendingIntent, true)
-                    .setDeleteIntent(rejectPendingIntent)
-                    .addAction(acceptAction)
-                    .addAction(declineAction)
-                    .setAutoCancel(true);
-
-
-            NotificationManager notificationManagerX = getSystemService(NotificationManager.class);
-            notificationManagerX.notify(idNotification, callNotification.build());
-
-        } else {
-
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-//                Notification.Builder callNotification = new Notification.Builder(contextInstance, VOICE_CALL_NOTIFICATIONS_CHANNEL_ID)
-//                        //                .setContentIntent(contentIntent)
+//
+//
+////        Intent ggIntent = new Intent(this, VideoLlamadaActivity.class);
+////        // Set the Activity to start in a new, empty task
+////        ggIntent.putExtra("callStatus", 1);
+////        ggIntent.putExtra("usuarioFrom", usuarioLocal);
+////        ggIntent.putExtra("usuarioTo", usuarioTo);
+////        ggIntent.putExtra("llamadaVideo", llamadaVideo);
+////        ggIntent.putExtra("channelNameShare", llamadaVideo.getId());
+////        ggIntent.putExtra("contest", 0);
+////
+////        PendingIntent ggPendingIntent = PendingIntent.getActivity(this, idNotification, ggIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+////
+//
+////        Intent replyIntent = new Intent(ACTION_ACEPTAR_VIDEO_LLAMADA);
+////        replyIntent.putExtra("idNotification", idNotification);
+////        replyIntent.putExtra("usuarioFrom", usuarioLocal);
+////        replyIntent.putExtra("usuarioTo", usuarioTo);
+////        replyIntent.putExtra("llamadaVideo", llamadaVideo);
+//////        replyIntent.putExtra("contestar", true);
+////        replyIntent.putExtra("channelNameShare", llamadaVideo.getId());
+//////        replyIntent.putExtra("callStatus", 1);
+//
+//
+////        Intent replyIntent = new Intent(ACTION_ACEPTAR_VIDEO_LLAMADA);
+////        // Set the Activity to start in a new, empty task
+////        replyIntent.putExtra("idNotification", idNotification);
+////        replyIntent.putExtra("usuarioFrom", usuarioLocal);
+////        replyIntent.putExtra("usuarioTo", usuarioTo);
+////        replyIntent.putExtra("llamadaVideo", llamadaVideo);
+////
+////
+////        PendingIntent replyPendingIntent = PendingIntent
+////                .getBroadcast(getApplicationContext(), idNotification, replyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+//
+//
+////
+////        PendingIntent replyPendingIntent =
+////                PendingIntent.getBroadcast(getApplicationContext(),
+////                        idNotification,
+////                        replyIntent,
+////                        PendingIntent.FLAG_UPDATE_CURRENT);
+//
+//
+////        NotificationCompat.Action actionResponder =
+////                new NotificationCompat.Action.Builder(R.drawable.ic_baseline_send_24,
+////                        "Aceptar", ggPendingIntent)
+////                        .build();
+//
+//
+//        Intent rejectIntent = new Intent(ACTION_RECHAZAR_VIDEO_LLAMADA);
+//        rejectIntent.putExtra("idNotification", idNotification);
+//        rejectIntent.putExtra("usuarioFrom", usuarioLocal);
+//        rejectIntent.putExtra("usuarioTo", usuarioTo);
+//        rejectIntent.putExtra("llamadaVideo", llamadaVideo);
+//        rejectIntent.putExtra("contestar", false);
+//        PendingIntent rejectPendingIntent = null;
+//
+//
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+//            rejectPendingIntent =
+//                    PendingIntent.getBroadcast(getApplicationContext(),
+//                            idNotification,
+//                            rejectIntent,
+//                            FLAG_MUTABLE);
+//        } else {
+//            rejectPendingIntent =
+//                    PendingIntent.getBroadcast(getApplicationContext(),
+//                            idNotification,
+//                            rejectIntent,
+//                            FLAG_UPDATE_CURRENT);
+//        }
+//
+//        NotificationCompat.Action actionRechazar =
+//                new NotificationCompat.Action.Builder(R.drawable.ic_baseline_send_24,
+//                        "Rechazar", rejectPendingIntent)
+//                        .build();
+//
+//
+//        // Create a call style notification for an incoming call.
+//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+//
+//            final Icon icon =
+//                    Icon.createWithResource(contextInstance,
+//                            android.R.drawable.ic_dialog_info);
+//
+//            Notification.Action acceptAction =
+//                    new Notification.Action.Builder(
+//                            icon, "Contestar", replyPendingIntent)
+//                            .build();
+//
+//
+//            Notification.Action declineAction =
+//                    new Notification.Action.Builder(
+//                            icon, "Rechazar", rejectPendingIntent)
+//                            .build();
+//
+//            Notification.Builder callNotification = new Notification.Builder(contextInstance, VOICE_CALL_NOTIFICATIONS_CHANNEL_ID)
+//                    //                .setContentIntent(contentIntent)
+//                    .setSmallIcon(R.drawable.ic_oficios)
+//                    .setContentTitle(getString(R.string.incoming_video_call_text))
+//                    .setContentText(llamadaVideo.getParticipanteCaller().getNombreParticipante())
+//
+//                    .setFullScreenIntent(notifyPendingIntent, true)
+//                    .setDeleteIntent(rejectPendingIntent)
+//                    .addAction(acceptAction)
+//                    .addAction(declineAction)
+//                    .setAutoCancel(true);
+//
+//
+//            NotificationManager notificationManagerX = getSystemService(NotificationManager.class);
+//            notificationManagerX.notify(idNotification, callNotification.build());
+//
+//        } else {
+//
+//            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+////                Notification.Builder callNotification = new Notification.Builder(contextInstance, VOICE_CALL_NOTIFICATIONS_CHANNEL_ID)
+////                        //                .setContentIntent(contentIntent)
+////                        .setSmallIcon(R.drawable.ic_oficios)
+////                        .setContentTitle(getString(R.string.incoming_call_text) + "-" + String.valueOf(Build.VERSION.SDK_INT))
+////                        .setContentText(usuarioRemoto.getNombre() + " " + usuarioRemoto.getApellido())
+////                        .setFullScreenIntent(fullScreenPendingIntent, true)
+////                        .setDeleteIntent(declinePendingIntent)
+//////                        .addAction(actionAccept)
+//////                        .addAction(actionDecline)
+////                        .setAutoCancel(true);
+//////                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(contextInstance);
+//////                notificationManager.notify(notificacionCustomLlamada.getIdNotification(), callNotification.build());
+//
+//                final Icon icon =
+//                        Icon.createWithResource(contextInstance,
+//                                android.R.drawable.ic_dialog_info);
+//
+//                Notification.Action acceptAction =
+//                        new Notification.Action.Builder(
+//                                icon, "Contestar", replyPendingIntent)
+//                                .build();
+//
+//
+//                Notification.Action declineAction =
+//                        new Notification.Action.Builder(
+//                                icon, "Rechazar", rejectPendingIntent)
+//                                .build();
+//
+//                Notification callNotification = new Notification.Builder(this, VOICE_CALL_NOTIFICATIONS_CHANNEL_ID)
+//                        .setContentTitle(getString(R.string.incoming_video_call_text))
+//                        .setContentText(llamadaVideo.getParticipanteCaller().getNombreParticipante())
 //                        .setSmallIcon(R.drawable.ic_oficios)
-//                        .setContentTitle(getString(R.string.incoming_call_text) + "-" + String.valueOf(Build.VERSION.SDK_INT))
-//                        .setContentText(usuarioRemoto.getNombre() + " " + usuarioRemoto.getApellido())
-//                        .setFullScreenIntent(fullScreenPendingIntent, true)
-//                        .setDeleteIntent(declinePendingIntent)
-////                        .addAction(actionAccept)
-////                        .addAction(actionDecline)
+//                        .setFullScreenIntent(notifyPendingIntent, true)
+//                        .setDeleteIntent(rejectPendingIntent).setTicker(getText(R.string.ticker_text))
+//                        .setPriority(Notification.PRIORITY_HIGH)
+//                        .setDefaults(Notification.DEFAULT_ALL)
+//                        .addAction(acceptAction)
+//                        .addAction(declineAction)
+//                        .build();
+//                NotificationManager notificationManagerX = getSystemService(NotificationManager.class);
+//                notificationManagerX.notify(idNotification, callNotification);
+//
+//
+//            } else {
+//                // Create the reply action and add the remote input.
+//                NotificationCompat.Action actionAccept =
+//                        new NotificationCompat.Action.Builder(R.drawable.ic_oficios,
+//                                "Contestar", replyPendingIntent)
+//                                .build();
+//
+//                NotificationCompat.Action actionDecline =
+//                        new NotificationCompat.Action.Builder(R.drawable.ic_oficios,
+//                                "Rechazar", rejectPendingIntent)
+//                                .build();
+//                NotificationCompat.Builder builder = new NotificationCompat.Builder(contextInstance, VOICE_CALL_NOTIFICATIONS_CHANNEL_ID)
+//                        .setSmallIcon(R.drawable.ic_oficios)
+//                        .setContentTitle(getString(R.string.incoming_video_call_text))
+//                        .setContentText(llamadaVideo.getParticipanteCaller().getNombreParticipante())
+//                        .setPriority(NotificationCompat.PRIORITY_HIGH)
+//                        .setDefaults(NotificationCompat.DEFAULT_ALL)
+//                        .setFullScreenIntent(notifyPendingIntent, true)
+//                        .setDeleteIntent(rejectPendingIntent)
+//                        .addAction(actionAccept)
+//                        .addAction(actionDecline)
+//                        // Set the intent that will fire when the user taps the notification
+////                    .setContentIntent(pendingIntent)
+////                    .setContentIntent(pendingIntent)
 //                        .setAutoCancel(true);
-////                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(contextInstance);
-////                notificationManager.notify(notificacionCustomLlamada.getIdNotification(), callNotification.build());
-
-                final Icon icon =
-                        Icon.createWithResource(contextInstance,
-                                android.R.drawable.ic_dialog_info);
-
-                Notification.Action acceptAction =
-                        new Notification.Action.Builder(
-                                icon, "Contestar", replyPendingIntent)
-                                .build();
-
-
-                Notification.Action declineAction =
-                        new Notification.Action.Builder(
-                                icon, "Rechazar", rejectPendingIntent)
-                                .build();
-
-                Notification callNotification = new Notification.Builder(this, VOICE_CALL_NOTIFICATIONS_CHANNEL_ID)
-                        .setContentTitle(getString(R.string.incoming_video_call_text))
-                        .setContentText(llamadaVideo.getParticipanteCaller().getNombreParticipante())
-                        .setSmallIcon(R.drawable.ic_oficios)
-                        .setFullScreenIntent(notifyPendingIntent, true)
-                        .setDeleteIntent(rejectPendingIntent).setTicker(getText(R.string.ticker_text))
-                        .setPriority(Notification.PRIORITY_HIGH)
-                        .setDefaults(Notification.DEFAULT_ALL)
-                        .addAction(acceptAction)
-                        .addAction(declineAction)
-                        .build();
-                NotificationManager notificationManagerX = getSystemService(NotificationManager.class);
-                notificationManagerX.notify(idNotification, callNotification);
-
-
-            } else {
-                // Create the reply action and add the remote input.
-                NotificationCompat.Action actionAccept =
-                        new NotificationCompat.Action.Builder(R.drawable.ic_oficios,
-                                "Contestar", replyPendingIntent)
-                                .build();
-
-                NotificationCompat.Action actionDecline =
-                        new NotificationCompat.Action.Builder(R.drawable.ic_oficios,
-                                "Rechazar", rejectPendingIntent)
-                                .build();
-                NotificationCompat.Builder builder = new NotificationCompat.Builder(contextInstance, VOICE_CALL_NOTIFICATIONS_CHANNEL_ID)
-                        .setSmallIcon(R.drawable.ic_oficios)
-                        .setContentTitle(getString(R.string.incoming_video_call_text))
-                        .setContentText(llamadaVideo.getParticipanteCaller().getNombreParticipante())
-                        .setPriority(NotificationCompat.PRIORITY_HIGH)
-                        .setDefaults(NotificationCompat.DEFAULT_ALL)
-                        .setFullScreenIntent(notifyPendingIntent, true)
-                        .setDeleteIntent(rejectPendingIntent)
-                        .addAction(actionAccept)
-                        .addAction(actionDecline)
-                        // Set the intent that will fire when the user taps the notification
-//                    .setContentIntent(pendingIntent)
-//                    .setContentIntent(pendingIntent)
-                        .setAutoCancel(true);
-                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(contextInstance);
-                notificationManager.notify(idNotification, builder.build());
-
-            }
-        }
-
-
-        NotificationCompat.Builder notification = null;
-        NotificationCompat.MessagingStyle messagingStyle = new NotificationCompat.MessagingStyle("Responder");
-        notification = new NotificationCompat.Builder(this, VOICE_CALL_NOTIFICATIONS_CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_oficios)
-                .setAutoCancel(true)// Quita la notification cunado el usuario la presiona
-                //.addAction(action)
-                .setContentIntent(notifyPendingIntent)
-                .setDeleteIntent(rejectPendingIntent)
-                .addAction(actionResponder)
-                .addAction(actionRechazar)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setDefaults(NotificationCompat.DEFAULT_ALL);
-
-
-        long timeStamp = System.currentTimeMillis();
-        NotificationCompat.MessagingStyle.Message message =
-                new NotificationCompat.MessagingStyle.Message(
-                        "Llamada de video entrante...",
-                        timeStamp,
-                        llamadaVideo.getParticipanteCaller().getNombreParticipante());
-//                            not.getFrom() + " " + not.getFrom());
-        messagingStyle.addMessage(message);
-
-
-        notification.setStyle(messagingStyle);
-
-        //000000000000000000000000000000000000000000NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-
-        // notificationId is a unique int for each notification that you must define
-//        notificationManager.notify(idNotification, notification.build());
-
-
-        NotificacionCustomVideoLlamada notificacionCustomVideoLlamada = new NotificacionCustomVideoLlamada();
-        notificacionCustomVideoLlamada.setIdNotification(idNotification);
-        notificacionCustomVideoLlamada.setVideoLlamada(llamadaVideo);
-        notificacionCustomVideoLlamada.setIdCall(llamadaVideo.getId());
-        notificacionCustomVideoLlamadaArrayList.add(notificacionCustomVideoLlamada);
-    }
+//                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(contextInstance);
+//                notificationManager.notify(idNotification, builder.build());
+//
+//            }
+//        }
+//
+//
+//        NotificationCompat.Builder notification = null;
+//        NotificationCompat.MessagingStyle messagingStyle = new NotificationCompat.MessagingStyle("Responder");
+//        notification = new NotificationCompat.Builder(this, VOICE_CALL_NOTIFICATIONS_CHANNEL_ID)
+//                .setSmallIcon(R.drawable.ic_oficios)
+//                .setAutoCancel(true)// Quita la notification cunado el usuario la presiona
+//                //.addAction(action)
+//                .setContentIntent(notifyPendingIntent)
+//                .setDeleteIntent(rejectPendingIntent)
+//                .addAction(actionResponder)
+//                .addAction(actionRechazar)
+//                .setPriority(NotificationCompat.PRIORITY_HIGH)
+//                .setDefaults(NotificationCompat.DEFAULT_ALL);
+//
+//
+//        long timeStamp = System.currentTimeMillis();
+//        NotificationCompat.MessagingStyle.Message message =
+//                new NotificationCompat.MessagingStyle.Message(
+//                        "Llamada de video entrante...",
+//                        timeStamp,
+//                        llamadaVideo.getParticipanteCaller().getNombreParticipante());
+////                            not.getFrom() + " " + not.getFrom());
+//        messagingStyle.addMessage(message);
+//
+//
+//        notification.setStyle(messagingStyle);
+//
+//        //000000000000000000000000000000000000000000NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+//
+//        // notificationId is a unique int for each notification that you must define
+////        notificationManager.notify(idNotification, notification.build());
+//
+//
+//        NotificacionCustomVideoLlamada notificacionCustomVideoLlamada = new NotificacionCustomVideoLlamada();
+//        notificacionCustomVideoLlamada.setIdNotification(idNotification);
+//        notificacionCustomVideoLlamada.setVideoLlamada(llamadaVideo);
+//        notificacionCustomVideoLlamada.setIdCall(llamadaVideo.getId());
+//        notificacionCustomVideoLlamadaArrayList.add(notificacionCustomVideoLlamada);
+//    }
 
     public void programarAlarmaLocalCustomLoco(Cita cita) {
         Log.d(TAG, cita.toString());
@@ -2602,174 +2584,174 @@ public class CrazyService extends Service {
 //
 //        }
 //    }
-    private void showCallNotification(NotificacionCustomLlamada notificacionCustomLlamada, Usuario usuarioRemoto) {
-//        final int min = 5000;
-//        final int max = 5999;
-//        int idNotification = new Random().nextInt((max - min) + 1) + min;
-
-
-        playingInconmingCallAudio();
-
-        Log.d(TAG, "Llamada entrante:");
-        Log.d(TAG, usuarioRemoto.getNombre() + " " + usuarioRemoto.getApellido());
-
-        Intent fullScreenIntent = new Intent(this, LlamadaVozActivity.class);
-        fullScreenIntent.putExtra("idNotification", notificacionCustomLlamada.getIdNotification());
-        fullScreenIntent.putExtra("callStatus", 1);
-        fullScreenIntent.putExtra("usuarioFrom", usuarioLocal);
-        fullScreenIntent.putExtra("usuarioTo", usuarioRemoto);
-        fullScreenIntent.putExtra("llamadaVoz", notificacionCustomLlamada.getLlamadaVoz());
-        fullScreenIntent.putExtra("channelNameShare", notificacionCustomLlamada.getLlamadaVoz().getId());
-
-
-        Intent declineIntent = new Intent(ACTION_DECLINE_CALL_VOICE);
-        declineIntent.putExtra("idNotification", notificacionCustomLlamada.getIdNotification());
-        declineIntent.putExtra("usuarioFrom", usuarioLocal);
-        declineIntent.putExtra("usuarioTo", usuarioRemoto);
-        declineIntent.putExtra("llamadaVoz", notificacionCustomLlamada.getLlamadaVoz());
-        declineIntent.putExtra("contestar", false);
-
-        Intent answerIntent = new Intent(ACTION_ACCEPT_CALL_VOICE);
-        answerIntent.putExtra("idNotification", notificacionCustomLlamada.getIdNotification());
-        answerIntent.putExtra("usuarioFrom", usuarioLocal);
-        answerIntent.putExtra("usuarioTo", usuarioRemoto);
-        answerIntent.putExtra("llamadaVoz", notificacionCustomLlamada.getLlamadaVoz());
-        answerIntent.putExtra("contestar", true);
-
-        PendingIntent fullScreenPendingIntent = null;
-        PendingIntent declinePendingIntent = null;
-        PendingIntent answerPendingIntent = null;
-
-
-        // Create a call style notification for an incoming call.
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-
-            declinePendingIntent = PendingIntent.getBroadcast(contextInstance, notificacionCustomLlamada.getIdNotification(), declineIntent, FLAG_MUTABLE);
-            answerPendingIntent = PendingIntent.getBroadcast(contextInstance, notificacionCustomLlamada.getIdNotification(), answerIntent, FLAG_MUTABLE);
-            fullScreenPendingIntent = PendingIntent.getActivity(this, notificacionCustomLlamada.getIdNotification(),
-                    fullScreenIntent, FLAG_MUTABLE);
-
-            final Icon icon =
-                    Icon.createWithResource(contextInstance,
-                            android.R.drawable.ic_dialog_info);
-
-            Notification.Action acceptAction =
-                    new Notification.Action.Builder(
-                            icon, "Contestar", answerPendingIntent)
-                            .build();
-
-
-            Notification.Action declineAction =
-                    new Notification.Action.Builder(
-                            icon, "Rechazar", declinePendingIntent)
-                            .build();
-
-            Notification.Builder callNotification = new Notification.Builder(contextInstance, VOICE_CALL_NOTIFICATIONS_CHANNEL_ID)
-                    //                .setContentIntent(contentIntent)
-                    .setSmallIcon(R.drawable.ic_oficios)
-                    .setContentTitle(getString(R.string.incoming_call_text))
-                    .setContentText(usuarioRemoto.getNombre() + " " + usuarioRemoto.getApellido())
-                    .setFullScreenIntent(fullScreenPendingIntent, true)
-                    .setDeleteIntent(declinePendingIntent)
-                    .addAction(acceptAction)
-                    .addAction(declineAction)
-                    .setAutoCancel(true);
-            ;
-//                    .setStyle(
-//                            Notification.CallStyle.forIncomingCall(incoming_caller, declinePendingIntent, answerPendingIntent))
-//                    .addPerson(incoming_caller)
+//    private void showCallNotification(NotificacionCustomLlamada notificacionCustomLlamada, Usuario usuarioRemoto) {
+////        final int min = 5000;
+////        final int max = 5999;
+////        int idNotification = new Random().nextInt((max - min) + 1) + min;
+//
+//
+//        playingInconmingCallAudio();
+//
+//        Log.d(TAG, "Llamada entrante:");
+//        Log.d(TAG, usuarioRemoto.getNombre() + " " + usuarioRemoto.getApellido());
+//
+//        Intent fullScreenIntent = new Intent(this, LlamadaVozActivity.class);
+//        fullScreenIntent.putExtra("idNotification", notificacionCustomLlamada.getIdNotification());
+//        fullScreenIntent.putExtra("callStatus", 1);
+//        fullScreenIntent.putExtra("usuarioFrom", usuarioLocal);
+//        fullScreenIntent.putExtra("usuarioTo", usuarioRemoto);
+//        fullScreenIntent.putExtra("llamadaVoz", notificacionCustomLlamada.getLlamadaVoz());
+//        fullScreenIntent.putExtra("channelNameShare", notificacionCustomLlamada.getLlamadaVoz().getId());
+//
+//
+//        Intent declineIntent = new Intent(ACTION_DECLINE_CALL_VOICE);
+//        declineIntent.putExtra("idNotification", notificacionCustomLlamada.getIdNotification());
+//        declineIntent.putExtra("usuarioFrom", usuarioLocal);
+//        declineIntent.putExtra("usuarioTo", usuarioRemoto);
+//        declineIntent.putExtra("llamadaVoz", notificacionCustomLlamada.getLlamadaVoz());
+//        declineIntent.putExtra("contestar", false);
+//
+//        Intent answerIntent = new Intent(ACTION_ACCEPT_CALL_VOICE);
+//        answerIntent.putExtra("idNotification", notificacionCustomLlamada.getIdNotification());
+//        answerIntent.putExtra("usuarioFrom", usuarioLocal);
+//        answerIntent.putExtra("usuarioTo", usuarioRemoto);
+//        answerIntent.putExtra("llamadaVoz", notificacionCustomLlamada.getLlamadaVoz());
+//        answerIntent.putExtra("contestar", true);
+//
+//        PendingIntent fullScreenPendingIntent = null;
+//        PendingIntent declinePendingIntent = null;
+//        PendingIntent answerPendingIntent = null;
+//
+//
+//        // Create a call style notification for an incoming call.
+//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+//
+//            declinePendingIntent = PendingIntent.getBroadcast(contextInstance, notificacionCustomLlamada.getIdNotification(), declineIntent, FLAG_MUTABLE);
+//            answerPendingIntent = PendingIntent.getBroadcast(contextInstance, notificacionCustomLlamada.getIdNotification(), answerIntent, FLAG_MUTABLE);
+//            fullScreenPendingIntent = PendingIntent.getActivity(this, notificacionCustomLlamada.getIdNotification(),
+//                    fullScreenIntent, FLAG_MUTABLE);
+//
+//            final Icon icon =
+//                    Icon.createWithResource(contextInstance,
+//                            android.R.drawable.ic_dialog_info);
+//
+//            Notification.Action acceptAction =
+//                    new Notification.Action.Builder(
+//                            icon, "Contestar", answerPendingIntent)
+//                            .build();
+//
+//
+//            Notification.Action declineAction =
+//                    new Notification.Action.Builder(
+//                            icon, "Rechazar", declinePendingIntent)
+//                            .build();
+//
+//            Notification.Builder callNotification = new Notification.Builder(contextInstance, VOICE_CALL_NOTIFICATIONS_CHANNEL_ID)
+//                    //                .setContentIntent(contentIntent)
+//                    .setSmallIcon(R.drawable.ic_oficios)
+//                    .setContentTitle(getString(R.string.incoming_call_text))
+//                    .setContentText(usuarioRemoto.getNombre() + " " + usuarioRemoto.getApellido())
+//                    .setFullScreenIntent(fullScreenPendingIntent, true)
+//                    .setDeleteIntent(declinePendingIntent)
+//                    .addAction(acceptAction)
+//                    .addAction(declineAction)
+//                    .setAutoCancel(true);
 //            ;
-
-            // Issue the notification.
-//            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(contextInstance);
-//            notificationManager.notify(idNotification, callNotification.build());
-
-            NotificationManager notificationManagerX = getSystemService(NotificationManager.class);
-            notificationManagerX.notify(notificacionCustomLlamada.getIdNotification(), callNotification.build());
-
-        } else {
-            // Create an explicit intent for an Activity in your app
-            declinePendingIntent = PendingIntent.getBroadcast(contextInstance, notificacionCustomLlamada.getIdNotification(), declineIntent, FLAG_UPDATE_CURRENT);
-            answerPendingIntent = PendingIntent.getBroadcast(contextInstance, notificacionCustomLlamada.getIdNotification(), answerIntent, FLAG_UPDATE_CURRENT);
-            fullScreenPendingIntent = PendingIntent.getActivity(contextInstance, notificacionCustomLlamada.getIdNotification(),
-                    fullScreenIntent, FLAG_UPDATE_CURRENT);
-
-
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-//                Notification.Builder callNotification = new Notification.Builder(contextInstance, VOICE_CALL_NOTIFICATIONS_CHANNEL_ID)
-//                        //                .setContentIntent(contentIntent)
-//                        .setSmallIcon(R.drawable.ic_oficios)
-//                        .setContentTitle(getString(R.string.incoming_call_text) + "-" + String.valueOf(Build.VERSION.SDK_INT))
+////                    .setStyle(
+////                            Notification.CallStyle.forIncomingCall(incoming_caller, declinePendingIntent, answerPendingIntent))
+////                    .addPerson(incoming_caller)
+////            ;
+//
+//            // Issue the notification.
+////            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(contextInstance);
+////            notificationManager.notify(idNotification, callNotification.build());
+//
+//            NotificationManager notificationManagerX = getSystemService(NotificationManager.class);
+//            notificationManagerX.notify(notificacionCustomLlamada.getIdNotification(), callNotification.build());
+//
+//        } else {
+//            // Create an explicit intent for an Activity in your app
+//            declinePendingIntent = PendingIntent.getBroadcast(contextInstance, notificacionCustomLlamada.getIdNotification(), declineIntent, FLAG_UPDATE_CURRENT);
+//            answerPendingIntent = PendingIntent.getBroadcast(contextInstance, notificacionCustomLlamada.getIdNotification(), answerIntent, FLAG_UPDATE_CURRENT);
+//            fullScreenPendingIntent = PendingIntent.getActivity(contextInstance, notificacionCustomLlamada.getIdNotification(),
+//                    fullScreenIntent, FLAG_UPDATE_CURRENT);
+//
+//
+//            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+////                Notification.Builder callNotification = new Notification.Builder(contextInstance, VOICE_CALL_NOTIFICATIONS_CHANNEL_ID)
+////                        //                .setContentIntent(contentIntent)
+////                        .setSmallIcon(R.drawable.ic_oficios)
+////                        .setContentTitle(getString(R.string.incoming_call_text) + "-" + String.valueOf(Build.VERSION.SDK_INT))
+////                        .setContentText(usuarioRemoto.getNombre() + " " + usuarioRemoto.getApellido())
+////                        .setFullScreenIntent(fullScreenPendingIntent, true)
+////                        .setDeleteIntent(declinePendingIntent)
+//////                        .addAction(actionAccept)
+//////                        .addAction(actionDecline)
+////                        .setAutoCancel(true);
+//////                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(contextInstance);
+//////                notificationManager.notify(notificacionCustomLlamada.getIdNotification(), callNotification.build());
+//
+//                final Icon icon =
+//                        Icon.createWithResource(contextInstance,
+//                                android.R.drawable.ic_dialog_info);
+//
+//                Notification.Action acceptAction =
+//                        new Notification.Action.Builder(
+//                                icon, "Contestar", answerPendingIntent)
+//                                .build();
+//
+//
+//                Notification.Action declineAction =
+//                        new Notification.Action.Builder(
+//                                icon, "Rechazar", declinePendingIntent)
+//                                .build();
+//
+//                Notification callNotification = new Notification.Builder(this, VOICE_CALL_NOTIFICATIONS_CHANNEL_ID)
+//                        .setContentTitle(getString(R.string.incoming_call_text))
 //                        .setContentText(usuarioRemoto.getNombre() + " " + usuarioRemoto.getApellido())
+//                        .setSmallIcon(R.drawable.ic_oficios)
+//                        .setFullScreenIntent(fullScreenPendingIntent, true)
+//                        .setDeleteIntent(declinePendingIntent).setTicker(getText(R.string.ticker_text))
+//                        .setPriority(Notification.PRIORITY_HIGH)
+//                        .setDefaults(Notification.DEFAULT_ALL)
+//                        .addAction(acceptAction)
+//                        .addAction(declineAction)
+//                        .build();
+//                NotificationManager notificationManagerX = getSystemService(NotificationManager.class);
+//                notificationManagerX.notify(notificacionCustomLlamada.getIdNotification(), callNotification);
+//
+//
+//            } else {
+//                // Create the reply action and add the remote input.
+//                NotificationCompat.Action actionAccept =
+//                        new NotificationCompat.Action.Builder(R.drawable.ic_oficios,
+//                                "Contestar", answerPendingIntent)
+//                                .build();
+//
+//                NotificationCompat.Action actionDecline =
+//                        new NotificationCompat.Action.Builder(R.drawable.ic_oficios,
+//                                "Rechazar", declinePendingIntent)
+//                                .build();
+//                NotificationCompat.Builder builder = new NotificationCompat.Builder(contextInstance, VOICE_CALL_NOTIFICATIONS_CHANNEL_ID)
+//                        .setSmallIcon(R.drawable.ic_oficios)
+//                        .setContentTitle(getString(R.string.incoming_call_text))
+//                        .setContentText(usuarioRemoto.getNombre() + " " + usuarioRemoto.getApellido())
+//                        .setPriority(NotificationCompat.PRIORITY_HIGH)
+//                        .setDefaults(NotificationCompat.DEFAULT_ALL)
 //                        .setFullScreenIntent(fullScreenPendingIntent, true)
 //                        .setDeleteIntent(declinePendingIntent)
-////                        .addAction(actionAccept)
-////                        .addAction(actionDecline)
+//                        .addAction(actionAccept)
+//                        .addAction(actionDecline)
+//                        // Set the intent that will fire when the user taps the notification
+////                    .setContentIntent(pendingIntent)
+////                    .setContentIntent(pendingIntent)
 //                        .setAutoCancel(true);
-////                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(contextInstance);
-////                notificationManager.notify(notificacionCustomLlamada.getIdNotification(), callNotification.build());
-
-                final Icon icon =
-                        Icon.createWithResource(contextInstance,
-                                android.R.drawable.ic_dialog_info);
-
-                Notification.Action acceptAction =
-                        new Notification.Action.Builder(
-                                icon, "Contestar", answerPendingIntent)
-                                .build();
-
-
-                Notification.Action declineAction =
-                        new Notification.Action.Builder(
-                                icon, "Rechazar", declinePendingIntent)
-                                .build();
-
-                Notification callNotification = new Notification.Builder(this, VOICE_CALL_NOTIFICATIONS_CHANNEL_ID)
-                        .setContentTitle(getString(R.string.incoming_call_text))
-                        .setContentText(usuarioRemoto.getNombre() + " " + usuarioRemoto.getApellido())
-                        .setSmallIcon(R.drawable.ic_oficios)
-                        .setFullScreenIntent(fullScreenPendingIntent, true)
-                        .setDeleteIntent(declinePendingIntent).setTicker(getText(R.string.ticker_text))
-                        .setPriority(Notification.PRIORITY_HIGH)
-                        .setDefaults(Notification.DEFAULT_ALL)
-                        .addAction(acceptAction)
-                        .addAction(declineAction)
-                        .build();
-                NotificationManager notificationManagerX = getSystemService(NotificationManager.class);
-                notificationManagerX.notify(notificacionCustomLlamada.getIdNotification(), callNotification);
-
-
-            } else {
-                // Create the reply action and add the remote input.
-                NotificationCompat.Action actionAccept =
-                        new NotificationCompat.Action.Builder(R.drawable.ic_oficios,
-                                "Contestar", answerPendingIntent)
-                                .build();
-
-                NotificationCompat.Action actionDecline =
-                        new NotificationCompat.Action.Builder(R.drawable.ic_oficios,
-                                "Rechazar", declinePendingIntent)
-                                .build();
-                NotificationCompat.Builder builder = new NotificationCompat.Builder(contextInstance, VOICE_CALL_NOTIFICATIONS_CHANNEL_ID)
-                        .setSmallIcon(R.drawable.ic_oficios)
-                        .setContentTitle(getString(R.string.incoming_call_text))
-                        .setContentText(usuarioRemoto.getNombre() + " " + usuarioRemoto.getApellido())
-                        .setPriority(NotificationCompat.PRIORITY_HIGH)
-                        .setDefaults(NotificationCompat.DEFAULT_ALL)
-                        .setFullScreenIntent(fullScreenPendingIntent, true)
-                        .setDeleteIntent(declinePendingIntent)
-                        .addAction(actionAccept)
-                        .addAction(actionDecline)
-                        // Set the intent that will fire when the user taps the notification
-//                    .setContentIntent(pendingIntent)
-//                    .setContentIntent(pendingIntent)
-                        .setAutoCancel(true);
-                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(contextInstance);
-                notificationManager.notify(notificacionCustomLlamada.getIdNotification(), builder.build());
-
-            }
-        }
-    }
+//                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(contextInstance);
+//                notificationManager.notify(notificacionCustomLlamada.getIdNotification(), builder.build());
+//
+//            }
+//        }
+//    }
 
 
     public void basicListen() {
@@ -3929,24 +3911,14 @@ public class CrazyService extends Service {
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                 .removeEventListener(childEventListenerNotificacionesConMensajesLocas);
 
-        databaseReference
-                .child("llamadasDeVideo")
-                .removeEventListener(LlamadaDeVideoListener);
 
         FirebaseDatabase.getInstance().getReference()
                 .child("citas")
                 .removeEventListener(childEventListenerCitasTrabajo);
 
-        FirebaseDatabase.getInstance().getReference()
-                .child("llamadasDeVoz")
-                .removeEventListener(LlamadaDeVozListener);
 
         contextInstance.unregisterReceiver(crazyDeleteBroadcastReceiver);
         contextInstance.unregisterReceiver(crazyReplyBroadcastReceiver);
-        contextInstance.unregisterReceiver(foregroundAcceptCallReceiver);
-        contextInstance.unregisterReceiver(foregroundRejectCallReceiver);
-        contextInstance.unregisterReceiver(foregrounAcceptVideoCallReceiver);
-        contextInstance.unregisterReceiver(foregroundRejectVideoCallReceiver);
 
 
         contextInstance.unregisterReceiver(acceptVideoCallBroadcastReceiver);

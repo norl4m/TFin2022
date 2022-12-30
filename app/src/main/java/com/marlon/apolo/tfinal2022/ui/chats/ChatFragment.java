@@ -54,7 +54,7 @@ public class ChatFragment extends Fragment {
     private AdminViewModel adminViewModel;
     private EmpleadorViewModel empleadorViewModel;
     private TrabajadorViewModel trabajadorViewModel;
-    private ChatListAdapter chatListAdapter;
+    //    private ChatListAdapter chatListAdapter;
     private ChatListAdapterPoc chatListAdapterPoc;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -72,7 +72,7 @@ public class ChatFragment extends Fragment {
         adminViewModel = new ViewModelProvider(requireActivity()).get(AdminViewModel.class);
         empleadorViewModel = new ViewModelProvider(this).get(EmpleadorViewModel.class);
         trabajadorViewModel = new ViewModelProvider(this).get(TrabajadorViewModel.class);
-        chatListAdapter = new ChatListAdapter(requireActivity());
+//        chatListAdapter = new ChatListAdapter(requireActivity());
         chatListAdapterPoc = new ChatListAdapterPoc(requireActivity());
         chatListAdapterPoc.setActivityInstance(requireActivity());
 
@@ -81,14 +81,14 @@ public class ChatFragment extends Fragment {
             adminViewModel.getAdministradorLiveData(FirebaseAuth.getInstance().getCurrentUser().getUid()).observe(getViewLifecycleOwner(), administrador -> {
                 if (administrador != null) {
                     usuarioFrom = administrador;
-                    chatListAdapter.setUsuarioFrom(usuarioFrom);
+//                    chatListAdapter.setUsuarioFrom(usuarioFrom);
                 }
             });
 
             empleadorViewModel.getOneEmpleador(FirebaseAuth.getInstance().getCurrentUser().getUid()).observe(getViewLifecycleOwner(), empleador -> {
                 if (empleador != null) {
                     usuarioFrom = empleador;
-                    chatListAdapter.setUsuarioFrom(usuarioFrom);
+//                    chatListAdapter.setUsuarioFrom(usuarioFrom);
 
                 }
             });
@@ -96,7 +96,7 @@ public class ChatFragment extends Fragment {
             trabajadorViewModel.getOneTrabajador(FirebaseAuth.getInstance().getCurrentUser().getUid()).observe(getViewLifecycleOwner(), trabajador -> {
                 if (trabajador != null) {
                     usuarioFrom = trabajador;
-                    chatListAdapter.setUsuarioFrom(usuarioFrom);
+//                    chatListAdapter.setUsuarioFrom(usuarioFrom);
                 }
             });
         }
@@ -108,7 +108,7 @@ public class ChatFragment extends Fragment {
         chatListAdapterPoc.setRecyclerView(recyclerView);
         ChatViewModel chatViewModel = new ViewModelProvider(this).get(ChatViewModel.class);
         chatViewModel.getAllChats().observe(getViewLifecycleOwner(), chats -> {
-            chatListAdapter.setChats(chats);
+//            chatListAdapter.setChats(chats);
 //
 //            switch (usuario) {
 //                case 0:/*admin*/

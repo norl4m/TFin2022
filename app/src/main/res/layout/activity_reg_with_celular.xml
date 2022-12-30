@@ -187,24 +187,24 @@
         android:orientation="vertical">
 
         <Button
-            android:background="@drawable/button_background"
             android:id="@+id/buttonVerificarCelular"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_below="@id/textFieldCode"
             android:layout_margin="8dp"
+            android:background="@drawable/button_background"
             android:fontFamily="@font/andika"
             android:text="@string/verificar_celular"
             android:textAllCaps="false" />
 
 
         <Button
-            android:background="@drawable/button_background"
             android:id="@+id/buttonEnviarCode"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_below="@id/textFieldCode"
             android:layout_margin="8dp"
+            android:background="@drawable/button_background"
             android:fontFamily="@font/andika"
             android:text="@string/enviar_cdigo"
             android:textAllCaps="false"
@@ -212,7 +212,6 @@
 
 
         <Button
-            android:background="@drawable/button_background"
             android:id="@+id/buttonSolicitarNuevoCode"
             android:layout_width="match_parent"
             android:layout_height="60dp"
@@ -221,6 +220,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
+            android:background="@drawable/button_background"
             android:fontFamily="@font/andika"
             android:text="@string/solicitar_nuevo_codigo"
             android:textAllCaps="false"

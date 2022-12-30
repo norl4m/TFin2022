@@ -48,10 +48,8 @@ import com.marlon.apolo.tfinal2022.individualChat.model.ChatPocData;
 import com.marlon.apolo.tfinal2022.individualChat.model.MessageCloudPoc;
 import com.marlon.apolo.tfinal2022.individualChat.view.CrazyIndividualChatActivity;
 import com.marlon.apolo.tfinal2022.individualChat.view.no.IndividualChatActivity;
-import com.marlon.apolo.tfinal2022.llamadaVoz.LlamadaVozActivity;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
 import com.marlon.apolo.tfinal2022.model.Usuario;
-import com.marlon.apolo.tfinal2022.videoLlamada.VideoLlamadaActivity;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -780,134 +778,6 @@ public class ChatListAdapterPoc extends RecyclerView.Adapter<ChatListAdapterPoc.
     }
 
 
-    public void opcionesTrabajadorDialog(Trabajador trabajador) {
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        // Get the layout inflater
-        LayoutInflater inflater = LayoutInflater.from(context);
-
-
-        View promptsView = inflater.inflate(R.layout.alert_dialog_opciones_trabajadores, null);
-
-
-        // set prompts.xml to alertdialog builder
-        builder.setView(promptsView);
-
-        final ImageView imageButtonMessage = promptsView.findViewById(R.id.imageViewMessage);
-        final ImageView imageButtonCall = promptsView.findViewById(R.id.imageViewCall);
-        final ImageView imageButtonVideoCall = promptsView.findViewById(R.id.imageViewVideoCall);
-        final ImageView imageButtonInfo = promptsView.findViewById(R.id.imageViewInfo);
-//        SharedPreferences sharedPreferences = context.getSharedPreferences("MyPreferences", MODE_PRIVATE);
-        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
-        boolean mode = mPrefs.getBoolean("sync_theme", false);
-        if (mode) {
-            imageButtonMessage.setColorFilter(context.getResources().getColor(R.color.white));
-            imageButtonCall.setColorFilter(context.getResources().getColor(R.color.white));
-            imageButtonVideoCall.setColorFilter(context.getResources().getColor(R.color.white));
-            imageButtonInfo.setColorFilter(context.getResources().getColor(R.color.white));
-        } else {
-
-        }
-
-        final ImageView imageView = promptsView.findViewById(R.id.imageViewTrabajador);
-        final TextView textView = promptsView.findViewById(R.id.textViewNombreUsuario);
-//
-
-        textView.setText(String.format("%s %s", trabajador.getNombre(), trabajador.getApellido()));
-        if (trabajador.getFotoPerfil() != null) {
-
-//            Bitmap bitmap = procesamientoDeImagen.stringToBitMap(trabajador.getFotoPerfil());
-//            imageView.setImageBitmap(bitmap);
-
-
-//            Glide
-//                    .with(requireActivity())
-//                    .load(trabajador.getFotoPerfil())
-//                    .placeholder(R.drawable.ic_baseline_person_24)
-//                    .transition(DrawableTransitionOptions.withCrossFade())
-//                    .into(imageView);
-
-            Glide
-                    .with(context)
-                    .load(trabajador.getFotoPerfil())
-//                    .circleCrop() /*mala idea*/
-                    .apply(new RequestOptions().override(300, 400))
-                    .placeholder(R.drawable.ic_baseline_person_24)
-                    .transition(DrawableTransitionOptions.withCrossFade())
-                    .into(imageView);
-
-
-        } else {
-            imageView.setImageResource(R.drawable.ic_baseline_person_24);
-        }
-        //imageButtonImages.setOnClickListener(clickListenerDialogCustom);
-        //imageButtonCall.setOnClickListener(clickListenerDialogCustom);
-//        imageButtonAudio.setOnClickListener(clickListenerDialogCustom);
-
-
-        imageButtonMessage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                Toast.makeText(context, "Message", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(context, IndividualChatActivity.class);
-                intent.putExtra("trabajador", trabajador);
-                context.startActivity(intent);
-                try {
-                    dialogVar.dismiss();
-                } catch (Exception e) {
-
-                }
-            }
-        });
-        imageButtonCall.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                Toast.makeText(context, "Call", Toast.LENGTH_SHORT).show();
-                Intent intentLlamadaVoz = new Intent(context, LlamadaVozActivity.class);
-                intentLlamadaVoz.putExtra("trabajador", trabajador);
-                context.startActivity(intentLlamadaVoz);
-                try {
-                    dialogVar.dismiss();
-                } catch (Exception e) {
-
-                }
-            }
-        });
-
-        imageButtonVideoCall.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                Toast.makeText(context, "Video Call", Toast.LENGTH_SHORT).show();
-                Intent intentVideoLlamada = new Intent(context, VideoLlamadaActivity.class);
-                intentVideoLlamada.putExtra("trabajador", trabajador);
-                context.startActivity(intentVideoLlamada);
-                try {
-                    dialogVar.dismiss();
-                } catch (Exception e) {
-                    Log.d(TAG, e.toString());
-                }
-            }
-        });
-
-        imageButtonInfo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(context, "Info", Toast.LENGTH_SHORT).show();
-//                Intent intentVideoLlamada = new Intent(context, VideoLlamadaActivity.class);
-//                context.startActivity(intentVideoLlamada);
-                try {
-                    dialogVar.dismiss();
-                } catch (Exception e) {
-
-                }
-            }
-        });
-
-
-//        return builder.create();
-        dialogVar = builder.create();
-        dialogVar.show();
-    }
 
 
     public void alertDialogInfo() {

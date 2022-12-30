@@ -6,8 +6,6 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" /> <!-- Permiso necesario para que la aplicación pueda utilizar la cámara -->
     <!-- Permiso de cámara: Tu aplicación debe solicitar permiso para usar una cámara del dispositivo. -->
     <!-- <uses-permission android:name="android.permission.CAMERA" /> &lt;!&ndash; Funciones de cámara: Tu aplicación también debe declarar el uso de funciones de cámara, por ejemplo &ndash;&gt; -->
-    <uses-permission android:name="android.permission.MANAGE_OWN_CALLS" />
-    <uses-permission android:name="android.permission.READ_CALL_LOG" /> <!-- <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" /> -->
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
     <uses-permission android:name="android.permission.WAKE_LOCK" /> <!-- Permisos -->
     <!--
@@ -90,7 +88,7 @@
         android:theme="@style/Theme.TFinal2022"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".citasTrabajo.SeleccionarEmpleadorActivity"
+            android:name=".citasTrabajo.view.SeleccionarEmpleadorActivity"
             android:exported="false"
             android:label="Seleccionar Empleador"
             android:screenOrientation="portrait"
@@ -110,22 +108,12 @@
             android:name=".ui.trabajadores.eliminar.DeleteUserAsyncActivity"
             android:exported="false" />
         <activity
-            android:name=".comunnication.voice.AgoraOnlyVoiceCallActivity"
+            android:name=".communicationAgora.voice.AgoraOnlyVoiceCallActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.TFinal2022.NoActionBar" />
         <activity
-            android:name=".comunnication.AgoraVoiceCallActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.TFinal2022.NoActionBar" />
-        <activity
-            android:name=".comunnication.video.AgoraVideoCallActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.TFinal2022.NoActionBar" />
-        <activity
-            android:name=".comunnication.VideoCallUIKitActivity"
+            android:name=".communicationAgora.video.AgoraVideoCallActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.TFinal2022.NoActionBar" />
@@ -267,7 +255,7 @@ Set color used with incoming notification messages. This is used when no color i
             android:screenOrientation="portrait"
             android:theme="@style/Theme.TFinal2022.NoActionBar" />
         <activity
-            android:name=".citasTrabajo.DetalleServicioActivity"
+            android:name=".citasTrabajo.view.DetalleServicioActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.TFinal2022.NoActionBar" />
@@ -291,9 +279,7 @@ Set color used with incoming notification messages. This is used when no color i
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.TFinal2022.NoActionBar" />
-        <activity
-            android:name=".videoLlamada.VideoChatViewActivity"
-            android:exported="false" />
+
         <activity
             android:name=".individualChat.view.no.IndividualChatActivity"
             android:exported="false"
@@ -354,20 +340,11 @@ Set color used with incoming notification messages. This is used when no color i
             android:screenOrientation="portrait"
             android:theme="@style/Theme.TFinal2022.NoActionBar" />
         <activity
-            android:name=".citasTrabajo.NuevaCitaTrabajoActivity"
+            android:name=".citasTrabajo.view.NuevaCitaTrabajoActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.TFinal2022.NoActionBar" />
-        <activity
-            android:name=".videoLlamada.VideoLlamadaActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.TFinal2022.NoActionBar" />
-        <activity
-            android:name=".llamadaVoz.LlamadaVozActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.TFinal2022.NoActionBar" />
+
         <activity
             android:name=".buscador.view.BuscadorActivity"
             android:exported="false"
@@ -499,9 +476,6 @@ Set color used with incoming notification messages. This is used when no color i
         <!-- <service -->
         <!-- android:name=".serviciosSegundoPlano.offlaneService.OffLaneService" -->
         <!-- android:exported="false" /> -->
-        <service
-            android:name=".foregroundCustomService.ForegroundCustomService"
-            android:exported="false" />
 
         <meta-data
             android:name="com.google.firebase.ml.vision.DEPENDENCIES"
@@ -510,16 +484,13 @@ Set color used with incoming notification messages. This is used when no color i
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <receiver
-            android:name=".foregroundCustomService.ForegroundReplyNotificationReceiver"
-            android:exported="false" />
 
         <service
             android:name=".CrazyService"
             android:exported="false" />
 
         <receiver
-            android:name=".citasTrabajo.AlarmReceiver"
+            android:name=".citasTrabajo.receivers.AlarmReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
@@ -539,8 +510,8 @@ Set color used with incoming notification messages. This is used when no color i
             android:name=".individualChat.view.CrazyReplyBroadcastReceiver"
             android:exported="false" />
         <receiver
-            android:name=".comunnication.video.AcceptVideoCallBroadcastReceiver"
-            android:exported="true">
+            android:name=".communicationAgora.video.AcceptVideoCallBroadcastReceiver"
+            android:exported="false">
             <intent-filter>
                 <action android:name="ACCEPT_INCOMING_CALL" />
                 <!-- <action android:name="android.intent.action.BOOT_COMPLETED" /> -->
@@ -548,8 +519,8 @@ Set color used with incoming notification messages. This is used when no color i
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".comunnication.video.RejectVideoCallBroadcastReceiver"
-            android:exported="true">
+            android:name=".communicationAgora.video.RejectVideoCallBroadcastReceiver"
+            android:exported="false">
             <intent-filter>
                 <action android:name="REJECT_INCOMING_CALL" />
                 <!-- <action android:name="android.intent.action.BOOT_COMPLETED" /> -->
@@ -557,8 +528,8 @@ Set color used with incoming notification messages. This is used when no color i
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".comunnication.voice.AcceptVoiceCallBroadcastReceiver"
-            android:exported="true">
+            android:name=".communicationAgora.voice.AcceptVoiceCallBroadcastReceiver"
+            android:exported="false">
             <intent-filter>
                 <action android:name="ACCEPT_INCOMING_VOICE_CALL" />
                 <!-- <action android:name="android.intent.action.BOOT_COMPLETED" /> -->
@@ -566,8 +537,8 @@ Set color used with incoming notification messages. This is used when no color i
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".comunnication.voice.RejectVoiceCallBroadcastReceiver"
-            android:exported="true">
+            android:name=".communicationAgora.voice.RejectVoiceCallBroadcastReceiver"
+            android:exported="false">
             <intent-filter>
                 <action android:name="REJECT_INCOMING_VOICE_CALL" />
                 <!-- <action android:name="android.intent.action.BOOT_COMPLETED" /> -->
@@ -575,9 +546,7 @@ Set color used with incoming notification messages. This is used when no color i
             </intent-filter>
         </receiver>
 
-        <provider
-            android:name=".buscador.MySuggestionProvider"
-            android:authorities="com.marlon.apolo.tfinal2022.buscador.MySuggestionProvider" />
+
     </application>
 
 </manifest>

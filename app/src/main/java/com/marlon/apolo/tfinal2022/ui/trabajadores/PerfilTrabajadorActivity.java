@@ -36,10 +36,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import com.marlon.apolo.tfinal2022.R;
-import com.marlon.apolo.tfinal2022.comunnication.video.AgoraVideoCallActivity;
-import com.marlon.apolo.tfinal2022.comunnication.voice.AgoraOnlyVoiceCallActivity;
+import com.marlon.apolo.tfinal2022.communicationAgora.video.AgoraVideoCallActivity;
+import com.marlon.apolo.tfinal2022.communicationAgora.voice.AgoraOnlyVoiceCallActivity;
 import com.marlon.apolo.tfinal2022.individualChat.view.CrazyIndividualChatActivity;
-import com.marlon.apolo.tfinal2022.llamadaVoz.LlamadaVozActivity;
 import com.marlon.apolo.tfinal2022.model.Administrador;
 import com.marlon.apolo.tfinal2022.model.Chat;
 import com.marlon.apolo.tfinal2022.model.Empleador;
@@ -50,7 +49,6 @@ import com.marlon.apolo.tfinal2022.model.Usuario;
 import com.marlon.apolo.tfinal2022.ui.datosPersonales.view.FotoActivity;
 import com.marlon.apolo.tfinal2022.ui.empleadores.EmpleadorViewModel;
 import com.marlon.apolo.tfinal2022.ui.oficios.OficioViewModel;
-import com.marlon.apolo.tfinal2022.videoLlamada.VideoLlamadaActivity;
 
 import java.util.ArrayList;
 

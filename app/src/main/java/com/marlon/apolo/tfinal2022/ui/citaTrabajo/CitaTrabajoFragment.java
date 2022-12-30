@@ -20,11 +20,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.marlon.apolo.tfinal2022.R;
-import com.marlon.apolo.tfinal2022.citasTrabajo.CitaListAdapter;
-import com.marlon.apolo.tfinal2022.citasTrabajo.CitaViewModel;
+import com.marlon.apolo.tfinal2022.citasTrabajo.adapters.CitaListAdapter;
+import com.marlon.apolo.tfinal2022.citasTrabajo.viewModel.CitaViewModel;
 import com.marlon.apolo.tfinal2022.model.Cita;
 
 import java.util.ArrayList;

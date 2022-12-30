@@ -54,8 +54,7 @@ public class OficioArchiVistaListAdapter extends RecyclerView.Adapter<OficioArch
 //                    AppCompatResources.getDrawable(contextInstance, R.drawable.bg9),
                     AppCompatResources.getDrawable(contextInstance, R.drawable.bg10),
                     AppCompatResources.getDrawable(contextInstance, R.drawable.bg11),
-                    AppCompatResources.getDrawable(contextInstance, R.drawable.bg12),
-                    AppCompatResources.getDrawable(contextInstance, R.drawable.bg13),
+                    AppCompatResources.getDrawable(contextInstance, R.drawable.bg12)
             };
             final int min = 0;
             final int max = itrems.length - 1;

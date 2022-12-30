@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.location.Address;
 import android.location.Geocoder;
 import android.media.MediaPlayer;
@@ -532,8 +533,14 @@ public class SpecialMessagePoc extends RecyclerView.Adapter<SpecialMessagePoc.My
                     break;
                 case 2:
                     if (current.getFrom().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+//                        holder.relativeLayoutAudioE.setBackgroundColor(colorPrimary);
+//                        holder.relativeLayoutAudioE.getBackground().setColorFilter(colorPrimary, PorterDuff.Mode.SRC_ATOP);
+
                         DrawableCompat.setTint(holder.relativeLayoutAudioE.getBackground(), colorPrimary);
                     } else {
+//                        holder.relativeLayoutAudioE.setBackgroundColor(colorSecondary);
+//                        holder.relativeLayoutAudioE.getBackground().setColorFilter(colorSecondary, PorterDuff.Mode.SRC_ATOP);
+
                         DrawableCompat.setTint(holder.relativeLayoutAudioE.getBackground(), colorSecondary);
                     }
                     break;

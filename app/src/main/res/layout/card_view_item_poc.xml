@@ -27,15 +27,6 @@
             android:fontFamily="@font/andika"
             android:hint="Detalle..."
             android:inputType="textNoSuggestions|textCapSentences|textMultiLine" />
-        <!--        <EditText-->
-        <!--            android:id="@+id/cardViewItemTextDetail"-->
-        <!--            android:layout_width="0dp"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:layout_weight="0.8"-->
-        <!--            android:text="Corte de cabello"-->
-        <!--            android:textSize="@dimen/textSize18Sp"-->
-        <!--            android:inputType="text"/>-->
-
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/cardViewItemTextPrice"

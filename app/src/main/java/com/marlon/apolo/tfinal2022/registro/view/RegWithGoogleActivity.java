@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
 
@@ -16,15 +17,18 @@ import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.OpenableColumns;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -98,6 +102,7 @@ public class RegWithGoogleActivity extends AppCompatActivity implements View.OnC
     private AlertDialog alertDialogVar;
     private String title;
     private String message;
+    private RelativeLayout relativeLayoutBack;
 
 
     @Override
@@ -110,7 +115,16 @@ public class RegWithGoogleActivity extends AppCompatActivity implements View.OnC
         empleadorListByEmail = new ArrayList<>();
         networkTool = new NetworkTool(this);
 
+        TypedValue typedValue = new TypedValue();
+        getTheme().resolveAttribute(R.attr.colorOnPrimary, typedValue, true);
+        int colorOnPrimary = typedValue.data;
 
+
+        relativeLayoutBack = findViewById(R.id.rltLytItems);
+
+        Drawable drawable = ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background);
+        drawable.setTint(colorOnPrimary);
+        relativeLayoutBack.setBackground(drawable);
         // Registers BroadcastReceiver to track network connection changes.
         IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         receiver = new NetworkReceiver();
@@ -357,7 +371,6 @@ public class RegWithGoogleActivity extends AppCompatActivity implements View.OnC
                         if (((!sPref) && (networkFlag)) || ((sPref) && (networkFlag))) {
 
 
-
                             ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
                             boolean isMetered = cm.isActiveNetworkMetered();
@@ -375,10 +388,6 @@ public class RegWithGoogleActivity extends AppCompatActivity implements View.OnC
                         }
 
 
-
-
-
-
 //
 //                        if (isOnlineWithWifi()) {
 //                            signIn();
@@ -390,7 +399,6 @@ public class RegWithGoogleActivity extends AppCompatActivity implements View.OnC
 //
 //                            }
 //                        }
-
 
 
                         /**

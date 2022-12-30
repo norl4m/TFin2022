@@ -10,8 +10,8 @@ android {
         applicationId 'com.marlon.apolo.tfinal2022'
         minSdk 21
         targetSdk 31
-        versionCode 5
-        versionName "5.4"
+        versionCode 9
+        versionName "9.6.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -119,11 +119,14 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.9.0'
 
 
-
     // For x.y.z, fill in a specific SDK version number. For example, 3.5.0.
     // Get the latest version number through the release notes.
 //    implementation 'io.agora.rtc:full-sdk:3.5.0'
+
     implementation 'io.agora.rtc:full-sdk:4.0.1'
+//    implementation "io.agora.rtc:full-rtc-basic:12-16-ci-test-2"
+//    implementation("io.agora.rtc:voice-rtc-basic:12-15-ci-test-2")
+//    implementation("io.agora.rtc:voice-sdk:12-15-ci-test-2")
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     // DO NOT CHANGE, CI may needs it when packaging
 

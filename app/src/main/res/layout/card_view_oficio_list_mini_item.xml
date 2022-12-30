@@ -14,6 +14,7 @@
             android:id="@+id/textViewOficioName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/andika"
             android:text="Electricista" />
 
     </RelativeLayout>

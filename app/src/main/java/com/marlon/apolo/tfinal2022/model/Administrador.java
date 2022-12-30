@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.FirebaseDatabase;
-import com.marlon.apolo.tfinal2022.citasTrabajo.DetalleServicioActivity;
+import com.marlon.apolo.tfinal2022.citasTrabajo.view.DetalleServicioActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;

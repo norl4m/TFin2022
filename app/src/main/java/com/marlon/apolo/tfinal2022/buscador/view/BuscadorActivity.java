@@ -12,7 +12,6 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.SearchRecentSuggestions;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,7 +26,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.marlon.apolo.tfinal2022.R;
-import com.marlon.apolo.tfinal2022.buscador.MySuggestionProvider;
 import com.marlon.apolo.tfinal2022.buscador.adaptadores.TrabajadorListAdapterBuscador;
 import com.marlon.apolo.tfinal2022.buscador.adaptadores.TrabajadorListAdapterResultados;
 import com.marlon.apolo.tfinal2022.model.Administrador;
@@ -59,6 +57,10 @@ public class BuscadorActivity extends AppCompatActivity {
     private TrabajadorListAdapterResultados trabajadorListAdapterResultados;
     private int searchMode;
     private Usuario usuarioLocal;
+    private ValueEventListener valueEventListenerCitas;
+    private ValueEventListener valueEventListenerTrabajadores;
+    private ValueEventListener valueEventListenerOficios;
+    private ValueEventListener valueEventListenerTrabajadoresLocales;
 
     private void loadLocalUser() {
         FirebaseDatabase.getInstance().getReference()
@@ -165,23 +167,24 @@ public class BuscadorActivity extends AppCompatActivity {
 //        }
 
 
+        valueEventListenerCitas = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ArrayList<Cita> citaArrayList = new ArrayList<>();
+                for (DataSnapshot data : snapshot.getChildren()) {
+                    Cita cita = data.getValue(Cita.class);
+                    citaArrayList.add(cita);
+                }
+                trabajadorListAdapterResultados.setCitaList(citaArrayList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        };
         FirebaseDatabase.getInstance().getReference().child("citas")
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        ArrayList<Cita> citaArrayList = new ArrayList<>();
-                        for (DataSnapshot data : snapshot.getChildren()) {
-                            Cita cita = data.getValue(Cita.class);
-                            citaArrayList.add(cita);
-                        }
-                        trabajadorListAdapterResultados.setCitaList(citaArrayList);
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
+                .addValueEventListener(valueEventListenerCitas);
 
 
         ChatViewModel chatViewModel = new ViewModelProvider(this).get(ChatViewModel.class);
@@ -196,15 +199,6 @@ public class BuscadorActivity extends AppCompatActivity {
                 trabajadorListAdapterResultados.setOficioList(oficios);
             }
         });
-
-
-//        trabajadorViewModel = new ViewModelProvider(this).get(TrabajadorViewModel.class);
-//        trabajadorViewModel.getAllTrabajadores().observe(getViewLifecycleOwner(), trabajadors -> {
-//            if (trabajadors != null) {
-//                trabajadorListAdapter.setTrabajadores(trabajadors);
-//                progressBar1.setVisibility(View.GONE);
-//            }
-//        });
 
 
         textViewResults = findViewById(R.id.textViewResultados);
@@ -327,7 +321,6 @@ public class BuscadorActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.search_by_name:
-                //Toast.makeText(getApplicationContext(), "by name", Toast.LENGTH_LONG).show();
                 searchMode = 1;
                 textViewResults.setText("");
                 textViewNoResults.setText("");
@@ -337,17 +330,12 @@ public class BuscadorActivity extends AppCompatActivity {
 
                 break;
             case R.id.search_by_oficio:
-                //Toast.makeText(getApplicationContext(), "by oficio", Toast.LENGTH_LONG).show();
                 searchMode = 0;
                 textViewResults.setText("");
                 textViewNoResults.setText("");
                 textViewResults.setVisibility(View.GONE);
                 textViewNoResults.setVisibility(View.GONE);
-                //loadTrabajadores();
-//                recyclerView1.setAdapter(trabajadorListAdapter);
-//                recyclerView1.setLayoutManager(new LinearLayoutManager(this));
-//                trabajadorListAdapter.setTrabajadores(new ArrayList<>());
-//                trabajadorListAdapter.setTrabajadors(new ArrayList<>());
+
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -355,27 +343,28 @@ public class BuscadorActivity extends AppCompatActivity {
     }
 
     private void loadTrabajadores() {
+        valueEventListenerTrabajadoresLocales = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ArrayList<Trabajador> trabajadorArrayList = new ArrayList<>();
+                for (DataSnapshot data : snapshot.getChildren()) {
+                    Trabajador trabajador = data.getValue(Trabajador.class);
+                    trabajadorArrayList.add(trabajador);
+                }
+                Collections.sort(trabajadorArrayList, (o1, o2) -> Double.compare(o2.getCalificacion(), o1.getCalificacion()));
+
+                trabajadorListAdapterBuscador.setTrabajadores(trabajadorArrayList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        };
 
         FirebaseDatabase.getInstance().getReference()
                 .child("trabajadores")
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        ArrayList<Trabajador> trabajadorArrayList = new ArrayList<>();
-                        for (DataSnapshot data : snapshot.getChildren()) {
-                            Trabajador trabajador = data.getValue(Trabajador.class);
-                            trabajadorArrayList.add(trabajador);
-                        }
-                        Collections.sort(trabajadorArrayList, (o1, o2) -> Double.compare(o2.getCalificacion(), o1.getCalificacion()));
-
-                        trabajadorListAdapterBuscador.setTrabajadores(trabajadorArrayList);
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
+                .addValueEventListener(valueEventListenerTrabajadoresLocales);
     }
 
     @Override
@@ -393,7 +382,6 @@ public class BuscadorActivity extends AppCompatActivity {
     }
 
     private void doMySearch(String query) {
-//        progressDialog.show();
         boolean oficioFound = false;
         switch (searchMode) {
             case 0:/* default por oficios*/
@@ -403,48 +391,6 @@ public class BuscadorActivity extends AppCompatActivity {
                 searchByName(query);
                 break;
         }
-
-
-//        oficioViewModel.getGetAllOficios().observe(this, oficios -> {
-//            if (oficios != null) {
-//                oficiosDB = oficios;
-//
-//                //Toast.makeText(getApplicationContext(), query, Toast.LENGTH_SHORT).show();
-//                //Toast.makeText(getApplicationContext(), String.valueOf(oficiosDB.size()), Toast.LENGTH_SHORT).show();
-//                //Toast.makeText(getApplicationContext(), String.valueOf(trabajadorsDB.size()), Toast.LENGTH_SHORT).show();
-//
-//                if (query.length() > 0) {
-//
-////        Toast.makeText(this, query, Toast.LENGTH_LONG).show();
-//                    SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
-//                            MySuggestionProvider.AUTHORITY, MySuggestionProvider.MODE);
-//                    suggestions.saveRecentQuery(query, null);
-//                    boolean flag = false;
-//                    if (oficiosDB != null) {
-//                        for (Oficio of : oficiosDB) {
-//                            if (of.getNombre().toUpperCase().equals(query.toUpperCase())) {
-//                                //Toast.makeText(getApplicationContext(), query, Toast.LENGTH_LONG).show();
-//                                flag = true;
-//                                filterTrabjadores(of, true);
-//                                break;
-//                            }
-//                        }
-//                        if (!flag) {
-//                            try {
-//                                progressDialog.dismiss();
-//                            } catch (Exception e) {
-//                            }
-//                        }
-//                    }
-//                } else {
-//                    try {
-//                        progressDialog.dismiss();
-//                    } catch (Exception e) {
-//                    }
-//                }
-//
-//            }
-//        });
 
     }
 
@@ -472,91 +418,70 @@ public class BuscadorActivity extends AppCompatActivity {
 
         recyclerViewBuscador.setVisibility(View.GONE);
         recyclerViewResultados.setVisibility(View.VISIBLE);
-//        FirebaseDatabase.getInstance().getReference()
-//                .child("trabajadores")
-//                .addValueEventListener(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                        ArrayList<Trabajador> trabajadorArrayList = new ArrayList<>();
-//                        for (DataSnapshot data : snapshot.getChildren()) {
-//                            Trabajador trabajador = data.getValue(Trabajador.class);
-//                            trabajadorArrayList.add(trabajador);
-//                        }
-//                        trabajadorListAdapter.setTrabajadores(trabajadorArrayList);
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError error) {
-//
-//                    }
-//                });
     }
 
     private void searchByOficio(String query) {
 
-        FirebaseDatabase.getInstance().getReference().child("oficios")
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        oficiosArrayList = new ArrayList<>();
-                        boolean flagFoundOficio = false;
-                        for (DataSnapshot data : snapshot.getChildren()) {
-                            Oficio oficio = data.getValue(Oficio.class);
-                            Log.d(TAG, oficio.toString());
-                            if (oficio.getNombre().toUpperCase().equals(query.toUpperCase())) {
+        valueEventListenerOficios = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                oficiosArrayList = new ArrayList<>();
+                boolean flagFoundOficio = false;
+                for (DataSnapshot data : snapshot.getChildren()) {
+                    Oficio oficio = data.getValue(Oficio.class);
+                    Log.d(TAG, oficio.toString());
+                    if (oficio.getNombre().toUpperCase().equals(query.toUpperCase())) {
 //                                Toast.makeText(getApplicationContext(), query, Toast.LENGTH_SHORT).show();
-                                flagFoundOficio = true;
-//                                ArrayList<Oficio> oficioArrayListAux = new ArrayList<>();
-//                                oficioArrayListAux.add(oficio);
-//                                trabajadorListAdapter.setOficioList(oficioArrayListAux);
-//                                SearchRecentSuggestions suggestions = new SearchRecentSuggestions(BuscadorActivity.this,
-//                                        MySuggestionProvider.AUTHORITY, MySuggestionProvider.MODE);
-//
-//                                suggestions.saveRecentQuery(query, null);
-                                searchTrabajadores(oficio.getIdOficio());
-                                break;
-                            }
-                        }
-                        if (!flagFoundOficio) {
-                            Toast.makeText(getApplicationContext(), "Lo sentimos el oficio no se encuentra registrado.", Toast.LENGTH_LONG).show();
+                        flagFoundOficio = true;
+
+                        searchTrabajadores(oficio.getIdOficio());
+                        break;
+                    }
+                }
+                if (!flagFoundOficio) {
+                    Toast.makeText(getApplicationContext(), "Lo sentimos el oficio no se encuentra registrado.", Toast.LENGTH_LONG).show();
 //                            bienvenidoTrabajadorListAdapter.setTrabajadores(new ArrayList<>());
-                            textViewNoResults.setText("No se encontraron trabajadores");
-                            textViewNoResults.setVisibility(View.VISIBLE);
-                            textViewResults.setVisibility(View.GONE);
-                            textViewResults.setText("");
-                        }
-                    }
+                    textViewNoResults.setText("No se encontraron trabajadores");
+                    textViewNoResults.setVisibility(View.VISIBLE);
+                    textViewResults.setVisibility(View.GONE);
+                    textViewResults.setText("");
+                }
+            }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
-                    }
-                });
+            }
+        };
+        FirebaseDatabase.getInstance().getReference().child("oficios")
+                .addValueEventListener(valueEventListenerOficios);
     }
 
     private void searchTrabajadores(String idOficio) {
-        FirebaseDatabase.getInstance().getReference().child("trabajadores")
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        ArrayList<Trabajador> trabajadorArrayList = new ArrayList<>();
-                        for (DataSnapshot data : snapshot.getChildren()) {
-                            Trabajador trabajador = data.getValue(Trabajador.class);
-                            for (String idOf : trabajador.getIdOficios()) {
-                                if (idOf.equals(idOficio)) {
-                                    trabajadorArrayList.add(trabajador);
-                                    break;
-                                }
-                            }
+        valueEventListenerTrabajadores = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ArrayList<Trabajador> trabajadorArrayList = new ArrayList<>();
+                for (DataSnapshot data : snapshot.getChildren()) {
+                    Trabajador trabajador = data.getValue(Trabajador.class);
+                    for (String idOf : trabajador.getIdOficios()) {
+                        if (idOf.equals(idOficio)) {
+                            trabajadorArrayList.add(trabajador);
+                            break;
                         }
-                        showTrabajadores(trabajadorArrayList);
                     }
+                }
+                showTrabajadores(trabajadorArrayList);
+            }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
-                    }
-                });
+            }
+        };
+
+        FirebaseDatabase.getInstance().getReference().child("trabajadores")
+                .addValueEventListener(valueEventListenerTrabajadores);
     }
 
     private void showTrabajadores(ArrayList<Trabajador> trabajadorArrayList) {
@@ -565,14 +490,6 @@ public class BuscadorActivity extends AppCompatActivity {
         textViewNoResults.setVisibility(View.GONE);
         textViewResults.setText(String.format(Locale.US, "%d resultados", trabajadorArrayList.size()));
         textViewResults.setVisibility(View.VISIBLE);
-//        ProgressBar progressBar1 = root.findViewById(R.id.fragHomeProgressBar1);
-//        recyclerView1.setAdapter(bienvenidoTrabajadorListAdapter);
-//        recyclerView1.setLayoutManager(new LinearLayoutManager(this));
-//        TrabajadorViewModel trabajadorViewModel = new ViewModelProvider(this).get(TrabajadorViewModel.class);
-//
-//
-//
-//        bienvenidoTrabajadorListAdapter.setTrabajadores(trabajadorArrayList);
 
 
         recyclerViewResultados.setAdapter(trabajadorListAdapterResultados);
@@ -585,21 +502,38 @@ public class BuscadorActivity extends AppCompatActivity {
         recyclerViewBuscador.setVisibility(View.GONE);
         recyclerViewResultados.setVisibility(View.VISIBLE);
 
-
-//        trabajadorViewModel.getAllTrabajadores().observe(this, trabajadors -> {
-//            if (trabajadors != null) {
-//                trabajadorListAdapter.setTrabajadores(trabajadors);
-////                progressBar1.setVisibility(View.GONE);
-//            }
-//        });
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
-                MySuggestionProvider.AUTHORITY, MySuggestionProvider.MODE);
-        suggestions.clearHistory();
 
+        try {
+            FirebaseDatabase.getInstance().getReference().child("citas")
+                    .removeEventListener(valueEventListenerCitas);
+        } catch (Exception e) {
+            Log.d(TAG, e.toString());
+        }
+
+        try {
+            FirebaseDatabase.getInstance().getReference().child("trabajadores")
+                    .removeEventListener(valueEventListenerTrabajadores);
+        } catch (Exception e) {
+            Log.d(TAG, e.toString());
+        }
+        try {
+
+            FirebaseDatabase.getInstance().getReference()
+                    .child("trabajadores")
+                    .removeEventListener(valueEventListenerTrabajadoresLocales);
+        } catch (Exception e) {
+            Log.d(TAG, e.toString());
+        }
+        try {
+            FirebaseDatabase.getInstance().getReference().child("oficios")
+                    .removeEventListener(valueEventListenerOficios);
+        } catch (Exception e) {
+            Log.d(TAG, e.toString());
+        }
     }
 }

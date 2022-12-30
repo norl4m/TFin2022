@@ -48,7 +48,7 @@ public class OficioArchiCRUDListAdapter extends RecyclerView.Adapter<OficioArchi
             int itemsColor = ContextCompat.getColor(contextInstance, R.color.white);
             holder.wordItemView.setTextColor(itemsColor);
             Drawable[] itrems = new Drawable[]{AppCompatResources.getDrawable(contextInstance, R.drawable.bg1),
-                    AppCompatResources.getDrawable(contextInstance, R.drawable.bg2),
+                    AppCompatResources.getDrawable(contextInstance, R.drawable.bg10),
                     AppCompatResources.getDrawable(contextInstance, R.drawable.bg3)};
             final int min = 0;
             final int max = itrems.length - 1;

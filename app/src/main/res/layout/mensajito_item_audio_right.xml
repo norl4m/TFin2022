@@ -54,8 +54,7 @@
             android:layout_marginStart="4dp"
             android:layout_marginTop="4dp"
             android:layout_marginEnd="4dp"
-            android:layout_marginBottom="4dp"
-            android:background="@drawable/shape_background_chat_item_right">
+            android:layout_marginBottom="4dp">
 
             <ImageView
                 android:id="@+id/profile_image"
@@ -99,8 +98,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="48dp"
-                android:layout_toRightOf="@id/profile_image">
+                android:background="@drawable/shape_background_chat_item_right">
 
 
                 <TextView
@@ -108,6 +106,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/seekBar"
+                    android:layout_marginLeft="48dp"
                     android:layout_marginTop="18dp"
                     android:text="0:00"
                     android:textAppearance="?android:attr/textAppearanceSmall"
@@ -119,6 +118,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
+                    android:layout_marginLeft="48dp"
                     android:visibility="visible" />
 
                 <TextView

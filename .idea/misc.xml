@@ -144,6 +144,7 @@
         <entry key="..\:/Users/p_cer/AndroidStudioProjects/testGit/app/src/main/res/drawable/edit_text_background.xml" value="0.2255" />
         <entry key="..\:/Users/p_cer/AndroidStudioProjects/testGit/app/src/main/res/drawable/end_call_icon_behavior.xml" value="0.1" />
         <entry key="..\:/Users/p_cer/AndroidStudioProjects/testGit/app/src/main/res/drawable/ic_baseline_videocam_24.xml" value="0.1" />
+        <entry key="..\:/Users/p_cer/AndroidStudioProjects/testGit/app/src/main/res/drawable/ic_search_employee.xml" value="0.117" />
         <entry key="..\:/Users/p_cer/AndroidStudioProjects/testGit/app/src/main/res/drawable/mic_icon_behavior.xml" value="0.1" />
         <entry key="..\:/Users/p_cer/AndroidStudioProjects/testGit/app/src/main/res/drawable/mic_mute_icon_behavior.xml" value="0.1" />
         <entry key="..\:/Users/p_cer/AndroidStudioProjects/testGit/app/src/main/res/drawable/mic_unmute_icon_behavior.xml" value="0.1" />
@@ -174,6 +175,7 @@
         <entry key="..\:/Users/p_cer/AndroidStudioProjects/testGit/app/src/main/res/layout/activity_habilidad.xml" value="0.13958333333333334" />
         <entry key="..\:/Users/p_cer/AndroidStudioProjects/testGit/app/src/main/res/layout/activity_informacion_inicial.xml" value="0.2" />
         <entry key="..\:/Users/p_cer/AndroidStudioProjects/testGit/app/src/main/res/layout/activity_llamada_voz.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/p_cer/AndroidStudioProjects/testGit/app/src/main/res/layout/activity_location.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/p_cer/AndroidStudioProjects/testGit/app/src/main/res/layout/activity_login.xml" value="0.1" />
         <entry key="..\:/Users/p_cer/AndroidStudioProjects/testGit/app/src/main/res/layout/activity_login_celular.xml" value="0.136" />
         <entry key="..\:/Users/p_cer/AndroidStudioProjects/testGit/app/src/main/res/layout/activity_login_email_password.xml" value="0.1" />
@@ -192,7 +194,7 @@
         <entry key="..\:/Users/p_cer/AndroidStudioProjects/testGit/app/src/main/res/layout/activity_perfil_trabajador.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/p_cer/AndroidStudioProjects/testGit/app/src/main/res/layout/activity_reg_foto_perfil.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/p_cer/AndroidStudioProjects/testGit/app/src/main/res/layout/activity_reg_nombre_usuario.xml" value="0.12692307692307692" />
-        <entry key="..\:/Users/p_cer/AndroidStudioProjects/testGit/app/src/main/res/layout/activity_reg_with_celular.xml" value="0.1" />
+        <entry key="..\:/Users/p_cer/AndroidStudioProjects/testGit/app/src/main/res/layout/activity_reg_with_celular.xml" value="0.2" />
         <entry key="..\:/Users/p_cer/AndroidStudioProjects/testGit/app/src/main/res/layout/activity_reg_with_email_poc.xml" value="0.2" />
         <entry key="..\:/Users/p_cer/AndroidStudioProjects/testGit/app/src/main/res/layout/activity_reg_with_google.xml" value="0.2" />
         <entry key="..\:/Users/p_cer/AndroidStudioProjects/testGit/app/src/main/res/layout/activity_regi_with_email_poc.xml" value="0.1" />

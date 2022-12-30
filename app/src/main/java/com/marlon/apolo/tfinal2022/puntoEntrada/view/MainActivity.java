@@ -60,13 +60,6 @@ public class MainActivity extends AppCompatActivity {
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // Cargamos una referencia a la preferencia para cambiar el tema
-//        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-//        boolean mode = mPrefs.getBoolean("sync_theme", false);
-//        if (mode) {
-//            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);/* recrea las actividades*/
-//        }
-//        hideSystemBars();
 
         super.onCreate(savedInstanceState);
         hideSystemBars();
@@ -90,10 +83,7 @@ public class MainActivity extends AppCompatActivity {
         textViewSlogan.setAnimation(bottomAnimation);
 //        textViewVersionCode.setText(String.format(Locale.getDefault(), "Versión: %d", versionCode));
         textViewVersionCode.setText(String.format("Versión: %s", versionName));
-//        if (mode) {
-        /* Permite cambiar el ìcono de color dentro del ícono en un ImageView*/
-//            imageViewLogo.setColorFilter(getResources().getColor(R.color.white));
-//        }
+
 
         /*Esto es una maravilla*/
         TypedValue typedValue = new TypedValue();
@@ -108,16 +98,6 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 if (getInfoInicialActivityFlag()) {
                     startActivity(new Intent(MainActivity.this, MainNavigationActivity.class));
-//                    startActivity(new Intent(MainActivity.this, CitaTrabajoArchiActivity.class));
-//                    startActivity(new Intent(MainActivity.this, DeleteUserAsyncActivity.class));
-//                    startActivity(new Intent(MainActivity.this, VideoCallUIKitActivity.class));
-//                    startActivity(new Intent(MainActivity.this, AgoraVideoCallActivity.class));
-//                    startActivity(new Intent(MainActivity.this, PerfilActivity.class));
-//                    startActivity(new Intent(MainActivity.this, MetodoRegActivity.cla   ss));
-//                    startActivity(new Intent(MainActivity.this, RegNombreUsuarioActivity.class));
-//                    startActivity(new Intent(MainActivity.this, OficioArchiActivity.class));
-//                    startActivity(new Intent(MainActivity.this, LoginPoCActivity.class));
-//                    startActivity(new Intent(MainActivity.this, RegWithEmailPasswordActivity.class));
                 } else {
                     startActivity(new Intent(MainActivity.this, InformacionInicialActivity.class));
                 }
@@ -139,18 +119,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void hideSystemBars() {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-//        WindowInsetsControllerCompat windowInsetsController =
-//                ViewCompat.getWindowInsetsController(getWindow().getDecorView());
-//        if (windowInsetsController == null) {
-//            return;
-//        }
-//        // Configure the behavior of the hidden system bars
-//        windowInsetsController.setSystemBarsBehavior(
-//                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-//        );
-//        // Hide both the status bar and the navigation bar
-//        windowInsetsController.hide(WindowInsetsCompat.Type.systemBars());
     }
 
 

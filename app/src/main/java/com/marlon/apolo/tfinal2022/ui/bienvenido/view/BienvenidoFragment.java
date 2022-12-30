@@ -37,7 +37,6 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -56,10 +55,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.admin.AdminViewModel;
-import com.marlon.apolo.tfinal2022.citasTrabajo.CitaListAdapter;
-import com.marlon.apolo.tfinal2022.citasTrabajo.CitaViewModel;
-import com.marlon.apolo.tfinal2022.comunnication.video.AgoraVideoCallActivity;
-import com.marlon.apolo.tfinal2022.comunnication.voice.AgoraOnlyVoiceCallActivity;
+import com.marlon.apolo.tfinal2022.citasTrabajo.adapters.CitaListAdapter;
+import com.marlon.apolo.tfinal2022.citasTrabajo.viewModel.CitaViewModel;
+import com.marlon.apolo.tfinal2022.communicationAgora.video.AgoraVideoCallActivity;
+import com.marlon.apolo.tfinal2022.communicationAgora.voice.AgoraOnlyVoiceCallActivity;
 import com.marlon.apolo.tfinal2022.databinding.FragmentBienvenidoBinding;
 import com.marlon.apolo.tfinal2022.individualChat.view.CrazyIndividualChatActivity;
 import com.marlon.apolo.tfinal2022.model.Administrador;
@@ -70,7 +69,6 @@ import com.marlon.apolo.tfinal2022.model.Oficio;
 import com.marlon.apolo.tfinal2022.model.Participante;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
 import com.marlon.apolo.tfinal2022.model.Usuario;
-import com.marlon.apolo.tfinal2022.ui.bienvenido.BienvenidoTrabajadorListAdapter;
 import com.marlon.apolo.tfinal2022.ui.bienvenido.BienvenidoViewModel;
 import com.marlon.apolo.tfinal2022.ui.bienvenido.HabilidadListAdapter;
 import com.marlon.apolo.tfinal2022.ui.bienvenido.adaptadores.OficioArchiVistaListAdapter;
@@ -78,7 +76,6 @@ import com.marlon.apolo.tfinal2022.ui.chats.ChatViewModel;
 import com.marlon.apolo.tfinal2022.ui.citaTrabajo.CitaTrabajoViewActivity;
 import com.marlon.apolo.tfinal2022.ui.empleadores.EmpleadorCRUDListAdapter;
 import com.marlon.apolo.tfinal2022.ui.empleadores.EmpleadorViewModel;
-import com.marlon.apolo.tfinal2022.ui.oficioArchi.model.OficioArchiModel;
 import com.marlon.apolo.tfinal2022.ui.oficioArchi.viewModel.OficioArchiViewModel;
 import com.marlon.apolo.tfinal2022.ui.oficios.adaptadores.OficioRegistroCRUDListAdapter;
 import com.marlon.apolo.tfinal2022.ui.oficios.OficioViewModel;
@@ -91,7 +88,6 @@ import com.marlon.apolo.tfinal2022.ui.trabajadores.adaptadores.TrabajadorVistaEm
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class BienvenidoFragment extends Fragment {
@@ -348,21 +344,6 @@ public class BienvenidoFragment extends Fragment {
 
     }
 
-
-    private void loadTrabajadores(View root) {
-        RecyclerView recyclerView1 = root.findViewById(R.id.fragHomeRecyclerView1);
-        ProgressBar progressBar1 = root.findViewById(R.id.fragHomeProgressBar1);
-        BienvenidoTrabajadorListAdapter bienvenidoTrabajadorListAdapter = new BienvenidoTrabajadorListAdapter(requireActivity());
-        recyclerView1.setAdapter(bienvenidoTrabajadorListAdapter);
-        recyclerView1.setLayoutManager(new LinearLayoutManager(requireActivity()));
-        TrabajadorViewModel trabajadorViewModel = new ViewModelProvider(this).get(TrabajadorViewModel.class);
-        trabajadorViewModel.getAllTrabajadores().observe(getViewLifecycleOwner(), trabajadors -> {
-            if (trabajadors != null) {
-                bienvenidoTrabajadorListAdapter.setTrabajadores(trabajadors);
-                progressBar1.setVisibility(View.GONE);
-            }
-        });
-    }
 
 
     public void loadCitas(View root) {

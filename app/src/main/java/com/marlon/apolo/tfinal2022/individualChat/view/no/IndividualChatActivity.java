@@ -60,13 +60,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.marlon.apolo.tfinal2022.R;
-import com.marlon.apolo.tfinal2022.citasTrabajo.NuevaCitaTrabajoActivity;
-import com.marlon.apolo.tfinal2022.comunnication.video.AgoraVideoCallActivity;
+import com.marlon.apolo.tfinal2022.citasTrabajo.view.NuevaCitaTrabajoActivity;
+import com.marlon.apolo.tfinal2022.communicationAgora.video.AgoraVideoCallActivity;
 import com.marlon.apolo.tfinal2022.individualChat.adaptador.SpecialMensajeNubeListAdapter;
 import com.marlon.apolo.tfinal2022.individualChat.view.MensajeNube;
 import com.marlon.apolo.tfinal2022.individualChat.view.MensajeNubeRepository;
 import com.marlon.apolo.tfinal2022.individualChat.view.location.LocationActivity;
-import com.marlon.apolo.tfinal2022.llamadaVoz.LlamadaVozActivity;
 import com.marlon.apolo.tfinal2022.model.Administrador;
 import com.marlon.apolo.tfinal2022.model.Chat;
 import com.marlon.apolo.tfinal2022.model.Empleador;
@@ -1396,11 +1395,11 @@ public class IndividualChatActivity extends AppCompatActivity implements View.On
                 }
                 break;
             case R.id.imageViewCall:
-                Intent intent = new Intent(IndividualChatActivity.this, LlamadaVozActivity.class);
-                intent.putExtra("usuarioTo", usuarioTo);
-                intent.putExtra("usuarioFrom", usuarioLocal);
-                intent.putExtra("callStatus", 0);
-                startActivity(intent);
+//                Intent intent = new Intent(IndividualChatActivity.this, LlamadaVozActivity.class);
+//                intent.putExtra("usuarioTo", usuarioTo);
+//                intent.putExtra("usuarioFrom", usuarioLocal);
+//                intent.putExtra("callStatus", 0);
+//                startActivity(intent);
                 break;
             case R.id.imageViewVideoCall:
 //                Intent intentVideollamada = new Intent(IndividualChatActivity.this, VideoChatViewActivity.class);

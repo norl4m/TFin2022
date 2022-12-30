@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
 
@@ -15,6 +16,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -24,12 +26,14 @@ import android.provider.OpenableColumns;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -131,6 +135,23 @@ public class RegWithCelularActivity extends AppCompatActivity implements View.On
 
         relativeLayoutProgressBarCustom = findViewById(R.id.progressBarCustom);
         relativeLayoutProgressBarCustom.setVisibility(View.GONE);
+
+        TypedValue typedValue = new TypedValue();
+        getTheme().resolveAttribute(R.attr.colorOnPrimary, typedValue, true);
+        int colorOnPrimary = typedValue.data;
+
+
+
+        ScrollView scrollView = findViewById(R.id.scrollView);
+        Drawable drawable = ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background);
+        drawable.setTint(colorOnPrimary);
+        scrollView.setBackground(drawable);
+
+        LinearLayout linearLayoutBack = findViewById(R.id.linLytBack);
+
+        linearLayoutBack.setBackgroundColor(colorOnPrimary);
+
+
 
         FirebaseDatabase.getInstance().getReference().child("empleadores")
                 .addListenerForSingleValueEvent(new ValueEventListener() {

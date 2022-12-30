@@ -32,10 +32,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 import com.marlon.apolo.tfinal2022.R;
-import com.marlon.apolo.tfinal2022.comunnication.video.AgoraVideoCallActivity;
-import com.marlon.apolo.tfinal2022.comunnication.voice.AgoraOnlyVoiceCallActivity;
+import com.marlon.apolo.tfinal2022.communicationAgora.video.AgoraVideoCallActivity;
+import com.marlon.apolo.tfinal2022.communicationAgora.voice.AgoraOnlyVoiceCallActivity;
 import com.marlon.apolo.tfinal2022.individualChat.view.CrazyIndividualChatActivity;
-import com.marlon.apolo.tfinal2022.llamadaVoz.LlamadaVozActivity;
 import com.marlon.apolo.tfinal2022.model.Chat;
 import com.marlon.apolo.tfinal2022.model.Cita;
 import com.marlon.apolo.tfinal2022.model.Oficio;
@@ -44,7 +43,6 @@ import com.marlon.apolo.tfinal2022.model.Trabajador;
 import com.marlon.apolo.tfinal2022.model.Usuario;
 import com.marlon.apolo.tfinal2022.ui.oficios.OficioTrabajadorVistaListAdapter;
 import com.marlon.apolo.tfinal2022.ui.trabajadores.PerfilTrabajadorActivity;
-import com.marlon.apolo.tfinal2022.videoLlamada.VideoLlamadaActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -144,20 +142,7 @@ public class TrabajadorListAdapterResultados extends RecyclerView.Adapter<Trabaj
         ArrayList<Oficio> oficiosFiltrados = new ArrayList<>();
         for (Oficio o : oficioList) {
             if (current.getIdOficios().contains(o.getIdOficio())) {
-//                ArrayList<Habilidad> habilidadsFiltradas = new ArrayList<>();
-//                ArrayList<Habilidad> habilidads = new ArrayList<>();
-//                habilidads = o.getHabilidadArrayList();
-//                o.setHabilidadArrayList(new ArrayList<>());
-//                try {
-//                    for (Habilidad h : habilidads) {
-//                        if (current.getIdHabilidades().contains(h.getIdHabilidad())) {
-//                            habilidadsFiltradas.add(h);
-//                        }
-//                    }
-//                    o.setHabilidadArrayList(habilidadsFiltradas);
-//                } catch (Exception e) {
-//                    Log.d(TAG, e.toString());
-//                }
+
                 oficiosFiltrados.add(o);
             }
         }
@@ -169,12 +154,7 @@ public class TrabajadorListAdapterResultados extends RecyclerView.Adapter<Trabaj
 
         holder.recyclerViewOficios.setLayoutManager(layoutManager);
         oficioTrabajadorVistaListAdapter.setOficios(oficiosFiltrados);
-//        oficioTrabajadorVistaListAdapter.setOficios(oficioList);
-//        oficioViewModel.getAllOficios().observe((LifecycleOwner) context, oficioRegistroListAdapter::setOficios);
 
-//        holder.textViewCalif.setText(String.format("Calificación: %.2f " + "/ 5.00", current.getCalificacion()));
-//        holder.textViewCalif.setText(String.format("Calificación: %.1f " + "/ 5.0", current.getCalificacion()));
-//        holder.ratingBar.setRating((float) current.getCalificacion());
 
         if (current.getCalificacion() > 0.0) {
             holder.textViewCalif.setText(String.format("Calificación: %.1f " + "/ 5.0", current.getCalificacion()));
@@ -266,63 +246,6 @@ public class TrabajadorListAdapterResultados extends RecyclerView.Adapter<Trabaj
         notifyDataSetChanged();
     }
 
-//    public void filtrado(final String txtBuscar) {
-////        trabajadorsAux = new ArrayList<>();
-//
-//        int longitud = txtBuscar.length();
-//        if (longitud == 0) {
-//            trabajadorsAux.clear();
-//            trabajadorsAux.addAll(trabajadors);
-//        } else {
-//            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-//                List<Trabajador> collecion = trabajadors.stream()
-//                        .filter(i -> (i.getNombre() + " " + i.getApellido()).toLowerCase().contains(txtBuscar.toLowerCase()))
-//                        .collect(Collectors.toList());
-//                trabajadorsAux.clear();
-//                trabajadorsAux.addAll(collecion);
-//            } else {
-//                for (Trabajador c : trabajadors) {
-//                    if ((c.getNombre() + " " + c.getApellido()).toLowerCase().contains(txtBuscar.toLowerCase())) {
-//                        trabajadorsAux.add(c);
-//                    }
-//                }
-//            }
-//        }
-//        notifyDataSetChanged();
-//    }
-//
-//    public void filtradoByOficio(final String txtBuscar) {
-////        trabajadorsAux = new ArrayList<>();
-//
-//        String idFound = "";
-//        ArrayList<String> ofids = new ArrayList<>();
-//        for (Oficio o : oficioList) {
-//            if (o.getNombre().toLowerCase().contains(txtBuscar.toLowerCase())) {
-////                idFound = o.getIdOficio();
-//                ofids.add(o.getIdOficio());
-//            }
-//        }
-//        int longitud = txtBuscar.length();
-//        if (longitud == 0) {
-//            trabajadorsAux.clear();
-//            trabajadorsAux.addAll(trabajadors);
-//        } else {
-//            trabajadorsAux.clear();
-//            for (Trabajador tr : trabajadors) {
-//                for (String idof : tr.getIdOficios()) {
-//                    for (String ofiIdLocal : ofids) {
-//                        if (idof.equals(ofiIdLocal)) {
-//                            trabajadorsAux.add(tr);
-//                            break;
-//                        }
-//                    }
-//
-//                }
-//            }
-//        }
-//        notifyDataSetChanged();
-//    }
-
 
     public void setChatList(List<Chat> chatList) {
         this.chatList = chatList;
@@ -402,18 +325,6 @@ public class TrabajadorListAdapterResultados extends RecyclerView.Adapter<Trabaj
         final ImageView imageButtonCall = promptsView.findViewById(R.id.imageViewCall);
         final ImageView imageButtonVideoCall = promptsView.findViewById(R.id.imageViewVideoCall);
         final ImageView imageButtonInfo = promptsView.findViewById(R.id.imageViewInfo);
-//        SharedPreferences sharedPreferences = context.getSharedPreferences("MyPreferences", MODE_PRIVATE);
-//        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
-//        boolean mode = mPrefs.getBoolean("sync_theme", false);
-//        if (mode) {
-//            imageButtonMessage.setColorFilter(context.getResources().getColor(R.color.white));
-//            imageButtonCall.setColorFilter(context.getResources().getColor(R.color.white));
-//            imageButtonVideoCall.setColorFilter(context.getResources().getColor(R.color.white));
-//            imageButtonInfo.setColorFilter(context.getResources().getColor(R.color.white));
-//        } else {
-//
-//        }
-
 
         /*Esto es una maravilla*/
         TypedValue typedValue = new TypedValue();
@@ -433,16 +344,6 @@ public class TrabajadorListAdapterResultados extends RecyclerView.Adapter<Trabaj
         textView.setText(String.format("%s %s", trabajador.getNombre(), trabajador.getApellido()));
         if (trabajador.getFotoPerfil() != null) {
 
-//            Bitmap bitmap = procesamientoDeImagen.stringToBitMap(trabajador.getFotoPerfil());
-//            imageView.setImageBitmap(bitmap);
-
-
-//            Glide
-//                    .with(requireActivity())
-//                    .load(trabajador.getFotoPerfil())
-//                    .placeholder(R.drawable.ic_baseline_person_24)
-//                    .transition(DrawableTransitionOptions.withCrossFade())
-//                    .into(imageView);
 
             Glide
                     .with(context)
@@ -459,9 +360,6 @@ public class TrabajadorListAdapterResultados extends RecyclerView.Adapter<Trabaj
             imageView.setColorFilter(colorPrimary);
 
         }
-        //imageButtonImages.setOnClickListener(clickListenerDialogCustom);
-        //imageButtonCall.setOnClickListener(clickListenerDialogCustom);
-//        imageButtonAudio.setOnClickListener(clickListenerDialogCustom);
 
 
         imageButtonMessage.setOnClickListener(new View.OnClickListener() {
@@ -471,35 +369,7 @@ public class TrabajadorListAdapterResultados extends RecyclerView.Adapter<Trabaj
 //                Intent intent = new Intent(context, IndividualChatActivity.class);
                 Intent intent = new Intent(context, CrazyIndividualChatActivity.class);
                 intent.putExtra("trabajador", trabajador);
-                //intent.putExtra("usuarioFrom", usuarioFrom);
-                //Toast.makeText(context, usuarioFrom.toString(), Toast.LENGTH_SHORT).show();
-//
-//                int exitFlag = 0;
-//                if (chatList != null) {
-//                    for (Chat chat : chatList) {
-//                        exitFlag = 0;
-//                        for (Participante p : chat.getParticipantes()) {
-//                            if (p.getIdParticipante().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
-//                                exitFlag++;
-//                            }
-//                            if (p.getIdParticipante().equals(trabajador.getIdUsuario())) {
-//                                exitFlag++;
-//                            }
-//                            if (exitFlag == 2) {
-//                                break;
-//                            }
-//                        }
-//                        if (exitFlag == 2) {
-//                            //Toast.makeText(context, chat.toString(), Toast.LENGTH_SHORT).show();
-//                            intent.putExtra("chat", chat);
-//                            break;
-//                        }
-//                    }
-//                }
 
-                //intent.putExtra("trabajador", trabajador);
-
-                //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 context.startActivity(intent);
                 try {
                     dialogVar.dismiss();
@@ -514,14 +384,6 @@ public class TrabajadorListAdapterResultados extends RecyclerView.Adapter<Trabaj
             @Override
             public void onClick(View v) {
 
-//                Intent intentllamadaVoz = new Intent(context, LlamadaVozActivity.class);
-//                intentllamadaVoz.putExtra("usuarioTo", (Usuario) trabajador);
-//                intentllamadaVoz.putExtra("usuarioFrom", (Usuario) usuarioFrom);
-//                intentllamadaVoz.putExtra("callStatus", 0);
-//                context.startActivity(intentllamadaVoz);
-//
-//
-
 
                 Intent intentllamadaVoz = new Intent(context, AgoraOnlyVoiceCallActivity.class);
                 intentllamadaVoz.putExtra("usuarioRemoto", (Usuario) trabajador);
@@ -533,14 +395,6 @@ public class TrabajadorListAdapterResultados extends RecyclerView.Adapter<Trabaj
                 context.startActivity(intentllamadaVoz);
 
 
-//
-//                Intent intent = new Intent(context, LlamadaVozActivity.class);
-//                intent.putExtra("usuarioTo", (Usuario) trabajador);
-////                intent.putExtra("usuarioFrom", usuarioLocal);
-//                intent.putExtra("callStatus", 0
-//                );
-//                context.startActivity(intent);
-//
                 try {
                     dialogVar.dismiss();
                 } catch (Exception e) {
@@ -552,12 +406,6 @@ public class TrabajadorListAdapterResultados extends RecyclerView.Adapter<Trabaj
         imageButtonVideoCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Toast.makeText(context, "Video Call", Toast.LENGTH_SHORT).show();
-//                Intent intentVideollamada = new Intent(context, VideoLlamadaActivity.class);
-//                intentVideollamada.putExtra("usuarioTo", (Usuario) trabajador);
-//                intentVideollamada.putExtra("usuarioFrom", (Usuario) usuarioFrom);
-//                intentVideollamada.putExtra("callStatus", 0);
-//                context.startActivity(intentVideollamada);
 
 
                 Intent intentVideollamada = new Intent(context, AgoraVideoCallActivity.class);
@@ -659,9 +507,5 @@ public class TrabajadorListAdapterResultados extends RecyclerView.Adapter<Trabaj
         this.oficioList = oficioList;
     }
 
-//    public void setTrabajadors(List<Trabajador> trabajadors) {
-////        this.trabajadors = trabajadors;
-//        this.trabajadorsAux = trabajadors;
-//    }
 }
 

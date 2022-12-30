@@ -36,11 +36,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
@@ -55,7 +53,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.admin.AdminViewModel;
-import com.marlon.apolo.tfinal2022.citasTrabajo.HerramientaCalendar;
 import com.marlon.apolo.tfinal2022.databinding.FragmentDataUsuarioBinding;
 import com.marlon.apolo.tfinal2022.model.Administrador;
 import com.marlon.apolo.tfinal2022.model.Cita;
@@ -66,11 +63,7 @@ import com.marlon.apolo.tfinal2022.ui.datosPersonales.viewModel.DataUsuarioViewM
 import com.marlon.apolo.tfinal2022.ui.empleadores.EmpleadorViewModel;
 import com.marlon.apolo.tfinal2022.ui.trabajadores.TrabajadorViewModel;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
 public class DataUsuarioFragment extends Fragment implements View.OnClickListener {

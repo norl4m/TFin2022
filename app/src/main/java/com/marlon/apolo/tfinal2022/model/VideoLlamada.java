@@ -13,7 +13,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.IgnoreExtraProperties;
 import com.google.firebase.database.ValueEventListener;
-import com.marlon.apolo.tfinal2022.videoLlamada.VideoChatViewActivity;
 
 import java.io.Serializable;
 
@@ -139,85 +138,85 @@ public class VideoLlamada implements Serializable {
         this.nameDestiny = nameDestiny;
     }
 
-    public void llamar(RtcEngine rtcEngine, String token, String channelNameShare, String extraData, int uidUser, VideoChatViewActivity videoChatViewActivity) {
-        try {
-            VideoLlamada videoLlamadaLocal = this;
-            FirebaseDatabase.getInstance()
-                    .getReference()
-                    .child("videoLlamadas")
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            int exit = 0;
-                            for (DataSnapshot data : snapshot.getChildren()) {
-                                try {
-                                    VideoLlamada videoLlamada = data.getValue(VideoLlamada.class);
-                                    if (videoLlamada.getDestiny().equals(videoLlamadaLocal.getDestiny())) {
-                                        if (videoLlamada.isChannelConnectedStatus()) {
-                                            Log.d("TAG", "Usuario ocupado!");
-                                            exit = 1;
-                                            break;
-                                        }
-                                        if (exit == 1) {
-                                            break;
-                                        }
-                                    }
-                                } catch (Exception e) {
-
-                                }
-                            }
-
-                            if (exit == 1) {
-                                Log.d("TAG", "El usuario no se encuentra disponible!");
-                                Log.d("TAG", "Por favor inténtelo más tarde!");
-
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Toast.makeText(videoChatViewActivity,
-                                                "El usuario no se encuentra disponible!" +
-                                                        "\nPor favor inténtelo más tarde!", Toast.LENGTH_LONG).show();
-                                        videoChatViewActivity.finish();
-                                    }
-                                }, 1000);
-//                                Log.d("TAG","Usuario ocupado!");
-                            } else {
-                                try {
-                                    FirebaseDatabase.getInstance()
-                                            .getReference()
-                                            .child("videoLlamadas")
-                                            .child(videoLlamadaLocal.id)
-                                            .setValue(videoLlamadaLocal)
-                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<Void> task) {
-                                                    if (task.isSuccessful()) {
-                                                        rtcEngine.joinChannel(token, channelNameShare, extraData, uidUser);
-                                                        //Toast.makeText(getApplicationContext(), "LLamando a " + nameTo, Toast.LENGTH_SHORT).show();
-                                                    } else {
-
-                                                    }
-                                                }
-                                            });
-                                } catch (Exception e) {
-
-                                }
-
-                            }
-
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
-
-
-        } catch (Exception e) {
-        }
-
-    }
+//    public void llamar(RtcEngine rtcEngine, String token, String channelNameShare, String extraData, int uidUser, VideoChatViewActivity videoChatViewActivity) {
+//        try {
+//            VideoLlamada videoLlamadaLocal = this;
+//            FirebaseDatabase.getInstance()
+//                    .getReference()
+//                    .child("videoLlamadas")
+//                    .addListenerForSingleValueEvent(new ValueEventListener() {
+//                        @Override
+//                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                            int exit = 0;
+//                            for (DataSnapshot data : snapshot.getChildren()) {
+//                                try {
+//                                    VideoLlamada videoLlamada = data.getValue(VideoLlamada.class);
+//                                    if (videoLlamada.getDestiny().equals(videoLlamadaLocal.getDestiny())) {
+//                                        if (videoLlamada.isChannelConnectedStatus()) {
+//                                            Log.d("TAG", "Usuario ocupado!");
+//                                            exit = 1;
+//                                            break;
+//                                        }
+//                                        if (exit == 1) {
+//                                            break;
+//                                        }
+//                                    }
+//                                } catch (Exception e) {
+//
+//                                }
+//                            }
+//
+//                            if (exit == 1) {
+//                                Log.d("TAG", "El usuario no se encuentra disponible!");
+//                                Log.d("TAG", "Por favor inténtelo más tarde!");
+//
+//                                new Handler().postDelayed(new Runnable() {
+//                                    @Override
+//                                    public void run() {
+//                                        Toast.makeText(videoChatViewActivity,
+//                                                "El usuario no se encuentra disponible!" +
+//                                                        "\nPor favor inténtelo más tarde!", Toast.LENGTH_LONG).show();
+//                                        videoChatViewActivity.finish();
+//                                    }
+//                                }, 1000);
+////                                Log.d("TAG","Usuario ocupado!");
+//                            } else {
+//                                try {
+//                                    FirebaseDatabase.getInstance()
+//                                            .getReference()
+//                                            .child("videoLlamadas")
+//                                            .child(videoLlamadaLocal.id)
+//                                            .setValue(videoLlamadaLocal)
+//                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                                @Override
+//                                                public void onComplete(@NonNull Task<Void> task) {
+//                                                    if (task.isSuccessful()) {
+//                                                        rtcEngine.joinChannel(token, channelNameShare, extraData, uidUser);
+//                                                        //Toast.makeText(getApplicationContext(), "LLamando a " + nameTo, Toast.LENGTH_SHORT).show();
+//                                                    } else {
+//
+//                                                    }
+//                                                }
+//                                            });
+//                                } catch (Exception e) {
+//
+//                                }
+//
+//                            }
+//
+//                        }
+//
+//                        @Override
+//                        public void onCancelled(@NonNull DatabaseError error) {
+//
+//                        }
+//                    });
+//
+//
+//        } catch (Exception e) {
+//        }
+//
+//    }
 
 
     public void contestar(RtcEngine rtcEngine, String token, String channelNameShare, String extraData, int uidUser) {
@@ -258,25 +257,25 @@ public class VideoLlamada implements Serializable {
                 });
     }
 
-    public void rechazar(String chatID, VideoChatViewActivity videoChatViewActivity) {
-        FirebaseDatabase.getInstance()
-                .getReference()
-                .child("videoLlamadas")
-                .child(chatID)
-                .child("llamadaRechazada")
-                .setValue(true)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            //Toast.makeText(videoChatViewActivity, "LLamada rechazada", Toast.LENGTH_SHORT).show();
-
-                        } else {
-
-                        }
-                    }
-                });
-    }
+//    public void rechazar(String chatID, VideoChatViewActivity videoChatViewActivity) {
+//        FirebaseDatabase.getInstance()
+//                .getReference()
+//                .child("videoLlamadas")
+//                .child(chatID)
+//                .child("llamadaRechazada")
+//                .setValue(true)
+//                .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<Void> task) {
+//                        if (task.isSuccessful()) {
+//                            //Toast.makeText(videoChatViewActivity, "LLamada rechazada", Toast.LENGTH_SHORT).show();
+//
+//                        } else {
+//
+//                        }
+//                    }
+//                });
+//    }
 
     public boolean isLlamadaRechazada() {
         return llamadaRechazada;

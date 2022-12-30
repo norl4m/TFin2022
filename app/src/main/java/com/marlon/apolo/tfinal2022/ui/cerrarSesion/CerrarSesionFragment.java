@@ -29,10 +29,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.marlon.apolo.tfinal2022.CrazyService;
 import com.marlon.apolo.tfinal2022.MainNavigationActivity;
 import com.marlon.apolo.tfinal2022.R;
-import com.marlon.apolo.tfinal2022.foregroundCustomService.ForegroundCustomService;
-import com.marlon.apolo.tfinal2022.login.LoginActivity;
-import com.marlon.apolo.tfinal2022.login.LoginEmailPasswordActivity;
-import com.marlon.apolo.tfinal2022.model.Administrador;
+
 
 import java.io.File;
 import java.util.Objects;
@@ -145,7 +142,7 @@ public class CerrarSesionFragment extends Fragment {
                         clearApplicationData();
                         try {
                             clearApplicationData();
-                        }catch (Exception e){
+                        } catch (Exception e) {
                             Log.d(TAG, e.toString());
                         }
 
@@ -175,7 +172,7 @@ public class CerrarSesionFragment extends Fragment {
     }
 
     public void clearApplicationData() {
-        Log.d(TAG,"clearApplicationData");
+        Log.d(TAG, "clearApplicationData");
 //        File cache = this.getActivity().getCacheDir();
 //        File appDir = new File(cache.getParent());
 
@@ -210,15 +207,15 @@ public class CerrarSesionFragment extends Fragment {
     }
 
     private void clearAppData() {
-        Log.d(TAG,"clearAppData");
+        Log.d(TAG, "clearAppData");
         try {
             // clearing app data
             if (Build.VERSION_CODES.KITKAT <= Build.VERSION.SDK_INT) {
-                ((ActivityManager)requireActivity().getSystemService(ACTIVITY_SERVICE)).clearApplicationUserData(); // note: it has a return value!
+                ((ActivityManager) requireActivity().getSystemService(ACTIVITY_SERVICE)).clearApplicationUserData(); // note: it has a return value!
             } else {
                 String packageName = requireActivity().getApplicationContext().getPackageName();
                 Runtime runtime = Runtime.getRuntime();
-                runtime.exec("pm clear "+packageName);
+                runtime.exec("pm clear " + packageName);
             }
 
         } catch (Exception e) {
