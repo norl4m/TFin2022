@@ -1,7 +1,5 @@
 package com.marlon.apolo.tfinal2022.ui.oficioArchi.model;
 
-import com.marlon.apolo.tfinal2022.model.Habilidad;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -10,7 +8,6 @@ public class OficioArchiModel implements Serializable {
     private String nombre;
     private String uriPhoto;
     private boolean estadoRegistro;
-    private ArrayList<Habilidad> habilidadArrayList;
 
 
     public OficioArchiModel() {
@@ -48,13 +45,7 @@ public class OficioArchiModel implements Serializable {
         this.estadoRegistro = estadoRegistro;
     }
 
-    public ArrayList<Habilidad> getHabilidadArrayList() {
-        return habilidadArrayList;
-    }
 
-    public void setHabilidadArrayList(ArrayList<Habilidad> habilidadArrayList) {
-        this.habilidadArrayList = habilidadArrayList;
-    }
 
     @Override
     public String toString() {

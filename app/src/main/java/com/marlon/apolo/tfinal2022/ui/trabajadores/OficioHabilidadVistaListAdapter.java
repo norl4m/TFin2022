@@ -48,13 +48,6 @@ public class OficioHabilidadVistaListAdapter extends RecyclerView.Adapter<Oficio
         holder.textViewOficioName.setText(String.format("%s", current.getNombre()));
 
 
-        final HabilidadListAdapterVista adapter = new HabilidadListAdapterVista(contextInstance);
-        holder.recyclerView.setAdapter(adapter);
-
-        holder.recyclerView.setLayoutManager(new LinearLayoutManager(contextInstance));
-        adapter.setHabilidades(current.getHabilidadArrayList());
-
-
     }
 
     public void setOficios(List<Oficio> oficiosVar) {
@@ -84,7 +77,7 @@ public class OficioHabilidadVistaListAdapter extends RecyclerView.Adapter<Oficio
                 public void onClick(View v) {
                     Intent intent = new Intent(context, BuscadorActivity.class);
                     intent.setAction("android.intent.action.SEARCH");
-                    intent.putExtra(SearchManager.QUERY, oficios.get(getAbsoluteAdapterPosition()).getNombre());
+                    intent.putExtra(SearchManager.QUERY, oficios.get(getAdapterPosition()).getNombre());
                     intent.putExtra("offset", 1);
                     context.startActivity(intent);
                 }

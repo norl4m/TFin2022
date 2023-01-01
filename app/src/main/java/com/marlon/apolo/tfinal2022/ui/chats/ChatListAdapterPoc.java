@@ -47,7 +47,6 @@ import com.marlon.apolo.tfinal2022.herramientas.DataValidation;
 import com.marlon.apolo.tfinal2022.individualChat.model.ChatPocData;
 import com.marlon.apolo.tfinal2022.individualChat.model.MessageCloudPoc;
 import com.marlon.apolo.tfinal2022.individualChat.view.CrazyIndividualChatActivity;
-import com.marlon.apolo.tfinal2022.individualChat.view.no.IndividualChatActivity;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
 import com.marlon.apolo.tfinal2022.model.Usuario;
 
@@ -174,12 +173,6 @@ public class ChatListAdapterPoc extends RecyclerView.Adapter<ChatListAdapterPoc.
         } else {
             holder.imageViewEstadoLectura.setColorFilter(context.getResources().getColor(R.color.purple_700));
         }
-
-
-//        if (!modoSeleccion) {
-//            holder.itemView.setBackgroundColor(Color.parseColor("#FFFFFF"));
-//
-//        }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -349,7 +342,7 @@ public class ChatListAdapterPoc extends RecyclerView.Adapter<ChatListAdapterPoc.
                     v.setBackgroundColor(Color.parseColor("#00FF00"));
                     chatListAdapterViewHolderSelected = new ChatListAdapterPoc.ChatListAdapterViewHolder(v);
 
-                    seleccionados.put(getAbsoluteAdapterPosition(), true);
+                    seleccionados.put(getAdapterPosition(), true);
                     return true;
 //                }
 //                    return false;
@@ -776,8 +769,6 @@ public class ChatListAdapterPoc extends RecyclerView.Adapter<ChatListAdapterPoc.
 //        }
 
     }
-
-
 
 
     public void alertDialogInfo() {

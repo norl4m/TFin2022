@@ -11,14 +11,12 @@ import androidx.lifecycle.MutableLiveData;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseException;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.marlon.apolo.tfinal2022.model.Habilidad;
 import com.marlon.apolo.tfinal2022.model.Oficio;
 import com.marlon.apolo.tfinal2022.ui.empleadores.EmpledorRepository;
 
@@ -144,7 +142,6 @@ public class OficioRepository {
 
     public void addOficioTofirebase(Activity activity, Oficio oficio) {
 
-        oficio.setEstadoRegistro(false);
         String idOficio = FirebaseDatabase.getInstance().getReference().child("oficios").push().getKey();
         oficio.setIdOficio(idOficio);
         FirebaseDatabase.getInstance().getReference()
@@ -169,59 +166,6 @@ public class OficioRepository {
 
     }
 
-    public void addHabilidadToOficioTofirebase(Activity activity, Oficio oficio, Habilidad habilidad) {
-        oficio.setEstadoRegistro(false);
-        try {
-            for (Habilidad h : oficio.getHabilidadArrayList()) {
-                h.setHabilidadSeleccionada(false);
-            }
-        } catch (Exception e) {
-
-        }
-
-//        FirebaseDatabase.getInstance().getReference()
-//                .child("oficios")
-//                .child(oficio.getIdOficio())
-//                .setValue(oficio)
-//                .addOnCompleteListener(new OnCompleteListener<Void>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<Void> task) {
-//                        if (task.isSuccessful()) {
-//                            Toast.makeText(activity, "Registro exitoso", Toast.LENGTH_SHORT).show();
-//                        } else {
-//                            Toast.makeText(activity, "Registro fallido", Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//                }).addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        Toast.makeText(activity, "Registro fallido: " + e.toString(), Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-
-
-        FirebaseDatabase.getInstance().getReference()
-                .child("habilidades")
-                .child(oficio.getIdOficio())
-                .child(habilidad.getIdHabilidad())
-                .setValue(habilidad)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(activity, "Registro exitoso", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(activity, "Registro fallido", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(activity, "Registro fallido: " + e.toString(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-    }
 
     public MutableLiveData<Oficio> getOneOficio(String id) {
         if (oneOficio == null) {

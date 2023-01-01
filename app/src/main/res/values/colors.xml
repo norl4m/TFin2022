@@ -56,4 +56,6 @@
     <color name="colorPlaceholder">#505050</color>
     <color name="colorTextPrimary">#0E68FF</color>
 
+    <color name="placeholer_bg">#dddddd</color>
+
 </resources>

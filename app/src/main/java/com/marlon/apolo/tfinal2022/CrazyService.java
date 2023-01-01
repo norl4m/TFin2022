@@ -57,8 +57,6 @@ import com.marlon.apolo.tfinal2022.model.Cita;
 import com.marlon.apolo.tfinal2022.model.Empleador;
 import com.marlon.apolo.tfinal2022.model.LlamadaVideo;
 import com.marlon.apolo.tfinal2022.model.LlamadaVoz;
-import com.marlon.apolo.tfinal2022.model.NotificacionCustomLlamada;
-import com.marlon.apolo.tfinal2022.model.NotificacionCustomVideoLlamada;
 import com.marlon.apolo.tfinal2022.model.Participante;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
 import com.marlon.apolo.tfinal2022.model.Usuario;
@@ -116,9 +114,6 @@ public class CrazyService extends Service {
     private CrazyReplyBroadcastReceiver crazyReplyBroadcastReceiver;
     private SharedPreferences myPreferences;
     private Usuario usuarioLocal;
-
-    private ArrayList<NotificacionCustomLlamada> notificacionCustomLlamadas;
-    private ArrayList<NotificacionCustomVideoLlamada> notificacionCustomVideoLlamadaArrayList;
 
 
     private SharedPreferences defaultSharedPreferences;

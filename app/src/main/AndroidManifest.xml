@@ -118,11 +118,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.TFinal2022.NoActionBar" />
         <activity
-            android:name=".login.LoginPoCActivity"
-            android:exported="false"
-            android:theme="@style/Theme.TFinal2022.NoActionBar"
-            android:windowSoftInputMode="stateVisible|adjustPan" />
-        <activity
             android:name=".ui.oficioArchi.view.OficioArchiEditDeleteActivity"
             android:exported="false"
             android:label="@string/no_nothing_text"
@@ -139,39 +134,6 @@
             android:exported="false"
             android:label="@string/no_nothing_text"
             android:theme="@style/Theme.TFinal2022.NoActionBar" />
-        <activity
-            android:name=".registro.view.regMethod.RegistrarseConGoogleActivity"
-            android:exported="false"
-            android:label="@string/no_nothing_text"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.TFinal2022.NoActionBar" />
-        <activity
-            android:name=".registro.view.regMethod.RegistrarseConCelularActivity"
-            android:exported="false"
-            android:label="@string/no_nothing_text"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.TFinal2022.NoActionBar" />
-        <activity
-            android:name=".registro.view.regMethod.RegistrarseConEmailPasswordActivity"
-            android:exported="false"
-            android:label="@string/no_nothing_text"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.TFinal2022.NoActionBar" />
-        <activity
-            android:name=".login.LoginMainActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.TFinal2022.NoActionBar" />
-        <activity
-            android:name=".registro.RegWithEmailPocActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.TFinal2022.NoActionBar" />
-        <activity
-            android:name=".registro.view.RegistroAdminActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.TFinal2022.NoActionBar" />
 
         <meta-data
             android:name="com.google.firebase.ml.vision.DEPENDENCIES"
@@ -187,30 +149,13 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.TFinal2022.NoActionBar" />
         <activity
-            android:name=".registro.RegistroOficioActivityPoc"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.TFinal2022.NoActionBar" />
-        <activity
             android:name=".individualChat.view.SendFotoActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.TFinal2022.NoActionBar" />
-        <activity
-            android:name=".individualChat.view.no.CamActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.TFinal2022.NoActionBar" />
-        <activity
-            android:name=".individualChat.view.no.CamXActivity"
-            android:exported="false" />
+
         <activity
             android:name=".individualChat.view.CrazyIndividualChatActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.TFinal2022.NoActionBar" />
-        <activity
-            android:name=".registro.PocRegWithGoogleActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.TFinal2022.NoActionBar" />
@@ -224,16 +169,7 @@
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.TFinal2022.NoActionBar" />
-        <activity
-            android:name=".ui.eliminarCuenta.EliminarInfoPhoneActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.TFinal2022.NoActionBar" />
-        <activity
-            android:name=".ui.eliminarCuenta.EliminarInfoGoogleActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.TFinal2022.NoActionBar" /> <!-- [START fcm_default_icon] -->
+        <!-- [START fcm_default_icon] -->
         <!--
 Set custom default icon. This is used when no icon is set for incoming notification messages.
          See README(https://goo.gl/l4GJaQ) for more.
@@ -260,12 +196,7 @@ Set color used with incoming notification messages. This is used when no color i
             android:screenOrientation="portrait"
             android:theme="@style/Theme.TFinal2022.NoActionBar" />
         <activity
-            android:name=".ui.datosPersonales.view.EditarOficioHabilidad2Activity"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.TFinal2022.NoActionBar" />
-        <activity
-            android:name=".ui.datosPersonales.EditarOficioHabilidadActivity"
+            android:name=".ui.datosPersonales.view.EditarOficioActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.TFinal2022.NoActionBar" />
@@ -274,34 +205,14 @@ Set color used with incoming notification messages. This is used when no color i
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.TFinal2022.NoActionBar" />
-        <activity
-            android:name=".registro.RegistroHabilidadActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.TFinal2022.NoActionBar" />
 
-        <activity
-            android:name=".individualChat.view.no.IndividualChatActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.TFinal2022.NoActionBar" />
         <activity
             android:name=".individualChat.view.location.LocationActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.TFinal2022.NoActionBar" />
         <activity
-            android:name=".ui.editarDatos.EditarOficioActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.TFinal2022.NoActionBar" />
-        <activity
             android:name=".ui.editarDatos.EditarDataActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.TFinal2022.NoActionBar" />
-        <activity
-            android:name=".ui.oficios.view.HabilidadActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.TFinal2022.NoActionBar" />
@@ -312,29 +223,7 @@ Set color used with incoming notification messages. This is used when no color i
             android:screenOrientation="portrait"
             android:theme="@style/Theme.TFinal2022.NoActionBar" />
         <activity
-            android:name=".registro.view.RegWithCelularActivity"
-            android:exported="false"
-            android:label="@string/no_nothing_text"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.TFinal2022.NoActionBar" />
-        <activity
-            android:name=".registro.view.RegWithGoogleActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.TFinal2022.NoActionBar" />
-        <activity
-            android:name=".registro.view.RegFotoPerfilActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.TFinal2022.NoActionBar" />
-        <activity
-            android:name=".registro.view.MetodoRegActivity"
-            android:exported="false"
-            android:label="@string/no_nothing_text"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.TFinal2022.NoActionBar" />
-        <activity
-            android:name=".registro.view.RegNombreUsuarioActivity"
+            android:name=".registro.view.RegDatoPersonalActivity"
             android:exported="false"
             android:label="@string/no_nothing_text"
             android:screenOrientation="portrait"
@@ -373,6 +262,7 @@ Set color used with incoming notification messages. This is used when no color i
         <activity
             android:name=".registro.view.RegistroOficioActivity"
             android:exported="false"
+            android:label=""
             android:screenOrientation="portrait"
             android:theme="@style/Theme.TFinal2022.NoActionBar" />
         <activity
@@ -382,31 +272,9 @@ Set color used with incoming notification messages. This is used when no color i
             android:screenOrientation="portrait"
             android:theme="@style/Theme.TFinal2022.NoActionBar" />
         <activity
-            android:name=".registro.RegistroDataEmpleadorActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.TFinal2022.NoActionBar" />
-        <activity
-            android:name=".registro.RegistroDataTrabajadorActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.TFinal2022.NoActionBar" />
-        <activity
             android:name=".registro.view.PerfilActivity"
             android:exported="false"
             android:label="@string/perfil_text"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.TFinal2022.NoActionBar" />
-        <activity
-            android:name=".login.LoginGoogleActivity"
-            android:exported="false"
-            android:label="@string/iniciar_sesion_con_google"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.TFinal2022.NoActionBar" />
-        <activity
-            android:name=".login.LoginCelularActivity"
-            android:exported="false"
-            android:label="@string/no_nothing_text"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.TFinal2022.NoActionBar" />
         <activity

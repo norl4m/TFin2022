@@ -28,16 +28,8 @@
             android:padding="2dp"
             android:text="Electricista"
             android:textSize="20sp"
-            android:textStyle="bold" />
+            android:fontFamily="@font/andika"/>
 
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewHabilidades"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/textViewOficio"
-            android:orientation="vertical"
-            tools:listitem="@layout/recycler_view_item_skill_vista" />
 
     </RelativeLayout>
 

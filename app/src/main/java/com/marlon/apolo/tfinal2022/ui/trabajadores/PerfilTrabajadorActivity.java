@@ -42,7 +42,6 @@ import com.marlon.apolo.tfinal2022.individualChat.view.CrazyIndividualChatActivi
 import com.marlon.apolo.tfinal2022.model.Administrador;
 import com.marlon.apolo.tfinal2022.model.Chat;
 import com.marlon.apolo.tfinal2022.model.Empleador;
-import com.marlon.apolo.tfinal2022.model.Habilidad;
 import com.marlon.apolo.tfinal2022.model.Oficio;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
 import com.marlon.apolo.tfinal2022.model.Usuario;
@@ -407,8 +406,8 @@ public class PerfilTrabajadorActivity extends AppCompatActivity {
 
                             int colorPrimary = typedValue.data;
                             Glide.with(PerfilTrabajadorActivity.this)
-                                    .load(ContextCompat.getDrawable(PerfilTrabajadorActivity.this, R.drawable.ic_usuario))
-                                    .placeholder(R.drawable.ic_usuario).into(imageView);
+                                    .load(ContextCompat.getDrawable(PerfilTrabajadorActivity.this, R.drawable.ic_user_tra_emp))
+                                    .placeholder(R.drawable.ic_user_tra_emp).into(imageView);
                             imageView.setColorFilter(colorPrimary);
                         }
 
@@ -457,7 +456,7 @@ public class PerfilTrabajadorActivity extends AppCompatActivity {
                         for (Oficio of : oficios) {
                             for (String idOf : trabajador.getIdOficios()) {
                                 if (idOf.equals(of.getIdOficio())) {
-                                    of.setEstadoRegistro(true);
+                                    //  of.setEstadoRegistro(true);
                                     oficioArrayList.add(of);
                                 }
                             }
@@ -471,35 +470,7 @@ public class PerfilTrabajadorActivity extends AppCompatActivity {
                                     .addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                            ArrayList<Habilidad> habilidadArrayList = new ArrayList<>();
 
-                                            for (DataSnapshot data : snapshot.getChildren()) {
-                                                try {
-                                                    Habilidad h = data.getValue(Habilidad.class);
-                                                    if (trabajador.getIdHabilidades() != null) {
-                                                        try {
-                                                            for (String idH : trabajador.getIdHabilidades()) {
-                                                                if (idH.equals(h.getIdHabilidad())) {
-                                                                    h.setHabilidadSeleccionada(true);
-                                                                    habilidadArrayList.add(h);
-
-                                                                }
-                                                            }
-//                                                            if (trabajador.getIdHabilidades().contains(h.getIdHabilidad())) {
-//                                                                h.setHabilidadSeleccionada(true);
-//                                                            }
-                                                        } catch (Exception e) {
-
-                                                        }
-
-                                                    }
-
-//                                                    habilidadArrayList.add(h);
-                                                } catch (Exception e) {
-
-                                                }
-                                            }
-                                            of.setHabilidadArrayList(habilidadArrayList);
                                             oficioListAdapter.setOficios(oficioArrayList);
 
                                         }
@@ -515,77 +486,6 @@ public class PerfilTrabajadorActivity extends AppCompatActivity {
 
                     });
 
-//                    oficioViewModel.getAllOficios().observe(PerfilTrabajadorActivity.this, new Observer<ArrayList<Oficio>>() {
-//                        @Override
-//                        public void onChanged(ArrayList<Oficio> oficios) {
-//                            ArrayList<Oficio> oficioArrayList = new ArrayList<>();
-//                            OficioVistaListAdapter oficioListAdapter = new OficioVistaListAdapter(PerfilTrabajadorActivity.this);
-//                            recyclerView.setAdapter(oficioListAdapter);
-//                            recyclerView.setLayoutManager(new LinearLayoutManager(PerfilTrabajadorActivity.this));
-////                            oficioListAdapter.setOficios(oficioArrayList);
-//
-//                            for (Oficio of : oficios) {
-//                                for (String idOf : trabajador.getIdOficios()) {
-//                                    if (idOf.equals(of.getIdOficio())) {
-//                                        of.setEstadoRegistro(true);
-//                                        oficioArrayList.add(of);
-//                                    }
-//                                }
-//
-//                                FirebaseDatabase.getInstance().getReference().child("habilidades")
-//                                        .child(of.getIdOficio())
-//                                        .addListenerForSingleValueEvent(new ValueEventListener() {
-//                                            @Override
-//                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                                                ArrayList<Habilidad> habilidadArrayList = new ArrayList<>();
-//
-//                                                for (DataSnapshot data : snapshot.getChildren()) {
-//                                                    try {
-//                                                        Habilidad h = data.getValue(Habilidad.class);
-//                                                        if (trabajador.getIdHabilidades() != null) {
-//                                                            if (trabajador.getIdHabilidades().contains(h.getIdHabilidad())) {
-//                                                                h.setHabilidadSeleccionada(true);
-//                                                            }
-//                                                        }
-//
-//                                                        habilidadArrayList.add(h);
-//                                                    } catch (Exception e) {
-//
-//                                                    }
-//                                                }
-//                                                of.setHabilidadArrayList(habilidadArrayList);
-//                                                oficioListAdapter.setOficios(oficioArrayList);
-//
-//                                            }
-//
-//                                            @Override
-//                                            public void onCancelled(@NonNull DatabaseError error) {
-//
-//                                            }
-//                                        });
-//                            }
-//
-//                            for (Oficio of : oficioArrayList) {
-//                                Log.e(TAG, of.toString());
-//                            }
-////
-////
-//                            oficioListAdapter.setOnItemClickListener(new OficioListAdapter.ClickListener() {
-//                                @Override
-//                                public void onItemClick(View v, int position) {
-//                                    Oficio oficio = oficioListAdapter.getJobAtPosition(position);
-//                                    Log.e("TAG", oficio.toString());
-//                                    Intent intent = new Intent(PerfilTrabajadorActivity.this, SearcherActivity.class);
-//                                    intent.setAction("android.intent.action.SEARCH");
-//                                    intent.putExtra(SearchManager.QUERY, oficio.getNombre());
-//                                    startActivity(intent);
-//                                }
-//                            });
-//                        }
-//                    });
-
-                    //ratingBar.setRating((float) trabajador.getCalificacion());
-//                    ratingBar.setRating((float) trabajador.getCalificacion());
                 }
             }
         });

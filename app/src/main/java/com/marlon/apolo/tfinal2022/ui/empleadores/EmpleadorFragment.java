@@ -21,7 +21,7 @@ import android.view.ViewGroup;
 
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.model.Usuario;
-import com.marlon.apolo.tfinal2022.registro.view.RegNombreUsuarioActivity;
+import com.marlon.apolo.tfinal2022.registro.view.RegDatoPersonalActivity;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -93,7 +93,7 @@ public class EmpleadorFragment extends Fragment {
         switch (id) {
             case R.id.mnu_add_empleador:
 //                Toast.makeText(requireActivity(), "Add empleador", Toast.LENGTH_SHORT).show();
-                Intent intentRegUsuario = new Intent(requireActivity(), RegNombreUsuarioActivity.class);
+                Intent intentRegUsuario = new Intent(requireActivity(), RegDatoPersonalActivity.class);
                 intentRegUsuario.putExtra("usuario", 1);
                 startActivity(intentRegUsuario);
                 break;

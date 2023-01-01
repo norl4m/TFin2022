@@ -16,20 +16,7 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <!--    <Button-->
-    <!--        android:id="@+id/buttonContinuar"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_below="@id/toolbar"-->
-    <!--        android:layout_alignParentEnd="true"-->
-    <!--        android:layout_gravity="end"-->
-    <!--        android:layout_marginEnd="2dp"-->
-    <!--        android:background="#00000000"-->
-    <!--        android:drawableEnd="@drawable/ic_baseline_navigate_next_24"-->
-    <!--        android:text="Continuar"-->
-    <!--        android:textAllCaps="false"-->
-    <!--        android:textColor="@color/black"-->
-    <!--        android:textSize="18sp" />-->
+
     <TextView
         android:id="@+id/textViewTitle"
         android:layout_width="wrap_content"
@@ -62,19 +49,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!--        <TextView-->
-        <!--            android:id="@+id/textViewContenido"-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:text="Bienvenido"-->
-        <!--            android:textAlignment="center"-->
-        <!--            android:textAppearance="@android:style/TextAppearance.Material.Display1"-->
-        <!--            android:textStyle="bold"-->
-        <!--            app:layout_constraintEnd_toEndOf="parent"-->
-        <!--            app:layout_constraintStart_toStartOf="parent"-->
-        <!--            app:layout_constraintTop_toBottomOf="@+id/imageView" />-->
-
-
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -106,38 +80,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textViewContenido" />
 
-                <Button
-                    android:id="@+id/btnLoginWithGoogle"
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginStart="25dp"
-                    android:layout_marginEnd="25dp"
-                    android:background="@drawable/button_background"
-                    android:drawableLeft="@drawable/googleg_standard_color_18"
-                    android:drawableTint="@color/white"
-                    android:fontFamily="@font/andika"
-                    android:text="@string/iniciar_sesion_con_google"
-                    android:textAllCaps="false"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
-
-                <Button
-                    android:id="@+id/btnLoginWithPhone"
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginStart="25dp"
-                    android:layout_marginEnd="25dp"
-                    android:background="@drawable/button_background"
-                    android:drawableLeft="@drawable/ic_baseline_phone_android_24"
-                    android:drawableTint="@color/white"
-                    android:fontFamily="@font/andika"
-                    android:text="@string/iniciar_sesion_con_celular"
-                    android:textAllCaps="false"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/button4" />
 
                 <Button
                     android:id="@+id/textViewNuevoReg"

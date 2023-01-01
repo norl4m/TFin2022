@@ -239,7 +239,7 @@ public class SeleccionarEmpleadorListAdapterPoc extends RecyclerView.Adapter<Sel
                 @Override
                 public void onClick(View v) {
 
-                    ChatPocData chat = chats.get(getAbsoluteAdapterPosition());
+                    ChatPocData chat = chats.get(getAdapterPosition());
 //                    //Toast.makeText(context, chat.toString(), Toast.LENGTH_LONG).show();
 ////                    Intent intent = new Intent(context, IndividualChatActivity.class);
 //                    Intent intent = new Intent(context, CrazyIndividualChatActivity.class);

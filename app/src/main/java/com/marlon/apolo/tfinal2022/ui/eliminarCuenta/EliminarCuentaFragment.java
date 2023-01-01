@@ -25,7 +25,6 @@ import java.util.Objects;
 
 public class EliminarCuentaFragment extends Fragment {
 
-    private EliminarCuentaViewModel mViewModel;
 
     public static EliminarCuentaFragment newInstance() {
         return new EliminarCuentaFragment();
@@ -40,7 +39,6 @@ public class EliminarCuentaFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(EliminarCuentaViewModel.class);
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         filterProvider(Objects.requireNonNull(firebaseAuth.getCurrentUser()));
 //        firebaseAuth.getCurrentUser().delete().addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -60,15 +58,7 @@ public class EliminarCuentaFragment extends Fragment {
 
     private void filterProvider(FirebaseUser firebaseUser) {
         String provider = firebaseUser.getProviderData().get(firebaseUser.getProviderData().size() - 1).getProviderId();
-        if (provider.contains("google.com")) {
-            //Toast.makeText(requireActivity(), "Google", Toast.LENGTH_LONG).show();
-            startActivity(new Intent(requireActivity(), EliminarInfoGoogleActivity.class));
-        }
-        if (provider.contains("phone")) {
-            //Toast.makeText(requireActivity(), "Phone", Toast.LENGTH_LONG).show();
-            startActivity(new Intent(requireActivity(), EliminarInfoPhoneActivity.class));
 
-        }
         if (provider.contains("password")) {
             //Toast.makeText(requireActivity(), "Password", Toast.LENGTH_LONG).show();
             startActivity(new Intent(requireActivity(), EliminarInfoEmailActivity.class));

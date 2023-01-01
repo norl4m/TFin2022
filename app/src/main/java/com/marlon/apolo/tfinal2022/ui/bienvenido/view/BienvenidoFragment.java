@@ -70,7 +70,6 @@ import com.marlon.apolo.tfinal2022.model.Participante;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
 import com.marlon.apolo.tfinal2022.model.Usuario;
 import com.marlon.apolo.tfinal2022.ui.bienvenido.BienvenidoViewModel;
-import com.marlon.apolo.tfinal2022.ui.bienvenido.HabilidadListAdapter;
 import com.marlon.apolo.tfinal2022.ui.bienvenido.adaptadores.OficioArchiVistaListAdapter;
 import com.marlon.apolo.tfinal2022.ui.chats.ChatViewModel;
 import com.marlon.apolo.tfinal2022.ui.citaTrabajo.CitaTrabajoViewActivity;
@@ -148,6 +147,10 @@ public class BienvenidoFragment extends Fragment {
         if (u != 0) {
             setListenerTextViews(root);
         }
+        root.findViewById(R.id.relativeLayout1).setVisibility(View.GONE);/*Trabajadores*/
+        root.findViewById(R.id.relativeLayout2).setVisibility(View.GONE);/*Empleadores*/
+        root.findViewById(R.id.relativeLayout3).setVisibility(View.GONE);/*Empleadores*/
+        root.findViewById(R.id.relativeLayout4).setVisibility(View.GONE);/*Citas de trabajo*/
 
 
         loadOficios(root);
@@ -156,9 +159,6 @@ public class BienvenidoFragment extends Fragment {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         trabajadorListAdapter = new TrabajadorListAdapter(requireActivity());
 
-        root.findViewById(R.id.relativeLayout1).setVisibility(View.GONE);/*Trabajadores*/
-        root.findViewById(R.id.relativeLayout2).setVisibility(View.GONE);/*Empleadores*/
-        root.findViewById(R.id.relativeLayout4).setVisibility(View.GONE);/*Citas de trabajo*/
 
 //        setInvitadoUI(root);
         if (firebaseUser != null) {
@@ -285,6 +285,8 @@ public class BienvenidoFragment extends Fragment {
     }
 
     private void loadOficios(View root) {
+        root.findViewById(R.id.relativeLayout3).setVisibility(View.VISIBLE);/*Empleadores*/
+
         RecyclerView recyclerView3 = root.findViewById(R.id.fragHomeRecyclerView3);
         recyclerView3.setVisibility(View.GONE);
         ProgressBar progressBar3 = root.findViewById(R.id.fragHomeProgressBar3);
@@ -343,7 +345,6 @@ public class BienvenidoFragment extends Fragment {
         });
 
     }
-
 
 
     public void loadCitas(View root) {
@@ -422,19 +423,6 @@ public class BienvenidoFragment extends Fragment {
                 });
     }
 
-    private void loadHabiliades(View root) {
-        RecyclerView recyclerView4 = root.findViewById(R.id.fragHomeRecyclerView4);
-        ProgressBar progressBar4 = root.findViewById(R.id.fragHomeProgressBar4);
-        HabilidadListAdapter trabajadorListAdapter = new HabilidadListAdapter(requireActivity());
-        recyclerView4.setAdapter(trabajadorListAdapter);
-        recyclerView4.setLayoutManager(new LinearLayoutManager(requireActivity()));
-//        bienvenidoViewModel.getAllHabilidades().observe(getViewLifecycleOwner(), habilidads -> {
-//            if (habilidads != null) {
-//                trabajadorListAdapter.setHabilidades(habilidads);
-////                progressBar4.setVisibility(View.GONE);
-//            }
-//        });
-    }
 
     public void loadEmpleadoresAdmin(View root) {
         /*Carga de datos empleadores*/

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,14 +57,32 @@ public class EmpleadorCRUDListAdapter extends RecyclerView.Adapter<EmpleadorCRUD
         if (current.getCelular() != null) {
             holder.textViewContacto.setText(current.getCelular());
         }
+        /*Esto es una maravilla*/
+        TypedValue typedValue = new TypedValue();
+        contextInstance.getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
+        int colorNight = typedValue.data;
+//        holder.imageView.setColorFilter(colorNight);
+        /*Esto es una maravilla*/
+
+        holder.imageViewUsuario.setColorFilter(colorNight);
+
         if (current.getFotoPerfil() != null) {
             Glide.with(contextInstance)
                     .load(current.getFotoPerfil())
-                    .apply(new RequestOptions().override(150, 150))
-                    .placeholder(R.drawable.ic_baseline_person_24).circleCrop().into(holder.imageViewUsuario);
+                    .apply(new RequestOptions().override(200, 200))
+                    .placeholder(R.drawable.ic_user_tra_emp)
+                    .circleCrop()
+                    .into(holder.imageViewUsuario);
+            holder.imageViewUsuario.setColorFilter(null);
         } else {
-            Glide.with(contextInstance).load(ContextCompat.getDrawable(contextInstance, R.drawable.ic_baseline_person_24)).placeholder(R.drawable.ic_baseline_person_24).circleCrop().into(holder.imageViewUsuario);
+            Glide.with(contextInstance).
+                    load(ContextCompat.getDrawable(contextInstance, R.drawable.ic_user_tra_emp)).
+                    placeholder(R.drawable.ic_user_tra_emp)
+                    .circleCrop()
+                    .into(holder.imageViewUsuario);
+
         }
+        holder.imageButtonDelete.setColorFilter(colorNight);
 
     }
 
@@ -97,7 +116,8 @@ public class EmpleadorCRUDListAdapter extends RecyclerView.Adapter<EmpleadorCRUD
             imageButtonEdit = itemView.findViewById(R.id.imageButtonEdit);
             imageButtonDelete = itemView.findViewById(R.id.imageButtonDelete);
 
-            imageButtonEdit.setOnClickListener(new View.OnClickListener() {
+//            imageButtonEdit.setOnClickListener(new View.OnClickListener() {
+            itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     //Toast.makeText(contextInstance, "Editar", Toast.LENGTH_LONG).show();

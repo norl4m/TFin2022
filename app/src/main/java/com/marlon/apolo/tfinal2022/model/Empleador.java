@@ -33,8 +33,6 @@ import com.marlon.apolo.tfinal2022.MainNavigationActivity;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.citasTrabajo.view.DetalleServicioActivity;
 import com.marlon.apolo.tfinal2022.registro.view.RegWithEmailPasswordActivity;
-import com.marlon.apolo.tfinal2022.registro.view.RegWithCelularActivity;
-import com.marlon.apolo.tfinal2022.registro.view.RegWithGoogleActivity;
 import com.marlon.apolo.tfinal2022.ui.editarDatos.EditarDataActivity;
 
 import java.util.ArrayList;
@@ -97,16 +95,6 @@ public class Empleador extends Usuario {
                                 case 1:/*email*/
                                     RegWithEmailPasswordActivity regWithEmailPasswordActivity = (RegWithEmailPasswordActivity) activity;
                                     regWithEmailPasswordActivity.closeProgress();
-                                    break;
-                                case 2:/*google*/
-                                    RegWithGoogleActivity regWithGoogleActivity = (RegWithGoogleActivity) activity;
-                                    regWithGoogleActivity.closeProgressDialog();
-//                                    addToGoogleUsers(activity, empleador);
-                                    break;
-                                case 3:/*phone*/
-//                                    addToPhoneUsers(activity, empleador);
-                                    RegWithCelularActivity regWithCelularActivity = (RegWithCelularActivity) activity;
-                                    regWithCelularActivity.closeProgressDialog();
                                     break;
 
                             }

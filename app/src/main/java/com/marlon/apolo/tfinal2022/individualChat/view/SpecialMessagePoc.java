@@ -119,295 +119,30 @@ public class SpecialMessagePoc extends RecyclerView.Adapter<SpecialMessagePoc.My
         return new MyadapterViewHolder(itemView);
     }
 
-    private String getCompleteAddressString(double LATITUDE, double LONGITUDE) {
-        String strAdd = "";
-        Geocoder geocoder = new Geocoder(activity, Locale.getDefault());
-        try {
-            List<Address> addresses = geocoder.getFromLocation(LATITUDE, LONGITUDE, 1);
-            if (addresses != null) {
-                Address returnedAddress = addresses.get(0);
-                StringBuilder strReturnedAddress = new StringBuilder("");
-
-                for (int i = 0; i <= returnedAddress.getMaxAddressLineIndex(); i++) {
-                    strReturnedAddress.append(returnedAddress.getAddressLine(i)).append("\n");
-                }
-                strAdd = strReturnedAddress.toString();
-                Log.w(TAG, "My Current loction address" + strReturnedAddress.toString());
-            } else {
-                Log.w(TAG, "My Current loction address" + "No Address returned!");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.w(TAG, "My Current loction address" + "Canont get Address!");
-        }
-        return strAdd;
-    }
 
     @Override
     public void onBindViewHolder(MyadapterViewHolder holder, int position) {
         MessageCloudPoc current = mensajeNubeArrayList.get(position);
 
         try {
-//            holder.textViewDB.setText(String.valueOf(current.getIdMessage()));
-//            holder.imageViewContent.(String.valueOf(current.getIdMessageFirebase()));
-            // CONTENIDO = IMAGEN
-//            if (current.getType() == 4) {
-//                //String path = "content://com.miui.gallery.open/raw/%2Fstorage%2Femulated%2F0%2FDCIM%2FCamera%2FIMG_20220130_213803.jpg";
-//
-//                String[] parts = current.getContenido().split(",");
-//                String part1 = parts[0]; // 123
-//                String part2 = parts[1]; // 654321
-////
-//                double latitude = Double.parseDouble(part1.substring(part1.indexOf(":") + 1));
-//                double longitude = Double.parseDouble(part2.substring(part2.indexOf(":") + 1));
-//
-//                Log.d(TAG, String.valueOf(latitude));
-//                Log.d(TAG, String.valueOf(longitude));
-//
-//                List<Address> addresses = null;
-//                String resultMessage = "";
-//                Geocoder geocoder = new Geocoder(activity,
-//                        Locale.getDefault());
-////
-//
-//                try {
-//                    addresses = geocoder.getFromLocation(
-//                            latitude,
-//                            longitude,
-//                            // In this sample, get just a single address
-//                            1);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//
-//                Address address = addresses.get(0);
-//                ArrayList<String> addressParts = new ArrayList<>();
-//
-//                // Fetch the address lines using getAddressLine,
-//                // join them, and send them to the thread
-//                for (int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
-//                    addressParts.add(address.getAddressLine(i));
-//                }
-//
-//                resultMessage = TextUtils.join(
-//                        "\n",
-//                        addressParts);
-////
-//                Log.d(TAG, String.valueOf(resultMessage));
-//
-////                holder.wordItemView.setText(resultMessage);
-//                holder.textViewContenido.setText(activity.getString(R.string.address_text, resultMessage));
-//                holder.textViewContenido.setText("Ubicación: " + resultMessage);
-//
-////                holder.wordItemView.setText(String.format("%s", context.getString(R.string.address_text), resultMessage));
-//
-//
-//                holder.itemView.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-////                        String longitude = "37.7749";
-////                        String latitude = "-122.4194";
-////                        String geo = "geo:" + String.valueOf(longitude) + "," + String.valueOf(latitude);
-////                        String geo = "geo:" + String.valueOf(latitude) + "," + String.valueOf(longitude);
-//                        DataValidation dataValidation = new DataValidation();
-//
-//
-////                        String longitude = dataValidation.splitterData(current.getContent(),":",",");
-////                        String latitude = dataValidation.splitterData(current.getContent(),",","");
-//                        //Toast.makeText(context, part1.substring(part1.indexOf(":") + 1), Toast.LENGTH_SHORT).show();
-//                        //Toast.makeText(context, part2.substring(part2.indexOf(":") + 1), Toast.LENGTH_SHORT).show();
-//
-//                        //                        String geo = current.getContent();
-////                Uri gmmIntentUri = Uri.parse("geo:37.7749,-122.4194");
-//                        String uri = String.format(Locale.US, "geo:%f,%f?z=17&q=%f,%f", latitude, longitude, latitude, longitude);
-//
-////                        Uri gmmIntentUri = Uri.parse(current.getContent());
-//                        Uri gmmIntentUri = Uri.parse(uri);
-//                        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-//                        mapIntent.setPackage("com.google.android.apps.maps");
-//                        if (mapIntent.resolveActivity(activity.getPackageManager()) != null) {
-//                            activity.startActivity(mapIntent);
-//                        }
-//
-////                        String uri = String.format(Locale.US, "geo:%f,%f?z=17&q=%f,%f", latitude,longitude,latitude,longitude);
-//////                        String uri = String.format(Locale.US, "geo:%f,%f?q=%f,%f", 0.0,0.0,latitude,longitude);
-//////                        String uri = "http://maps.google.com/maps?q=" +latitude +","+longitude;
-////                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(current.getContent()));
-////
-////                        context.startActivity(intent);
-//                    }
-//                });
-//            }
 
 
             if (current.getType() == 4) {
-                //String path = "content://com.miui.gallery.open/raw/%2Fstorage%2Femulated%2F0%2FDCIM%2FCamera%2FIMG_20220130_213803.jpg";
-//                holder.textViewContenido.setText(current.getContenido());
 
                 holder.textViewContenido.setText(activity.getString(R.string.address_text,
                         current.getContenido()));
 
 
-////                String[] parts = current.getContenido().split(",");
-////                String part1 = parts[0]; // 123
-////                String part2 = parts[1]; // 654321
-//////
-//////                double latitude = Double.parseDouble(part1.substring(part1.indexOf(":") + 1));
-//                double longitude = 37.4219983;
-//////                double longitude = Double.parseDouble(part2.substring(part2.indexOf(":") + 1));
-//                double latitude = -122.084;
-////
-//                Log.d(TAG, "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-//                Log.d(TAG, getCompleteAddressString(latitude, longitude));
-//
-////                List<Address> addresses = null;
-////                String resultMessage = "";
-////                Geocoder geocoder = new Geocoder(activity.getApplicationContext(),
-////                        Locale.getDefault());
-//////
-////
-////                try {
-////                    addresses = geocoder.getFromLocation(
-////                            latitude,
-////                            longitude,
-////                            // In this sample, get just a single address
-////                            1);
-////                } catch (IOException e) {
-////                    Log.d(TAG, e.toString());
-////                    e.printStackTrace();
-////                }
-////
-////                try {
-////
-////                    Address address = addresses.get(0);
-////                    ArrayList<String> addressParts = new ArrayList<>();
-////
-////                    // Fetch the address lines using getAddressLine,
-////                    // join them, and send them to the thread
-////                    for (int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
-////                        addressParts.add(address.getAddressLine(i));
-////                    }
-////
-////                    resultMessage = TextUtils.join(
-////                            "\n",
-////                            addressParts);
-//////
-//////                holder.wordItemView.setText(resultMessage);
-////                    holder.textViewContenido.setText(activity.getString(R.string.address_text, resultMessage));
-////                    Log.d(TAG, resultMessage);
-////
-//////                holder.wordItemView.setText(String.format("%s", context.getString(R.string.address_text), resultMessage));
-////                } catch (Exception e) {
-////                    Log.d(TAG, e.toString());
-////
-////                }
-//
-////                Geocoder geocoder = new Geocoder(activity,
-////                        Locale.getDefault());
-//
-////                List<Address> addresses = null;
-//                String resultMessage = "";
-//                List<Address> addresses;
-//
-//
-//                try {
-//
-//                    Geocoder geocoder;
-////                    List<Address> addresses;
-//                    geocoder = new Geocoder(activity, Locale.getDefault());
-//
-//                    addresses = geocoder.getFromLocation(latitude, longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
-//
-//                    String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-//                    String city = addresses.get(0).getLocality();
-//                    String state = addresses.get(0).getAdminArea();
-//                    String country = addresses.get(0).getCountryName();
-//                    String postalCode = addresses.get(0).getPostalCode();
-//                    String knownName = addresses.get(0).getFeatureName(); //
-//                    Log.d(TAG, address);
-//                    Log.d(TAG, city);
-//                    Log.d(TAG, state);
-//                    Log.d(TAG, country);
-//                    Log.d(TAG, postalCode);
-//
-//
-//                    addresses = geocoder.getFromLocation(
-//                            latitude,
-//                            longitude,
-//                            // In this sample, get just a single address
-//                            1);
-//                } catch (Exception e) {
-//                    Log.d(TAG, e.toString());
-//                    // Catch network or other I/O problems
-//                    resultMessage = activity
-//                            .getString(R.string.service_not_available);
-//                    Log.e(TAG, resultMessage, e);
-//                }
-////
-////                if (addresses == null || addresses.size() == 0) {
-////                    if (resultMessage.isEmpty()) {
-////                        resultMessage = activity
-////                                .getString(R.string.no_address_found);
-////                        Log.e(TAG, resultMessage);
-////                    }
-////                } else {
-////                    // If an address is found, read it into resultMessage
-////                    Address address = addresses.get(0);
-////                    ArrayList<String> addressParts = new ArrayList<>();
-////
-////                    // Fetch the address lines using getAddressLine,
-////                    // join them, and send them to the thread
-////                    for (int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
-////                        addressParts.add(address.getAddressLine(i));
-////                    }
-////
-////                    resultMessage = TextUtils.join("\n", addressParts);
-////                    holder.textViewContenido.setText(activity.getString(R.string.address_text,
-////                            resultMessage));
-//            }
-//
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-//                        String longitude = "37.7749";
-//                        String latitude = "-122.4194";
-//                        String geo = "geo:" + String.valueOf(longitude) + "," + String.valueOf(latitude);
-//                        String geo = "geo:" + String.valueOf(latitude) + "," + String.valueOf(longitude);
-                        DataValidation dataValidation = new DataValidation();
 
 
-//                        String longitude = dataValidation.splitterData(current.getContent(),":",",");
-//                        String latitude = dataValidation.splitterData(current.getContent(),",","");
-                        //Toast.makeText(context, part1.substring(part1.indexOf(":") + 1), Toast.LENGTH_SHORT).show();
-                        //Toast.makeText(context, part2.substring(part2.indexOf(":") + 1), Toast.LENGTH_SHORT).show();
-
-                        //                        String geo = current.getContent();
-//                        String locationLoca = String.format(Locale.US, "geo:%f,%f?z=17&q=%f,%f", current.getLatitude(), current.getLongitude(), current.getLatitude(), current.getLongitude());
                         String locationLoca = String.format(Locale.US, "geo:%f,%f?z=17&q=%f,%f", current.getLongitude(), current.getLatitude(), current.getLongitude(), current.getLatitude());
                         Log.d(TAG, locationLoca);
 //                Uri gmmIntentUri = Uri.parse("geo:37.7749,-122.4194");
-                        Uri gmmIntentUri = Uri.parse(locationLoca);
-//                        String uri = String.format(Locale.US, "geo:%f,%f?z=17&q=%f,%f", current.getLatitude(), current.getLongitude(), current.getLatitude(), current.getLongitude());
+//                        Uri gmmIntentUri = Uri.parse(locationLoca);
 
-//                        Uri gmmIntentUri = Uri.parse(current.getContent());
-//                        Uri gmmIntentUri = Uri.parse(uri);
-                        //Toast.makeText(activity, "Algo va mal", Toast.LENGTH_LONG).show();
-                        /*Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-                        mapIntent.setPackage("com.google.android.apps.maps");
-                        if (mapIntent.resolveActivity(activity.getPackageManager()) != null) {
-                            activity.startActivity(mapIntent);
-                        }*/ // Error luego de actualizar app
-
-//                        String uri = String.format(Locale.US, "geo:%f,%f?z=17&q=%f,%f", latitude,longitude,latitude,longitude);
-////                        String uri = String.format(Locale.US, "geo:%f,%f?q=%f,%f", 0.0,0.0,latitude,longitude);
-////                        String uri = "http://maps.google.com/maps?q=" +latitude +","+longitude;
-//                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(current.getContent()));
-//
-//                        context.startActivity(intent);
-
-                        // Create a Uri from an intent string. Use the result to create an Intent.
-//                        Uri gmmIntentUri1 = Uri.parse("google.streetview:cbll=46.414382,10.013988");
-//                        Uri gmmIntentUri1 = Uri.parse("geo:37.7749,-122.4194");
                         Uri gmmIntentUri1 = Uri.parse(locationLoca);
 
 // Create an Intent from gmmIntentUri. Set the action to ACTION_VIEW
@@ -415,27 +150,14 @@ public class SpecialMessagePoc extends RecyclerView.Adapter<SpecialMessagePoc.My
 // Make the Intent explicit by setting the Google Maps package
                         mapIntent1.setPackage("com.google.android.apps.maps");
 
-// Attempt to start an activity that can handle the Intent
-//                        activity.startActivity(mapIntent1);
-
-//                        Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
-//                                Uri.parse("http://maps.google.com/maps?daddr="+current.getLatitude()+","+current.getLongitude()));
                         try {
                             activity.startActivity(mapIntent1);
 
                         } catch (Exception e) {
                             Toast.makeText(activity, "La aplicación de Google Maps no se encuentra instalada en su dispositivo móvil", Toast.LENGTH_LONG).show();
-//                            Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
-//                                    Uri.parse("http://maps.google.com/maps?daddr=" + current.getLatitude() + "," + current.getLongitude()));
-//                            activity.startActivity(intent);
 
                         }
 
-//                        if (mapIntent1.resolveActivity(activity.getPackageManager()) != null) {
-////                            startActivity(mapIntent);
-//                            activity.startActivity(mapIntent1);
-//
-//                        }
                     }
                 });
 
@@ -470,17 +192,7 @@ public class SpecialMessagePoc extends RecyclerView.Adapter<SpecialMessagePoc.My
         boolean mode = mPrefs.getBoolean("sync_theme", false);
         int someColorFrom = 0;
         int someColorTo = 0;
-//        if (mode) {
-//////            holder.textViewContenido.settint.setColorFilter(activity.getResources().getColor(R.color.teal_700));
-////
-////            DrawableCompat.setTint(holder.textViewContenido.getBackground(), activity.getResources().getColor(R.color.black_minus));
-////            holder.textViewContenido.setBackground(holder.textViewContenido.getBackground());
-//            someColor = ContextCompat.getColor(activity, R.color.black_minus);
-//
-//        } else {
-//            someColor = ContextCompat.getColor(activity, R.color.happy_color);
-//
-//        }
+
 
         switch (activity.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) {
             case Configuration.UI_MODE_NIGHT_YES:
@@ -547,16 +259,7 @@ public class SpecialMessagePoc extends RecyclerView.Adapter<SpecialMessagePoc.My
 
             }
 
-            //holder.textViewContenido.setBackground(holder.textViewContenido.getBackground());
 
-//            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-//                DrawableCompat.setTint(holder.textViewContenido.getBackground(), colorTheme);
-//                holder.textViewContenido.setBackground(holder.textViewContenido.getBackground());
-//            } else {
-//                DrawableCompat.setTint(holder.textViewContenido.getBackground(), colorTheme2);
-//                holder.textViewContenido.setBackground(holder.textViewContenido.getBackground());
-//
-//            }
         } catch (Exception e) {
 
         }
@@ -570,28 +273,6 @@ public class SpecialMessagePoc extends RecyclerView.Adapter<SpecialMessagePoc.My
         }
 
         try {
-//            Glide.with(activity).load(current.getContenido()).into(holder.imageViewContent);
-//
-//            Glide.with(activity)
-//                    .load(current.getContenido())
-//                    .placeholder(R.drawable.placeholder)
-//                    .fitCenter()
-//                    .into(imageView);
-
-//            RequestOptions cropOptions = new RequestOptions().centerCrop();
-//            cropOptions.placeholder(R.drawable.placeholder);
-//
-//            DrawableCrossFadeFactory factory =
-//                    new DrawableCrossFadeFactory.Builder().setCrossFadeEnabled(true).build();
-//
-//            Glide.with(activity)
-//                    .load(current.getContenido())
-//                    .apply(cropOptions)
-//                    .transition(withCrossFade(factory))
-//                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-//
-//                    .into(holder.imageViewContent)
-//            ;
 
 
             Glide.with(activity).load(current.getContenido()).apply(new
@@ -704,7 +385,7 @@ public class SpecialMessagePoc extends RecyclerView.Adapter<SpecialMessagePoc.My
                     public void onClick(View view) {
                         Intent intent = new Intent();
                         intent.setAction(Intent.ACTION_VIEW);
-                        intent.setDataAndType(Uri.parse(mensajeNubeArrayList.get(getAbsoluteAdapterPosition()).getContenido()), "image/*");
+                        intent.setDataAndType(Uri.parse(mensajeNubeArrayList.get(getAdapterPosition()).getContenido()), "image/*");
                         activity.startActivity(intent);
                     }
                 });
@@ -814,31 +495,6 @@ public class SpecialMessagePoc extends RecyclerView.Adapter<SpecialMessagePoc.My
         currentPlayingPosition = -1;
     }
 
-
-    public void liberarRecursos() {
-        try {
-            mediaPlayer.release();
-            mediaPlayer = null;
-        } catch (Exception e) {
-            Log.d(TAG, e.toString());
-        }
-    }
-
-    public void addMensajeNubeToList(MessageCloudPoc mensajeNube) {
-//        if (mensajeNubeList != null) {
-//            mensajeNubeList = new ArrayList<>();
-//        }
-        mensajeNubeArrayList.add(mensajeNube);
-        notifyItemInserted(mensajeNubeArrayList.size() - 1);
-    }
-
-    public void updateMensaje(int index, MessageCloudPoc mensajeNube) {
-//        if (mensajeNubeList != null) {
-//            mensajeNubeList = new ArrayList<>();
-//        }
-        mensajeNubeArrayList.set(index, mensajeNube);
-        notifyItemChanged(index);
-    }
 
     @Override
     public int getItemViewType(int position) {

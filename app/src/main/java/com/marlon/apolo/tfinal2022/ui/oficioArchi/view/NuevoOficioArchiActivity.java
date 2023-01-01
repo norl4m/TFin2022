@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,6 +43,7 @@ public class NuevoOficioArchiActivity extends AppCompatActivity implements View.
 
     private ArrayList<OficioArchiModel> oficioArchiModelsDB;
     private ProgressDialog progressDialog;
+    private int colorNight;
 
 
     public TextInputLayout getTextInputLayoutNombre() {
@@ -98,7 +100,16 @@ public class NuevoOficioArchiActivity extends AppCompatActivity implements View.
         });
 
 
+        /*Esto es una maravilla*/
+        TypedValue typedValue = new TypedValue();
+        getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
+        colorNight = typedValue.data;
+//        holder.imageView.setColorFilter(colorNight);
+        /*Esto es una maravilla*/
+
         imageViewIcono = findViewById(R.id.imageViewIcono);
+        imageViewIcono.setColorFilter(colorNight);
+
         textInputLayoutNombre = findViewById(R.id.textInputLayoutNombre);
         buttonSave = findViewById(R.id.buttonSave);
 
@@ -197,7 +208,7 @@ public class NuevoOficioArchiActivity extends AppCompatActivity implements View.
                 Glide.with(getApplicationContext())
                         .load(imageUri)
                         .into(imageViewIcono);
-                //imageViewFoto.setColorFilter(null);
+                imageViewIcono.setColorFilter(colorNight);
 
                 // Toast.makeText(getApplicationContext(), uriPhoto.toString(), Toast.LENGTH_SHORT).show();
 

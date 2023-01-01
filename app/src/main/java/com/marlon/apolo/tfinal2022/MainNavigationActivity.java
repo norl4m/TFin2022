@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -46,13 +47,10 @@ import com.marlon.apolo.tfinal2022.admin.AdminViewModel;
 import com.marlon.apolo.tfinal2022.buscador.view.BuscadorActivity;
 import com.marlon.apolo.tfinal2022.config.ConfiguracionActivity;
 import com.marlon.apolo.tfinal2022.databinding.ActivityMainNavigationBinding;
-import com.marlon.apolo.tfinal2022.individualChat.receiver.EliminarNotificationReceiver;
-import com.marlon.apolo.tfinal2022.individualChat.receiver.RespuestaDirectaReceiver;
 import com.marlon.apolo.tfinal2022.individualChat.view.MensajeNube;
 import com.marlon.apolo.tfinal2022.model.Chat;
 import com.marlon.apolo.tfinal2022.model.Cita;
 import com.marlon.apolo.tfinal2022.model.Empleador;
-import com.marlon.apolo.tfinal2022.model.NotificacionCustom;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
 import com.marlon.apolo.tfinal2022.model.Usuario;
 import com.marlon.apolo.tfinal2022.ui.empleadores.EmpleadorViewModel;
@@ -99,13 +97,12 @@ public class MainNavigationActivity extends AppCompatActivity {
     private ArrayList<NotificationCompat.Builder> notificationArrayList;
     private ArrayList<Integer> notificationsIds;
     private ArrayList<Chat> chatArrayList;
-    private EliminarNotificationReceiver mReceiver;
-    private RespuestaDirectaReceiver respuestaDirectaReceiver;
-    private ArrayList<NotificacionCustom> notificacionCustoms;
+
     // Key for the string that's delivered in the action's intent.
     private static final String KEY_TEXT_REPLY = "key_text_reply";
     private Dialog alertD;
     private DrawerLayout drawer;
+    private int colorNight;
 
     private void listenerNotificacionesDeCitasTrabajo() {
         ArrayList<Cita> citaArrayList = new ArrayList<>();
@@ -360,6 +357,10 @@ public class MainNavigationActivity extends AppCompatActivity {
 //                return true;
 //            }
 //        });
+        /*Esto es una maravilla*/
+        TypedValue typedValue = new TypedValue();
+        getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
+        colorNight = typedValue.data;
 
         if (firebaseUser != null) {
             Log.d(TAG, "FIREBASE LOGIN-" + firebaseUser.getUid());
@@ -446,9 +447,11 @@ public class MainNavigationActivity extends AppCompatActivity {
 
         } else {
 
-            Glide.with(MainNavigationActivity.this).load(
-                    ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_oficios)).placeholder(R.drawable.ic_baseline_person_24).into(imageView);
-            imageView.setColorFilter(getResources().getColor(R.color.white));
+            Glide.with(MainNavigationActivity.this)
+                    .load(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_oficios))
+                    .placeholder(R.drawable.ic_baseline_person_24)
+                    .into(imageView);
+            imageView.setColorFilter(colorNight);
 
         }
 
@@ -466,87 +469,6 @@ public class MainNavigationActivity extends AppCompatActivity {
         Log.d(TAG, "FILTRANDO USUARIO POR UID");
         Log.d(TAG, "filter by user: " + firebaseUser.getUid());
         Log.d(TAG, "########################");
-
-//        FirebaseDatabase.getInstance().getReference()
-//                .child("trabajadores")
-//                .child(firebaseUser.getUid())
-//                .addListenerForSingleValueEvent(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                        try {
-//                            Trabajador trabajador = snapshot.getValue(Trabajador.class);
-//                            if (trabajador != null) {
-//                                Log.d(TAG, "########################");
-//                                Log.d(TAG, "TRABAJADOR");
-//                                Log.d(TAG, trabajador.toString());
-//                                Log.d(TAG, "########################");
-//                                setTrabajadorUI();
-//                            }
-//
-//                        } catch (Exception e) {
-//                            Log.e(TAG, e.toString());
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError error) {
-//
-//                    }
-//                });
-//
-//        FirebaseDatabase.getInstance().getReference()
-//                .child("empleadores")
-//                .child(firebaseUser.getUid())
-//                .addListenerForSingleValueEvent(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                        try {
-//                            Empleador empleador = snapshot.getValue(Empleador.class);
-//                            if (empleador != null) {
-//                                Log.d(TAG, "########################");
-//                                Log.d(TAG, "EMPLEADOR");
-//                                Log.d(TAG, empleador.toString());
-//                                Log.d(TAG, "########################");
-//                                setEmpleadorUI();
-//                            }
-//
-//                        } catch (Exception e) {
-//                            Log.e(TAG, e.toString());
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError error) {
-//
-//                    }
-//                });
-//
-//        FirebaseDatabase.getInstance().getReference()
-//                .child("administrador")
-//                .child(firebaseUser.getUid())
-//                .addListenerForSingleValueEvent(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                        try {
-//                            Administrador administrador = snapshot.getValue(Administrador.class);
-//                            if (administrador != null) {
-//                                Log.d(TAG, "########################");
-//                                Log.d(TAG, "ADMINISTRADOR");
-//                                Log.d(TAG, administrador.toString());
-//                                Log.d(TAG, "########################");
-//                                setAdminUI();
-//                            }
-//                        } catch (Exception e) {
-//                            Log.e(TAG, e.toString());
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError error) {
-//
-//                    }
-//                });
-
 
         TrabajadorViewModel trabajadorViewModel = new ViewModelProvider(this).get(TrabajadorViewModel.class);
         trabajadorViewModel.getOneTrabajador(firebaseUser.getUid()).observe(this, trabajador -> {
@@ -598,11 +520,12 @@ public class MainNavigationActivity extends AppCompatActivity {
 
     private void loadLocalInfoHeader(Usuario usuario) {
         if (usuario.getFotoPerfil() != null) {
-            Glide.with(MainNavigationActivity.this).load(usuario.getFotoPerfil()).placeholder(R.drawable.ic_baseline_person_24).circleCrop().into(imageView);
+            Glide.with(MainNavigationActivity.this).load(usuario.getFotoPerfil()).placeholder(R.drawable.ic_user_tra_emp).circleCrop().into(imageView);
+            imageView.setColorFilter(null);
         } else {
             Glide.with(MainNavigationActivity.this).load(
-                    ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_person_24)).placeholder(R.drawable.ic_baseline_person_24).circleCrop().into(imageView);
-
+                    ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_user_tra_emp)).placeholder(R.drawable.ic_user_tra_emp).circleCrop().into(imageView);
+            imageView.setColorFilter(colorNight);
         }
         if (usuario.getNombre() != null && usuario.getApellido() != null) {
             textViewUser.setText(String.format("%s %s", usuario.getNombre(), usuario.getApellido()));

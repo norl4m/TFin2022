@@ -7,25 +7,24 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.marlon.apolo.tfinal2022.R;
-import com.marlon.apolo.tfinal2022.model.Oficio;
+import com.marlon.apolo.tfinal2022.model.OficioPoc;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
-public class OficioSuperSpecialListAdapter extends
-        RecyclerView.Adapter<OficioSuperSpecialListAdapter.OSuperListAdapteWordViewHolder> {
+public class EditarOficioSuperSpecialListAdapter extends
+        RecyclerView.Adapter<EditarOficioSuperSpecialListAdapter.OSuperListAdapteWordViewHolder> {
 
-    private ArrayList<Oficio> oficioArrayList;
+    private ArrayList<OficioPoc> oficioArrayList;
     private final LayoutInflater mInflater;
     private Context contextInstance;
 
-    public class OSuperListAdapteWordViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class OSuperListAdapteWordViewHolder extends RecyclerView.ViewHolder {
         public final CheckBox checkBox;
-        public final RecyclerView recyclerView;
-        final OficioSuperSpecialListAdapter mAdapter;
+        final EditarOficioSuperSpecialListAdapter mAdapter;
 
         /**
          * Creates a new custom view holder to hold the view to display in
@@ -35,62 +34,58 @@ public class OficioSuperSpecialListAdapter extends
          * @param adapter  The adapter that manages the the data and views
          *                 for the RecyclerView.
          */
-        public OSuperListAdapteWordViewHolder(View itemView, OficioSuperSpecialListAdapter adapter) {
+        public OSuperListAdapteWordViewHolder(View itemView, EditarOficioSuperSpecialListAdapter adapter) {
             super(itemView);
             checkBox = itemView.findViewById(R.id.checkBoxOficio);
-            recyclerView = itemView.findViewById(R.id.recyclerViewHabilidades);
             this.mAdapter = adapter;
 //            itemView.setOnClickListener(this);
             checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (isChecked) { // The switch is enabled
-                        oficioArrayList.get(getAbsoluteAdapterPosition()).setEstadoRegistro(true);
-                    } else { // The switch is disabled
-                        checkBox.setChecked(false);
-                        oficioArrayList.get(getAbsoluteAdapterPosition()).setEstadoRegistro(false);
-                    }
-                    checkBox.setChecked(oficioArrayList.get(getAbsoluteAdapterPosition()).isEstadoRegistro());
+                    // The switch is enabled
+                    // The switch is disabled
+                    oficioArrayList.get(getAdapterPosition()).setEstadoRegistro(isChecked);
+                    checkBox.setChecked(oficioArrayList.get(getAdapterPosition()).isEstadoRegistro());
                 }
             });
         }
 
-        @Override
-        public void onClick(View view) {
-            // Get the position of the item that was clicked.
-            int mPosition = getLayoutPosition();
-
-            // Use that to access the affected item in mWordList.
-            Oficio element = oficioArrayList.get(mPosition);
-            // Change the word in the mWordList.
-
-            oficioArrayList.set(mPosition, element);
-            // Notify the adapter, that the data has changed so it can
-            // update the RecyclerView to display the data.
-            //mAdapter.notifyDataSetChanged();
-        }
+//        @Override
+//        public void onClick(View view) {
+//            // Get the position of the item that was clicked.
+//            int mPosition = getLayoutPosition();
+//
+//            // Use that to access the affected item in mWordList.
+//            OficioPoc element = oficioArrayList.get(mPosition);
+//            // Change the word in the mWordList.
+//
+//            oficioArrayList.set(mPosition, element);
+//            // Notify the adapter, that the data has changed so it can
+//            // update the RecyclerView to display the data.
+//            //mAdapter.notifyDataSetChanged();
+//        }
     }
 
-    public OficioSuperSpecialListAdapter(Context context, ArrayList<Oficio> wordList) {
-        mInflater = LayoutInflater.from(context);
-        this.oficioArrayList = wordList;
-    }
+//    public OficioSuperSpecialListAdapter(Context context, ArrayList<Oficio> wordList) {
+//        mInflater = LayoutInflater.from(context);
+//        this.oficioArrayList = wordList;
+//    }
 
-    public OficioSuperSpecialListAdapter(Context context) {
+    public EditarOficioSuperSpecialListAdapter(Context context) {
         contextInstance = context;
         mInflater = LayoutInflater.from(context);
     }
 
-    public void setOficioArrayList(ArrayList<Oficio> oficioArrayList) {
+    public void setOficioArrayList(ArrayList<OficioPoc> oficioArrayList) {
         this.oficioArrayList = oficioArrayList;
         notifyDataSetChanged();
     }
 
-    public ArrayList<Oficio> getOficioArrayList() {
+    public ArrayList<OficioPoc> getOficioArrayList() {
         return oficioArrayList;
     }
 
-    public void updateViewWithOficio(int position, Oficio oficio) {
+    public void updateViewWithOficio(int position, OficioPoc oficio) {
         oficioArrayList.set(position, oficio);
 //        notifyItemChanged(position);
         notifyDataSetChanged();
@@ -137,17 +132,11 @@ public class OficioSuperSpecialListAdapter extends
     public void onBindViewHolder(OSuperListAdapteWordViewHolder holder,
                                  int position) {
         // Retrieve the data for that position.
-        Oficio mCurrent = oficioArrayList.get(position);
+        OficioPoc mCurrent = oficioArrayList.get(position);
         // Add the data to the view holder.
         holder.checkBox.setText(mCurrent.getNombre());
         holder.checkBox.setChecked(mCurrent.isEstadoRegistro());
 
-
-        final HabilidadSuperSpecialListAdapter adapter = new HabilidadSuperSpecialListAdapter(contextInstance);
-        holder.recyclerView.setAdapter(adapter);
-
-        holder.recyclerView.setLayoutManager(new LinearLayoutManager(contextInstance));
-        adapter.setHabilidadArrayList(mCurrent.getHabilidadArrayList());
 
     }
 
@@ -162,4 +151,27 @@ public class OficioSuperSpecialListAdapter extends
             return oficioArrayList.size();
         else return 0;
     }
+
+    public void addOficio(OficioPoc oficio) {
+        if (oficioArrayList == null) {
+            oficioArrayList = new ArrayList<>();
+        }
+        oficioArrayList.add(oficio);
+        Collections.sort(oficioArrayList, (t1, t2) -> (t1.getNombre()).compareTo(t2.getNombre()));
+//        this.oficioArrayList = oficioArrayList;
+        notifyItemInserted(oficioArrayList.indexOf(oficio));
+//        notifyDataSetChanged();
+    }
+
+    public void updateOficioArrayList(int index, OficioPoc oficio) {
+        oficioArrayList.set(index, oficio);
+        notifyItemChanged(index);
+    }
+
+    public void removeOficioArrayList(int index) {
+        oficioArrayList.remove(index);
+        notifyItemRemoved(index);
+    }
+
+
 }

@@ -123,12 +123,12 @@ public class TrabajadorListAdapter extends RecyclerView.Adapter<TrabajadorListAd
         holder.textViewNombre.setText(String.format("%s %s", current.getNombre(), current.getApellido()));
         if (current.getFotoPerfil() != null) {
             holder.imageViewTrabajador.setColorFilter(null);
-            Glide.with(context).load(current.getFotoPerfil()).placeholder(R.drawable.ic_baseline_person_24).circleCrop().into(holder.imageViewTrabajador);
+            Glide.with(context).load(current.getFotoPerfil()).placeholder(R.drawable.ic_user_tra_emp).circleCrop().into(holder.imageViewTrabajador);
         } else {
             TypedValue typedValue = new TypedValue();
             context.getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
             int colorPrimary = typedValue.data;
-            Glide.with(context).load(ContextCompat.getDrawable(context, R.drawable.ic_usuario)).placeholder(R.drawable.ic_usuario).into(holder.imageViewTrabajador);
+            Glide.with(context).load(ContextCompat.getDrawable(context, R.drawable.ic_user_tra_emp)).placeholder(R.drawable.ic_user_tra_emp).into(holder.imageViewTrabajador);
             holder.imageViewTrabajador.setColorFilter(colorPrimary);
         }
 
@@ -421,13 +421,13 @@ public class TrabajadorListAdapter extends RecyclerView.Adapter<TrabajadorListAd
                     .load(trabajador.getFotoPerfil())
 //                    .circleCrop() /*mala idea*/
                     .apply(new RequestOptions().override(300, 400))
-                    .placeholder(R.drawable.ic_usuario)
+                    .placeholder(R.drawable.ic_user_tra_emp)
                     .transition(DrawableTransitionOptions.withCrossFade())
                     .into(imageView);
 
 
         } else {
-            imageView.setImageResource(R.drawable.ic_usuario);
+            imageView.setImageResource(R.drawable.ic_user_tra_emp);
             imageView.setColorFilter(colorPrimary);
 
         }

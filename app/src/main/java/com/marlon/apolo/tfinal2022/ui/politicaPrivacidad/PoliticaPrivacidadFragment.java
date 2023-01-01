@@ -20,7 +20,6 @@ import com.marlon.apolo.tfinal2022.R;
 
 public class PoliticaPrivacidadFragment extends Fragment {
 
-    private PoliticaPrivacidadViewModel mViewModel;
 
     public static PoliticaPrivacidadFragment newInstance() {
         return new PoliticaPrivacidadFragment();
@@ -48,7 +47,6 @@ public class PoliticaPrivacidadFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(PoliticaPrivacidadViewModel.class);
         // TODO: Use the ViewModel
     }
 

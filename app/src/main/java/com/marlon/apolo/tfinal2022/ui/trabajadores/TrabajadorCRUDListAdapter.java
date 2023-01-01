@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,6 +58,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class TrabajadorCRUDListAdapter extends RecyclerView.Adapter<TrabajadorCRUDListAdapter.TrabajadorViewHolder> {
 
+    private final int colorNight;
     private Context context;
     private LayoutInflater inflater;
     private List<Trabajador> trabajadors;
@@ -67,12 +69,22 @@ public class TrabajadorCRUDListAdapter extends RecyclerView.Adapter<TrabajadorCR
     public TrabajadorCRUDListAdapter(Context contextVar) {
         context = contextVar;
         inflater = LayoutInflater.from(context);
+
+        /*Esto es una maravilla*/
+        TypedValue typedValue = new TypedValue();
+        context.getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
+        colorNight = typedValue.data;
+//        holder.imageView.setColorFilter(colorNight);
+        /*Esto es una maravilla*/
     }
 
     public TrabajadorCRUDListAdapter(Context contextVar, ArrayList<Oficio> oficioArrayList) {
         context = contextVar;
         inflater = LayoutInflater.from(context);
         oficioList = oficioArrayList;
+        TypedValue typedValue = new TypedValue();
+        context.getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
+        colorNight = typedValue.data;
     }
 
     public List<Oficio> getOficioList() {
@@ -91,16 +103,25 @@ public class TrabajadorCRUDListAdapter extends RecyclerView.Adapter<TrabajadorCR
         Trabajador current = trabajadors.get(position);
         holder.textViewNombre.setText(String.format("%s %s", current.getNombre(), current.getApellido()));
         Log.d(TAG, current.toString());
+
+        holder.imageViewTrabajador.setColorFilter(colorNight);
+
         if (current.getFotoPerfil() != null) {
             Glide.with(context)
                     .load(current.getFotoPerfil())
-                    .apply(new RequestOptions().override(150, 150))
-                    .placeholder(R.drawable.ic_baseline_person_24)
+                    .apply(new RequestOptions().override(200, 200))
+                    .placeholder(R.drawable.ic_user_tra_emp)
                     .circleCrop()
                     .into(holder.imageViewTrabajador);
+            holder.imageViewTrabajador.setColorFilter(null);
+
         } else {
-            Glide.with(context).load(ContextCompat.getDrawable(context, R.drawable.ic_baseline_person_24)).placeholder(R.drawable.ic_baseline_person_24).circleCrop().into(holder.imageViewTrabajador);
+            Glide.with(context)
+                    .load(ContextCompat.getDrawable(context, R.drawable.ic_user_tra_emp))
+                    .placeholder(R.drawable.ic_user_tra_emp)
+                    .into(holder.imageViewTrabajador);
         }
+        holder.imageButtonDelete.setColorFilter(colorNight);
 
 
         ArrayList<Oficio> oficiosFiltrados = new ArrayList<>();
@@ -290,7 +311,8 @@ public class TrabajadorCRUDListAdapter extends RecyclerView.Adapter<TrabajadorCR
             imageButtonEdit = itemView.findViewById(R.id.imageButtonEdit);
             imageButtonDelete = itemView.findViewById(R.id.imageButtonDelete);
 
-            imageButtonEdit.setOnClickListener(new View.OnClickListener() {
+//            imageButtonEdit.setOnClickListener(new View.OnClickListener() {
+            itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     //Toast.makeText(context, "Editar", Toast.LENGTH_LONG).show();

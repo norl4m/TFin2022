@@ -5,27 +5,30 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.text.InputType;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.FirebaseDatabase;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.model.Oficio;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
-import com.marlon.apolo.tfinal2022.ui.oficioArchi.model.OficioArchiModel;
 import com.marlon.apolo.tfinal2022.ui.oficioArchi.view.OficioArchiEditDeleteActivity;
-import com.marlon.apolo.tfinal2022.ui.oficios.view.HabilidadActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +66,37 @@ public class OficioRegistroCRUDListAdapter extends RecyclerView.Adapter<OficioRe
         holder.textViewOficioName.setText(String.format("%s", current.getNombre()));
 
 
+        /*Esto es una maravilla*/
+        TypedValue typedValue = new TypedValue();
+        context.getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
+        int colorNight = typedValue.data;
+//        holder.imageView.setColorFilter(colorNight);
+        /*Esto es una maravilla*/
+
+
+        try {
+            if (current.getUriPhoto() != null) {
+                Glide.with(context)
+                        .load(current.getUriPhoto())
+                        .apply(new RequestOptions().override(150, 150))
+                        .placeholder(R.drawable.ic_oficios)
+                        .into(holder.imageView);
+                holder.imageView.setColorFilter(colorNight);
+
+            } else {
+                Glide.with(context)
+                        .load(ContextCompat.getDrawable(context, R.drawable.ic_oficios))
+                        .placeholder(R.drawable.ic_oficios)
+                        .into(holder.imageView);
+            }
+            holder.imageView.setColorFilter(colorNight);
+
+
+        } catch (Exception e) {
+
+        }
+
+
     }
 
     public void setOficios(List<Oficio> oficiosVar) {
@@ -85,33 +119,17 @@ public class OficioRegistroCRUDListAdapter extends RecyclerView.Adapter<OficioRe
 
     public class OficioViewHolder extends RecyclerView.ViewHolder {
         private final TextView textViewOficioName;
-        private final ImageButton imageButtonEdit;
-        private final ImageButton imageButtonDelete;
+        private final ImageView imageView;
 
-//        private RecyclerView recyclerView;
 
         private OficioViewHolder(View itemView) {
             super(itemView);
             textViewOficioName = itemView.findViewById(R.id.textViewOficioName);
-//            recyclerView = itemView.findViewById(R.id.recyclerViewHabilidades);
-            imageButtonEdit = itemView.findViewById(R.id.imageButtonEdit);
-            imageButtonDelete = itemView.findViewById(R.id.imageButtonDelete);
+            imageView = itemView.findViewById(R.id.imageViewIcon);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(context, HabilidadActivity.class);
-                    intent.putExtra("oficio", oficios.get(getAdapterPosition()));
-                    context.startActivity(intent);
-                }
-            });
-            imageButtonEdit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //Toast.makeText(context, "Editar", Toast.LENGTH_LONG).show();
-//                    alertDialogEditarOficio(oficios.get(getAdapterPosition()));
-
-//                    clickListener.onItemClickEdit(imageButtonEdit, getAdapterPosition());
 
 
                     Oficio oficio = getOficioAtPosition(getAdapterPosition());
@@ -120,34 +138,6 @@ public class OficioRegistroCRUDListAdapter extends RecyclerView.Adapter<OficioRe
 
                 }
             });
-
-            imageButtonDelete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    Oficio oficio = getOficioAtPosition(getAdapterPosition());
-                    launchDeleteOficioActivity(oficio);
-//                    Toast.makeText(context, "Eliminar", Toast.LENGTH_LONG).show();
-                    boolean flagEliminar = true;
-                    try {
-//                        for (Trabajador tr : trabajadors) {
-//                            if (tr.getIdOficios() != null) {
-//                                for (String id : tr.getIdOficios()) {
-//                                    if (oficios.get(getAdapterPosition()).getIdOficio().equals(id)) {
-//                                        flagEliminar = false;
-//                                        break;
-//                                    }
-//                                }
-//                            }
-//                        }
-                    } catch (Exception e) {
-                        Log.d("TAG", e.toString());
-                    }
-//                    alertDialogConfirmar(oficios.get(getAdapterPosition()).getIdOficio(), flagEliminar);
-
-                }
-            });
-
         }
     }
 

@@ -109,56 +109,9 @@ public class RegWithEmailPasswordActivity extends AppCompatActivity implements V
         RegWithEmailPasswordActivity.sPref = sPref;
     }
 
-    //
-//    public void showCustomProgressDialog(String title, String message) {
-//        try {
-//            closeCustomAlertDialog();
-//        } catch (Exception e) {
-//            Log.d(TAG, e.toString());
-//        }
-//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//        // Get the layout inflater
-//        LayoutInflater inflater = this.getLayoutInflater();
-//        View promptsView = inflater.inflate(R.layout.custom_progress_dialog, null);
-//
-//
-//        // set prompts.xml to alertdialog builder
-//        builder.setView(promptsView);
-//        // Inflate and set the layout for the dialog
-//        // Pass null as the parent view because its going in the dialog layout
-////        builder.setView(inflater.inflate(R.layout.custom_progress_dialog, null));
-////        return builder.create();
-//        final TextView textViewTitle = promptsView.findViewById(R.id.textViewTitle);
-//        final TextView textViewMessage = promptsView.findViewById(R.id.textViewMessage);
-//
-//        textViewTitle.setText(title);
-//        textViewMessage.setText(message);
-//
-//        alertDialogVar = builder.create();
-//        alertDialogVar.show();
-////        builder.show();
-//    }
-//
-//    public void closeCustomAlertDialog() {
-//        try {
-//            alertDialogVar.dismiss();
-//        } catch (Exception e) {
-//
-//        }
-//    }
+
     private void hideSystemBars() {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-//        WindowInsetsControllerCompat windowInsetsController =
-//                ViewCompat.getWindowInsetsController(getWindow().getDecorView());
-//        if (windowInsetsController == null) {
-//            return;
-//        }
-//        // Configure the behavior of the hidden system bars
-//        windowInsetsController.setSystemBarsBehavior(
-//                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-//        );
-//        // Hide both the status bar and the navigation bar
-//        windowInsetsController.hide(WindowInsetsCompat.Type.systemBars());
     }
 
     @Override
@@ -321,18 +274,6 @@ public class RegWithEmailPasswordActivity extends AppCompatActivity implements V
                 colorSecondaryVariant
         };
         ColorStateList myList = new ColorStateList(states, colors);
-//            textInputLayoutEmail.set(textInputLayoutEmail, myList);
-
-//            textInputLayoutEmail.setHintTextColor(myList);
-        //textInputLayoutEmail.setDefaultHintTextColor(myList);
-
-        //Method method = textInputLayoutEmail.getClass().getDeclaredMethod("updateLabelState", boolean.class);
-        //method.setAccessible(true);
-        //method.invoke(textInputLayoutEmail, true);
-
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
 
 
         textInputEditTextEmail.addTextChangedListener(new TextWatcher() {

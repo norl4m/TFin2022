@@ -26,48 +26,24 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
-                android:layout_toLeftOf="@id/imageButtonEdit"
+                android:layout_toLeftOf="@id/imageViewIcon"
                 android:text="Electricista"
                 android:textSize="24sp" />
 
-            <ImageButton
-                android:id="@+id/imageButtonEdit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+
+            <ImageView
+                android:id="@+id/imageViewIcon"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_alignParentEnd="true"
                 android:layout_marginStart="2dp"
                 android:layout_marginTop="2dp"
                 android:layout_marginEnd="2dp"
                 android:layout_marginBottom="2dp"
-                android:layout_toStartOf="@id/imageButtonDelete"
-                android:src="@drawable/ic_baseline_edit_24" />
-
-
-            <ImageButton
-                android:id="@+id/imageButtonDelete"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="2dp"
-                android:layout_marginStart="2dp"
-                android:layout_marginTop="2dp"
-                android:layout_marginEnd="2dp"
-                android:layout_marginBottom="2dp"
-                android:src="@drawable/ic_baseline_delete_forever_24"
-                android:layout_alignParentEnd="true"/>
+                android:src="@drawable/ic_oficios" />
 
 
         </RelativeLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewHabilidades"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/relativeLayoutOficio"
-            android:layout_marginStart="2dp"
-            android:layout_marginTop="2dp"
-            android:layout_marginEnd="2dp"
-            android:layout_marginBottom="2dp"
-            android:orientation="vertical"
-            tools:listitem="@layout/recycler_view_item_crud_skill" />
 
     </RelativeLayout>
 

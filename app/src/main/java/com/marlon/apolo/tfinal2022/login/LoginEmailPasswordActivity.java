@@ -69,18 +69,6 @@ public class LoginEmailPasswordActivity extends AppCompatActivity implements Vie
 
     private void hideSystemBars() {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-//        WindowInsetsControllerCompat windowInsetsController =
-//                ViewCompat.getWindowInsetsController(getWindow().getDecorView());
-//        if (windowInsetsController == null) {
-//            return;
-//        }
-//        // Configure the behavior of the hidden system bars
-//        windowInsetsController.setSystemBarsBehavior(
-//                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-//        );
-//        // Hide both the status bar and the navigation bar
-//        windowInsetsController.hide(WindowInsetsCompat.Type.systemBars());
     }
 
     @Override
@@ -89,24 +77,7 @@ public class LoginEmailPasswordActivity extends AppCompatActivity implements Vie
         hideSystemBars();
         setContentView(R.layout.activity_login_email_password);
 
-//        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-//        boolean mode = mPrefs.getBoolean("sync_theme", false);
-//        if (mode) {
-////            ((ImageView) findViewById(R.id.acLoginImageViewLogo)).setColorFilter(getResources().getColor(R.color.white));
-//            ((ImageView) findViewById(R.id.acLoginImageViewLogo)).setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.white));
-//        }
         TypedValue typedValue = new TypedValue();
-        getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
-        int colorNight = typedValue.data;
-//        ((ImageView) findViewById(R.id.acLoginImageViewLogo)).setColorFilter(colorNight);
-
-
-//        getTheme().resolveAttribute(R.attr.colorPrimaryVariant, typedValue, true);
-//        int colorPrimaryVariant = typedValue.data;
-        //linearLayout.setBackgroundColor(colorSecondaryVariant);
-
-//        relativeLayoutBack = findViewById(R.id.scrollView);
-
         getTheme().resolveAttribute(R.attr.colorOnPrimary, typedValue, true);
         int colorOnPrimary = typedValue.data;
 
@@ -307,19 +278,6 @@ public class LoginEmailPasswordActivity extends AppCompatActivity implements Vie
             startActivity(intent);
         }
 
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    progressDialog.dismiss();
-//                } catch (Exception e) {
-//
-//                }
-//                Intent intent = new Intent(LoginEmailPasswordActivity.this, MainNavigationActivity.class);
-//                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                startActivity(intent);
-//            }
-//        }, 1500);
     }
 
     public void setLocalAdminDevice(Administrador administrador) {
@@ -411,24 +369,6 @@ public class LoginEmailPasswordActivity extends AppCompatActivity implements Vie
                 });
                 break;
         }
-//
-//        builder.setPositiveButton("Entendido", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int id) {
-//                // sign in the user ...
-//                try {
-//                    dialogInfoError.dismiss();
-//
-//                } catch (Exception e) {
-//
-//                }
-//            }
-//        });
-
-        // Inflate and set the layout for the dialog
-        // Pass null as the parent view because its going in the dialog layout
-//        builder.setView(inflater.inflate(R.layout.dialog_info, null))
-        // Add action buttons
 
         dialogInfoError = builder.create();
         dialogInfoError.show();

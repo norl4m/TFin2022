@@ -22,6 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="2dp"
+            android:fontFamily="@font/andika"
             android:text="Marlon Apolo"
             android:textAllCaps="false"
             android:textAppearance="@android:style/TextAppearance.Material.Title"
@@ -86,6 +87,7 @@
                     android:layout_marginTop="4dp"
                     android:layout_marginEnd="4dp"
                     android:layout_marginBottom="4dp"
+                    android:fontFamily="@font/andika"
                     android:text="Calificación: 0.5/5.0"
                     android:textAppearance="@android:style/TextAppearance.Material.Body2" />
 

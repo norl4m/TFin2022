@@ -59,7 +59,6 @@ import com.marlon.apolo.tfinal2022.model.Cita;
 import com.marlon.apolo.tfinal2022.model.Empleador;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
 import com.marlon.apolo.tfinal2022.model.Usuario;
-import com.marlon.apolo.tfinal2022.ui.datosPersonales.viewModel.DataUsuarioViewModel;
 import com.marlon.apolo.tfinal2022.ui.empleadores.EmpleadorViewModel;
 import com.marlon.apolo.tfinal2022.ui.trabajadores.TrabajadorViewModel;
 
@@ -68,8 +67,7 @@ import java.util.Locale;
 
 public class DataUsuarioFragment extends Fragment implements View.OnClickListener {
 
-    private static final String TAG = DataUsuarioViewModel.class.getSimpleName();
-    private DataUsuarioViewModel dataUsuarioViewModel;
+    private static final String TAG = DataUsuarioFragment.class.getSimpleName();
     private FragmentDataUsuarioBinding binding;
     private TextInputLayout textInputLayoutNombre;
     private TextInputLayout textInputLayoutApellido;
@@ -122,7 +120,7 @@ public class DataUsuarioFragment extends Fragment implements View.OnClickListene
         //noinspection SimplifiableIfStatement
         if (id == R.id.mnu_edit_oficio) {
 //            Intent intent = new Intent(requireActivity(), EditarOficioHabilidadActivity.class);
-            Intent intent = new Intent(requireActivity(), EditarOficioHabilidad2Activity.class);
+            Intent intent = new Intent(requireActivity(), EditarOficioActivity.class);
             intent.putExtra("trabajador", (Trabajador) usuarioLocal);
 //            ArrayList<String> idOficios = this.trabajador.getIdOficios();
 //            ArrayList<String> idHabilidades = this.trabajador.getIdHabilidades();
@@ -176,7 +174,6 @@ public class DataUsuarioFragment extends Fragment implements View.OnClickListene
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        dataUsuarioViewModel = new ViewModelProvider(this).get(DataUsuarioViewModel.class);
 
         binding = FragmentDataUsuarioBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -320,6 +317,15 @@ public class DataUsuarioFragment extends Fragment implements View.OnClickListene
         empleadorViewModel.getOneEmpleador(firebaseUser.getUid()).observe(requireActivity(), empleador -> {
             if (empleador != null) {
                 usuarioLocal = empleador;
+//                String passloc = null;
+//                try {
+//                    passloc = usuarioLocal.decrypt(usuarioLocal.generateKey(FirebaseAuth.getInstance().getCurrentUser().getUid()), usuarioLocal.getPassword());
+//                    textInputLayoutPassword.getEditText().setText(passloc);
+//
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+
                 user = 1;
                 loadLocalInfo(usuarioLocal);
                 relativeLayoutCalif.setVisibility(View.GONE);
@@ -368,7 +374,10 @@ public class DataUsuarioFragment extends Fragment implements View.OnClickListene
     private void loadLocalInfo(Usuario usuario) {
         if (usuario.getFotoPerfil() != null) {
             try {
-                Glide.with(requireActivity()).load(usuario.getFotoPerfil()).placeholder(R.drawable.ic_baseline_person_24).circleCrop().into(imageViewProfile);
+                Glide.with(requireActivity())
+                        .load(usuario.getFotoPerfil()).placeholder(R.drawable.ic_user_tra_emp)
+                        .circleCrop()
+                        .into(imageViewProfile);
                 imageViewProfile.setColorFilter(null);
             } catch (Exception e) {
 

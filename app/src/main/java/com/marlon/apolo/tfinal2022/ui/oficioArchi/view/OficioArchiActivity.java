@@ -10,12 +10,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import com.google.android.exoplayer2.util.Log;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.ui.oficioArchi.adapters.OficioArchiCRUDListAdapter;
 import com.marlon.apolo.tfinal2022.ui.oficioArchi.model.OficioArchiModel;

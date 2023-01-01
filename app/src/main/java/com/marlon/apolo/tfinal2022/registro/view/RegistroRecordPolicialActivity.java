@@ -134,17 +134,6 @@ public class RegistroRecordPolicialActivity extends AppCompatActivity implements
     private void hideSystemBars() {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-//        WindowInsetsControllerCompat windowInsetsController =
-//                ViewCompat.getWindowInsetsController(getWindow().getDecorView());
-//        if (windowInsetsController == null) {
-//            return;
-//        }
-//        // Configure the behavior of the hidden system bars
-//        windowInsetsController.setSystemBarsBehavior(
-//                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-//        );
-//        // Hide both the status bar and the navigation bar
-//        windowInsetsController.hide(WindowInsetsCompat.Type.systemBars());
     }
 
     @Override

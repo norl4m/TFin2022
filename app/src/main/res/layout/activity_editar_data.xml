@@ -19,8 +19,8 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/toolbar"
-        android:layout_above="@id/buttonUpdate">
+        android:layout_above="@id/buttonUpdate"
+        android:layout_below="@id/toolbar">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -61,6 +61,7 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInputLayoutName"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -73,12 +74,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:digits="@string/validate_names_and_lastname"
+                    android:fontFamily="@font/andika"
                     android:inputType="textCapSentences|textPersonName" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInputLayoutLastName"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -91,6 +94,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:digits="@string/validate_names_and_lastname"
+                    android:fontFamily="@font/andika"
                     android:inputType="textCapSentences|textPersonName" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -140,26 +144,31 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInputLayoutEmail"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:hint="@string/email"
+
                 app:startIconDrawable="@drawable/ic_baseline_email_24">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/acRegisterUserEditTextEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/andika"
                     android:inputType="textEmailAddress|text" />
             </com.google.android.material.textfield.TextInputLayout>
 
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInputLayoutPhone"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:hint="@string/phone"
+
                 app:startIconDrawable="@drawable/ic_baseline_phone_android_24">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -167,16 +176,19 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:digits="@string/numbers_validation"
+                    android:fontFamily="@font/andika"
                     android:inputType="phone"
                     android:maxLength="10" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInputLayoutPassword"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:hint="@string/password"
+
                 app:passwordToggleEnabled="true"
                 app:startIconDrawable="@drawable/ic_baseline_lock_24">
 
@@ -184,6 +196,7 @@
                     android:id="@+id/acRegisterUserEditTextPassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/andika"
                     android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -195,12 +208,14 @@
     <Button
         android:id="@+id/buttonUpdate"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:layout_alignParentBottom="true"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
+        android:background="@drawable/button_background"
+        android:fontFamily="@font/andika"
         android:text="Actualizar información"
         android:textAllCaps="false" />
 </RelativeLayout>

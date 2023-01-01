@@ -5,16 +5,9 @@ import android.app.Application;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.SavedStateHandle;
-import androidx.lifecycle.ViewModel;
 
-import com.marlon.apolo.tfinal2022.model.Empleador;
-import com.marlon.apolo.tfinal2022.model.Habilidad;
 import com.marlon.apolo.tfinal2022.model.Oficio;
-import com.marlon.apolo.tfinal2022.ui.empleadores.EmpledorRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class OficioViewModel extends AndroidViewModel {
@@ -44,9 +37,7 @@ public class OficioViewModel extends AndroidViewModel {
         mRepository.addOficioTofirebase(activity, oficio);
     }
 
-    public void addHabilidadToOficioTofirebase(Activity activity, Oficio oficio, Habilidad habilidad) {
-        mRepository.addHabilidadToOficioTofirebase(activity, oficio, habilidad);
-    }
+
 
 
     public LiveData<Oficio> getOneOficio(String id) {

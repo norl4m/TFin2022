@@ -33,7 +33,6 @@ import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.model.Empleador;
 import com.marlon.apolo.tfinal2022.model.Oficio;
 import com.marlon.apolo.tfinal2022.registro.view.RegWithEmailPasswordActivity;
-import com.marlon.apolo.tfinal2022.registro.view.regMethod.RegistrarseConCelularActivity;
 import com.marlon.apolo.tfinal2022.ui.oficioArchi.model.OficioArchiModel;
 import com.marlon.apolo.tfinal2022.ui.oficioArchi.view.NuevoOficioArchiActivity;
 import com.marlon.apolo.tfinal2022.ui.oficioArchi.view.OficioArchiActivity;
@@ -146,6 +145,8 @@ public class OficioArchiRepository {
                 public void onFailure(@androidx.annotation.NonNull Exception exception) {
                     // Handle unsuccessful uploads
                     Log.d(TAG, "on failure Foto complete...");
+                    Log.w(TAG, exception.toString());
+                    Toast.makeText(nuevoOficioArchiActivity, exception.toString(), Toast.LENGTH_LONG).show();
                 }
             }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
@@ -430,6 +431,7 @@ public class OficioArchiRepository {
 
                             Toast.makeText(oficioArchiEditDeleteActivity, "Oficio actualizado.", Toast.LENGTH_LONG).show();
                             oficioArchiEditDeleteActivity.setUriPhoto(null);
+                            oficioArchiEditDeleteActivity.initStatesButtons();
 
                         } else {
                             Log.d(TAG, "Registro de oficio con foto fallido");

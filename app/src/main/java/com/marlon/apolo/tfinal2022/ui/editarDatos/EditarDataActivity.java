@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.app.ProgressDialog;
@@ -17,6 +18,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,7 +34,9 @@ import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.model.Empleador;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
 import com.marlon.apolo.tfinal2022.model.Usuario;
-import com.marlon.apolo.tfinal2022.ui.datosPersonales.view.EditarOficioHabilidad2Activity;
+import com.marlon.apolo.tfinal2022.ui.datosPersonales.view.EditarOficioActivity;
+import com.marlon.apolo.tfinal2022.ui.datosPersonales.view.FotoActivity;
+import com.marlon.apolo.tfinal2022.ui.trabajadores.PerfilTrabajadorActivity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -64,6 +68,7 @@ public class EditarDataActivity extends AppCompatActivity implements View.OnClic
     private String mediaPath;
     private File cameraImage;
     private ProgressDialog progressDialog;
+    private int colorNight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +107,7 @@ public class EditarDataActivity extends AppCompatActivity implements View.OnClic
         buttonUpdate.setOnClickListener(this);
         fabChooseImageProfile.setOnClickListener(this);
 
+
         regUsuario = getIntent().getIntExtra("usuario", -1);
 
         switch (regUsuario) {
@@ -118,6 +124,22 @@ public class EditarDataActivity extends AppCompatActivity implements View.OnClic
                 //Toast.makeText(getApplicationContext(), trabajador.toString(), Toast.LENGTH_LONG).show();
                 break;
         }
+
+        /*Esto es una maravilla*/
+        TypedValue typedValue = new TypedValue();
+        getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
+        colorNight = typedValue.data;
+
+        imageViewFoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (usuarioEdt.getFotoPerfil() != null) {
+                    Intent intentFoto = new Intent(EditarDataActivity.this, FotoActivity.class);
+                    intentFoto.setData(Uri.parse(usuarioEdt.getFotoPerfil()));
+                    startActivity(intentFoto);
+                }
+            }
+        });
 
         loadInfo(usuarioEdt);
 
@@ -141,6 +163,13 @@ public class EditarDataActivity extends AppCompatActivity implements View.OnClic
                     .load(usuarioEdt.getFotoPerfil())
                     .circleCrop().placeholder(R.drawable.ic_baseline_person_24)
                     .into(imageViewFoto);
+            imageViewFoto.setColorFilter(null);
+        } else {
+            Glide.with(EditarDataActivity.this)
+                    .load(ContextCompat.getDrawable(this, R.drawable.ic_user_tra_emp))
+                    .placeholder(R.drawable.ic_user_tra_emp)
+                    .into(imageViewFoto);
+            imageViewFoto.setColorFilter(colorNight);
         }
     }
 
@@ -645,16 +674,9 @@ public class EditarDataActivity extends AppCompatActivity implements View.OnClic
                 //Toast.makeText(this, "Edit oficios", Toast.LENGTH_SHORT).show();
 //                Intent intent = new Intent(EditarDataActivity.this, EditarOficioActivity.class);
 //                Intent intent = new Intent(EditarDataActivity.this, EditarOficioHabilidadActivity.class);
-                Intent intent = new Intent(EditarDataActivity.this, EditarOficioHabilidad2Activity.class);
+                Intent intent = new Intent(EditarDataActivity.this, EditarOficioActivity.class);
                 intent.putExtra("trabajador", trabajador);
                 startActivity(intent);
-                break;
-            case R.id.mnu_edit_habilidad:
-//                Intent intent = new Intent(EditarDataActivity.this,EditarOficioActivity.class);
-//                intent.putExtra("trabajador",trabajador);
-//                startActivity(intent);
-                Toast.makeText(this, "Edit habilidades", Toast.LENGTH_SHORT).show();
-
                 break;
         }
         return super.onOptionsItemSelected(item);

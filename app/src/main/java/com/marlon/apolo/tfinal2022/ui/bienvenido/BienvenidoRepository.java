@@ -6,7 +6,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -17,12 +16,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.marlon.apolo.tfinal2022.model.Empleador;
-import com.marlon.apolo.tfinal2022.model.Habilidad;
 import com.marlon.apolo.tfinal2022.model.Oficio;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
-
-import org.checkerframework.checker.units.qual.A;
-import org.checkerframework.checker.units.qual.C;
 
 import java.util.ArrayList;
 
@@ -31,7 +26,6 @@ public class BienvenidoRepository {
     MutableLiveData<ArrayList<Trabajador>> allTrabajadores;
     MutableLiveData<ArrayList<Empleador>> allEmpleadores;
     MutableLiveData<ArrayList<Oficio>> allOficios;
-    MutableLiveData<ArrayList<Habilidad>> habilidadesByOficio;
     MutableLiveData<ArrayList<Trabajador>> trabajadoresByEmail;
     MutableLiveData<ArrayList<Trabajador>> trabajadoresByPhone;
     MutableLiveData<ArrayList<Empleador>> empleadoresByEmail;
@@ -265,106 +259,7 @@ public class BienvenidoRepository {
                 .child("oficios")
                 .addChildEventListener(childEventListenerOficios);
     }
-
-
-    public MutableLiveData<ArrayList<Habilidad>> getHabilidadesByOficio(String idOficio) {
-        if (habilidadesByOficio == null) {
-            habilidadesByOficio = new MutableLiveData<>();
-            loadHabilidadesByOficio(idOficio);
-        }
-        return habilidadesByOficio;
-    }
-
-    private void loadHabilidadesByOficio(String idOficio) {
-        ArrayList<Habilidad> habilidadArrayList = new ArrayList<>();
-        ChildEventListener childEventListenerHabilidades = new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                try {
-                    Habilidad habilidad = snapshot.getValue(Habilidad.class);
-                    habilidadArrayList.add(habilidad);
-                    habilidadesByOficio.setValue(habilidadArrayList);
-                } catch (Exception e) {
-
-                }
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                try {
-                    Habilidad habilidadChanged = snapshot.getValue(Habilidad.class);
-                    int index = 0;
-                    for (Habilidad h : habilidadArrayList) {
-                        if (h.getIdHabilidad().equals(habilidadChanged.getIdHabilidad())) {
-                            habilidadArrayList.set(index, habilidadChanged);
-                            break;
-                        }
-                        index++;
-                    }
-                    habilidadesByOficio.setValue(habilidadArrayList);
-                } catch (Exception e) {
-
-                }
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-                try {
-                    Habilidad habilidadRemoved = snapshot.getValue(Habilidad.class);
-                    int index = 0;
-                    for (Habilidad h : habilidadArrayList) {
-                        if (h.getIdHabilidad().equals(habilidadRemoved.getIdHabilidad())) {
-                            habilidadArrayList.remove(index);
-                            break;
-                        }
-                        index++;
-                    }
-                    habilidadesByOficio.setValue(habilidadArrayList);
-                } catch (Exception e) {
-
-                }
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        };
-        FirebaseDatabase.getInstance().getReference()
-                .child("habilidades")
-                .child(idOficio)
-                .addChildEventListener(childEventListenerHabilidades);
-    }
-
-    public void addHabilidadToOficioTofirebase(Activity activity, Oficio oficio, Habilidad habilidad) {
-
-        FirebaseDatabase.getInstance().getReference()
-                .child("habilidades")
-                .child(oficio.getIdOficio())
-                .child(habilidad.getIdHabilidad())
-                .setValue(habilidad)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(activity, "Registro exitoso", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(activity, "Registro fallido", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(activity, "Registro fallido: " + e.toString(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-    }
+    
 
 
     public MutableLiveData<ArrayList<Trabajador>> getTrabajadoresByEmail() {

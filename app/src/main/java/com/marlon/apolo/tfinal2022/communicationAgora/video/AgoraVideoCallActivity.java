@@ -323,6 +323,7 @@ public class AgoraVideoCallActivity extends AppCompatActivity implements PopupMe
     private ImageView imageButtonDisableVideo;
     private boolean value;
     private MediaPlayer mediaPlayerCallTone;
+    private AlertDialog dialogSDKLoco;
 
     private void updateNetworkStatus(int quality) {
         if (quality > 0 && quality < 3) networkStatus.setBackgroundColor(Color.GREEN);
@@ -422,8 +423,8 @@ public class AgoraVideoCallActivity extends AppCompatActivity implements PopupMe
                             // Set other dialog properties
 
                             // Create the AlertDialog
-                            AlertDialog dialog = builder.create();
-                            dialog.show();
+                            dialogSDKLoco = builder.create();
+                            dialogSDKLoco.show();
                         }
 
 
@@ -453,8 +454,8 @@ public class AgoraVideoCallActivity extends AppCompatActivity implements PopupMe
                 // Set other dialog properties
 
                 // Create the AlertDialog
-                AlertDialog dialog = builder.create();
-                dialog.show();
+                dialogSDKLoco = builder.create();
+                dialogSDKLoco.show();
             }
         }
 
@@ -463,6 +464,14 @@ public class AgoraVideoCallActivity extends AppCompatActivity implements PopupMe
         return value;
 
 
+    }
+
+    public void closeDialog() {
+        try {
+            dialogSDKLoco.dismiss();
+        } catch (Exception e) {
+            Log.d(TAG, e.toString());
+        }
     }
 
     void showMessage(String message) {
@@ -765,7 +774,8 @@ public class AgoraVideoCallActivity extends AppCompatActivity implements PopupMe
 //            localSurfaceView.setVisibility(View.VISIBLE);
             fetchToken(uid, channelName, tokenRole);
         } else {
-            showMessage("Permissions was not granted");
+//            showMessage("Permissions was not granted");
+            showMessage("Permiso de cámara y micrófono no concedido");
         }
     }
 
@@ -786,7 +796,9 @@ public class AgoraVideoCallActivity extends AppCompatActivity implements PopupMe
 //            localSurfaceView.setVisibility(View.VISIBLE);
             fetchToken(uid, channelName, tokenRole);
         } else {
-            showMessage("Permissions was not granted");
+//            showMessage("Permissions was not granted");
+            showMessage("Permiso de cámara y micrófono no concedido");
+
         }
     }
 
@@ -1394,6 +1406,7 @@ public class AgoraVideoCallActivity extends AppCompatActivity implements PopupMe
                         Log.d(TAG, e.toString());
 
                     }
+                    closeDialog();
                 } else {
                     // Explain to the user that the feature is unavailable because
                     // the feature requires a permission that the user has denied.

@@ -32,7 +32,6 @@ import com.google.firebase.storage.UploadTask;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.individualChat.model.ChatPoc;
 import com.marlon.apolo.tfinal2022.individualChat.model.MessageCloudPoc;
-import com.marlon.apolo.tfinal2022.individualChat.view.no.CamActivity;
 import com.marlon.apolo.tfinal2022.model.Usuario;
 
 import java.util.Date;
@@ -256,7 +255,7 @@ public class SendFotoActivity extends AppCompatActivity {
                     closeAlertDialogLoad();
                     try {
 //                        CamActivity.camActivity.finish();
-                        CamActivity.camActivity.closeForce();
+                        //CamActivity.camActivity.closeForce();
                     } catch (Exception e) {
                         Log.d(TAG, e.toString());
                     }

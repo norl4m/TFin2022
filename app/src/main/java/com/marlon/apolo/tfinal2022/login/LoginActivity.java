@@ -34,18 +34,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void hideSystemBars() {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-//        WindowInsetsControllerCompat windowInsetsController =
-//                ViewCompat.getWindowInsetsController(getWindow().getDecorView());
-//        if (windowInsetsController == null) {
-//            return;
-//        }
-//        // Configure the behavior of the hidden system bars
-//        windowInsetsController.setSystemBarsBehavior(
-//                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-//        );
-//        // Hide both the status bar and the navigation bar
-//        windowInsetsController.hide(WindowInsetsCompat.Type.systemBars());
     }
 
 
@@ -55,12 +43,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         hideSystemBars();
         setContentView(R.layout.activity_login);
         SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean mode = mPrefs.getBoolean("sync_theme", false);
-//        if (mode) {
-////            ((ImageView) findViewById(R.id.imageView)).setColorFilter(getResources().getColor(R.color.white));
-//            ((ImageView) findViewById(R.id.imageView)).setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.white));
-//
-//        }
+
         TypedValue typedValue = new TypedValue();
         this.getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
         int colorNight = typedValue.data;
@@ -76,8 +59,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         });
         findViewById(R.id.btnLoginWithEmail).setOnClickListener(this);
-        findViewById(R.id.btnLoginWithGoogle).setOnClickListener(this);
-        findViewById(R.id.btnLoginWithPhone).setOnClickListener(this);
         findViewById(R.id.textViewNuevoReg).setOnClickListener(this);
 
         if (getOmitirLoginFlag()) {
@@ -86,9 +67,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             findViewById(R.id.buttonContinuar).setVisibility(View.VISIBLE);
             findViewById(R.id.buttonContinuar).setOnClickListener(this);
         }
-
-//        findViewById(R.id.buttonContinuar).setOnClickListener(this);
-
 
     }
 
@@ -101,24 +79,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 intent.putExtra("password", "");
                 startActivity(intent);
                 break;
-            case R.id.btnLoginWithGoogle:
-                Intent intentGoogle = new Intent(LoginActivity.this, LoginGoogleActivity.class);
-                intentGoogle.putExtra("loginRev", "");
-                startActivity(intentGoogle);
-                break;
-            case R.id.btnLoginWithPhone:
-                startActivity(new Intent(LoginActivity.this, LoginCelularActivity.class));
-                break;
             case R.id.textViewNuevoReg:
                 startActivity(new Intent(LoginActivity.this, PerfilActivity.class));
-
                 break;
             case R.id.buttonContinuar:
-//                finishAffinity();
                 setOmitirLoginFlag();
                 Intent intentConti = new Intent(LoginActivity.this, MainNavigationActivity.class);
-//                intentConti.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                finishAffinity();
                 finish();
                 startActivity(intentConti);
                 break;

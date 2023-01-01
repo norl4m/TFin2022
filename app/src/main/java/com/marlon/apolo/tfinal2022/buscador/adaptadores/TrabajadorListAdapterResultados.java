@@ -133,7 +133,7 @@ public class TrabajadorListAdapterResultados extends RecyclerView.Adapter<Trabaj
             TypedValue typedValue = new TypedValue();
             context.getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
             int colorPrimary = typedValue.data;
-            Glide.with(context).load(ContextCompat.getDrawable(context, R.drawable.ic_usuario)).placeholder(R.drawable.ic_usuario).into(holder.imageViewTrabajador);
+            Glide.with(context).load(ContextCompat.getDrawable(context, R.drawable.ic_user_tra_emp)).placeholder(R.drawable.ic_user_tra_emp).into(holder.imageViewTrabajador);
             holder.imageViewTrabajador.setColorFilter(colorPrimary);
         }
         Log.d(TAG, current.toString());
@@ -288,7 +288,7 @@ public class TrabajadorListAdapterResultados extends RecyclerView.Adapter<Trabaj
                         switch (usuario) {
                             case 0:/*admin*/
                             case 1:/*empleador*/
-                                opcionesTrabajadorDialog(trabajadors.get(getAbsoluteAdapterPosition()));
+                                opcionesTrabajadorDialog(trabajadors.get(getAdapterPosition()));
                                 break;
                             case 2:
                                 break;
@@ -350,13 +350,13 @@ public class TrabajadorListAdapterResultados extends RecyclerView.Adapter<Trabaj
                     .load(trabajador.getFotoPerfil())
 //                    .circleCrop() /*mala idea*/
                     .apply(new RequestOptions().override(300, 400))
-                    .placeholder(R.drawable.ic_usuario)
+                    .placeholder(R.drawable.ic_baseline_person_24)
                     .transition(DrawableTransitionOptions.withCrossFade())
                     .into(imageView);
 
 
         } else {
-            imageView.setImageResource(R.drawable.ic_usuario);
+            imageView.setImageResource(R.drawable.ic_user_tra_emp);
             imageView.setColorFilter(colorPrimary);
 
         }

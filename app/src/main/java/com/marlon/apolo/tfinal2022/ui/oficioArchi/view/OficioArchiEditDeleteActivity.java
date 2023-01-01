@@ -1,7 +1,9 @@
 package com.marlon.apolo.tfinal2022.ui.oficioArchi.view;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -10,9 +12,12 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,11 +26,19 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.database.FirebaseDatabase;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.model.Oficio;
+import com.marlon.apolo.tfinal2022.model.Trabajador;
+import com.marlon.apolo.tfinal2022.ui.bienvenido.BienvenidoViewModel;
 import com.marlon.apolo.tfinal2022.ui.oficioArchi.model.OficioArchiModel;
 import com.marlon.apolo.tfinal2022.ui.oficioArchi.viewModel.OficioArchiViewModel;
+import com.marlon.apolo.tfinal2022.ui.oficios.adaptadores.OficioViewModelPoc;
+import com.marlon.apolo.tfinal2022.ui.trabajadores.TrabajadorViewModel;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,18 +52,13 @@ public class OficioArchiEditDeleteActivity extends AppCompatActivity implements 
     private Button buttonSave;
     private Uri uriPhoto;
     private OficioArchiViewModel oficioArchiViewModel;
-    private ArrayList<OficioArchiModel> oficioArchiModelsDB;
+    //    private ArrayList<OficioArchiModel> oficioArchiModelsDB;
     private ProgressDialog progressDialog;
     private Oficio oficioArchiModelSelected;
-
-    public Oficio getOficioArchiModelSelected() {
-        return oficioArchiModelSelected;
-    }
-
-    public void setOficioArchiModelSelected(Oficio oficioArchiModelSelected) {
-        this.oficioArchiModelSelected = oficioArchiModelSelected;
-    }
-
+    private ArrayList<Oficio> oficioArrayListDB;
+    private boolean editMenu;
+    private ArrayList<Trabajador> trabajadorArrayList;
+    private int colorNight;
 
     public Uri getUriPhoto() {
         return uriPhoto;
@@ -65,7 +73,17 @@ public class OficioArchiEditDeleteActivity extends AppCompatActivity implements 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_oficio_archi_edit_delete);
 
+        editMenu = true;
+
+        /*Esto es una maravilla*/
+        TypedValue typedValue = new TypedValue();
+        getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
+        colorNight = typedValue.data;
+//        holder.imageView.setColorFilter(colorNight);
+        /*Esto es una maravilla*/
+
         imageViewIcono = findViewById(R.id.imageViewIcono);
+        imageViewIcono.setColorFilter(colorNight);
         textInputLayoutNombre = findViewById(R.id.textInputLayoutNombre);
         buttonSave = findViewById(R.id.buttonSave);
 
@@ -81,27 +99,68 @@ public class OficioArchiEditDeleteActivity extends AppCompatActivity implements 
             }
         });
 
+        initStatesButtons();
+
+
         oficioArchiModelSelected = (Oficio) getIntent().getSerializableExtra("oficioModel");
+
         if (oficioArchiModelSelected.getUriPhoto() != null) {
             uriPhoto = Uri.parse(oficioArchiModelSelected.getUriPhoto());
             Glide.with(getApplicationContext())
                     .load(uriPhoto)
                     .into(imageViewIcono);
+            imageViewIcono.setColorFilter(colorNight);
+
+        } else {
+            Glide.with(getApplicationContext())
+                    .load(AppCompatResources.getDrawable(this, R.drawable.ic_oficios))
+                    .into(imageViewIcono);
+            imageViewIcono.setColorFilter(colorNight);
         }
 
         textInputLayoutNombre.getEditText().setText(oficioArchiModelSelected.getNombre());
 
+        oficioArrayListDB = new ArrayList<>();
 
         oficioArchiViewModel = new ViewModelProvider(this).get(OficioArchiViewModel.class);
-
-        oficioArchiViewModel.getAllOficios().observe(OficioArchiEditDeleteActivity.this, new Observer<List<OficioArchiModel>>() {
+        OficioViewModelPoc oficioViewModelPoc = new ViewModelProvider(this).get(OficioViewModelPoc.class);
+        oficioViewModelPoc.getOficios().observe(this, new Observer<ArrayList<Oficio>>() {
             @Override
-            public void onChanged(List<OficioArchiModel> oficioArchiModels) {
-                oficioArchiModelsDB = (ArrayList<OficioArchiModel>) oficioArchiModels;
-
+            public void onChanged(ArrayList<Oficio> oficios) {
+//                oficioArrayList = new ArrayList<>();
+                oficioArrayListDB = oficios;
             }
         });
 
+        TrabajadorViewModel trabajadorViewModel = new ViewModelProvider(this).get(TrabajadorViewModel.class);
+        trabajadorViewModel.getAllTrabajadores().observe(this, new Observer<List<Trabajador>>() {
+            @Override
+            public void onChanged(List<Trabajador> trabajadors) {
+                trabajadorArrayList = new ArrayList<>();
+                trabajadorArrayList = (ArrayList<Trabajador>) trabajadors;
+            }
+        });
+
+    }
+
+    public void initStatesButtons() {
+        editMenu = true;
+
+        buttonSave.setEnabled(false);
+        textInputLayoutNombre.setEnabled(false);
+        imageViewIcono.setEnabled(false);
+        invalidateOptionsMenu();
+
+
+    }
+
+    public void editStatesButtons() {
+        editMenu = false;
+        buttonSave.setEnabled(true);
+        textInputLayoutNombre.setEnabled(true);
+        imageViewIcono.setEnabled(true);
+
+        invalidateOptionsMenu();
     }
 
     private void escogerDesdeGaleria() {
@@ -111,6 +170,14 @@ public class OficioArchiEditDeleteActivity extends AppCompatActivity implements 
         intent.setType("image/*");
         startActivityForResult(intent, SELECCIONAR_FOTO_GALERIA_REQ_ID);
 
+    }
+
+    public void closeProgressDialog() {
+        try {
+            progressDialog.dismiss();
+        } catch (Exception e) {
+
+        }
     }
 
 
@@ -128,6 +195,48 @@ public class OficioArchiEditDeleteActivity extends AppCompatActivity implements 
                         String title = "Por favor espere";
                         String message = "Eliminando oficio...";
                         showProgress(title, message);
+
+
+                        boolean flagDelete = true;
+                        try {
+                            for (Trabajador tr : trabajadorArrayList) {
+                                for (String idOf : tr.getIdOficios()) {
+                                    if (idOf.equals(oficioArchiModelSelected.getIdOficio())) {
+//                                        Toast.makeText(context, "No se puede eliminar el oficio", Toast.LENGTH_LONG).show();
+                                        flagDelete = false;
+                                        break;
+                                    }
+                                }
+                            }
+                        } catch (Exception e) {
+                            Log.d("TAG", e.toString());
+                        }
+
+                        if (flagDelete) {
+//                            Toast.makeText(context,"Oficio eliminado",Toast.LENGTH_LONG).show();
+                            FirebaseDatabase.getInstance().getReference()
+                                    .child("oficios")
+                                    .child(oficioArchiModelSelected.getIdOficio())
+                                    .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                Toast.makeText(OficioArchiEditDeleteActivity.this, "Oficio eliminado", Toast.LENGTH_LONG).show();
+                                                closeProgressDialog();
+                                                finish();
+                                            } else {
+                                                Toast.makeText(OficioArchiEditDeleteActivity.this, R.string.delete_oficio, Toast.LENGTH_LONG).show();
+                                                closeProgressDialog();
+                                            }
+
+                                        }
+                                    });
+                        } else {
+                            Toast.makeText(OficioArchiEditDeleteActivity.this, R.string.delete_oficio, Toast.LENGTH_LONG).show();
+                            closeProgressDialog();
+                        }
+
+
                         // oficioArchiViewModel.delete(oficioArchiModelSelected, OficioArchiEditDeleteActivity.this, progressDialog);
                     }
                 })
@@ -165,7 +274,7 @@ public class OficioArchiEditDeleteActivity extends AppCompatActivity implements 
 
                         if (!oficioArchiModelSelected.getNombre().isEmpty()) {
                             boolean flagExit = false;
-                            for (OficioArchiModel ofDB : oficioArchiModelsDB) {
+                            for (Oficio ofDB : oficioArrayListDB) {
 
 
                                 if (oficioArchiModelSelected.getNombre().toLowerCase().equals(ofDB.getNombre().toLowerCase())) {
@@ -196,12 +305,12 @@ public class OficioArchiEditDeleteActivity extends AppCompatActivity implements 
                             Toast.makeText(getApplicationContext(), "El nombre ingresado es inválido", Toast.LENGTH_LONG).show();
                         }
 
-
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // User cancelled the dialog
+                        initStatesButtons();
                     }
                 });
         // Create the AlertDialog object and return it
@@ -223,14 +332,36 @@ public class OficioArchiEditDeleteActivity extends AppCompatActivity implements 
                 deleteDialog.show();
                 return true;
             case R.id.action_edit:
-
-                Dialog updateDialog = updateDialog();
-                updateDialog.show();
+                editStatesButtons();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
+
+
+    @Override
+    public boolean onPrepareOptionsMenu(@NonNull Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        MenuItem edit = menu.findItem(R.id.action_edit);
+//        TypedValue typedValue = new TypedValue();
+//        getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
+//        colorNight = typedValue.data;
+
+        Drawable delete = menu.getItem(0).getIcon(); // change 0 with 1,2 ...
+//        yourdrawable.mutate();
+        delete.setColorFilter(colorNight, PorterDuff.Mode.SRC_IN);
+
+
+        Drawable editIcon = menu.getItem(1).getIcon(); // change 0 with 1,2 ...
+//        yourdrawable.mutate();
+        editIcon.setColorFilter(colorNight, PorterDuff.Mode.SRC_IN);
+
+
+        edit.setVisible(editMenu);
+        return true;
+    }
+
 
     @Override
     public void onClick(View v) {
@@ -271,7 +402,7 @@ public class OficioArchiEditDeleteActivity extends AppCompatActivity implements 
                 Glide.with(getApplicationContext())
                         .load(imageUri)
                         .into(imageViewIcono);
-                //imageViewFoto.setColorFilter(null);
+                imageViewIcono.setColorFilter(colorNight);
 
                 // Toast.makeText(getApplicationContext(), uriPhoto.toString(), Toast.LENGTH_SHORT).show();
 

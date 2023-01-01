@@ -406,10 +406,9 @@
         \n
         A continuación, por favor seleccione al menos un oficio de los registrados en la lista para completar su registro.
         \n\n
-        Si su oficio o habilidad no se encuentran registrados, por favor pulse sobre los 3 puntos ubicados en la parte superior derecha
-        y a continuación proceda a registrarlos.
+        Si su oficio no se encuentra registrado, por favor pulse sobre el botón +, y a continuación proceda a registrarlo.
         \n\n
-        Puede actualizar y registrar nuevos oficios o habilidades una vez completado el proceso de registro.
+        Puede actualizar y registrar nuevos oficios una vez completado el proceso de registro.
     </string>
     <string name="text_select_trabjador_no_login">
         \n

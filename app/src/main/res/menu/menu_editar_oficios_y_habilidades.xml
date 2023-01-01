@@ -7,10 +7,5 @@
         android:orderInCategory="70"
         android:title="Nuevo oficio"
         app:showAsAction="never" />
-    <item
-        android:id="@+id/mnu_edit_habilidad"
-        android:orderInCategory="90"
-        android:title="Nueva habilidad"
-        app:showAsAction="never" />
 
 </menu>

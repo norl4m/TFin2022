@@ -27,7 +27,6 @@ import java.util.Comparator;
 
 public class AuthenticationFragment extends Fragment {
 
-    private AuthenticationViewModel mViewModel;
     private ProgressBar progressBar;
     private RecyclerView recyclerView;
     private AuthUserListAdapter authUserListAdapter;
@@ -77,7 +76,6 @@ public class AuthenticationFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(AuthenticationViewModel.class);
         // TODO: Use the ViewModel
 
 

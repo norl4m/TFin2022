@@ -37,9 +37,11 @@ public class OficioArchiViewModel extends AndroidViewModel {
     public void insert(Oficio oficioArchiModel, NuevoOficioArchiActivity nuevoOficioArchiActivity, ProgressDialog progressDialog) {
         mRepository.writeNewOficioWithTaskListeners(oficioArchiModel, nuevoOficioArchiActivity, progressDialog);
     }
+
     public void delete(OficioArchiModel oficioArchiModel, OficioArchiEditDeleteActivity oficioArchiEditDeleteActivity, ProgressDialog progressDialog) {
         mRepository.deleteOficio(oficioArchiModel, oficioArchiEditDeleteActivity, progressDialog);
     }
+
     public void update(Oficio oficioArchiModel, OficioArchiEditDeleteActivity oficioArchiEditDeleteActivity, ProgressDialog progressDialog) {
         mRepository.updateOficio(oficioArchiModel, oficioArchiEditDeleteActivity, progressDialog);
     }

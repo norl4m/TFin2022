@@ -16,7 +16,6 @@ import com.marlon.apolo.tfinal2022.R;
 
 public class InfoAppFragment extends Fragment {
 
-    private InfoAppViewModel mViewModel;
 
     public static InfoAppFragment newInstance() {
         return new InfoAppFragment();
@@ -31,7 +30,6 @@ public class InfoAppFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(InfoAppViewModel.class);
         // TODO: Use the ViewModel
     }
 

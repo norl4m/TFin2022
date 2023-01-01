@@ -70,7 +70,7 @@ public class OficioVistaListAdapter extends RecyclerView.Adapter<OficioVistaList
                 public void onClick(View v) {
                     Intent intent = new Intent(context, BuscadorActivity.class);
                     intent.setAction("android.intent.action.SEARCH");
-                    intent.putExtra(SearchManager.QUERY, oficios.get(getAbsoluteAdapterPosition()).getNombre());
+                    intent.putExtra(SearchManager.QUERY, oficios.get(getAdapterPosition()).getNombre());
                     intent.putExtra("offset", 1);
                     intent.putExtra("searchMode", 0);
                     context.startActivity(intent);

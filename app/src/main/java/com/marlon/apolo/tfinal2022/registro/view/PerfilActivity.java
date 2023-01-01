@@ -50,14 +50,13 @@ public class PerfilActivity extends AppCompatActivity implements View.OnClickLis
         switch (v.getId()) {
             case R.id.cardViewEmpleador:
             case R.id.imgBtnRegEmpleador:
-
-                intentRegUsuario = new Intent(PerfilActivity.this, RegNombreUsuarioActivity.class);
+                intentRegUsuario = new Intent(PerfilActivity.this, RegDatoPersonalActivity.class);
                 intentRegUsuario.putExtra("usuario", 1);
                 startActivity(intentRegUsuario);
                 break;
             case R.id.cardViewTrabajdor:
             case R.id.imgBtnRegTrabajador:
-                intentRegUsuario = new Intent(PerfilActivity.this, RegNombreUsuarioActivity.class);
+                intentRegUsuario = new Intent(PerfilActivity.this, RegDatoPersonalActivity.class);
                 intentRegUsuario.putExtra("usuario", 2);
                 startActivity(intentRegUsuario);
                 break;

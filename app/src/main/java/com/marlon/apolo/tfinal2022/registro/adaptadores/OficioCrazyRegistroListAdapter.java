@@ -1,20 +1,18 @@
 package com.marlon.apolo.tfinal2022.registro.adaptadores;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.exoplayer2.util.Log;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.model.Oficio;
-import com.marlon.apolo.tfinal2022.ui.datosPersonales.adaptadores.HabilidadSuperSpecialListAdapter;
-import com.marlon.apolo.tfinal2022.ui.datosPersonales.adaptadores.OficioSuperSpecialListAdapter;
+import com.marlon.apolo.tfinal2022.model.OficioPoc;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,7 +20,7 @@ import java.util.Collections;
 public class OficioCrazyRegistroListAdapter extends RecyclerView.Adapter<OficioCrazyRegistroListAdapter.OficioCrazyRegistroListAdapterViewHolder> {
 
     private static final String TAG = OficioCrazyRegistroListAdapter.class.getSimpleName();
-    private ArrayList<Oficio> oficioArrayList;
+    private ArrayList<OficioPoc> oficioPocArrayList;
     private LayoutInflater mInflater;
     private Context contextInstance;
 
@@ -31,9 +29,8 @@ public class OficioCrazyRegistroListAdapter extends RecyclerView.Adapter<OficioC
         mInflater = LayoutInflater.from(context);
     }
 
-    public class OficioCrazyRegistroListAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class OficioCrazyRegistroListAdapterViewHolder extends RecyclerView.ViewHolder {
         public final CheckBox checkBox;
-        public final RecyclerView recyclerView;
         final OficioCrazyRegistroListAdapter mAdapter;
 
         /**
@@ -47,85 +44,71 @@ public class OficioCrazyRegistroListAdapter extends RecyclerView.Adapter<OficioC
         public OficioCrazyRegistroListAdapterViewHolder(View itemView, OficioCrazyRegistroListAdapter adapter) {
             super(itemView);
             checkBox = itemView.findViewById(R.id.checkBoxOficio);
-            recyclerView = itemView.findViewById(R.id.recyclerViewHabilidades);
             this.mAdapter = adapter;
 //            itemView.setOnClickListener(this);
             checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (isChecked) { // The switch is enabled
-                        oficioArrayList.get(getAbsoluteAdapterPosition()).setEstadoRegistro(true);
-                    } else { // The switch is disabled
-                        checkBox.setChecked(false);
-                        oficioArrayList.get(getAbsoluteAdapterPosition()).setEstadoRegistro(false);
-                    }
-                    checkBox.setChecked(oficioArrayList.get(getAbsoluteAdapterPosition()).isEstadoRegistro());
+                    // The switch is enabled
+                    // The switch is disabled
+                    //checkBox.setChecked(false);
+                    oficioPocArrayList.get(getAdapterPosition()).setEstadoRegistro(isChecked);
+                    checkBox.setChecked(oficioPocArrayList.get(getAdapterPosition()).isEstadoRegistro());
                 }
             });
         }
-
-        @Override
-        public void onClick(View view) {
-            // Get the position of the item that was clicked.
-            int mPosition = getLayoutPosition();
-
-            // Use that to access the affected item in mWordList.
-            Oficio element = oficioArrayList.get(mPosition);
-            // Change the word in the mWordList.
-
-            oficioArrayList.set(mPosition, element);
-            // Notify the adapter, that the data has changed so it can
-            // update the RecyclerView to display the data.
-            //mAdapter.notifyDataSetChanged();
-        }
+//
+//        @Override
+//        public void onClick(View view) {
+//            // Get the position of the item that was clicked.
+//            int mPosition = getLayoutPosition();
+//
+//            // Use that to access the affected item in mWordList.
+//            OficioPoc element = oficioPocArrayList.get(mPosition);
+//            // Change the word in the mWordList.
+//
+//            oficioPocArrayList.set(mPosition, element);
+//            // Notify the adapter, that the data has changed so it can
+//            // update the RecyclerView to display the data.
+//            //mAdapter.notifyDataSetChanged();
+//        }
     }
 
-//    public OficioSuperSpecialListAdapter(Context context, ArrayList<Oficio> wordList) {
-//        mInflater = LayoutInflater.from(context);
-//        this.oficioArrayList = wordList;
-//    }
-//
-//    public OficioSuperSpecialListAdapter(Context context) {
-//        contextInstance = context;
-//        mInflater = LayoutInflater.from(context);
-//    }
-
-    public void setOficioArrayList(ArrayList<Oficio> oficioArrayList) {
-        this.oficioArrayList = oficioArrayList;
+    public void setOficioPocArrayList(ArrayList<OficioPoc> oficioPocArrayList) {
+        this.oficioPocArrayList = oficioPocArrayList;
         notifyDataSetChanged();
     }
 
-    public void addOficio(Oficio oficio) {
-        if (oficioArrayList == null) {
-            oficioArrayList = new ArrayList<>();
+    public void addOficio(OficioPoc oficio) {
+        if (oficioPocArrayList == null) {
+            oficioPocArrayList = new ArrayList<>();
         }
-        oficioArrayList.add(oficio);
-        Collections.sort(oficioArrayList, (t1, t2) -> (t1.getNombre()).compareTo(t2.getNombre()));
+        oficioPocArrayList.add(oficio);
+        Collections.sort(oficioPocArrayList, (t1, t2) -> (t1.getNombre()).compareTo(t2.getNombre()));
 //        this.oficioArrayList = oficioArrayList;
-        notifyItemInserted(oficioArrayList.size() - 1);
+        notifyItemInserted(oficioPocArrayList.indexOf(oficio));
+//        notifyDataSetChanged();
     }
 
-    public void updateOficioArrayList(int index) {
+    public void updateOficioArrayList(int index, OficioPoc oficio) {
+        oficioPocArrayList.set(index, oficio);
         notifyItemChanged(index);
     }
+
     public void updateOficioCrazy(int index, Oficio oficioUpdateCrazy) {
-        Log.d(TAG,oficioUpdateCrazy.toString());
+        Log.d(TAG, oficioUpdateCrazy.toString());
         notifyItemChanged(index);
     }
 
     public void removeOficioArrayList(int index) {
+        oficioPocArrayList.remove(index);
         notifyItemRemoved(index);
     }
 
-    public ArrayList<Oficio> getOficioArrayList() {
-        return oficioArrayList;
+    public ArrayList<OficioPoc> getOficioPocArrayList() {
+        return oficioPocArrayList;
     }
 
-    public void updateViewWithOficio(int position, Oficio oficio) {
-        oficioArrayList.set(position, oficio);
-//        notifyItemChanged(position);
-        notifyDataSetChanged();
-    }
 
     /**
      * Called when RecyclerView needs a new ViewHolder of the given type to
@@ -168,17 +151,11 @@ public class OficioCrazyRegistroListAdapter extends RecyclerView.Adapter<OficioC
     public void onBindViewHolder(OficioCrazyRegistroListAdapter.OficioCrazyRegistroListAdapterViewHolder holder,
                                  int position) {
         // Retrieve the data for that position.
-        Oficio mCurrent = oficioArrayList.get(position);
+        OficioPoc mCurrent = oficioPocArrayList.get(position);
         // Add the data to the view holder.
         holder.checkBox.setText(mCurrent.getNombre());
         holder.checkBox.setChecked(mCurrent.isEstadoRegistro());
 
-
-        final HabilidadSuperSpecialListAdapter adapter = new HabilidadSuperSpecialListAdapter(contextInstance);
-        holder.recyclerView.setAdapter(adapter);
-
-        holder.recyclerView.setLayoutManager(new LinearLayoutManager(contextInstance));
-        adapter.setHabilidadArrayList(mCurrent.getHabilidadArrayList());
 
     }
 
@@ -189,8 +166,8 @@ public class OficioCrazyRegistroListAdapter extends RecyclerView.Adapter<OficioC
      */
     @Override
     public int getItemCount() {
-        if (oficioArrayList != null)
-            return oficioArrayList.size();
+        if (oficioPocArrayList != null)
+            return oficioPocArrayList.size();
         else return 0;
     }
 

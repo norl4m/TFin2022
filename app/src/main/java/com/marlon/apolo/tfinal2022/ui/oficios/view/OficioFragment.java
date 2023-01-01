@@ -40,14 +40,12 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.FirebaseDatabase;
 import com.marlon.apolo.tfinal2022.R;
-import com.marlon.apolo.tfinal2022.model.Habilidad;
 import com.marlon.apolo.tfinal2022.model.Oficio;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
 import com.marlon.apolo.tfinal2022.ui.bienvenido.BienvenidoViewModel;
 import com.marlon.apolo.tfinal2022.ui.oficioArchi.adapters.OficioArchiCRUDListAdapter;
 import com.marlon.apolo.tfinal2022.ui.oficioArchi.model.OficioArchiModel;
 import com.marlon.apolo.tfinal2022.ui.oficioArchi.view.NuevoOficioArchiActivity;
-import com.marlon.apolo.tfinal2022.ui.oficioArchi.view.OficioArchiActivity;
 import com.marlon.apolo.tfinal2022.ui.oficioArchi.viewModel.OficioArchiViewModel;
 import com.marlon.apolo.tfinal2022.ui.oficios.OficioViewModel;
 import com.marlon.apolo.tfinal2022.ui.oficios.adaptadores.OficioRegistroCRUDListAdapter;
@@ -144,164 +142,12 @@ public class OficioFragment extends Fragment {
         dialogNuevoOficio.show();
     }
 
-    public android.app.AlertDialog alertDialogNuevaHabilidad() {
-
-        Log.d("TAG", "Registrando nueva habilidad....");
-        final EditText input = new EditText(requireActivity());
-        input.setHint("Nombre de habilidad");
-        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
-        return new android.app.AlertDialog.Builder(requireActivity())
-                .setIcon(R.drawable.ic_oficios)
-                .setTitle("Nueva habilidad:")
-                .setView(input)
-                .setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
-
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        Habilidad habilidad = new Habilidad();
-                        habilidad.setNombreHabilidad(input.getText().toString());
-                        if (!input.getText().toString().equals("")) {
-//                            mViewModel.registerJobOnFirebase(job, jobAdapter);
-
-//                            LinearLayout layout = new LinearLayout(this);
-
-                            if (oficioRegistroListAdapter.getOficios().size() > 0) {
-                                spinnerSelectOficio(habilidad);
-                            } else {
-                                Toast.makeText(requireActivity(), "No existen oficios registrados!.", Toast.LENGTH_LONG).show();
-//                                oficioViewModel.addHabilidadToOficioTofirebase(requireActivity(),oficio);
-                                //habilidadViewModel.guardarHabilidadEnFirebase(allOficios.get(0).getIdOficio(), habilidad, getApplicationContext());
-                            }
-                        }
-                        input.setText("");
-                    }
-
-
-                })
-                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        input.setText("");
-                    }
-                }).create();
-    }
-
-    private void spinnerSelectOficio(Habilidad habilidad) {
-        android.app.AlertDialog.Builder builder;
-        android.app.AlertDialog alertDialog;
-
-        Context mContext = requireActivity();
-        LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(LAYOUT_INFLATER_SERVICE);
-        View layout = inflater.inflate(R.layout.spinner, null);
-
-        String array_spinner[];
-        array_spinner = new String[oficioRegistroListAdapter.getOficios().size()];
-
-        int index = 0;
-        for (Oficio o : oficioRegistroListAdapter.getOficios()) {
-            array_spinner[index] = o.getNombre();
-            index++;
-        }
-//        array_spinner[0] = "US";
-//        array_spinner[1] = "Japan";
-//        array_spinner[2] = "China";
-//        array_spinner[3] = "India";
-//        array_spinner[4] = "Vietnam";
-
-        Spinner s = (Spinner) layout.findViewById(R.id.Spinner01);
-
-//        ArrayAdapter adapter = new ArrayAdapter(requireActivity(), android.R.layout.simple_spinner_item, array_spinner);
-        ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(requireActivity(), android.R.layout.simple_spinner_item, array_spinner);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        s.setAdapter(adapter);
-        s.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                oficioSelected = array_spinner[position];
-                positionSelected = position;
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        builder = new android.app.AlertDialog.Builder(requireActivity());
-        builder.setMessage("Por favor seleccione el oficio donde desea registrar su habilidad");
-        builder.setView(layout);
-        builder.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
-
-            public void onClick(DialogInterface dialog, int whichButton) {
-                alertDialogConfirmar(oficioRegistroListAdapter.getOficios().get(positionSelected).getIdOficio(), habilidad).show();
-//                habilidadViewModel.guardarHabilidadEnFirebase(allOficios.get(positionSelected).getIdOficio(), habilidad, getApplicationContext());
-            }
-        });
-
-        alertDialog = builder.create();
-        alertDialog.show();
-        click = false;
-        c = 0;
-
-
-    }
-
-    public android.app.AlertDialog alertDialogConfirmar(String idOficio, Habilidad habilidad) {
-
-        return new android.app.AlertDialog.Builder(requireActivity())
-                .setIcon(R.drawable.ic_oficios)
-                .setTitle("Nueva habilidad:")
-                .setMessage("¿Está seguro que desea guardar su habilidad?")
-                .setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
-
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        //habilidadViewModel.guardarHabilidadEnFirebase(idOficio, habilidad, requireActivity());
-                        Oficio oficioUpdate = new Oficio();
-                        for (Oficio o : oficioRegistroListAdapter.getOficios()) {
-                            if (o.getIdOficio().equals(idOficio)) {
-                                oficioUpdate = o;
-                            }
-                        }
-                        String idHabilidad = FirebaseDatabase.getInstance().getReference().child("oficios").child(idOficio).child("habilidades").push().getKey();
-                        habilidad.setIdHabilidad(idHabilidad);
-
-                        int exitFlag = 0;
-                        try {
-                            for (Habilidad h : oficioUpdate.getHabilidadArrayList()) {
-                                if (h.getNombreHabilidad().toUpperCase().equals(habilidad.getNombreHabilidad().toUpperCase())) {
-                                    exitFlag = 1;
-                                    break;
-                                }
-                            }
-                        } catch (Exception e) {
-
-                        }
-
-                        if (exitFlag == 0) {
-                            if (oficioUpdate.getHabilidadArrayList() != null) {
-                                oficioUpdate.getHabilidadArrayList().add(habilidad);
-                            } else {
-                                oficioUpdate.setHabilidadArrayList(new ArrayList<>());
-                                oficioUpdate.getHabilidadArrayList().add(habilidad);
-                            }
-                            oficioViewModel.addHabilidadToOficioTofirebase(requireActivity(), oficioUpdate, habilidad);
-                        } else {
-                            Toast.makeText(requireActivity(), "No se ha podido registrar la habilidad", Toast.LENGTH_LONG).show();
-                        }
-
-
-                    }
-                })
-                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-
-                    }
-                }).create();
-    }
-
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.oficio_fragment, container, false);
+
 
         RecyclerView recyclerView = root.findViewById(R.id.recyclerViewOficios);
 
@@ -411,7 +257,6 @@ public class OficioFragment extends Fragment {
         bienvenidoViewModel.getAllOficios().observe(requireActivity(), oficios -> {
             if (oficios != null) {
                 Collections.sort(oficios, (t1, t2) -> (t1.getNombre()).compareTo(t2.getNombre()));
-
                 oficioRegistroListAdapter.setOficios(oficios);
 
             }

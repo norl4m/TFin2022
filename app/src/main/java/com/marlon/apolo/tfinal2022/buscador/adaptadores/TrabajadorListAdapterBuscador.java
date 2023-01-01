@@ -17,7 +17,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -112,7 +114,7 @@ public class TrabajadorListAdapterBuscador extends RecyclerView.Adapter<Trabajad
             TypedValue typedValue = new TypedValue();
             context.getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
             int colorPrimary = typedValue.data;
-            Glide.with(context).load(ContextCompat.getDrawable(context, R.drawable.ic_usuario)).placeholder(R.drawable.ic_usuario).into(holder.imageViewTrabajador);
+            Glide.with(context).load(ContextCompat.getDrawable(context, R.drawable.ic_user_tra_emp)).placeholder(R.drawable.ic_user_tra_emp).into(holder.imageViewTrabajador);
             holder.imageViewTrabajador.setColorFilter(colorPrimary);
         }
         Log.d(TAG, current.toString());
@@ -277,44 +279,78 @@ public class TrabajadorListAdapterBuscador extends RecyclerView.Adapter<Trabajad
         private final ImageView imageViewTrabajador;
         private RatingBar ratingBar;
         private final TextView textViewContacto;
+        private RelativeLayout relativeLayout;
 
 
         public TrabajadorViewHolder(@NonNull View itemView) {
             super(itemView);
             textViewNombre = itemView.findViewById(R.id.textViewNombre);
+            relativeLayout = itemView.findViewById(R.id.elements);
             textViewCalif = itemView.findViewById(R.id.textViewCalificacion);
             recyclerViewOficios = itemView.findViewById(R.id.recyclerViewOficios);
             imageViewTrabajador = itemView.findViewById(R.id.imageViewTrabajador);
             ratingBar = itemView.findViewById(R.id.ratingBar);
             textViewContacto = itemView.findViewById(R.id.textViewContacto);
 //            imageViewTrabajador.setOnClickListener(new View.OnClickListener() {
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                    if (user != null) {
-                        SharedPreferences myPreferences = context.getSharedPreferences("MyPreferences", MODE_PRIVATE);
-                        int usuario = myPreferences.getInt("usuario", -1);
-
-                        switch (usuario) {
-                            case 0:/*admin*/
-                            case 1:/*empleador*/
-                                opcionesTrabajadorDialog(trabajadorsAux.get(getAbsoluteAdapterPosition()));
-                                break;
-                            case 2:
-                                break;
-                        }
-                    } else {
-                        alertDialogInfo();
-                    }
-                    //opcionesTrabajadorDialog(trabajadors.get(getAdapterPosition()));
-
-                }
-            });
+//            itemView.setOnClickListener(new View.OnClickListener() {
+            recyclerViewOficios.setOnClickListener(test);
+            itemView.setOnClickListener(test);
+            relativeLayout.setOnClickListener(test);
+            textViewNombre.setOnClickListener(test);
+//            relativeLayout.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//
+////                    Toast.makeText(context, "AAAA", Toast.LENGTH_LONG).show();
+//                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+//                    if (user != null) {
+//                        SharedPreferences myPreferences = context.getSharedPreferences("MyPreferences", MODE_PRIVATE);
+//                        int usuario = myPreferences.getInt("usuario", -1);
+//
+//                        switch (usuario) {
+//                            case 0:/*admin*/
+//                            case 1:/*empleador*/
+//                                opcionesTrabajadorDialog(trabajadorsAux.get(getAbsoluteAdapterPosition()));
+//                                break;
+//                            case 2:
+//                                break;
+//                        }
+//                    } else {
+//                        alertDialogInfo();
+//                    }
+//                    //opcionesTrabajadorDialog(trabajadors.get(getAdapterPosition()));
+//
+//                }
+//            });
 
 
         }
+
+        View.OnClickListener test = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+//                    Toast.makeText(context, "AAAA", Toast.LENGTH_LONG).show();
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                if (user != null) {
+                    SharedPreferences myPreferences = context.getSharedPreferences("MyPreferences", MODE_PRIVATE);
+                    int usuario = myPreferences.getInt("usuario", -1);
+
+                    switch (usuario) {
+                        case 0:/*admin*/
+                        case 1:/*empleador*/
+                            opcionesTrabajadorDialog(trabajadorsAux.get(getAdapterPosition()));
+                            break;
+                        case 2:
+                            break;
+                    }
+                } else {
+                    alertDialogInfo();
+                }
+                //opcionesTrabajadorDialog(trabajadors.get(getAdapterPosition()));
+
+            }
+        };
     }
 
 
@@ -384,13 +420,13 @@ public class TrabajadorListAdapterBuscador extends RecyclerView.Adapter<Trabajad
                     .load(trabajador.getFotoPerfil())
 //                    .circleCrop() /*mala idea*/
                     .apply(new RequestOptions().override(300, 400))
-                    .placeholder(R.drawable.ic_usuario)
+                    .placeholder(R.drawable.ic_baseline_person_24)
                     .transition(DrawableTransitionOptions.withCrossFade())
                     .into(imageView);
 
 
         } else {
-            imageView.setImageResource(R.drawable.ic_usuario);
+            imageView.setImageResource(R.drawable.ic_user_tra_emp);
             imageView.setColorFilter(colorPrimary);
 
         }

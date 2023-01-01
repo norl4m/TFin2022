@@ -37,8 +37,7 @@ import com.marlon.apolo.tfinal2022.model.Usuario;
 import com.marlon.apolo.tfinal2022.ui.empleadores.EmpleadorViewModel;
 import com.marlon.apolo.tfinal2022.ui.trabajadores.TrabajadorViewModel;
 
-import org.checkerframework.checker.units.qual.A;
-import org.checkerframework.checker.units.qual.C;
+
 
 import java.util.ArrayList;
 

@@ -47,8 +47,8 @@ import com.marlon.apolo.tfinal2022.model.Empleador;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
 import com.marlon.apolo.tfinal2022.ui.datosPersonales.view.FotoActivity;
 
-public class RegNombreUsuarioActivity extends AppCompatActivity implements View.OnClickListener {
-    private static final String TAG = RegNombreUsuarioActivity.class.getSimpleName();
+public class RegDatoPersonalActivity extends AppCompatActivity implements View.OnClickListener {
+    private static final String TAG = RegDatoPersonalActivity.class.getSimpleName();
     private Button buttonNext;
     private Dialog dialogInfo;
     TextInputEditText textInputEditTextNombre;
@@ -314,7 +314,8 @@ public class RegNombreUsuarioActivity extends AppCompatActivity implements View.
 //                Toast.makeText(getApplicationContext(), "Siguiente", Toast.LENGTH_LONG).show();
 //                Intent intent = new Intent(RegNombreUsuarioActivity.this, MetodoRegActivity.class);
 //                Intent intent = new Intent(RegNombreUsuarioActivity.this, RegFotoPerfilActivity.class);
-                Intent intent = new Intent(RegNombreUsuarioActivity.this, MetodoRegActivity.class);
+//                Intent intent = new Intent(RegNombreUsuarioActivity.this, MetodoRegActivity.class);
+                Intent intent = new Intent(RegDatoPersonalActivity.this, RegWithEmailPasswordActivity.class);
 
                 switch (regUsuario) {
                     case 1:
@@ -333,7 +334,7 @@ public class RegNombreUsuarioActivity extends AppCompatActivity implements View.
                         intent.putExtra("empleador", empleador);
                         break;
                     case 2:
-                        intent = new Intent(RegNombreUsuarioActivity.this, RegistroRecordPolicialActivity.class);
+                        intent = new Intent(RegDatoPersonalActivity.this, RegistroRecordPolicialActivity.class);
                         Trabajador trabajador = new Trabajador();
                         trabajador.setNombre(nombre);
                         trabajador.setApellido(apellido);
@@ -446,7 +447,7 @@ public class RegNombreUsuarioActivity extends AppCompatActivity implements View.
                 @Override
                 public void onClick(View view) {
                     // Request the permission
-                    ActivityCompat.requestPermissions(RegNombreUsuarioActivity.this,
+                    ActivityCompat.requestPermissions(RegDatoPersonalActivity.this,
                             new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},
                             PERMISSION_REQUEST_CAMERA);
                 }
@@ -472,7 +473,7 @@ public class RegNombreUsuarioActivity extends AppCompatActivity implements View.
                 @Override
                 public void onClick(View view) {
                     // Request the permission
-                    ActivityCompat.requestPermissions(RegNombreUsuarioActivity.this,
+                    ActivityCompat.requestPermissions(RegDatoPersonalActivity.this,
                             new String[]{Manifest.permission.CAMERA},
                             PERMISSION_REQUEST_CAMERA_ONLY);
                 }
@@ -498,7 +499,7 @@ public class RegNombreUsuarioActivity extends AppCompatActivity implements View.
                 @Override
                 public void onClick(View view) {
                     // Request the permission
-                    ActivityCompat.requestPermissions(RegNombreUsuarioActivity.this,
+                    ActivityCompat.requestPermissions(RegDatoPersonalActivity.this,
                             new String[]{Manifest.permission.CAMERA},
                             PERMISSION_REQUEST_CAMERA_LOCA);
                 }

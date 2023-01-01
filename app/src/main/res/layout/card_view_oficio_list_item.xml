@@ -14,9 +14,9 @@
             android:id="@+id/textViewOficioName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/andika"
             android:text="Electricista"
-            android:textAppearance="@android:style/TextAppearance.Material.Body2"
-            android:textStyle="bold" />
+            android:textAppearance="@android:style/TextAppearance.Material.Body2" />
 
     </RelativeLayout>
 
