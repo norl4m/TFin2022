@@ -458,11 +458,6 @@ public class MainNavigationActivity extends AppCompatActivity {
 
     }
 
-    private void deleteLocalUserInEspecialCase() {
-
-        Log.d(TAG, "Parece q funciona");
-
-    }
 
     private void filterByFirebaseUserUID(FirebaseUser firebaseUser) {
         Log.d(TAG, "########################");
@@ -614,21 +609,6 @@ public class MainNavigationActivity extends AppCompatActivity {
             case R.id.mnu_nav_search:
                 startActivity(new Intent(MainNavigationActivity.this, BuscadorActivity.class));
                 break;
-//            case R.id.action_app_config:
-//                Intent i = new Intent(ACTION_WIRELESS_SETTINGS);
-////                startActivity(i);
-//
-//                Intent intent = new Intent();
-//                intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-//                intent.setData(Uri.parse("package:" + getPackageName()));
-//                startActivity(intent);
-//                break;
-//            case R.id.nav_cita:
-//                Toast.makeText(getApplicationContext(), "Clickianedo diferentes", Toast.LENGTH_LONG).show();
-//                Intent newIntent = new Intent(MainNavigationActivity.this, CitaTrabajoViewActivity.class);
-//                startActivity(newIntent);
-//                drawer.closeDrawers();
-//                break;
         }
         return super.onOptionsItemSelected(item);
     }

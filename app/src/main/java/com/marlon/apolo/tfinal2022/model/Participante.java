@@ -7,7 +7,6 @@ public class Participante implements Serializable {
     private String idParticipante;
     private String uriFotoParticipante;
     private String nombreParticipante;
-    private String estadoEnApp;
 
     public Participante() {
     }
@@ -42,15 +41,8 @@ public class Participante implements Serializable {
                 "idParticipante='" + idParticipante + '\'' +
                 ", uriFotoParticipante='" + uriFotoParticipante + '\'' +
                 ", nombreParticipante='" + nombreParticipante + '\'' +
-                ", estadoEnApp='" + estadoEnApp + '\'' +
                 '}';
     }
 
-    public String getEstadoEnApp() {
-        return estadoEnApp;
-    }
 
-    public void setEstadoEnApp(String estadoEnApp) {
-        this.estadoEnApp = estadoEnApp;
-    }
 }
