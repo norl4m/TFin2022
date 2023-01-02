@@ -2,7 +2,6 @@ package com.marlon.apolo.tfinal2022.ui.authentication;
 
 import androidx.lifecycle.ViewModelProvider;
 
-import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,15 +14,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 
 import com.marlon.apolo.tfinal2022.R;
-import com.marlon.apolo.tfinal2022.model.Usuario;
-import com.marlon.apolo.tfinal2022.ui.empleadores.EmpleadorViewModel;
-import com.marlon.apolo.tfinal2022.ui.trabajadores.TrabajadorViewModel;
+import com.marlon.apolo.tfinal2022.ui.empleadores.viewModel.EmpleadorViewModel;
+import com.marlon.apolo.tfinal2022.ui.trabajadores.viewModel.TrabajadorViewModel;
 
 import java.util.Collections;
-import java.util.Comparator;
 
 public class AuthenticationFragment extends Fragment {
 

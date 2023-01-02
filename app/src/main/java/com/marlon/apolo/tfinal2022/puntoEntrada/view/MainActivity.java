@@ -34,11 +34,7 @@ import android.widget.TextView;
 import com.marlon.apolo.tfinal2022.BuildConfig;
 import com.marlon.apolo.tfinal2022.MainNavigationActivity;
 import com.marlon.apolo.tfinal2022.R;
-import com.marlon.apolo.tfinal2022.citasTrabajoArchi.CitaTrabajoArchiActivity;
 import com.marlon.apolo.tfinal2022.infoInicial.InformacionInicialActivity;
-import com.marlon.apolo.tfinal2022.ui.trabajadores.eliminar.DeleteUserAsyncActivity;
-
-import java.util.Locale;
 
 /**
  * Esta clase es el punto de entrada a la aplicación.

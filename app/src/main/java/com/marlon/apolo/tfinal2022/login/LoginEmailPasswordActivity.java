@@ -43,7 +43,7 @@ import com.marlon.apolo.tfinal2022.model.Administrador;
 import com.marlon.apolo.tfinal2022.model.Empleador;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
 import com.marlon.apolo.tfinal2022.registro.view.PerfilActivity;
-import com.marlon.apolo.tfinal2022.ui.bienvenido.BienvenidoViewModel;
+import com.marlon.apolo.tfinal2022.ui.bienvenido.viewModel.BienvenidoViewModel;
 
 import java.util.ArrayList;
 import java.util.Objects;

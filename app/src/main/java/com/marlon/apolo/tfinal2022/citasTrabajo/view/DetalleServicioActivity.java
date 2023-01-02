@@ -37,7 +37,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.citasTrabajo.viewModel.CitaViewModel;
 import com.marlon.apolo.tfinal2022.citasTrabajo.herramientas.HerramientaCalendar;
-import com.marlon.apolo.tfinal2022.citasTrabajo.ItemAdapter;
+import com.marlon.apolo.tfinal2022.citasTrabajo.adapters.ItemAdapter;
 import com.marlon.apolo.tfinal2022.model.Administrador;
 import com.marlon.apolo.tfinal2022.model.Cita;
 import com.marlon.apolo.tfinal2022.model.Empleador;

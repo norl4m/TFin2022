@@ -168,6 +168,7 @@
         <entry key="..\:/Users/p_cer/AndroidStudioProjects/testGit/app/src/main/res/layout/activity_crazy_individual_chat.xml" value="0.4590780809031044" />
         <entry key="..\:/Users/p_cer/AndroidStudioProjects/testGit/app/src/main/res/layout/activity_delete_user_async.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/p_cer/AndroidStudioProjects/testGit/app/src/main/res/layout/activity_detalle_servicio.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/p_cer/AndroidStudioProjects/testGit/app/src/main/res/layout/activity_direct_reply.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/p_cer/AndroidStudioProjects/testGit/app/src/main/res/layout/activity_editar_data.xml" value="0.2" />
         <entry key="..\:/Users/p_cer/AndroidStudioProjects/testGit/app/src/main/res/layout/activity_editar_oficio.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/p_cer/AndroidStudioProjects/testGit/app/src/main/res/layout/activity_editar_oficio_habilidad.xml" value="0.264" />
@@ -244,6 +245,7 @@
         <entry key="..\:/Users/p_cer/AndroidStudioProjects/testGit/app/src/main/res/layout/cita_edit.xml" value="0.13425925925925927" />
         <entry key="..\:/Users/p_cer/AndroidStudioProjects/testGit/app/src/main/res/layout/cita_nueva.xml" value="0.264" />
         <entry key="..\:/Users/p_cer/AndroidStudioProjects/testGit/app/src/main/res/layout/cita_trabajo_archi_item.xml" value="0.264" />
+        <entry key="..\:/Users/p_cer/AndroidStudioProjects/testGit/app/src/main/res/layout/cita_trabajo_fragment.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/p_cer/AndroidStudioProjects/testGit/app/src/main/res/layout/citas_main.xml" value="0.2" />
         <entry key="..\:/Users/p_cer/AndroidStudioProjects/testGit/app/src/main/res/layout/content_main_individual_chat.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/p_cer/AndroidStudioProjects/testGit/app/src/main/res/layout/dialog_info.xml" value="0.23854166666666668" />

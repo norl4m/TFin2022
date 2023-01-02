@@ -36,7 +36,6 @@ import com.marlon.apolo.tfinal2022.model.Trabajador;
 import com.marlon.apolo.tfinal2022.model.Usuario;
 import com.marlon.apolo.tfinal2022.ui.datosPersonales.view.EditarOficioActivity;
 import com.marlon.apolo.tfinal2022.ui.datosPersonales.view.FotoActivity;
-import com.marlon.apolo.tfinal2022.ui.trabajadores.PerfilTrabajadorActivity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;

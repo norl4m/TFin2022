@@ -14,15 +14,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.buscador.view.BuscadorActivity;
 import com.marlon.apolo.tfinal2022.config.ConfiguracionActivity;
 import com.marlon.apolo.tfinal2022.model.Oficio;
-import com.marlon.apolo.tfinal2022.ui.bienvenido.BienvenidoViewModel;
-import com.marlon.apolo.tfinal2022.ui.bienvenido.adaptadores.OficioArchiVistaListAdapter;
+import com.marlon.apolo.tfinal2022.ui.bienvenido.viewModel.BienvenidoViewModel;
+import com.marlon.apolo.tfinal2022.ui.bienvenido.adaptaders.OficioArchiVistaListAdapter;
 import com.marlon.apolo.tfinal2022.ui.bienvenido.viewModel.OficioListAdapter;
 import com.marlon.apolo.tfinal2022.ui.bienvenido.viewModel.OficioViewModel;
 

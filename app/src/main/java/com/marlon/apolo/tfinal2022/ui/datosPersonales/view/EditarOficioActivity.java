@@ -2,13 +2,9 @@ package com.marlon.apolo.tfinal2022.ui.datosPersonales.view;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -29,10 +25,9 @@ import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.model.Oficio;
 import com.marlon.apolo.tfinal2022.model.OficioPoc;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
-import com.marlon.apolo.tfinal2022.registro.view.RegistroOficioActivity;
-import com.marlon.apolo.tfinal2022.ui.bienvenido.BienvenidoViewModel;
-import com.marlon.apolo.tfinal2022.ui.datosPersonales.adaptadores.EditarOficioSuperSpecialListAdapter;
-import com.marlon.apolo.tfinal2022.ui.oficios.OficioViewModel;
+import com.marlon.apolo.tfinal2022.ui.bienvenido.viewModel.BienvenidoViewModel;
+import com.marlon.apolo.tfinal2022.ui.datosPersonales.adapterrs.EditarOficioSuperSpecialListAdapter;
+import com.marlon.apolo.tfinal2022.ui.oficios.viewModel.OficioViewModel;
 
 import java.util.ArrayList;
 

@@ -10,8 +10,8 @@ android {
         applicationId 'com.marlon.apolo.tfinal2022'
         minSdk 21
         targetSdk 31
-        versionCode 13
-        versionName "13.9.5"
+        versionCode 14
+        versionName "14.1.9"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

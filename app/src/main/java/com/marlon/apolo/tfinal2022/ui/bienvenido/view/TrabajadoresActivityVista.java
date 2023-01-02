@@ -19,7 +19,7 @@ import com.marlon.apolo.tfinal2022.buscador.view.BuscadorActivity;
 import com.marlon.apolo.tfinal2022.config.ConfiguracionActivity;
 import com.marlon.apolo.tfinal2022.ui.bienvenido.viewModel.OficioViewModel;
 import com.marlon.apolo.tfinal2022.ui.bienvenido.viewModel.TrabajadorViewModel;
-import com.marlon.apolo.tfinal2022.ui.trabajadores.TrabajadorListAdapter;
+import com.marlon.apolo.tfinal2022.ui.trabajadores.adapters.TrabajadorListAdapter;
 
 public class TrabajadoresActivityVista extends AppCompatActivity {
 

@@ -41,25 +41,24 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.marlon.apolo.tfinal2022.citasTrabajo.receivers.AlarmReceiver;
 import com.marlon.apolo.tfinal2022.citasTrabajo.view.DetalleServicioActivity;
-import com.marlon.apolo.tfinal2022.communicationAgora.video.AcceptVideoCallBroadcastReceiver;
-import com.marlon.apolo.tfinal2022.communicationAgora.voice.AcceptVoiceCallBroadcastReceiver;
-import com.marlon.apolo.tfinal2022.communicationAgora.voice.AgoraOnlyVoiceCallActivity;
-import com.marlon.apolo.tfinal2022.communicationAgora.video.AgoraVideoCallActivity;
-import com.marlon.apolo.tfinal2022.communicationAgora.video.RejectVideoCallBroadcastReceiver;
-import com.marlon.apolo.tfinal2022.communicationAgora.voice.RejectVoiceCallBroadcastReceiver;
+import com.marlon.apolo.tfinal2022.communicationAgora.video.receivers.AcceptVideoCallBroadcastReceiver;
+import com.marlon.apolo.tfinal2022.communicationAgora.voice.receivers.AcceptVoiceCallBroadcastReceiver;
+import com.marlon.apolo.tfinal2022.communicationAgora.voice.view.AgoraOnlyVoiceCallActivity;
+import com.marlon.apolo.tfinal2022.communicationAgora.video.view.AgoraVideoCallActivity;
+import com.marlon.apolo.tfinal2022.communicationAgora.video.receivers.RejectVideoCallBroadcastReceiver;
+import com.marlon.apolo.tfinal2022.communicationAgora.voice.receivers.RejectVoiceCallBroadcastReceiver;
 
 import com.marlon.apolo.tfinal2022.individualChat.model.MessageCloudPoc;
-import com.marlon.apolo.tfinal2022.individualChat.view.CrazyDeleteBroadcastReceiver;
+import com.marlon.apolo.tfinal2022.individualChat.receivers.CrazyDeleteBroadcastReceiver;
 import com.marlon.apolo.tfinal2022.individualChat.view.CrazyIndividualChatActivity;
-import com.marlon.apolo.tfinal2022.individualChat.view.CrazyReplyBroadcastReceiver;
-import com.marlon.apolo.tfinal2022.model.Administrador;
+import com.marlon.apolo.tfinal2022.individualChat.receivers.CrazyReplyBroadcastReceiver;
 import com.marlon.apolo.tfinal2022.model.Cita;
 import com.marlon.apolo.tfinal2022.model.Empleador;
 import com.marlon.apolo.tfinal2022.model.LlamadaVideo;
 import com.marlon.apolo.tfinal2022.model.LlamadaVoz;
+import com.marlon.apolo.tfinal2022.model.NotificacionStack;
 import com.marlon.apolo.tfinal2022.model.Participante;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
-import com.marlon.apolo.tfinal2022.model.Usuario;
 import com.marlon.apolo.tfinal2022.puntoEntrada.view.MainActivity;
 
 import java.text.DateFormat;
@@ -93,7 +92,6 @@ public class CrazyService extends Service {
     private DatabaseReference databaseReference;
 
     private DatabaseReference mNotificacionesRef;
-    private ValueEventListener mNotificacionesListener;
 
 
     private Context contextInstance;
@@ -103,7 +101,6 @@ public class CrazyService extends Service {
     private CrazyDeleteBroadcastReceiver crazyDeleteBroadcastReceiver;
     private CrazyReplyBroadcastReceiver crazyReplyBroadcastReceiver;
     private SharedPreferences myPreferences;
-    private Usuario usuarioLocal;
 
 
     private SharedPreferences defaultSharedPreferences;
@@ -123,47 +120,47 @@ public class CrazyService extends Service {
     private BroadcastReceiver rejectVoiceCallBroadcastReceiver;
     private BroadcastReceiver acceptVoiceCallBroadcastReceiver;
 
-    public class NotificacionStack {
-        ArrayList<MessageCloudPoc> mensajeNubes;
-        private int idNotification;
-        private long numberMessages;
-
-        public NotificacionStack() {
-        }
-
-        public ArrayList<MessageCloudPoc> getMensajeNubes() {
-            return mensajeNubes;
-        }
-
-        public void setMensajeNubes(ArrayList<MessageCloudPoc> mensajeNubes) {
-            this.mensajeNubes = mensajeNubes;
-        }
-
-        public int getIdNotification() {
-            return idNotification;
-        }
-
-        public void setIdNotification(int idNotification) {
-            this.idNotification = idNotification;
-        }
-
-        public long getNumberMessages() {
-            return numberMessages;
-        }
-
-        public void setNumberMesssages(long numberMessages) {
-            this.numberMessages = numberMessages;
-        }
-
-        @Override
-        public String toString() {
-            return "NotificacionCustom{" +
-                    "mensajeNubes=" + mensajeNubes +
-                    ", idNotification=" + idNotification +
-                    ", numberMessages=" + numberMessages +
-                    '}';
-        }
-    }
+//    public class NotificacionStack {
+//        ArrayList<MessageCloudPoc> mensajeNubes;
+//        private int idNotification;
+//        private long numberMessages;
+//
+//        public NotificacionStack() {
+//        }
+//
+//        public ArrayList<MessageCloudPoc> getMensajeNubes() {
+//            return mensajeNubes;
+//        }
+//
+//        public void setMensajeNubes(ArrayList<MessageCloudPoc> mensajeNubes) {
+//            this.mensajeNubes = mensajeNubes;
+//        }
+//
+//        public int getIdNotification() {
+//            return idNotification;
+//        }
+//
+//        public void setIdNotification(int idNotification) {
+//            this.idNotification = idNotification;
+//        }
+//
+//        public long getNumberMessages() {
+//            return numberMessages;
+//        }
+//
+//        public void setNumberMesssages(long numberMessages) {
+//            this.numberMessages = numberMessages;
+//        }
+//
+//        @Override
+//        public String toString() {
+//            return "NotificacionCustom{" +
+//                    "mensajeNubes=" + mensajeNubes +
+//                    ", idNotification=" + idNotification +
+//                    ", numberMessages=" + numberMessages +
+//                    '}';
+//        }
+//    }
 
 
     private void createForegroundNotificationChannel() {
@@ -439,7 +436,7 @@ public class CrazyService extends Service {
         crazyReplyBroadcastReceiver = new CrazyReplyBroadcastReceiver();
 
 
-        loadUsuarioLocal();
+//        loadUsuarioLocal();
 
         myPreferences = this.getSharedPreferences("MyPreferences", MODE_PRIVATE);
         defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -904,59 +901,59 @@ public class CrazyService extends Service {
     }
 
 
-    private void loadUsuarioLocal() {
-        FirebaseDatabase.getInstance().getReference()
-                .child("administrador")
-                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Administrador administrador = snapshot.getValue(Administrador.class);
-                        if (administrador != null) {
-                            usuarioLocal = administrador;
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-        FirebaseDatabase.getInstance().getReference()
-                .child("trabajadores")
-                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Trabajador trabajador = snapshot.getValue(Trabajador.class);
-                        if (trabajador != null) {
-                            usuarioLocal = trabajador;
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-        FirebaseDatabase.getInstance().getReference()
-                .child("empleadores")
-                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Empleador empleador = snapshot.getValue(Empleador.class);
-                        if (empleador != null) {
-                            usuarioLocal = empleador;
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-    }
+//    private void loadUsuarioLocal() {
+//        FirebaseDatabase.getInstance().getReference()
+//                .child("administrador")
+//                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+//                .addListenerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                        Administrador administrador = snapshot.getValue(Administrador.class);
+//                        if (administrador != null) {
+//                            usuarioLocal = administrador;
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//
+//                    }
+//                });
+//        FirebaseDatabase.getInstance().getReference()
+//                .child("trabajadores")
+//                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+//                .addListenerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                        Trabajador trabajador = snapshot.getValue(Trabajador.class);
+//                        if (trabajador != null) {
+//                            usuarioLocal = trabajador;
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//
+//                    }
+//                });
+//        FirebaseDatabase.getInstance().getReference()
+//                .child("empleadores")
+//                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+//                .addListenerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                        Empleador empleador = snapshot.getValue(Empleador.class);
+//                        if (empleador != null) {
+//                            usuarioLocal = empleador;
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//
+//                    }
+//                });
+//    }
 
 
     private void listenerMessagePocNotificacionesFirebase() {

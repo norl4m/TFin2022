@@ -19,17 +19,17 @@
 
     <fragment
         android:id="@+id/nav_chats"
-        android:name="com.marlon.apolo.tfinal2022.ui.chats.ChatFragment"
+        android:name="com.marlon.apolo.tfinal2022.ui.chats.view.ChatFragment"
         android:label="@string/menu_chats"
         tools:layout="@layout/fragment_chat" />
     <fragment
         android:id="@+id/nav_trabajadores"
-        android:name="com.marlon.apolo.tfinal2022.ui.trabajadores.TrabajadorFragment"
+        android:name="com.marlon.apolo.tfinal2022.ui.trabajadores.view.TrabajadorFragment"
         android:label="@string/menu_admin_trab"
         tools:layout="@layout/trabajador_fragment" />
     <fragment
         android:id="@+id/nav_empleadores"
-        android:name="com.marlon.apolo.tfinal2022.ui.empleadores.EmpleadorFragment"
+        android:name="com.marlon.apolo.tfinal2022.ui.empleadores.view.EmpleadorFragment"
         android:label="@string/menu_admin_emp"
         tools:layout="@layout/empleador_fragment" />
     <fragment

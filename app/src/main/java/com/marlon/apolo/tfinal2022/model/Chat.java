@@ -2,7 +2,7 @@ package com.marlon.apolo.tfinal2022.model;
 
 
 import com.google.firebase.database.IgnoreExtraProperties;
-import com.marlon.apolo.tfinal2022.individualChat.view.MensajeNube;
+import com.marlon.apolo.tfinal2022.individualChat.model.MensajeNube;
 
 import java.io.Serializable;
 import java.util.ArrayList;

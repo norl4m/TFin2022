@@ -9,7 +9,7 @@ public class MessageCloudPoc {
     private String idMensaje;
     private String from;
     private String to;
-    private int type;/*0 mensaje -1 imagen- 2 audio-3 video 5MB -4 Location*/
+    private int type;/*0 mensaje -1 imagen- 2 audio -4 Location*/
     private String contenido;
     private String timeStamp;
     private boolean estadoLectura; /*leído - no  leído*/

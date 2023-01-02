@@ -95,25 +95,15 @@
             android:theme="@style/Theme.TFinal2022.NoActionBar" />
 
         <activity
-            android:name=".citasTrabajoArchi.NuevaCitaTrabajoArchiActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.TFinal2022.NoActionBar" />
-        <activity
-            android:name=".citasTrabajoArchi.CitaTrabajoArchiActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.TFinal2022.NoActionBar" />
-        <activity
             android:name=".ui.trabajadores.eliminar.DeleteUserAsyncActivity"
             android:exported="false" />
         <activity
-            android:name=".communicationAgora.voice.AgoraOnlyVoiceCallActivity"
+            android:name=".communicationAgora.voice.view.AgoraOnlyVoiceCallActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.TFinal2022.NoActionBar" />
         <activity
-            android:name=".communicationAgora.video.AgoraVideoCallActivity"
+            android:name=".communicationAgora.video.view.AgoraVideoCallActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.TFinal2022.NoActionBar" />
@@ -128,11 +118,6 @@
             android:exported="false"
             android:label="@string/no_nothing_text"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.TFinal2022.NoActionBar" />
-        <activity
-            android:name=".ui.oficioArchi.view.OficioArchiActivity"
-            android:exported="false"
-            android:label="@string/no_nothing_text"
             android:theme="@style/Theme.TFinal2022.NoActionBar" />
 
         <meta-data
@@ -186,7 +171,7 @@ Set color used with incoming notification messages. This is used when no color i
             android:resource="@color/teal_200" /> <!-- [END fcm_default_icon] -->
         <!-- [START fcm_default_channel] -->
         <activity
-            android:name=".ui.trabajadores.PerfilTrabajadorActivity"
+            android:name=".ui.trabajadores.view.PerfilTrabajadorActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.TFinal2022.NoActionBar" />
@@ -368,17 +353,17 @@ Set color used with incoming notification messages. This is used when no color i
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".individualChat.view.CrazyDeleteBroadcastReceiver"
+            android:name=".individualChat.receivers.CrazyDeleteBroadcastReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="ACTION_DELETE_NOTIFICATION" />
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".individualChat.view.CrazyReplyBroadcastReceiver"
+            android:name=".individualChat.receivers.CrazyReplyBroadcastReceiver"
             android:exported="false" />
         <receiver
-            android:name=".communicationAgora.video.AcceptVideoCallBroadcastReceiver"
+            android:name=".communicationAgora.video.receivers.AcceptVideoCallBroadcastReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="ACCEPT_INCOMING_CALL" />
@@ -387,7 +372,7 @@ Set color used with incoming notification messages. This is used when no color i
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".communicationAgora.video.RejectVideoCallBroadcastReceiver"
+            android:name=".communicationAgora.video.receivers.RejectVideoCallBroadcastReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="REJECT_INCOMING_CALL" />
@@ -396,7 +381,7 @@ Set color used with incoming notification messages. This is used when no color i
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".communicationAgora.voice.AcceptVoiceCallBroadcastReceiver"
+            android:name=".communicationAgora.voice.receivers.AcceptVoiceCallBroadcastReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="ACCEPT_INCOMING_VOICE_CALL" />
@@ -405,7 +390,7 @@ Set color used with incoming notification messages. This is used when no color i
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".communicationAgora.voice.RejectVoiceCallBroadcastReceiver"
+            android:name=".communicationAgora.voice.receivers.RejectVoiceCallBroadcastReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="REJECT_INCOMING_VOICE_CALL" />

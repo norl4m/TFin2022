@@ -73,9 +73,11 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.citasTrabajo.view.NuevaCitaTrabajoActivity;
-import com.marlon.apolo.tfinal2022.communicationAgora.voice.AgoraOnlyVoiceCallActivity;
-import com.marlon.apolo.tfinal2022.communicationAgora.video.AgoraVideoCallActivity;
+import com.marlon.apolo.tfinal2022.communicationAgora.voice.view.AgoraOnlyVoiceCallActivity;
+import com.marlon.apolo.tfinal2022.communicationAgora.video.view.AgoraVideoCallActivity;
+import com.marlon.apolo.tfinal2022.individualChat.adapters.SpecialMessageListAdapterPoc;
 import com.marlon.apolo.tfinal2022.individualChat.model.ChatPoc;
+import com.marlon.apolo.tfinal2022.individualChat.model.MensajeNube;
 import com.marlon.apolo.tfinal2022.individualChat.model.MessageCloudPoc;
 import com.marlon.apolo.tfinal2022.individualChat.view.location.LocationActivity;
 import com.marlon.apolo.tfinal2022.model.Administrador;
@@ -130,7 +132,7 @@ public class CrazyIndividualChatActivity extends AppCompatActivity implements Vi
     private Handler handler;
     private Runnable runnable;
     private TextView textViewDuration;
-    private SpecialMessagePoc specialMessagePoc;
+    private SpecialMessageListAdapterPoc specialMessageListAdapterPoc;
     private ValueEventListener valueEventListenerMessagesPoc;
     private FloatingActionButton fabChooseImageProfile;
 
@@ -419,8 +421,8 @@ public class CrazyIndividualChatActivity extends AppCompatActivity implements Vi
 
         recyclerViewMensajes = findViewById(R.id.recyclerViewMensajes);
 
-        specialMessagePoc = new SpecialMessagePoc(this);
-        recyclerViewMensajes.setAdapter(specialMessagePoc);
+        specialMessageListAdapterPoc = new SpecialMessageListAdapterPoc(this);
+        recyclerViewMensajes.setAdapter(specialMessageListAdapterPoc);
         recyclerViewMensajes.setLayoutManager(new LinearLayoutManager(this));
         ((LinearLayoutManager) recyclerViewMensajes.getLayoutManager()).setStackFromEnd(true);
 
@@ -1118,7 +1120,7 @@ public class CrazyIndividualChatActivity extends AppCompatActivity implements Vi
 //                updateMessagesPoc(messageCloudPocsAux);
 //                updateMessagesPoc(messageCloudPocsAux);
 
-                specialMessagePoc.setMensajeNubeArrayList(messageCloudPocArrayList);
+                specialMessageListAdapterPoc.setMensajeNubeArrayList(messageCloudPocArrayList);
                 recyclerViewMensajes.scrollToPosition(messageCloudPocArrayList.size() - 1);
                 if (stateRemoteUser != null) {
                     if (stateRemoteUser.equals("eliminado")) {

@@ -4,7 +4,6 @@ public class ChatPoc {
     private String idRemoteUser;
     private MessageCloudPoc lastMessageCloudPoc;
     private String stateRemoteUser;
-    private String nameDeleteUser;
 
 
     public String getIdRemoteUser() {

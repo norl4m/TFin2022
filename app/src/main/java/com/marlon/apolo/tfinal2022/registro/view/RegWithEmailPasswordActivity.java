@@ -51,13 +51,11 @@ import com.marlon.apolo.tfinal2022.model.Empleador;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
 import com.marlon.apolo.tfinal2022.model.Usuario;
 import com.marlon.apolo.tfinal2022.receivers.NetworkReceiver;
-import com.marlon.apolo.tfinal2022.ui.empleadores.EmpleadorViewModel;
-import com.marlon.apolo.tfinal2022.ui.trabajadores.TrabajadorViewModel;
+import com.marlon.apolo.tfinal2022.ui.empleadores.viewModel.EmpleadorViewModel;
+import com.marlon.apolo.tfinal2022.ui.trabajadores.viewModel.TrabajadorViewModel;
 
 import org.json.JSONObject;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;

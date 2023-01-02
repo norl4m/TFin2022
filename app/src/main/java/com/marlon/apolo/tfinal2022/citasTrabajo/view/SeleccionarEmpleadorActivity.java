@@ -18,7 +18,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.marlon.apolo.tfinal2022.R;
-import com.marlon.apolo.tfinal2022.admin.AdminViewModel;
+import com.marlon.apolo.tfinal2022.admin.viewModel.AdminViewModel;
 import com.marlon.apolo.tfinal2022.citasTrabajo.adapters.SeleccionarEmpleadorListAdapterPoc;
 import com.marlon.apolo.tfinal2022.individualChat.model.ChatPoc;
 import com.marlon.apolo.tfinal2022.individualChat.model.ChatPocData;
@@ -26,8 +26,8 @@ import com.marlon.apolo.tfinal2022.model.Administrador;
 import com.marlon.apolo.tfinal2022.model.Empleador;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
 import com.marlon.apolo.tfinal2022.model.Usuario;
-import com.marlon.apolo.tfinal2022.ui.empleadores.EmpleadorViewModel;
-import com.marlon.apolo.tfinal2022.ui.trabajadores.TrabajadorViewModel;
+import com.marlon.apolo.tfinal2022.ui.empleadores.viewModel.EmpleadorViewModel;
+import com.marlon.apolo.tfinal2022.ui.trabajadores.viewModel.TrabajadorViewModel;
 
 import java.util.ArrayList;
 

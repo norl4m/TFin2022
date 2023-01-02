@@ -33,11 +33,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.model.Oficio;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
-import com.marlon.apolo.tfinal2022.ui.bienvenido.BienvenidoViewModel;
-import com.marlon.apolo.tfinal2022.ui.oficioArchi.model.OficioArchiModel;
 import com.marlon.apolo.tfinal2022.ui.oficioArchi.viewModel.OficioArchiViewModel;
-import com.marlon.apolo.tfinal2022.ui.oficios.adaptadores.OficioViewModelPoc;
-import com.marlon.apolo.tfinal2022.ui.trabajadores.TrabajadorViewModel;
+import com.marlon.apolo.tfinal2022.ui.oficios.adapters.OficioViewModelPoc;
+import com.marlon.apolo.tfinal2022.ui.trabajadores.viewModel.TrabajadorViewModel;
 
 
 import java.util.ArrayList;
