@@ -117,17 +117,7 @@ public abstract class Usuario implements Serializable {
         this.password = password;
     }
 
-    @Override
-    public String toString() {
-        return "Usuario{" +
-                "idUsuario='" + idUsuario + '\'' +
-                ", nombre='" + nombre + '\'' +
-                ", apellido='" + apellido + '\'' +
-                ", email='" + email + '\'' +
-                ", celular=" + celular +
-                ", fotoPerfil='" + fotoPerfil + '\'' +
-                '}';
-    }
+
 
     public abstract void registrarseEnFirebase(Activity activity, int metodoReg);
 
@@ -238,57 +228,8 @@ public abstract class Usuario implements Serializable {
 
     }
 
-
-    public static byte[] generateKey(String uid) throws GeneralSecurityException, UnsupportedEncodingException {
-        final String KEY = uid;
-        byte[] binary = KEY.getBytes("UTF-8");
-        MessageDigest sha = MessageDigest.getInstance("SHA-256");
-        binary = sha.digest(binary);
-        // Use only first 128 bit.
-        binary = Arrays.copyOf(binary, 16);
-        return binary;
-    }
-
-    public static String encrypt(byte[] key, String value) throws GeneralSecurityException {
-        // Argument validation.
-        if (key.length != 16) {
-            throw new IllegalArgumentException("Invalid key size.");
-        }
-
-        SecretKeySpec skeySpec = new SecretKeySpec(key, "AES");
-        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-        cipher.init(Cipher.ENCRYPT_MODE, skeySpec, new IvParameterSpec(new byte[16]));
-
-        byte[] original = value.getBytes(Charset.forName("UTF-8"));
-        byte[] binary = cipher.doFinal(original);
-        return Base64.encodeToString(binary, Base64.DEFAULT);
-    }
-
-    public String decrypt(byte[] key, String encrypted) throws GeneralSecurityException {
-        // Argument validation.
-        if (key.length != 16) {
-            throw new IllegalArgumentException("Invalid key size.");
-        }
-
-        // Setup AES tool.
-        SecretKeySpec skeySpec = new SecretKeySpec(key, "AES");
-        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-        cipher.init(Cipher.DECRYPT_MODE, skeySpec, new IvParameterSpec(new byte[16]));
-
-        byte[] binary = Base64.decode(encrypted, Base64.DEFAULT);
-        byte[] original = cipher.doFinal(binary);
-        return new String(original, Charset.forName("UTF-8"));
-    }
-
-
     public void updateNormalInfo(String locationToFirebase, Activity activity, int metodoReg, String password, Usuario usuarioUpdate, ProgressDialog progressDialog) {
 
-//        try {
-//
-//            usuarioUpdate.setPassword(encrypt(generateKey(FirebaseAuth.getInstance().getCurrentUser().getUid()), password));
-//        } catch (Exception e) {
-//            Log.e(TAG, e.toString());
-//        }
         FirebaseDatabase.getInstance().getReference()
                 .child(locationToFirebase)/*administrador - trabajadores - empleadores*/
                 .child(usuarioUpdate.getIdUsuario())
@@ -353,7 +294,6 @@ public abstract class Usuario implements Serializable {
                     }
                 });
     }
-
 
     private void updatePartcipantOnChat(Usuario usuarioUpdate) {
         ValueEventListener valueEventListener = new ValueEventListener() {
@@ -585,7 +525,6 @@ public abstract class Usuario implements Serializable {
                         }
 
 
-
                         try {
                             FirebaseAuth.getInstance().getCurrentUser().delete();
                         } catch (Exception e) {
@@ -727,7 +666,6 @@ public abstract class Usuario implements Serializable {
 
     }
 
-
     private void deleteUserFromMessage(Usuario usuarioEliminado) {
         FirebaseDatabase.getInstance().getReference()
                 .child("crazyMessages")
@@ -756,6 +694,18 @@ public abstract class Usuario implements Serializable {
                         }
                     }
                 });
+    }
+
+    @Override
+    public String toString() {
+        return "Usuario{" +
+                "idUsuario='" + idUsuario + '\'' +
+                ", nombre='" + nombre + '\'' +
+                ", apellido='" + apellido + '\'' +
+                ", email='" + email + '\'' +
+                ", celular=" + celular +
+                ", fotoPerfil='" + fotoPerfil + '\'' +
+                '}';
     }
 
 }

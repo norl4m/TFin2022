@@ -180,7 +180,6 @@ public class EditarOficioActivity extends AppCompatActivity implements View.OnCl
 //                    Log.d(TAG, o.getHabilidadArrayList().toString());
                 }
                 trabajador.setIdOficios(idsOfi);
-                trabajador.setIdHabilidades(idsHab);
                 if (!trabajador.getIdOficios().isEmpty()) {
                     trabajador.actualizarInfo(this);
                     //Toast.makeText(getApplicationContext(), trabajador.toString(), Toast.LENGTH_LONG).show();

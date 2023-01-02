@@ -164,7 +164,7 @@ public class TrabajadorListAdapterBuscador extends RecyclerView.Adapter<Trabajad
 
 
         } else {
-            holder.textViewCalif.setText(context.getString(R.string.text_no_trabajo));
+            holder.textViewCalif.setText(String.format("*%s %s %s", current.getNombre(), current.getApellido(), context.getString(R.string.text_no_trabajo)));
 //            holder.ratingBar.setRating((float) current.getCalificacion());
             holder.ratingBar.setVisibility(View.GONE);
         }

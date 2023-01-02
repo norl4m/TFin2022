@@ -520,7 +520,7 @@
     <string name="perfil_text"></string>
     <string name="no_nothing_text"></string>
     <string name="text_campo_necesario">*Requerido</string>
-    <string name="text_no_trabajo">*El usuario todavía no ha realizado trabajos en Cachuelito</string>
+    <string name="text_no_trabajo">todavía no ha realizado trabajos en Cachuelito</string>
     <string name="gg_client_id">299262505124-56887uu0pge1go2355rhu4thf0oagr55.apps.googleusercontent.com</string>
     <string name="code_expiration">Su código ha expirado, por favor solicite un nuevo código.</string>
     <string name="version_app">Versión: 3.0</string>
@@ -563,5 +563,6 @@
     <string name="no_search_term">Please enter a search term</string>
     <string name="no_network">Please check your network connection and try again.</string>
     <string name="oficio_duplicado">Error: ya existe otro oficio registrado con ese nombre.</string>
+    <string name="fotousuario">fotoUsuario</string>
 
 </resources>

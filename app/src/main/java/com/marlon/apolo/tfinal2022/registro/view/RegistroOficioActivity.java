@@ -190,7 +190,6 @@ public class RegistroOficioActivity extends AppCompatActivity implements View.On
                     }
                     if (oficiosReg.size() > 0) {
                         trabajador.setIdOficios(idOficiosReg);
-                        trabajador.setIdHabilidades(idHabilidadesReg);
 //                        Intent intent = new Intent(RegistroOficioActivity.this, MetodoRegActivity.class);
                         Intent intent = new Intent(RegistroOficioActivity.this, RegWithEmailPasswordActivity.class);
 //                        Intent intent = new Intent(RegistroOficioActivity.this, RegistroHabilidadActivity.class);

@@ -118,6 +118,7 @@
                         android:layout_marginTop="2dp"
                         android:layout_marginEnd="2dp"
                         android:layout_marginBottom="2dp"
+                        android:contentDescription="trabajador"
                         android:src="@drawable/ic_trabajadores" />
                 </RelativeLayout>
 
@@ -191,6 +192,7 @@
                         android:layout_marginTop="2dp"
                         android:layout_marginEnd="2dp"
                         android:layout_marginBottom="2dp"
+                        android:contentDescription="empleador"
                         android:src="@drawable/ic_empleadores" />
                 </RelativeLayout>
 

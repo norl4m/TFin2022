@@ -15,16 +15,16 @@
         android:padding="8dp"
         android:weightSum="2">
 
-    <TextView
+        <TextView
             android:id="@+id/textViewOficioName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:layout_toStartOf="@id/imageViewOficio"
+            android:fontFamily="@font/andika"
             android:text="Electricista"
-            android:textAppearance="@android:style/TextAppearance.Material.Headline"
-            android:fontFamily="@font/andika"/>
+            android:textSize="24sp" />
 
         <ImageView
             android:id="@+id/imageViewOficio"
