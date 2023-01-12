@@ -29,8 +29,10 @@ import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 import com.marlon.apolo.tfinal2022.R;
+import com.marlon.apolo.tfinal2022.model.Administrador;
 import com.marlon.apolo.tfinal2022.model.Oficio;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
 import com.marlon.apolo.tfinal2022.ui.oficioArchi.viewModel.OficioArchiViewModel;
@@ -57,6 +59,7 @@ public class OficioArchiEditDeleteActivity extends AppCompatActivity implements 
     private boolean editMenu;
     private ArrayList<Trabajador> trabajadorArrayList;
     private int colorNight;
+    private Administrador administrador;
 
     public Uri getUriPhoto() {
         return uriPhoto;
@@ -70,6 +73,10 @@ public class OficioArchiEditDeleteActivity extends AppCompatActivity implements 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_oficio_archi_edit_delete);
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            administrador = new Administrador();
+            administrador.setIdUsuario(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        }
 
         editMenu = true;
 
@@ -212,23 +219,28 @@ public class OficioArchiEditDeleteActivity extends AppCompatActivity implements 
 
                         if (flagDelete) {
 //                            Toast.makeText(context,"Oficio eliminado",Toast.LENGTH_LONG).show();
-                            FirebaseDatabase.getInstance().getReference()
-                                    .child("oficios")
-                                    .child(oficioArchiModelSelected.getIdOficio())
-                                    .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            if (task.isSuccessful()) {
-                                                Toast.makeText(OficioArchiEditDeleteActivity.this, "Oficio eliminado", Toast.LENGTH_LONG).show();
-                                                closeProgressDialog();
-                                                finish();
-                                            } else {
-                                                Toast.makeText(OficioArchiEditDeleteActivity.this, R.string.delete_oficio, Toast.LENGTH_LONG).show();
-                                                closeProgressDialog();
-                                            }
 
-                                        }
-                                    });
+//                            oficioArchiViewModel.delete(oficioArchiModelSelected, OficioArchiEditDeleteActivity.this, progressDialog);
+
+                            administrador.eliminarOficio(oficioArchiViewModel,oficioArchiModelSelected, OficioArchiEditDeleteActivity.this, progressDialog);
+
+//                            FirebaseDatabase.getInstance().getReference()
+//                                    .child("oficios")
+//                                    .child(oficioArchiModelSelected.getIdOficio())
+//                                    .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                        @Override
+//                                        public void onComplete(@NonNull Task<Void> task) {
+//                                            if (task.isSuccessful()) {
+//                                                Toast.makeText(OficioArchiEditDeleteActivity.this, "Oficio eliminado", Toast.LENGTH_LONG).show();
+//                                                closeProgressDialog();
+//                                                finish();
+//                                            } else {
+//                                                Toast.makeText(OficioArchiEditDeleteActivity.this, R.string.delete_oficio, Toast.LENGTH_LONG).show();
+//                                                closeProgressDialog();
+//                                            }
+//
+//                                        }
+//                                    });
                         } else {
                             Toast.makeText(OficioArchiEditDeleteActivity.this, R.string.delete_oficio, Toast.LENGTH_LONG).show();
                             closeProgressDialog();
@@ -297,7 +309,8 @@ public class OficioArchiEditDeleteActivity extends AppCompatActivity implements 
                                 String message = "Actualizando oficio...";
                                 showProgress(title, message);
 
-                                oficioArchiViewModel.update(oficioArchiModelSelected, OficioArchiEditDeleteActivity.this, progressDialog);
+                                administrador.updateOficio(oficioArchiViewModel,oficioArchiModelSelected,OficioArchiEditDeleteActivity.this, progressDialog);
+//                                oficioArchiViewModel.update(oficioArchiModelSelected, OficioArchiEditDeleteActivity.this, progressDialog);
                             }
                         } else {
                             Toast.makeText(getApplicationContext(), "El nombre ingresado es inválido", Toast.LENGTH_LONG).show();

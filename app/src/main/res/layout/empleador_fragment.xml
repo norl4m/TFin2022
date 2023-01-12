@@ -1,16 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_emp"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.empleadores.view.EmpleadorFragment"
-    android:id="@+id/fragment_emp">
+    tools:context=".ui.empleadores.view.EmpleadorFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewEmpleadores"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/card_view_presentacion_empledor"/>
+        tools:listitem="@layout/card_view_presentacion_empledor" />
 
-
-</FrameLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAddEmp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="8dp"
+        android:src="@drawable/ic_baseline_add_24" />
+</RelativeLayout>

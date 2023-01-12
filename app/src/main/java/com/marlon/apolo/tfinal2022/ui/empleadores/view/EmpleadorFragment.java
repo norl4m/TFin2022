@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.model.Usuario;
 import com.marlon.apolo.tfinal2022.registro.view.RegDatoPersonalActivity;
@@ -42,6 +43,15 @@ public class EmpleadorFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.empleador_fragment, container, false);
+        FloatingActionButton floatingActionButton = root.findViewById(R.id.fabAddEmp);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentRegUsuario = new Intent(requireActivity(), RegDatoPersonalActivity.class);
+                intentRegUsuario.putExtra("usuario", 1);
+                startActivity(intentRegUsuario);
+            }
+        });
         return root;
     }
 
@@ -94,7 +104,6 @@ public class EmpleadorFragment extends Fragment {
 
         switch (id) {
             case R.id.mnu_add_empleador:
-//                Toast.makeText(requireActivity(), "Add empleador", Toast.LENGTH_SHORT).show();
                 Intent intentRegUsuario = new Intent(requireActivity(), RegDatoPersonalActivity.class);
                 intentRegUsuario.putExtra("usuario", 1);
                 startActivity(intentRegUsuario);

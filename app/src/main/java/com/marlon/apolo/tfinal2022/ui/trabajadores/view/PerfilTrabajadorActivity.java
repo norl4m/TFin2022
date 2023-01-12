@@ -442,7 +442,7 @@ public class PerfilTrabajadorActivity extends AppCompatActivity {
                         textViewCalif.setText(String.format("Calificación: %.2f / 5.00", trabajador.getCalificacion()));
 
                     } else {
-                        textViewCalif.setText(PerfilTrabajadorActivity.this.getString(R.string.text_no_trabajo));
+                        textViewCalif.setText(String.format("%s %s %s", trabajador.getNombre(), trabajador.getApellido(), PerfilTrabajadorActivity.this.getString(R.string.text_no_trabajo)));
 //            holder.ratingBar.setRating((float) current.getCalificacion());
                         ratingBar.setVisibility(View.GONE);
                     }

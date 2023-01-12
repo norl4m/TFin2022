@@ -452,7 +452,7 @@ public class RegistroRecordPolicialActivity extends AppCompatActivity implements
 
 
         } else {
-            Toast.makeText(RegistroRecordPolicialActivity.this, "El record policial ingresado es inválido!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(RegistroRecordPolicialActivity.this, "El documento ingresado es inválido!", Toast.LENGTH_SHORT).show();
             trabajador.setEstadoRrcordP(true);
             policeRecordFromPdf.setStatusCriminalRecord(true);
             buttonNext.setEnabled(false);

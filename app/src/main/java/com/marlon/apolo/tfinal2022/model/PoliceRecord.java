@@ -71,9 +71,6 @@ public class PoliceRecord {
         this.statusCriminalRecord = statusCriminalRecord;
     }
 
-    public boolean verifyRecord(PoliceRecord policeRecord) {
-        return false;
-    }
 
     public String getCriminalRecordStat() {
         return criminalRecordStat;
@@ -86,12 +83,6 @@ public class PoliceRecord {
     @NotNull
     @Override
     public String toString() {
-        String valueCriminalStatus = "";
-        if (isStatusCriminalRecord()) {
-            valueCriminalStatus = "SI";
-        } else {
-            valueCriminalStatus = "NO";
-        }
 
         return "Fecha de emisión: " + dateCreation +
                 "\nNúmero de Certificado: " + certificateNumber +

@@ -1,7 +1,6 @@
 package com.marlon.apolo.tfinal2022.ui.oficioArchi.repository;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.OpenableColumns;
@@ -28,11 +27,8 @@ import com.google.firebase.storage.OnPausedListener;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.marlon.apolo.tfinal2022.MainNavigationActivity;
 import com.marlon.apolo.tfinal2022.R;
-import com.marlon.apolo.tfinal2022.model.Empleador;
 import com.marlon.apolo.tfinal2022.model.Oficio;
-import com.marlon.apolo.tfinal2022.registro.view.RegWithEmailPasswordActivity;
 import com.marlon.apolo.tfinal2022.ui.oficioArchi.model.OficioArchiModel;
 import com.marlon.apolo.tfinal2022.ui.oficioArchi.view.NuevoOficioArchiActivity;
 import com.marlon.apolo.tfinal2022.ui.oficioArchi.view.OficioArchiEditDeleteActivity;
@@ -225,7 +221,7 @@ public class OficioArchiRepository {
 
     }
 
-    public void deleteOficio(OficioArchiModel oficioArchiModel, OficioArchiEditDeleteActivity oficioArchiEditDeleteActivity, ProgressDialog progressDialog) {
+    public void deleteOficio(Oficio oficioArchiModel, OficioArchiEditDeleteActivity oficioArchiEditDeleteActivity, ProgressDialog progressDialog) {
         mDatabase.child(OFICIO_REF_ON_FIREBASE)
                 .child(oficioArchiModel.getIdOficio())
                 .setValue(null)
@@ -245,7 +241,7 @@ public class OficioArchiRepository {
 //                                .load(R.drawable.ic_oficios)
 //                                .into(nuevoOficioArchiActivity.getImageViewIcono());
 
-                        Toast.makeText(oficioArchiEditDeleteActivity, "Oficio eliminado.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(oficioArchiEditDeleteActivity, "Oficio eliminado.", Toast.LENGTH_SHORT).show();
 
                         oficioArchiEditDeleteActivity.finish();
 
@@ -257,7 +253,16 @@ public class OficioArchiRepository {
                     public void onFailure(@NonNull Exception e) {
                         // Write failed
                         // ...
-                        Log.d(TAG, "Eliminación de oficio fallido");
+                        try {
+                            progressDialog.dismiss();
+                        } catch (Exception ex) {
+                            Log.d(TAG, ex.toString());
+                        }
+
+                        Toast.makeText(oficioArchiEditDeleteActivity, oficioArchiEditDeleteActivity.getResources().getString(R.string.error_inesperado), Toast.LENGTH_SHORT).show();
+
+                        oficioArchiEditDeleteActivity.finish();
+
                     }
                 });
         // [END rtdb_write_new_user_task]
@@ -338,7 +343,7 @@ public class OficioArchiRepository {
         boolean finalPhotoFlag = photoFlag;
 
         if (!finalPhotoFlag) {
-            mCRUDOficioOnFirebase(oficio, oficioArchiEditDeleteActivity, progressDialog);
+            updateOficioOnFirebase(oficio, oficioArchiEditDeleteActivity, progressDialog);
             // [END rtdb_write_new_user_task]
 
         } else {
@@ -398,7 +403,7 @@ public class OficioArchiRepository {
                     if (task.isSuccessful()) {
                         Uri downloadUri = task.getResult();
                         oficio.setUriPhoto(downloadUri.toString());
-                        mCRUDOficioOnFirebase(oficio, oficioArchiEditDeleteActivity, progressDialog);
+                        updateOficioOnFirebase(oficio, oficioArchiEditDeleteActivity, progressDialog);
 
 
                     } else {
@@ -412,7 +417,7 @@ public class OficioArchiRepository {
 
     }
 
-    public void mCRUDOficioOnFirebase(Oficio oficio, OficioArchiEditDeleteActivity oficioArchiEditDeleteActivity, ProgressDialog progressDialog) {
+    public void updateOficioOnFirebase(Oficio oficio, OficioArchiEditDeleteActivity oficioArchiEditDeleteActivity, ProgressDialog progressDialog) {
         mDatabase
                 .child(OFICIO_REF_ON_FIREBASE)
                 .child(oficio.getIdOficio())

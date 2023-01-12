@@ -118,7 +118,6 @@ public abstract class Usuario implements Serializable {
     }
 
 
-
     public abstract void registrarseEnFirebase(Activity activity, int metodoReg);
 
     public abstract void registrarseEnFirebaseConFoto(Activity activity, int metodoReg);
@@ -132,10 +131,7 @@ public abstract class Usuario implements Serializable {
     public abstract void setDeleteUserOnFirebase(String idUsuario);
 
     public abstract void cleanFirebaseDeleteUser(String idUsuario);
-
-
-    /*Comunicación*/
-
+    /*Métodos normales*/
 
     public void updateCompleteInfo(String locationToFirebase, Activity activity, int metodoReg, String password, ProgressDialog progressDialog) {
 
@@ -295,7 +291,7 @@ public abstract class Usuario implements Serializable {
                 });
     }
 
-    private void updatePartcipantOnChat(Usuario usuarioUpdate) {
+    public void updatePartcipantOnChat(Usuario usuarioUpdate) {
         ValueEventListener valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -394,7 +390,7 @@ public abstract class Usuario implements Serializable {
                 });
     }
 
-    private void eliminarInfoFromChats(Usuario usuarioEliminado, Activity activity) {
+    public void eliminarInfoFromChats(Usuario usuarioEliminado, Activity activity) {
         //setFlagParticipanteEliminado(usuarioEliminado, activity);
         setFlagParticipanteEliminadoCrazyChat(usuarioEliminado, activity);
     }
@@ -410,7 +406,7 @@ public abstract class Usuario implements Serializable {
 
     }
 
-    private void cancelAllLocalNotifications(Activity activity) {
+    public void cancelAllLocalNotifications(Activity activity) {
         Log.d(TAG, "Cancel all notifications");
 
 
@@ -432,7 +428,7 @@ public abstract class Usuario implements Serializable {
         }
     }
 
-    private void setFlagParticipanteEliminadoCrazyChat(Usuario usuarioEliminado, Activity activity) {
+    public void setFlagParticipanteEliminadoCrazyChat(Usuario usuarioEliminado, Activity activity) {
 
         FirebaseDatabase.getInstance().getReference()
                 .child("crazyChats")
@@ -550,7 +546,7 @@ public abstract class Usuario implements Serializable {
                 });
     }
 
-    private void cleanMultimediaMessage(String usuarioDel, String idRemoteUser) {
+    public void cleanMultimediaMessage(String usuarioDel, String idRemoteUser) {
         Log.d(TAG, "cleanMultimediaMessage");
         FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
 
@@ -608,7 +604,7 @@ public abstract class Usuario implements Serializable {
 
     }
 
-    private void cleanMultimediaMessageBackward(String idDel, String idRemoteUser) {
+    public void cleanMultimediaMessageBackward(String idDel, String idRemoteUser) {
         Log.d(TAG, "cleanMultimediaMessageBackward");
         FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
 
@@ -666,7 +662,7 @@ public abstract class Usuario implements Serializable {
 
     }
 
-    private void deleteUserFromMessage(Usuario usuarioEliminado) {
+    public void deleteUserFromMessage(Usuario usuarioEliminado) {
         FirebaseDatabase.getInstance().getReference()
                 .child("crazyMessages")
                 .child(usuarioEliminado.getIdUsuario())
@@ -694,18 +690,6 @@ public abstract class Usuario implements Serializable {
                         }
                     }
                 });
-    }
-
-    @Override
-    public String toString() {
-        return "Usuario{" +
-                "idUsuario='" + idUsuario + '\'' +
-                ", nombre='" + nombre + '\'' +
-                ", apellido='" + apellido + '\'' +
-                ", email='" + email + '\'' +
-                ", celular=" + celular +
-                ", fotoPerfil='" + fotoPerfil + '\'' +
-                '}';
     }
 
 }

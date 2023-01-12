@@ -11,7 +11,7 @@
         android:id="@+id/recyclerViewOficios"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="16dp"
+        android:layout_margin="8dp"
         tools:itemCount="2"
         tools:listitem="@layout/card_view_crud_oficio_with_habilidad_list_item" />
 

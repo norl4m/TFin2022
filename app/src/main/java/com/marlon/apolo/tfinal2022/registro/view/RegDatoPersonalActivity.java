@@ -68,6 +68,8 @@ public class RegDatoPersonalActivity extends AppCompatActivity implements View.O
     private int colorPrimary;
     private ScrollView scrollView;
     private LinearLayout linearLayout;
+    private SharedPreferences myPreferences;
+    private SharedPreferences.Editor editorPref;
 
 
     private void hideSystemBars() {
@@ -136,6 +138,7 @@ public class RegDatoPersonalActivity extends AppCompatActivity implements View.O
         nombre = "";
         apellido = "";
 
+        myPreferences = this.getSharedPreferences("MyPreferences", MODE_PRIVATE);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -319,6 +322,14 @@ public class RegDatoPersonalActivity extends AppCompatActivity implements View.O
 
                 switch (regUsuario) {
                     case 1:
+                        editorPref = myPreferences.edit();
+                        int checkAdmin = myPreferences.getInt("usuario", -1);
+
+                        if (checkAdmin == 0) {
+                            intent = new Intent(RegDatoPersonalActivity.this, RegWithEmailPasswordActivityAdmin.class);
+                        }
+
+
                         Empleador empleador = new Empleador();
                         empleador.setNombre(nombre);
                         empleador.setApellido(apellido);

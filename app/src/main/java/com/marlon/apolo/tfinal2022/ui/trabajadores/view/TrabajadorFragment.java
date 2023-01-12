@@ -18,8 +18,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.registro.view.RegDatoPersonalActivity;
+import com.marlon.apolo.tfinal2022.ui.oficioArchi.view.NuevoOficioArchiActivity;
 import com.marlon.apolo.tfinal2022.ui.oficios.viewModel.OficioViewModel;
 import com.marlon.apolo.tfinal2022.ui.trabajadores.viewModel.TrabajadorViewModel;
 import com.marlon.apolo.tfinal2022.ui.trabajadores.adapters.TrabajadorCRUDListAdapter;
@@ -40,6 +42,16 @@ public class TrabajadorFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.trabajador_fragment, container, false);
+        FloatingActionButton floatingActionButton = root.findViewById(R.id.fabAddTrab);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentRegUsuario = new Intent(requireActivity(), RegDatoPersonalActivity.class);
+                intentRegUsuario.putExtra("usuario", 2);
+                startActivity(intentRegUsuario);
+            }
+        });
+
         return root;
     }
 

@@ -21,7 +21,9 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
 import com.marlon.apolo.tfinal2022.R;
+import com.marlon.apolo.tfinal2022.model.Administrador;
 import com.marlon.apolo.tfinal2022.model.Oficio;
 import com.marlon.apolo.tfinal2022.ui.oficioArchi.model.OficioArchiModel;
 import com.marlon.apolo.tfinal2022.ui.oficioArchi.viewModel.OficioArchiViewModel;
@@ -44,6 +46,7 @@ public class NuevoOficioArchiActivity extends AppCompatActivity implements View.
     private ArrayList<OficioArchiModel> oficioArchiModelsDB;
     private ProgressDialog progressDialog;
     private int colorNight;
+    private Administrador administrador;
 
 
     public TextInputLayout getTextInputLayoutNombre() {
@@ -87,6 +90,10 @@ public class NuevoOficioArchiActivity extends AppCompatActivity implements View.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nuevo_oficio_archi);
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            administrador = new Administrador();
+            administrador.setIdUsuario(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        }
 
         oficioArchiModelsDB = new ArrayList<OficioArchiModel>();
 
@@ -184,7 +191,8 @@ public class NuevoOficioArchiActivity extends AppCompatActivity implements View.
                         String title = "Por favor espere";
                         String message = "Registrando nuevo oficio...";
                         showProgress(title, message);
-                        oficioArchiViewModel.insert(oficioArchiModel, NuevoOficioArchiActivity.this, progressDialog);
+                        administrador.crearOficio(oficioArchiViewModel, oficioArchiModel, NuevoOficioArchiActivity.this, progressDialog);
+//                        oficioArchiViewModel.insert(oficioArchiModel, NuevoOficioArchiActivity.this, progressDialog);
                     }
                 } else {
                     Toast.makeText(getApplicationContext(), "El nombre ingresado es inválido", Toast.LENGTH_LONG).show();

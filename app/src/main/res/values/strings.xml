@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><!DOCTYPE resources [<!ENTITY appname "Cachuelito"><!ENTITY  author "Marlon Apolo"><!ENTITY  empresa "NelectrogApps">]>
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE resources [<!ENTITY appname "Cachuelito"><!ENTITY  author "Marlon Apolo"><!ENTITY  empresa "NelectrogApps">]>
 
 <!--<!DOCTYPE resources [<!ENTITY appname "Cachuelito"><!ENTITY author "Marlon Apolo">]>-->
 <resources>

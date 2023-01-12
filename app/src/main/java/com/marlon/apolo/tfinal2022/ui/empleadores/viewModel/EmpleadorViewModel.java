@@ -29,7 +29,8 @@ public class EmpleadorViewModel extends AndroidViewModel {
     public EmpleadorViewModel(Application application) {
         super(application);
         mRepository = new EmpledorRepository(application);
-        mAllEmpleadores = mRepository.getAllEmpleadores();
+        mAllEmpleadores = mRepository.
+                getAllEmpleadores();
     }
 
     public LiveData<List<Empleador>> getAllEmpleadores() {

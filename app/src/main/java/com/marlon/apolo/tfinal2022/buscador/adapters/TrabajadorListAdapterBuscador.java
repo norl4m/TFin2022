@@ -157,15 +157,15 @@ public class TrabajadorListAdapterBuscador extends RecyclerView.Adapter<Trabajad
 
 
         if (current.getCalificacion() > 0.0) {
-            holder.textViewCalif.setText(String.format(Locale.getDefault(), " %.1f ", current.getCalificacion()));
+//            holder.textViewCalif.setText(String.format(Locale.getDefault(), " %.1f ", current.getCalificacion()));
             holder.ratingBar.setRating((float) current.getCalificacion());
-            holder.ratingBar.setVisibility(View.VISIBLE);
+//            holder.ratingBar.setVisibility(View.VISIBLE);
 
 
         } else {
-            holder.textViewCalif.setText(String.format("*%s %s %s", current.getNombre(), current.getApellido(), context.getString(R.string.text_no_trabajo)));
+//            holder.textViewCalif.setText(String.format("*%s %s %s", current.getNombre(), current.getApellido(), context.getString(R.string.text_no_trabajo)));
 //            holder.ratingBar.setRating((float) current.getCalificacion());
-            holder.ratingBar.setVisibility(View.GONE);
+//            holder.ratingBar.setVisibility(View.GONE);
         }
 
 

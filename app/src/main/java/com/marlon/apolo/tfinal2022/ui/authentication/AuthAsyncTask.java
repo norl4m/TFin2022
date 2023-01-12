@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.marlon.apolo.tfinal2022.model.Empleador;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
 import com.marlon.apolo.tfinal2022.model.UsuarioFirebaseAuth;
@@ -143,6 +144,14 @@ public class AuthAsyncTask extends AsyncTask<String, Void, String> {
         /*Filtrado gg*/
         for (UsuarioFirebaseAuth us : authArrayList) {
             us.setExtraLol("si");
+        }
+        int index = 0;
+        for (UsuarioFirebaseAuth us : authArrayList) {
+            if (us.getUid().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                authArrayList.remove(index);
+                break;
+            }
+            index++;
         }
 
         for (UsuarioFirebaseAuth us : authArrayList) {

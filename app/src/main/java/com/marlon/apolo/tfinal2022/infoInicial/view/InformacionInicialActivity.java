@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.marlon.apolo.tfinal2022.infoInicial;
+package com.marlon.apolo.tfinal2022.infoInicial.view;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
@@ -69,7 +69,7 @@ public class InformacionInicialActivity extends AppCompatActivity implements Vie
         viewPager.addOnPageChangeListener(changeListener);
         btnLogin.setOnClickListener(this);
         btnChangeSlide.setOnClickListener(this);
-
+        findViewById(R.id.btnChangeSlide1).setOnClickListener(this);
         btnLogin.setEnabled(false);
 
     }
@@ -122,7 +122,21 @@ public class InformacionInicialActivity extends AppCompatActivity implements Vie
         }
         if (idBoton == R.id.btnChangeSlide) {
             Log.e("Cambiaste de -->", " página");
-            viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
+            if (viewPager.getCurrentItem() == 3) {
+
+            } else {
+                viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
+
+            }
+        }
+        if (idBoton == R.id.btnChangeSlide1) {
+            Log.e("Cambiaste de -->", " página");
+            if (viewPager.getCurrentItem() == 0) {
+
+            } else {
+                viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
+
+            }
         }
     }
 

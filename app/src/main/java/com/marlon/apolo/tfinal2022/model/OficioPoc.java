@@ -1,8 +1,5 @@
 package com.marlon.apolo.tfinal2022.model;
 
-
-import java.io.Serializable;
-
 public class OficioPoc extends Oficio {
 
     private boolean estadoRegistro;
@@ -10,7 +7,6 @@ public class OficioPoc extends Oficio {
     public OficioPoc() {
         estadoRegistro = false;
     }
-
 
     public boolean isEstadoRegistro() {
         return estadoRegistro;

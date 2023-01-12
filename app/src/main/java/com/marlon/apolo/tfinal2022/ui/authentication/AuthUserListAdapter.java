@@ -16,6 +16,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.herramientasAsíncronas.DeleteAsyncTask;
 import com.marlon.apolo.tfinal2022.model.Empleador;
@@ -266,6 +267,9 @@ public class AuthUserListAdapter extends
         Drawable[] itrems = new Drawable[]{AppCompatResources.getDrawable(contextInstance, R.drawable.bg4),
                 AppCompatResources.getDrawable(contextInstance, R.drawable.bg5),
                 AppCompatResources.getDrawable(contextInstance, R.drawable.bg6)};
+        if (FirebaseAuth.getInstance().getCurrentUser() != null && mCurrent.getUid().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+            holder.itemView.setVisibility(View.INVISIBLE);
+        }
         try {
             switch (mCurrent.getExtraLol()) {
                 case "si":

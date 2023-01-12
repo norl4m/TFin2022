@@ -3,6 +3,7 @@ package com.marlon.apolo.tfinal2022.registro.view;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -57,11 +58,15 @@ public class RegistroOficioActivity extends AppCompatActivity implements View.On
     private BienvenidoViewModel bienvenidoViewModel;
     private OficioCrazyRegistroListAdapter oficioCrazyRegistroListAdapter;
     private ChildEventListener childEventListenerOficios;
+    private SharedPreferences myPreferences;
+    private SharedPreferences.Editor editorPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registro_oficio);
+        myPreferences = this.getSharedPreferences("MyPreferences", MODE_PRIVATE);
+
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -187,7 +192,17 @@ public class RegistroOficioActivity extends AppCompatActivity implements View.On
                     if (oficiosReg.size() > 0) {
                         trabajador.setIdOficios(idOficiosReg);
 //                        Intent intent = new Intent(RegistroOficioActivity.this, MetodoRegActivity.class);
+
+//        startActivity(new Intent(this, PoCActivity.class));
+                        editorPref = myPreferences.edit();
+                        int checkAdmin = myPreferences.getInt("usuario", -1);
                         Intent intent = new Intent(RegistroOficioActivity.this, RegWithEmailPasswordActivity.class);
+
+                        if (checkAdmin == 0) {
+                            intent = new Intent(RegistroOficioActivity.this, RegWithEmailPasswordActivityAdmin.class);
+                        }
+
+//                        Intent intent = new Intent(RegistroOficioActivity.this, RegWithEmailPasswordActivity.class);
 //                        Intent intent = new Intent(RegistroOficioActivity.this, RegistroHabilidadActivity.class);
                         switch (regUsuario) {
 //                            case 1:/*empleador*/
@@ -295,7 +310,8 @@ public class RegistroOficioActivity extends AppCompatActivity implements View.On
                                 Toast.makeText(getApplicationContext(), "Registro fallido!", Toast.LENGTH_LONG).show();
                                 exit = 0;
                             } else {
-                                oficioViewModel.addOficioToFirebase(RegistroOficioActivity.this, oficio);
+//                                oficioViewModel.addOficioToFirebase(RegistroOficioActivity.this, oficio);
+                                trabajador.crearOficio(oficioViewModel, RegistroOficioActivity.this, oficio);
                             }
                         } else {
                             Toast.makeText(getApplicationContext(), "Nombre de oficio inválido.", Toast.LENGTH_LONG).show();

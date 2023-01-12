@@ -30,7 +30,10 @@ import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.citasTrabajo.view.NuevaCitaTrabajoActivity;
 import com.marlon.apolo.tfinal2022.citasTrabajo.view.DetalleServicioActivity;
 import com.marlon.apolo.tfinal2022.registro.view.RegWithEmailPasswordActivity;
+import com.marlon.apolo.tfinal2022.registro.view.RegWithEmailPasswordActivityAdmin;
+import com.marlon.apolo.tfinal2022.registro.view.RegistroOficioActivity;
 import com.marlon.apolo.tfinal2022.ui.editarDatos.EditarDataActivity;
+import com.marlon.apolo.tfinal2022.ui.oficios.viewModel.OficioViewModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,51 +67,177 @@ public class Trabajador extends Usuario {
         this.calificacion = calificacion;
     }
 
-    @Override
-    public String toString() {
-        return "Trabajador{" +
-                "estadoRrcordP=" + estadoRrcordP +
-                ", calificacion=" + calificacion +
-                ", idOficios=" + idOficios +
-                "} " + super.toString();
+    public ArrayList<String> getIdOficios() {
+        return idOficios;
     }
 
-    private void signInAdmin(Activity activity, SharedPreferences myPreferences) {
-        FirebaseAuth.getInstance().signOut();
-        String email = myPreferences.getString("email", null);
-        String password = myPreferences.getString("key", null);
+    public void setIdOficios(ArrayList<String> idOficios) {
+        this.idOficios = idOficios;
+    }
 
-        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
+    public void enviarCita(Cita cita, NuevaCitaTrabajoActivity citaActivity) {
+
+        Cita citaAux = cita;
+        Log.d(TAG, "ENVIANDO CITA DE TRABAJO");
+        //ArrayList<String> idParticipants = cita.getParticipants();
+        ArrayList<Item> itemArrayList = cita.getItems();
+        //cita.setParticipants(null);
+        cita.setItems(null);
+        cita.setStateReceive(false);
+
+        String idCita = FirebaseDatabase.getInstance().getReference().child("citas").push().getKey();
+        cita.setIdCita(idCita);
+
+
+        // Create new post at /user-posts/$userid/$postid and at
+        // /posts/$postid simultaneously
+        // String key = mDatabase.child("posts").push().getKey();
+        //Post post = new Post(userId, username, title, body);
+        Map<String, Object> postValues = cita.toMap();
+
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put("/citas/" + idCita, postValues);
+//        childUpdates.put("/citasIds/" + idParticipants.get(0) + "/citaId/", idCita);
+//        childUpdates.put("/citasIds/" + idParticipants.get(1) + "/citaId/", idCita);
+//        childUpdates.put("/citasIds/" + idCita + "/", idParticipants);
+        childUpdates.put("/citaItems/" + idCita + "/", itemArrayList);
+
+        FirebaseDatabase
+                .getInstance()
+                .getReference()
+                .updateChildren(childUpdates)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithEmail:success");
-                            Log.d(TAG, "ADMIN");
-
-                            SharedPreferences.Editor editorPref = myPreferences.edit();
-                            editorPref.putInt("usuario", 0);
-                            editorPref.apply();
-                            activity.finishAffinity();
-                            Intent intent = new Intent(activity, MainNavigationActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            activity.startActivity(intent);
-                            try {
-                                activity.finish();
-                            } catch (Exception e) {
-
-                            }
-
-
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            Toast.makeText(activity, activity.getString(R.string.error_inesperado),
-                                    Toast.LENGTH_SHORT).show();
-                        }
+                    public void onSuccess(@NonNull Void unused) {
+                        Log.d("TAG", "Registro de cita exitoso");
+//                        citaActivity.programarAlarmaLocal(cita);
+                        citaActivity.programarAlarmaLocalCustomLoco(cita);
+                        Toast.makeText(citaActivity, "Cita enviada!", Toast.LENGTH_LONG).show();
+                        citaActivity.finish();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, e.toString());
                     }
                 });
+
+
+//        FirebaseDatabase.getInstance().getReference()
+//                .child("citas")
+//                .child(idCita)
+//                .setValue(cita)
+//                .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                    @Override
+//                    public void onSuccess(Void unused) {
+//                        Log.d("TAG", "Registro exitoso");
+//                        Toast.makeText(citaActivity, "Cita enviada!", Toast.LENGTH_LONG).show();
+//                        citaActivity.finish();
+////                        registroActivity.getProgressBar().setVisibility(View.GONE);
+////                        registroActivity.getTextViewSavingData().setText(R.string.reg_exitoso);
+////                        registroActivity.limpiarUI();
+//
+//                    }
+//                });
+    }
+
+
+    public void actualizarCita(Cita cita, DetalleServicioActivity detalleServicioActivity) {
+
+        //ArrayList<String> idParticipants = cita.getParticipants();
+        ArrayList<Item> itemArrayList = cita.getItems();
+        //cita.setParticipants(null);
+        cita.setItems(null);
+
+//        String idCita = FirebaseDatabase.getInstance().getReference().child("citas").push().getKey();
+        String idCita = cita.getIdCita();
+        //cita.setIdCita(idCita);
+
+
+        // Create new post at /user-posts/$userid/$postid and at
+        // /posts/$postid simultaneously
+        // String key = mDatabase.child("posts").push().getKey();
+        //Post post = new Post(userId, username, title, body);
+        Map<String, Object> postValues = cita.toMap();
+
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put("/citas/" + idCita, postValues);
+//        childUpdates.put("/citasIds/" + idParticipants.get(0) + "/citaId/", idCita);
+//        childUpdates.put("/citasIds/" + idParticipants.get(1) + "/citaId/", idCita);
+//        childUpdates.put("/citasIds/" + idCita + "/", idParticipants);
+        childUpdates.put("/citaItems/" + idCita + "/", itemArrayList);
+
+        FirebaseDatabase
+                .getInstance()
+                .getReference()
+                .updateChildren(childUpdates)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(@NonNull Void unused) {
+                        Log.d("TAG", "Cita actualizada");
+
+                        Toast.makeText(detalleServicioActivity, "Cita actualizada!", Toast.LENGTH_LONG).show();
+//                        citaActivity.finish();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, e.toString());
+                    }
+                });
+
+
+    }
+
+    public void eliminarCita(Cita cita, DetalleServicioActivity detalleServicioActivity) {
+
+        //ArrayList<String> idParticipants = cita.getParticipants();
+        ArrayList<Item> itemArrayList = cita.getItems();
+        //cita.setParticipants(null);
+        cita.setItems(null);
+
+//        String idCita = FirebaseDatabase.getInstance().getReference().child("citas").push().getKey();
+        String idCita = cita.getIdCita();
+        //cita.setIdCita(idCita);
+
+
+        // Create new post at /user-posts/$userid/$postid and at
+        // /posts/$postid simultaneously
+        // String key = mDatabase.child("posts").push().getKey();
+        //Post post = new Post(userId, username, title, body);
+        Map<String, Object> postValues = cita.toMap();
+
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put("/citas/" + idCita, null);
+//        childUpdates.put("/citasIds/" + idParticipants.get(0) + "/citaId/", idCita);
+//        childUpdates.put("/citasIds/" + idParticipants.get(1) + "/citaId/", idCita);
+//        childUpdates.put("/citasIds/" + idCita + "/", idParticipants);
+        childUpdates.put("/citaItems/" + idCita + "/", null);
+
+        FirebaseDatabase
+                .getInstance()
+                .getReference()
+                .updateChildren(childUpdates)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(@NonNull Void unused) {
+                        Log.d("TAG", "Cita actualizada");
+
+                        Toast.makeText(detalleServicioActivity, "Cita eliminada!", Toast.LENGTH_LONG).show();
+//                        citaActivity.finish();
+                        detalleServicioActivity.finish();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, e.toString());
+                    }
+                });
+
+
     }
 
 
@@ -134,25 +263,37 @@ public class Trabajador extends Usuario {
 
                             switch (metodoReg) {
                                 case 1:/*email*/
-                                    RegWithEmailPasswordActivity regWithEmailPasswordActivity = (RegWithEmailPasswordActivity) activity;
-                                    regWithEmailPasswordActivity.closeProgress();
+
+                                    try {
+                                        if (adminFlag) {
+                                            RegWithEmailPasswordActivityAdmin regWithEmailPasswordActivity = (RegWithEmailPasswordActivityAdmin) activity;
+                                            regWithEmailPasswordActivity.closeProgress();
+                                        } else {
+                                            RegWithEmailPasswordActivity regWithEmailPasswordActivity = (RegWithEmailPasswordActivity) activity;
+                                            regWithEmailPasswordActivity.closeProgress();
+                                        }
+                                    } catch (Exception e) {
+
+                                    }
+//                                    RegWithEmailPasswordActivity regWithEmailPasswordActivity = (RegWithEmailPasswordActivity) activity;
+//                                    regWithEmailPasswordActivity.closeProgress();
                                     break;
 
 
                             }
-                            if (adminFlag) {
-                                signInAdmin(activity, myPreferences);
-                            } else {
-                                activity.finishAffinity();
-                                Intent intent = new Intent(activity, MainNavigationActivity.class);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                activity.startActivity(intent);
-                                try {
-                                    activity.finish();
-                                } catch (Exception e) {
+//                            if (adminFlag) {
+//                                signInAdmin(activity, myPreferences);
+//                            } else {
+                            activity.finishAffinity();
+                            Intent intent = new Intent(activity, MainNavigationActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            activity.startActivity(intent);
+                            try {
+                                activity.finish();
+                            } catch (Exception e) {
 
-                                }
                             }
+//                            }
 
 
 //                            Intent intent = new Intent(activity, MainNavigationActivity.class);
@@ -427,178 +568,8 @@ public class Trabajador extends Usuario {
                 .setValue(null);
     }
 
-    public ArrayList<String> getIdOficios() {
-        return idOficios;
+
+    public void crearOficio(OficioViewModel oficioViewModel, Activity activity, Oficio oficio) {
+        oficioViewModel.addOficioToFirebase(activity, oficio);
     }
-
-    public void setIdOficios(ArrayList<String> idOficios) {
-        this.idOficios = idOficios;
-    }
-
-
-    public void enviarCita(Cita cita, NuevaCitaTrabajoActivity citaActivity) {
-
-        Cita citaAux = cita;
-        Log.d(TAG, "ENVIANDO CITA DE TRABAJO");
-        //ArrayList<String> idParticipants = cita.getParticipants();
-        ArrayList<Item> itemArrayList = cita.getItems();
-        //cita.setParticipants(null);
-        cita.setItems(null);
-        cita.setStateReceive(false);
-
-        String idCita = FirebaseDatabase.getInstance().getReference().child("citas").push().getKey();
-        cita.setIdCita(idCita);
-
-
-        // Create new post at /user-posts/$userid/$postid and at
-        // /posts/$postid simultaneously
-        // String key = mDatabase.child("posts").push().getKey();
-        //Post post = new Post(userId, username, title, body);
-        Map<String, Object> postValues = cita.toMap();
-
-        Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/citas/" + idCita, postValues);
-//        childUpdates.put("/citasIds/" + idParticipants.get(0) + "/citaId/", idCita);
-//        childUpdates.put("/citasIds/" + idParticipants.get(1) + "/citaId/", idCita);
-//        childUpdates.put("/citasIds/" + idCita + "/", idParticipants);
-        childUpdates.put("/citaItems/" + idCita + "/", itemArrayList);
-
-        FirebaseDatabase
-                .getInstance()
-                .getReference()
-                .updateChildren(childUpdates)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(@NonNull Void unused) {
-                        Log.d("TAG", "Registro de cita exitoso");
-//                        citaActivity.programarAlarmaLocal(cita);
-                        citaActivity.programarAlarmaLocalCustomLoco(cita);
-                        Toast.makeText(citaActivity, "Cita enviada!", Toast.LENGTH_LONG).show();
-                        citaActivity.finish();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, e.toString());
-                    }
-                });
-
-
-//        FirebaseDatabase.getInstance().getReference()
-//                .child("citas")
-//                .child(idCita)
-//                .setValue(cita)
-//                .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                    @Override
-//                    public void onSuccess(Void unused) {
-//                        Log.d("TAG", "Registro exitoso");
-//                        Toast.makeText(citaActivity, "Cita enviada!", Toast.LENGTH_LONG).show();
-//                        citaActivity.finish();
-////                        registroActivity.getProgressBar().setVisibility(View.GONE);
-////                        registroActivity.getTextViewSavingData().setText(R.string.reg_exitoso);
-////                        registroActivity.limpiarUI();
-//
-//                    }
-//                });
-    }
-
-
-    public void actualizarCita(Cita cita, DetalleServicioActivity detalleServicioActivity) {
-
-        //ArrayList<String> idParticipants = cita.getParticipants();
-        ArrayList<Item> itemArrayList = cita.getItems();
-        //cita.setParticipants(null);
-        cita.setItems(null);
-
-//        String idCita = FirebaseDatabase.getInstance().getReference().child("citas").push().getKey();
-        String idCita = cita.getIdCita();
-        //cita.setIdCita(idCita);
-
-
-        // Create new post at /user-posts/$userid/$postid and at
-        // /posts/$postid simultaneously
-        // String key = mDatabase.child("posts").push().getKey();
-        //Post post = new Post(userId, username, title, body);
-        Map<String, Object> postValues = cita.toMap();
-
-        Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/citas/" + idCita, postValues);
-//        childUpdates.put("/citasIds/" + idParticipants.get(0) + "/citaId/", idCita);
-//        childUpdates.put("/citasIds/" + idParticipants.get(1) + "/citaId/", idCita);
-//        childUpdates.put("/citasIds/" + idCita + "/", idParticipants);
-        childUpdates.put("/citaItems/" + idCita + "/", itemArrayList);
-
-        FirebaseDatabase
-                .getInstance()
-                .getReference()
-                .updateChildren(childUpdates)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(@NonNull Void unused) {
-                        Log.d("TAG", "Cita actualizada");
-
-                        Toast.makeText(detalleServicioActivity, "Cita actualizada!", Toast.LENGTH_LONG).show();
-//                        citaActivity.finish();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, e.toString());
-                    }
-                });
-
-
-    }
-
-    public void eliminarCita(Cita cita, DetalleServicioActivity detalleServicioActivity) {
-
-        //ArrayList<String> idParticipants = cita.getParticipants();
-        ArrayList<Item> itemArrayList = cita.getItems();
-        //cita.setParticipants(null);
-        cita.setItems(null);
-
-//        String idCita = FirebaseDatabase.getInstance().getReference().child("citas").push().getKey();
-        String idCita = cita.getIdCita();
-        //cita.setIdCita(idCita);
-
-
-        // Create new post at /user-posts/$userid/$postid and at
-        // /posts/$postid simultaneously
-        // String key = mDatabase.child("posts").push().getKey();
-        //Post post = new Post(userId, username, title, body);
-        Map<String, Object> postValues = cita.toMap();
-
-        Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/citas/" + idCita, null);
-//        childUpdates.put("/citasIds/" + idParticipants.get(0) + "/citaId/", idCita);
-//        childUpdates.put("/citasIds/" + idParticipants.get(1) + "/citaId/", idCita);
-//        childUpdates.put("/citasIds/" + idCita + "/", idParticipants);
-        childUpdates.put("/citaItems/" + idCita + "/", null);
-
-        FirebaseDatabase
-                .getInstance()
-                .getReference()
-                .updateChildren(childUpdates)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(@NonNull Void unused) {
-                        Log.d("TAG", "Cita actualizada");
-
-                        Toast.makeText(detalleServicioActivity, "Cita eliminada!", Toast.LENGTH_LONG).show();
-//                        citaActivity.finish();
-                        detalleServicioActivity.finish();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, e.toString());
-                    }
-                });
-
-
-    }
-
 }

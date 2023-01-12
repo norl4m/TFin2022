@@ -9,6 +9,8 @@ public class Oficio implements Serializable {
     private String nombre;
     private String uriPhoto;
 
+    public Oficio() {
+    }
 
     public String getIdOficio() {
         return idOficio;

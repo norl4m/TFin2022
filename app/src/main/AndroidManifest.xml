@@ -95,9 +95,6 @@
             android:theme="@style/Theme.TFinal2022.NoActionBar" />
 
         <activity
-            android:name=".ui.trabajadores.eliminar.DeleteUserAsyncActivity"
-            android:exported="false" />
-        <activity
             android:name=".communicationAgora.voice.view.AgoraOnlyVoiceCallActivity"
             android:exported="false"
             android:screenOrientation="portrait"
@@ -202,6 +199,12 @@ Set color used with incoming notification messages. This is used when no color i
             android:screenOrientation="portrait"
             android:theme="@style/Theme.TFinal2022.NoActionBar" />
         <activity
+            android:name=".registro.view.RegWithEmailPasswordActivityAdmin"
+            android:exported="false"
+            android:label="@string/no_nothing_text"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar" />
+        <activity
             android:name=".registro.view.RegWithEmailPasswordActivity"
             android:exported="false"
             android:label="@string/no_nothing_text"
@@ -269,7 +272,7 @@ Set color used with incoming notification messages. This is used when no color i
             android:screenOrientation="portrait"
             android:theme="@style/Theme.TFinal2022.NoActionBar" />
         <activity
-            android:name=".infoInicial.InformacionInicialActivity"
+            android:name=".infoInicial.view.InformacionInicialActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.TFinal2022.NoActionBar" />
