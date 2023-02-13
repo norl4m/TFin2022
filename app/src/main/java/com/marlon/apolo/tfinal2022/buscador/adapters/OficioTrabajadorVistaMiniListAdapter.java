@@ -43,16 +43,16 @@ public class OficioTrabajadorVistaMiniListAdapter extends RecyclerView.Adapter<O
     public void onBindViewHolder(@NonNull OficioViewHolder holder, int position) {
         Oficio current = oficios.get(position);
         holder.textViewOficioName.setText(String.format("%s", current.getNombre()));
-        Drawable[] itrems = new Drawable[]{
-//                    AppCompatResources.getDrawable(contextInstance, R.drawable.bg9),
-                AppCompatResources.getDrawable(context, R.drawable.bg10),
-                AppCompatResources.getDrawable(context, R.drawable.bg11),
-                AppCompatResources.getDrawable(context, R.drawable.bg12)
-        };
-        final int min = 0;
-        final int max = itrems.length - 1;
-        int random = new Random().nextInt((max - min) + 1) + min;
-        holder.itemView.setBackground(itrems[random]);
+//        Drawable[] itrems = new Drawable[]{
+////                    AppCompatResources.getDrawable(contextInstance, R.drawable.bg9),
+//                AppCompatResources.getDrawable(context, R.drawable.bg10),
+//                AppCompatResources.getDrawable(context, R.drawable.bg11),
+//                AppCompatResources.getDrawable(context, R.drawable.bg12)
+//        };
+//        final int min = 0;
+//        final int max = itrems.length - 1;
+//        int random = new Random().nextInt((max - min) + 1) + min;
+//        holder.itemView.setBackground(itrems[random]);
 
     }
 

@@ -93,7 +93,11 @@
             android:label="Seleccionar Empleador"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.TFinal2022.NoActionBar" />
-
+        <activity
+            android:name=".communicationAgora.voice.view.AgoraVoiceCallActivityPoc"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar" />
         <activity
             android:name=".communicationAgora.voice.view.AgoraOnlyVoiceCallActivity"
             android:exported="false"

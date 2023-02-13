@@ -9,6 +9,7 @@ import android.widget.Toast;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.marlon.apolo.tfinal2022.communicationAgora.voice.view.AgoraOnlyVoiceCallActivity;
+import com.marlon.apolo.tfinal2022.communicationAgora.voice.view.AgoraVoiceCallActivityPoc;
 import com.marlon.apolo.tfinal2022.model.LlamadaVoz;
 
 public class AcceptVoiceCallBroadcastReceiver extends BroadcastReceiver {
@@ -35,7 +36,8 @@ public class AcceptVoiceCallBroadcastReceiver extends BroadcastReceiver {
 
     private void answerVideoCall(Context context, LlamadaVoz llamadaVideo) {
 //        Intent fullScreenIntent = new Intent(context, AgoraVideoCallActivity.class);
-        Intent fullScreenIntent = new Intent(context, AgoraOnlyVoiceCallActivity.class);
+//        Intent fullScreenIntent = new Intent(context, AgoraOnlyVoiceCallActivity.class);
+        Intent fullScreenIntent = new Intent(context, AgoraVoiceCallActivityPoc.class);
         fullScreenIntent.putExtra("callStatus", "llamadaEntrante");
         fullScreenIntent.putExtra("llamadaVoz", llamadaVideo);
 //        fullScreenIntent.putExtra("joinValue", "false");

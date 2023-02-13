@@ -75,6 +75,7 @@ import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.citasTrabajo.view.NuevaCitaTrabajoActivity;
 import com.marlon.apolo.tfinal2022.communicationAgora.voice.view.AgoraOnlyVoiceCallActivity;
 import com.marlon.apolo.tfinal2022.communicationAgora.video.view.AgoraVideoCallActivity;
+import com.marlon.apolo.tfinal2022.communicationAgora.voice.view.AgoraVoiceCallActivityPoc;
 import com.marlon.apolo.tfinal2022.individualChat.adapters.SpecialMessageListAdapterPoc;
 import com.marlon.apolo.tfinal2022.individualChat.model.ChatPoc;
 import com.marlon.apolo.tfinal2022.individualChat.model.MensajeNube;
@@ -1495,7 +1496,8 @@ public class CrazyIndividualChatActivity extends AppCompatActivity implements Vi
 
 
 //                        Intent intent = new Intent(CrazyIndividualChatActivity.this, LlamadaVozActivity.class);
-                        Intent intent = new Intent(CrazyIndividualChatActivity.this, AgoraOnlyVoiceCallActivity.class);
+//                        Intent intent = new Intent(CrazyIndividualChatActivity.this, AgoraOnlyVoiceCallActivity.class);
+                        Intent intent = new Intent(CrazyIndividualChatActivity.this, AgoraVoiceCallActivityPoc.class);
 //                        intent.putExtra("usuarioTo", usuarioRemoto);
 //                        intent.putExtra("usuarioFrom", usuarioLocal);
 //                        intent.putExtra("callStatus", 0);

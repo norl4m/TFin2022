@@ -48,6 +48,7 @@ import com.marlon.apolo.tfinal2022.communicationAgora.video.view.AgoraVideoCallA
 import com.marlon.apolo.tfinal2022.communicationAgora.video.receivers.RejectVideoCallBroadcastReceiver;
 import com.marlon.apolo.tfinal2022.communicationAgora.voice.receivers.RejectVoiceCallBroadcastReceiver;
 
+import com.marlon.apolo.tfinal2022.communicationAgora.voice.view.AgoraVoiceCallActivityPoc;
 import com.marlon.apolo.tfinal2022.individualChat.model.MessageCloudPoc;
 import com.marlon.apolo.tfinal2022.individualChat.receivers.CrazyDeleteBroadcastReceiver;
 import com.marlon.apolo.tfinal2022.individualChat.view.CrazyIndividualChatActivity;
@@ -750,7 +751,8 @@ public class CrazyService extends Service {
         }
 
 
-        Intent fullScreenIntent = new Intent(this, AgoraOnlyVoiceCallActivity.class);
+//        Intent fullScreenIntent = new Intent(this, AgoraOnlyVoiceCallActivity.class);
+        Intent fullScreenIntent = new Intent(this, AgoraVoiceCallActivityPoc.class);
         fullScreenIntent.putExtra("callStatus", "llamadaEntrante");
         fullScreenIntent.putExtra("llamadaVoz", llamadaVideo);
 //        fullScreenIntent.putExtra("joinValue", "false");
@@ -966,7 +968,8 @@ public class CrazyService extends Service {
 
     public void playingInconmingCallAudio() {
 //        mediaPlayerCallTone = MediaPlayer.create(contextInstance, R.raw.beat_it_gameboy);
-        mediaPlayerCallTone = MediaPlayer.create(contextInstance, R.raw.katyusha_8_bit);
+//        mediaPlayerCallTone = MediaPlayer.create(contextInstance, R.raw.katyusha_8_bit);
+        mediaPlayerCallTone = MediaPlayer.create(contextInstance, R.raw.bomberman);
         mediaPlayerCallTone.setLooping(true);
         mediaPlayerCallTone.start(); // no need to call prepare(); create() does that for you
     }

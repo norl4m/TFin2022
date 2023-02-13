@@ -1,13 +1,4 @@
-package com.marlon.apolo.tfinal2022.communicationAgora.video.view;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SwitchCompat;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
+package com.marlon.apolo.tfinal2022.communicationAgora.voice.view;
 
 import android.Manifest;
 import android.content.Context;
@@ -48,6 +39,15 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
@@ -58,6 +58,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.model.LlamadaVideo;
+import com.marlon.apolo.tfinal2022.model.LlamadaVoz;
 import com.marlon.apolo.tfinal2022.model.Participante;
 import com.marlon.apolo.tfinal2022.model.Usuario;
 import com.marlon.apolo.tfinal2022.puntoEntrada.view.MainActivity;
@@ -82,16 +83,13 @@ import io.agora.rtc2.internal.LastmileProbeConfig;
 import io.agora.rtc2.video.VideoCanvas;
 import io.agora.rtc2.video.VideoEncoderConfiguration;
 
-public class AgoraVideoCallActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
+public class AgoraVoiceCallActivityPoc extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
 
 
     private static final int PERMISSION_REQ_ID = 22;
     private static final String[] REQUESTED_PERMISSIONS =
-            {
-                    Manifest.permission.RECORD_AUDIO,
-                    Manifest.permission.CAMERA
-            };
-    private static final String TAG = AgoraVideoCallActivity.class.getSimpleName();
+            {Manifest.permission.RECORD_AUDIO};
+    private static final String TAG = AgoraVoiceCallActivityPoc.class.getSimpleName();
     // Fill the App ID of your project generated on Agora Console.
 //    private final String appId = "7c0b693ccee54bcdb935f23c984dc2aa";
     // Fill the channel name.
@@ -112,16 +110,7 @@ public class AgoraVideoCallActivity extends AppCompatActivity implements PopupMe
     //SurfaceView to render Remote video in a Container.
     private SurfaceView remoteSurfaceView;
     private VideoEncoderConfiguration videoConfigLocal;
-
-    private int flagexit;
     private final IRtcEngineEventHandler mRtcEventHandler = new IRtcEngineEventHandler() {
-        @Override
-        public void onVideoStopped() {
-            super.onVideoStopped();
-            runOnUiThread(() -> Toast.makeText(AgoraVideoCallActivity.this, "onVideoStopped", Toast.LENGTH_SHORT).show());
-
-        }
-
         @Override
         // Listen for the remote host joining the channel to get the uid of the host.
         public void onUserJoined(int uid, int elapsed) {
@@ -133,7 +122,7 @@ public class AgoraVideoCallActivity extends AppCompatActivity implements PopupMe
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    setupRemoteVideo(uid);
+                    //setupRemoteVideo(uid);
                     stopPlaying();
 
                 }
@@ -265,68 +254,7 @@ public class AgoraVideoCallActivity extends AppCompatActivity implements PopupMe
         }
 
 
-        @Override
-        public void onVideoSubscribeStateChanged(String channel, int uid, int oldState, int newState, int elapseSinceLastState) {
-            super.onVideoSubscribeStateChanged(channel, uid, oldState, newState, elapseSinceLastState);
-            String msg = "onVideoSubscribeStateChanged: "
-                    + "\n channel =" + channel
-                    + "\n uid =" + uid
-                    + "\n oldState =" + oldState
-                    + "\n newState =" + newState;
-            if (oldState == 1) {
-                runOnUiThread(() -> deleteRemoteVideo(uid));
-            }
-            Log.d(TAG, msg);
-        }
-
-        @Override
-        public void onUserMuteVideo(final int uid, final boolean muted) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Log.d(TAG, String.valueOf(uid));
-                    Log.d(TAG, String.valueOf(muted));
-
-                    if (!muted && flagexit >= 1) {
-//                        onRemoteUserVideoMuted(uid, muted);
-                        surfaceViewRemote.setVisibility(View.VISIBLE);
-                        linLytRemoteUser.setVisibility(View.GONE);
-                        imageViewRemoteUser.setVisibility(View.GONE);
-                        textViewRemoteUser.setVisibility(View.GONE);
-                    } else {
-                        //setupRemoteVideo(uid);
-                    }
-                    if (muted && uid == remoteUid && flagexit >= 1) {
-//                        onRemoteUserVideoMuted(uid, muted);
-                        linLytRemoteUser.setVisibility(View.VISIBLE);
-                        imageViewRemoteUser.setVisibility(View.VISIBLE);
-                        textViewRemoteUser.setVisibility(View.VISIBLE);
-                        onRemoteUserVideoMuted(uid, muted);
-                    } else {
-                        //setupRemoteVideo(uid);
-                    }
-
-                    flagexit++;
-//                    onRemoteUserVideoMuted(uid, muted);
-                }
-            });
-        }
     };
-    private SurfaceView surfaceViewRemote;
-
-    private void onRemoteUserVideoMuted(int uid, boolean muted) {
-
-//        SurfaceView surfaceView = (SurfaceView) container.getChildAt(0);
-
-        Object tag = surfaceViewRemote.getTag();
-        if (tag != null && (Integer) tag == uid) {
-            surfaceViewRemote.setVisibility(muted ? View.GONE : View.VISIBLE);
-            //surfaceView.setVisibility(View.GONE);
-        }
-//        Toast.makeText(AgoraVideoCallActivity.this, "MUTEANDO VIDEO", Toast.LENGTH_SHORT).show();
-
-        //parent.removeView(mRemoteVideo.view);
-    }
 
     private String externalServer;
     // The base URL to your token server, for example, "https://agora-token-service-production-92ff.up.railway.app".
@@ -381,7 +309,7 @@ public class AgoraVideoCallActivity extends AppCompatActivity implements PopupMe
     private Usuario usuarioLocal;
     private String callStatus = "";
     private String joinRemoteStatus = "";
-    private LlamadaVideo llamadaVideoRemota;
+    private LlamadaVoz llamadaVideoRemota;
     private ChildEventListener childEventListenerLlamar;
     private ChildEventListener childEventListenerResponder;
     private LinearLayout linLytRemoteUser;
@@ -394,7 +322,6 @@ public class AgoraVideoCallActivity extends AppCompatActivity implements PopupMe
     private boolean value;
     private MediaPlayer mediaPlayerCallTone;
     private AlertDialog dialogSDKLoco;
-    private ViewGroup parent;
 
     private void updateNetworkStatus(int quality) {
         if (quality > 0 && quality < 3) networkStatus.setBackgroundColor(Color.GREEN);
@@ -403,10 +330,6 @@ public class AgoraVideoCallActivity extends AppCompatActivity implements PopupMe
         else networkStatus.setBackgroundColor(Color.WHITE);
     }
 
-
-    private void deleteRemoteVideo(int uid) {
-
-    }
 
     private void hideSystemBars() {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -435,11 +358,10 @@ public class AgoraVideoCallActivity extends AppCompatActivity implements PopupMe
 
         value = false;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
-            if (ContextCompat.checkSelfPermission(this, REQUESTED_PERMISSIONS[0]) == PackageManager.PERMISSION_GRANTED
-                    && ContextCompat.checkSelfPermission(this, REQUESTED_PERMISSIONS[1]) == PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(this, REQUESTED_PERMISSIONS[0]) == PackageManager.PERMISSION_GRANTED) {
                 value = true;
 //                } else if (shouldShowRequestPermissionRationale(Manifest.permission.RECORD_AUDIO)) {
-            } else if (shouldShowRequestPermissionRationale(REQUESTED_PERMISSIONS[0]) && shouldShowRequestPermissionRationale(REQUESTED_PERMISSIONS[1])) {
+            } else if (shouldShowRequestPermissionRationale(REQUESTED_PERMISSIONS[0])) {
                 Snackbar.make(joinButton, "Permiso de micrófono necesario",
                         Snackbar.LENGTH_INDEFINITE).setAction(R.string.ok, new View.OnClickListener() {
                     @Override
@@ -447,23 +369,22 @@ public class AgoraVideoCallActivity extends AppCompatActivity implements PopupMe
                         // Request the permission
 //                        Toast.makeText(getApplicationContext(), "GG permisos", Toast.LENGTH_LONG).show();
 //                        requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}, 8000);
-                        ActivityCompat.requestPermissions(AgoraVideoCallActivity.this, REQUESTED_PERMISSIONS, PERMISSION_REQ_ID);
+                        ActivityCompat.requestPermissions(AgoraVoiceCallActivityPoc.this, REQUESTED_PERMISSIONS, PERMISSION_REQ_ID);
 
                     }
                 }).show();
             } else {
 //                requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}, 8000);
-                ActivityCompat.requestPermissions(AgoraVideoCallActivity.this, REQUESTED_PERMISSIONS, PERMISSION_REQ_ID);
+                ActivityCompat.requestPermissions(AgoraVoiceCallActivityPoc.this, REQUESTED_PERMISSIONS, PERMISSION_REQ_ID);
 
             }
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
 
-            if (ContextCompat.checkSelfPermission(this, REQUESTED_PERMISSIONS[0]) == PackageManager.PERMISSION_GRANTED
-                    && ContextCompat.checkSelfPermission(this, REQUESTED_PERMISSIONS[1]) == PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(this, REQUESTED_PERMISSIONS[0]) == PackageManager.PERMISSION_GRANTED) {
                 return true;
-            } else if (shouldShowRequestPermissionRationale(REQUESTED_PERMISSIONS[0]) && shouldShowRequestPermissionRationale(REQUESTED_PERMISSIONS[1])) {
+            } else if (shouldShowRequestPermissionRationale(REQUESTED_PERMISSIONS[0])) {
                 Snackbar.make(joinButton, "Permiso de micrófono necesario",
                         Snackbar.LENGTH_INDEFINITE).setAction(R.string.ok, new View.OnClickListener() {
                     @Override
@@ -471,10 +392,10 @@ public class AgoraVideoCallActivity extends AppCompatActivity implements PopupMe
                         // Request the permission
 //                        Toast.makeText(getApplicationContext(), "GG permisos", Toast.LENGTH_LONG).show();
 //                        requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}, 8000);
-                        if (ContextCompat.checkSelfPermission(AgoraVideoCallActivity.this, REQUESTED_PERMISSIONS[0]) == PackageManager.PERMISSION_GRANTED) {
+                        if (ContextCompat.checkSelfPermission(AgoraVoiceCallActivityPoc.this, REQUESTED_PERMISSIONS[0]) == PackageManager.PERMISSION_GRANTED) {
                             value = true;
                         } else {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(AgoraVideoCallActivity.this);
+                            AlertDialog.Builder builder = new AlertDialog.Builder(AgoraVoiceCallActivityPoc.this);
 //        builder.setTitle("");
                             builder.setMessage(R.string.permiso_call_text);
                             // Add the buttons
@@ -491,7 +412,7 @@ public class AgoraVideoCallActivity extends AppCompatActivity implements PopupMe
                             builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     // User cancelled the dialog
-                                    Toast.makeText(AgoraVideoCallActivity.this, "Permiso de audio NO concedido!", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(AgoraVoiceCallActivityPoc.this, "Permiso de audio NO concedido!", Toast.LENGTH_LONG).show();
                                     finish();
                                 }
                             });
@@ -507,7 +428,7 @@ public class AgoraVideoCallActivity extends AppCompatActivity implements PopupMe
                 }).show();
             } else {
 //                requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}, 8000);
-                AlertDialog.Builder builder = new AlertDialog.Builder(AgoraVideoCallActivity.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(AgoraVoiceCallActivityPoc.this);
 //        builder.setTitle("");
                 builder.setMessage(R.string.permiso_call_text);
                 // Add the buttons
@@ -562,7 +483,8 @@ public class AgoraVideoCallActivity extends AppCompatActivity implements PopupMe
             config.mEventHandler = mRtcEventHandler;
             agoraEngine = RtcEngine.create(config);
             // By default, the video module is disabled, call enableVideo to enable it.
-            agoraEngine.enableVideo();
+//            agoraEngine.enableVideo();
+            agoraEngine.disableVideo();
 
             // Enable the dual stream mode
             agoraEngine.enableDualStreamMode(true);
@@ -595,7 +517,7 @@ public class AgoraVideoCallActivity extends AppCompatActivity implements PopupMe
 // Set degradation preference
             videoConfigLocal.degradationPrefer = VideoEncoderConfiguration.DEGRADATION_PREFERENCE.MAINTAIN_BALANCED;
 // Apply the configuration
-            agoraEngine.setVideoEncoderConfiguration(videoConfigLocal);
+            //agoraEngine.setVideoEncoderConfiguration(videoConfigLocal);
 
 // Start the probe test
             startProbeTest();
@@ -630,16 +552,13 @@ public class AgoraVideoCallActivity extends AppCompatActivity implements PopupMe
 
     private void setupRemoteVideo(int uid) {
 
-//        Toast.makeText(this, "Setup remote video", Toast.LENGTH_SHORT).show();
-
 //        /*Pinreles*/
 //        linLytRemoteUser.setVisibility(View.GONE);
 //        textViewRemoteState.setVisibility(View.GONE);
 //        textViewRemoteUser.setVisibility(View.GONE);
 //        imageViewRemoteUser.setVisibility(View.GONE);
 //        /**/
-//        ViewGroup parent = mRemoteContainer;
-        parent = mRemoteContainer;
+        ViewGroup parent = mRemoteContainer;
         if (parent.indexOfChild(mLocalVideo.view) > -1) {
             parent = mLocalContainer;
         }
@@ -658,46 +577,34 @@ public class AgoraVideoCallActivity extends AppCompatActivity implements PopupMe
           The video display view must be created using this method instead of directly
           calling SurfaceView.
          */
-        surfaceViewRemote = RtcEngine.CreateRendererView(getBaseContext());
-        surfaceViewRemote.setZOrderMediaOverlay(parent == mLocalContainer);
-        parent.addView(surfaceViewRemote);
-        mRemoteVideo = new VideoCanvas(surfaceViewRemote, VideoCanvas.RENDER_MODE_HIDDEN, uid);
+        SurfaceView view = RtcEngine.CreateRendererView(getBaseContext());
+        view.setZOrderMediaOverlay(parent == mLocalContainer);
+        parent.addView(view);
+        mRemoteVideo = new VideoCanvas(view, VideoCanvas.RENDER_MODE_HIDDEN, uid);
         // Initializes the video view of a remote user.
         agoraEngine.setupRemoteVideo(mRemoteVideo);
-        surfaceViewRemote.setTag(uid); // for mark purpose
-
     }
 
-//    private void setupRemoteVideo(int uid) {
-//        FrameLayout container = findViewById(R.id.remote_video_view_container);
-//        remoteSurfaceView = new SurfaceView(getBaseContext());
-//        remoteSurfaceView.setZOrderMediaOverlay(true);
-//        container.addView(remoteSurfaceView);
-//        agoraEngine.setupRemoteVideo(new VideoCanvas(remoteSurfaceView, VideoCanvas.RENDER_MODE_FIT, uid));
-//        // Display RemoteSurfaceView.
-//        remoteSurfaceView.setVisibility(View.VISIBLE);
+
+//    private void setupLocalVideo() {
+////        Log.d(TAG, "setupVideoConfig");
+//
+//        // This is used to set a local preview.
+//        // The steps setting local and remote view are very similar.
+//        // But note that if the local user do not have a uid or do
+//        // not care what the uid is, he can set his uid as ZERO.
+//        // Our server will assign one and return the uid via the event
+//        // handler callback function (onJoinChannelSuccess) after
+//        // joining the channel successfully.
+//        SurfaceView view = RtcEngine.CreateRendererView(getBaseContext());
+//        view.setZOrderMediaOverlay(true);
+//        localSurfaceView = view;
+//        mLocalContainer.addView(view);
+//        // Initializes the local video view.
+//        // RENDER_MODE_HIDDEN: Uniformly scale the video until it fills the visible boundaries. One dimension of the video may have clipped contents.
+//        mLocalVideo = new VideoCanvas(view, VideoCanvas.RENDER_MODE_HIDDEN, 0);
+//        agoraEngine.setupLocalVideo(mLocalVideo);
 //    }
-
-
-    private void setupLocalVideo() {
-//        Log.d(TAG, "setupVideoConfig");
-
-        // This is used to set a local preview.
-        // The steps setting local and remote view are very similar.
-        // But note that if the local user do not have a uid or do
-        // not care what the uid is, he can set his uid as ZERO.
-        // Our server will assign one and return the uid via the event
-        // handler callback function (onJoinChannelSuccess) after
-        // joining the channel successfully.
-        SurfaceView view = RtcEngine.CreateRendererView(getBaseContext());
-        view.setZOrderMediaOverlay(true);
-        localSurfaceView = view;
-        mLocalContainer.addView(view);
-        // Initializes the local video view.
-        // RENDER_MODE_HIDDEN: Uniformly scale the video until it fills the visible boundaries. One dimension of the video may have clipped contents.
-        mLocalVideo = new VideoCanvas(view, VideoCanvas.RENDER_MODE_HIDDEN, 0);
-        agoraEngine.setupLocalVideo(mLocalVideo);
-    }
 
     private ViewGroup removeFromParent(VideoCanvas canvas) {
         if (canvas != null) {
@@ -744,7 +651,7 @@ public class AgoraVideoCallActivity extends AppCompatActivity implements PopupMe
         leaveButton.setVisibility(View.VISIBLE);
         switch (externalServer) {
             case "Java":
-                AgoraTokenAsyncTaskWithJava agoraTokenAsyncTaskWithJava = new AgoraTokenAsyncTaskWithJava(AgoraVideoCallActivity.this,
+                AgoraTokenAsyncTaskWithJava agoraTokenAsyncTaskWithJava = new AgoraTokenAsyncTaskWithJava(AgoraVoiceCallActivityPoc.this,
                         isJoined,
                         agoraEngine,
                         channelName,
@@ -753,7 +660,7 @@ public class AgoraVideoCallActivity extends AppCompatActivity implements PopupMe
                 agoraTokenAsyncTaskWithJava.execute(javaUrl);
                 break;
             case "Node.js":
-                AgoraTokenAsyncTaskWithNodeJs agoraTokenAsyncTaskWithNodeJs = new AgoraTokenAsyncTaskWithNodeJs(AgoraVideoCallActivity.this,
+                AgoraTokenAsyncTaskWithNodeJs agoraTokenAsyncTaskWithNodeJs = new AgoraTokenAsyncTaskWithNodeJs(AgoraVoiceCallActivityPoc.this,
                         isJoined,
                         agoraEngine,
                         channelName,
@@ -832,20 +739,6 @@ public class AgoraVideoCallActivity extends AppCompatActivity implements PopupMe
 //        }
 //    }
 
-    public void setStreamQuality(View view) {
-        highQuality = !highQuality;
-
-        if (highQuality) {
-            agoraEngine.setRemoteVideoStreamType(remoteUid, Constants.VIDEO_STREAM_HIGH);
-//            showMessage("Switching to high-quality video");
-            showMessage("Cambiando calidad de video: alta-baja");
-        } else {
-            agoraEngine.setRemoteVideoStreamType(remoteUid, Constants.VIDEO_STREAM_LOW);
-//            showMessage("Switching to low-quality video");
-            showMessage("Cambiando calidad de video: baja-alta");
-        }
-    }
-
 
     public void joinChannel(View view) {
 //        channelName = editChannelName.getText().toString();
@@ -860,7 +753,7 @@ public class AgoraVideoCallActivity extends AppCompatActivity implements PopupMe
         if (checkSelfPermission()) {
             tokenRole = Constants.CLIENT_ROLE_BROADCASTER;
             // Display LocalSurfaceView.
-            setupLocalVideo();
+            //setupLocalVideo();
 //            localSurfaceView.setVisibility(View.VISIBLE);
             fetchToken(uid, channelName, tokenRole);
         } else {
@@ -882,7 +775,7 @@ public class AgoraVideoCallActivity extends AppCompatActivity implements PopupMe
         if (checkSelfPermission()) {
             tokenRole = Constants.CLIENT_ROLE_BROADCASTER;
             // Display LocalSurfaceView.
-            setupLocalVideo();
+            //setupLocalVideo();
 //            localSurfaceView.setVisibility(View.VISIBLE);
             fetchToken(uid, channelName, tokenRole);
         } else {
@@ -1001,7 +894,7 @@ public class AgoraVideoCallActivity extends AppCompatActivity implements PopupMe
             case R.id.radio_java:
                 if (checked) {
                     // Pirates are the best
-                    Toast.makeText(AgoraVideoCallActivity.this,
+                    Toast.makeText(AgoraVoiceCallActivityPoc.this,
                             ((RadioButton) view).getText(), Toast.LENGTH_SHORT).show();
                     externalServer = "Java";
                 }
@@ -1009,7 +902,7 @@ public class AgoraVideoCallActivity extends AppCompatActivity implements PopupMe
             case R.id.radio_nodejs:
                 if (checked) {
                     // Ninjas rule
-                    Toast.makeText(AgoraVideoCallActivity.this,
+                    Toast.makeText(AgoraVoiceCallActivityPoc.this,
                             ((RadioButton) view).getText(), Toast.LENGTH_SHORT).show();
                     externalServer = "Node.js";
                 }
@@ -1039,7 +932,7 @@ public class AgoraVideoCallActivity extends AppCompatActivity implements PopupMe
 
             case R.id.radio_480p:
                 if (checked) {
-                    Toast.makeText(AgoraVideoCallActivity.this,
+                    Toast.makeText(AgoraVoiceCallActivityPoc.this,
                             ((RadioButton) view).getText(), Toast.LENGTH_SHORT).show();
                     // Set the video profile
 //                    VideoEncoderConfiguration videoConfig = new VideoEncoderConfiguration();
@@ -1083,7 +976,7 @@ public class AgoraVideoCallActivity extends AppCompatActivity implements PopupMe
                 break;
             case R.id.radio_1080p:
                 if (checked) {
-                    Toast.makeText(AgoraVideoCallActivity.this,
+                    Toast.makeText(AgoraVoiceCallActivityPoc.this,
                             ((RadioButton) view).getText(), Toast.LENGTH_SHORT).show();
                     // Set the video profile
 //                    VideoEncoderConfiguration videoConfig = new VideoEncoderConfiguration();
@@ -1153,7 +1046,7 @@ public class AgoraVideoCallActivity extends AppCompatActivity implements PopupMe
 
                 // Restore camera and microphone publishing
                 updateMediaPublishOptions(false);
-                setupLocalVideo();
+                //setupLocalVideo();
             }
         } catch (Exception e) {
             Log.e(TAG, "########################################");
@@ -1314,10 +1207,8 @@ public class AgoraVideoCallActivity extends AppCompatActivity implements PopupMe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         hideSystemBars();
-        setContentView(R.layout.activity_agora_video_call);
+        setContentView(R.layout.activity_agora_voice_call_poc);
 
-
-        flagexit = 0;
         joinButton = findViewById(R.id.joinButton);
         leaveButton = findViewById(R.id.leaveButton);
         muteButton = findViewById(R.id.micMute);
@@ -1351,7 +1242,7 @@ public class AgoraVideoCallActivity extends AppCompatActivity implements PopupMe
 
         usuarioRemoto = (Usuario) getIntent().getSerializableExtra("usuarioRemoto");
         usuarioLocal = (Usuario) getIntent().getSerializableExtra("usuarioLocal");
-        llamadaVideoRemota = (LlamadaVideo) getIntent().getSerializableExtra("llamadaVideo");
+        llamadaVideoRemota = (LlamadaVoz) getIntent().getSerializableExtra("llamadaVoz");
         joinRemoteStatus = getIntent().getStringExtra("extraJoin");
 
         callStatus = getIntent().getStringExtra("callStatus");
@@ -1411,7 +1302,7 @@ public class AgoraVideoCallActivity extends AppCompatActivity implements PopupMe
 
         setupVideoSDKEngine();
 
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             enableEncryption();
         }
 
@@ -1423,7 +1314,7 @@ public class AgoraVideoCallActivity extends AppCompatActivity implements PopupMe
 //                    Toast.makeText(getApplicationContext(), callStatus + " : " + joinRemoteStatus, Toast.LENGTH_SHORT).show();
                     channelName = llamadaVideoRemota.getId();
                     textViewRemoteUser.setText(llamadaVideoRemota.getParticipanteCaller().getNombreParticipante());
-                    textViewRemoteState.setText("Videollamada entrante...");
+                    textViewRemoteState.setText("Llamada entrante...");
                     linLytRemoteUser.setVisibility(View.VISIBLE);
 
                     setListenerLlamadaRemota(llamadaVideoRemota);
@@ -1515,7 +1406,7 @@ public class AgoraVideoCallActivity extends AppCompatActivity implements PopupMe
     }
 
 
-    private void setListenerLlamadaRemota(LlamadaVideo llamadaVideoRemota) {
+    private void setListenerLlamadaRemota(LlamadaVoz llamadaVideoRemota) {
         idVideoCall = llamadaVideoRemota.getId();
 
         //Toast.makeText(getApplicationContext(), "Listener llamnad local", Toast.LENGTH_SHORT).show();
@@ -1534,7 +1425,7 @@ public class AgoraVideoCallActivity extends AppCompatActivity implements PopupMe
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
 //                        Toast.makeText(getApplicationContext(), "Remove call", Toast.LENGTH_LONG).show();
 //                        finishRemoteCall();
-                LlamadaVideo llamadaVideoRemoved = snapshot.getValue(LlamadaVideo.class);
+                LlamadaVoz llamadaVideoRemoved = snapshot.getValue(LlamadaVoz.class);
                 if (llamadaVideoRemoved.getId().equals(llamadaVideoRemota.getId())) {
                     finishRemoteCall();
                 }
@@ -1551,7 +1442,7 @@ public class AgoraVideoCallActivity extends AppCompatActivity implements PopupMe
             }
         };
 
-        FirebaseDatabase.getInstance().getReference().child("videoCalls")
+        FirebaseDatabase.getInstance().getReference().child("voiceCalls")
                 .addChildEventListener(childEventListenerResponder);
     }
 
@@ -1669,18 +1560,15 @@ public class AgoraVideoCallActivity extends AppCompatActivity implements PopupMe
     public void enableCamera(View view) {
         imageButtonEnableVideo.setVisibility(View.GONE);
         imageButtonDisableVideo.setVisibility(View.VISIBLE);
-//        agoraEngine.enableVideo();
-        agoraEngine.muteLocalVideoStream(false);
+        agoraEngine.enableVideo();
         localSurfaceView.setVisibility(View.VISIBLE);
-
     }
 
     public void disableCamera(View view) {
         imageButtonEnableVideo.setVisibility(View.VISIBLE);
         imageButtonDisableVideo.setVisibility(View.GONE);
         localSurfaceView.setVisibility(View.GONE);
-//        agoraEngine.disableVideo();/*deshabilita a los dos lados*/
-        agoraEngine.muteLocalVideoStream(true);
+        agoraEngine.disableVideo();
     }
 
 
@@ -1905,7 +1793,7 @@ public class AgoraVideoCallActivity extends AppCompatActivity implements PopupMe
 
     }
 
-    private void constestarLlamada(LlamadaVideo llamadaVideo) {
+    private void constestarLlamada(LlamadaVoz llamadaVideo) {
 
 
         idVideoCall = llamadaVideo.getId();
@@ -1917,7 +1805,7 @@ public class AgoraVideoCallActivity extends AppCompatActivity implements PopupMe
 //        Toast.makeText(getApplicationContext(), llamadaVideo.toString(), Toast.LENGTH_LONG).show();
 
         FirebaseDatabase.getInstance().getReference()
-                .child("videoCalls")
+                .child("voiceCalls")
                 .child(llamadaVideo.getId())
                 .setValue(llamadaVideo)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -1925,10 +1813,12 @@ public class AgoraVideoCallActivity extends AppCompatActivity implements PopupMe
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "Contestando...");
-                            linLytRemoteUser.setVisibility(View.GONE);
-                            textViewRemoteState.setVisibility(View.GONE);
-                            textViewRemoteUser.setVisibility(View.GONE);
-                            imageViewRemoteUser.setVisibility(View.GONE);
+                            //linLytRemoteUser.setVisibility(View.GONE);
+                            //textViewRemoteState.setVisibility(View.GONE);
+                            //textViewRemoteUser.setVisibility(View.GONE);
+                            //imageViewRemoteUser.setVisibility(View.GONE);
+                            textViewRemoteUser.setVisibility(View.VISIBLE);
+                            textViewRemoteState.setText("Comunicación establecida");
                         } else {
                             Log.d(TAG, "Error al realizar llamada.");
                         }
@@ -1955,18 +1845,18 @@ public class AgoraVideoCallActivity extends AppCompatActivity implements PopupMe
     }
 
     public void removeChildEventListenerLlamar() {
-        FirebaseDatabase.getInstance().getReference().child("videoCalls")
+        FirebaseDatabase.getInstance().getReference().child("voiceCalls")
                 .removeEventListener(childEventListenerLlamar);
     }
 
     public void removeChildEventListenerContestar() {
-        FirebaseDatabase.getInstance().getReference().child("videoCalls")
+        FirebaseDatabase.getInstance().getReference().child("voiceCalls")
                 .removeEventListener(childEventListenerLlamar);
     }
 
 
     private void createVideoCallOnFirebase(String channelName, int uid) {
-        LlamadaVideo llamadaVideo = new LlamadaVideo();
+        LlamadaVoz llamadaVideo = new LlamadaVoz();
         Participante participanteCaller = new Participante();
         Participante participanteDestiny = new Participante();
         participanteCaller.setIdParticipante(FirebaseAuth.getInstance().getCurrentUser().getUid());
@@ -1992,7 +1882,7 @@ public class AgoraVideoCallActivity extends AppCompatActivity implements PopupMe
         llamadaVideo.setFinishCall(false);
 
         FirebaseDatabase.getInstance().getReference()
-                .child("videoCalls")
+                .child("voiceCalls")
                 .child(idVideoCall)
                 .setValue(llamadaVideo)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -2033,10 +1923,12 @@ public class AgoraVideoCallActivity extends AppCompatActivity implements PopupMe
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                LlamadaVideo llamadaVideoChanged = snapshot.getValue(LlamadaVideo.class);
+                LlamadaVoz llamadaVideoChanged = snapshot.getValue(LlamadaVoz.class);
                 if (llamadaVideoChanged.getId().equals(idVideoCall)) {
                     if (llamadaVideoChanged.isChannelConnectedStatus() && llamadaVideoChanged.isDestinyStatus()) {
-                        linLytRemoteUser.setVisibility(View.GONE);
+                        //linLytRemoteUser.setVisibility(View.GONE);
+                        textViewRemoteUser.setVisibility(View.VISIBLE);
+                        textViewRemoteState.setText("Comunicación establecida");
 //                        stopPlaying();
 
                     }
@@ -2064,7 +1956,7 @@ public class AgoraVideoCallActivity extends AppCompatActivity implements PopupMe
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-                LlamadaVideo llamadaVideoRemoved = snapshot.getValue(LlamadaVideo.class);
+                LlamadaVoz llamadaVideoRemoved = snapshot.getValue(LlamadaVoz.class);
                 if (llamadaVideoRemoved.getId().equals(idVideoCall)) {
 //                    finishLocalCall();
                     if (llamadaVideoRemoved.isRejectCallStatus()) {
@@ -2086,7 +1978,7 @@ public class AgoraVideoCallActivity extends AppCompatActivity implements PopupMe
 
             }
         };
-        FirebaseDatabase.getInstance().getReference().child("videoCalls")
+        FirebaseDatabase.getInstance().getReference().child("voiceCalls")
                 .addChildEventListener(childEventListenerLlamar);
     }
 
@@ -2094,7 +1986,7 @@ public class AgoraVideoCallActivity extends AppCompatActivity implements PopupMe
     private void finishVideoCall(String idVideoCall) {
         try {
             FirebaseDatabase.getInstance().getReference()
-                    .child("videoCalls")
+                    .child("voiceCalls")
                     .child(idVideoCall)
                     .setValue(null)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
