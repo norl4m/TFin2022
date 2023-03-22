@@ -15,6 +15,7 @@ import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
@@ -29,6 +30,7 @@ import android.widget.TextView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
@@ -66,6 +68,7 @@ public class LoginEmailPasswordActivity extends AppCompatActivity implements Vie
     private SharedPreferences.Editor editorPref;
     private ScrollView scrollView;
     private LinearLayout linearLayout;
+
 
     private void hideSystemBars() {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -129,6 +132,7 @@ public class LoginEmailPasswordActivity extends AppCompatActivity implements Vie
 
 
         buttonLogin.setEnabled(false);
+        findViewById(R.id.textViewSubTitle).setOnClickListener(this);
 
         try {
             if (!email.isEmpty() && !password.isEmpty()) {
@@ -149,11 +153,26 @@ public class LoginEmailPasswordActivity extends AppCompatActivity implements Vie
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 email = s.toString();
-                if (!email.isEmpty() && !password.isEmpty()) {
-                    buttonLogin.setEnabled(true);
+
+                if (TextUtils.isEmpty(email)) {
+//                    textInputEditTextEmail.setError("Error: por favor ingrese un correo electrónico.");/*tambien funciona pero en el EDT*/
+                    ((TextInputLayout) findViewById(R.id.textFieldEmail)).setError("Error: por favor ingrese un correo electrónico.");
                 } else {
-                    buttonLogin.setEnabled(false);
+                    ((TextInputLayout) findViewById(R.id.textFieldEmail)).setError(null);
                 }
+
+                try {
+//                    if (!email.isEmpty() && !password.isEmpty()) {
+                    if (!email.isEmpty() && password.length() >= 6) {
+                        buttonLogin.setEnabled(true);
+                    } else {
+                        buttonLogin.setEnabled(false);
+                    }
+                } catch (Exception e) {
+
+                }
+
+
             }
 
             @Override
@@ -171,11 +190,36 @@ public class LoginEmailPasswordActivity extends AppCompatActivity implements Vie
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 password = s.toString();
-                if (!email.isEmpty() && !password.isEmpty()) {
-                    buttonLogin.setEnabled(true);
+//                try {
+//                    if (!email.isEmpty() && !password.isEmpty()) {
+//                        buttonLogin.setEnabled(true);
+//                    } else {
+//                        buttonLogin.setEnabled(false);
+//                    }
+//                } catch (Exception e) {
+//                    Log.d(TAG, e.toString());
+//                }
+
+
+                if (TextUtils.isEmpty(password)) {
+                    ((TextInputLayout) findViewById(R.id.textFieldPassword)).setError("Error: su clave o contraseña debe contener al menos 6 letras");
                 } else {
-                    buttonLogin.setEnabled(false);
+                    ((TextInputLayout) findViewById(R.id.textFieldPassword)).setError(null);
                 }
+
+
+                try {
+//                    if (!email.isEmpty() && !password.isEmpty()) {
+                    if (!email.isEmpty() && password.length() >= 6) {
+                        buttonLogin.setEnabled(true);
+                    } else {
+                        buttonLogin.setEnabled(false);
+                    }
+                } catch (Exception e) {
+
+                }
+
+
             }
 
             @Override
@@ -194,8 +238,12 @@ public class LoginEmailPasswordActivity extends AppCompatActivity implements Vie
                 showProgress(title, message);
                 signIn(email, password);
                 break;
+            case R.id.textViewSubTitle:
+                startActivity(new Intent(LoginEmailPasswordActivity.this, PerfilActivity.class));
+                break;
         }
     }
+
 
     private void signIn(String email, String password) {
         // [START sign_in_with_email]

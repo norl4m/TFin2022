@@ -1,3 +1,20 @@
+/*
+ * @(#)Usuario.java        1.0 2022/09/30
+ *
+ * Copyright (C) 2022 Marlon Apolo.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.marlon.apolo.tfinal2022.model;
 
 import android.app.Activity;
@@ -47,18 +64,28 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+/**
+ * Esta clase permite reutilizar métodos comunes que tienen los diferentes usuarios de la aplicación.
+ */
 
 public abstract class Usuario implements Serializable {
+    private static final String TAG = Usuario.class.getSimpleName();
     private String idUsuario;
     private String nombre;
     private String apellido;
     private String email;
-    private String celular;
     private String fotoPerfil;
-    private static final String TAG = Usuario.class.getSimpleName();
     private String password;
 
     public Usuario() {
+    }
+
+    public String getIdUsuario() {
+        return idUsuario;
+    }
+
+    public void setIdUsuario(String idUsuario) {
+        this.idUsuario = idUsuario;
     }
 
     public String getNombre() {
@@ -85,28 +112,12 @@ public abstract class Usuario implements Serializable {
         this.email = email;
     }
 
-    public String getCelular() {
-        return celular;
-    }
-
-    public void setCelular(String celular) {
-        this.celular = celular;
-    }
-
     public String getFotoPerfil() {
         return fotoPerfil;
     }
 
     public void setFotoPerfil(String fotoPerfil) {
         this.fotoPerfil = fotoPerfil;
-    }
-
-    public String getIdUsuario() {
-        return idUsuario;
-    }
-
-    public void setIdUsuario(String idUsuario) {
-        this.idUsuario = idUsuario;
     }
 
     public String getPassword() {
@@ -117,19 +128,58 @@ public abstract class Usuario implements Serializable {
         this.password = password;
     }
 
-
-    public abstract void registrarseEnFirebase(Activity activity, int metodoReg);
-
-    public abstract void registrarseEnFirebaseConFoto(Activity activity, int metodoReg);
-
+    /*Métodos abstractos*/
+    /**
+     * Este método permite registrar un nuevo usuario en Firebase
+     *
+     * @param activity objeto que permite relacionar la acción de registrar con la pantalla de registro en
+     *                 la aplicación
+     */
+    public abstract void registrarseEnFirebase(Activity activity);
+    /**
+     * Este método permite registrar un nuevo usuario en Firebase utilizando una foto
+     *
+     * @param activity objeto que permite relacionar la acción de registrar con la pantalla de registro en
+     *                 la aplicación
+     */
+    public abstract void registrarseEnFirebaseConFoto(Activity activity);
+    /**
+     * Este método permite actualizar la información de un usuario en Firebase
+     *
+     * @param activity objeto que permite relacionar la acción de registrar con la pantalla de registro en
+     *                 la aplicación
+     */
     public abstract void actualizarInfo(Activity activity);
-
+    /**
+     * Este método permite actualizar la información de un usuario en Firebase utilizando una foto almacenada en el
+     * dispositivo móvil
+     *
+     * @param activity objeto que permite relacionar la acción de registrar con la pantalla de registro en
+     *                 la aplicación
+     * @param uri objeto que contiene la ubicación de la foto en el dispositivo móvil
+     */
     public abstract void actualizarInfoConFoto(Activity activity, Uri uri);
 
+    /**
+     * Este método permite actualizar la información de un usuario en Firebase utilizando una foto almacenada en el
+     * dispositivo móvil
+     *
+     * @param activity objeto que permite relacionar la acción de eliminar con la pantalla de eliminación en
+     *                 la aplicación
+     */
     public abstract void eliminarInfo(Activity activity);
-
+    /**
+     * Este método permite registrar en Firebase el id de un usuario que va ha ser eliminador de la aplicación,
+     * El id se utiliza para desloguear al usuario eliminado por el administrador
+     *
+     * @param idUsuario contiene el identificador del usuario a eliminar
+     */
     public abstract void setDeleteUserOnFirebase(String idUsuario);
-
+    /**
+     * Este método permite eliminar el id de usuario creado temporalmente de la lista de usuarios eliminados en Firebase
+     *
+     * @param idUsuario contiene el identificador del usuario a eliminar
+     */
     public abstract void cleanFirebaseDeleteUser(String idUsuario);
     /*Métodos normales*/
 

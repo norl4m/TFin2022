@@ -22,14 +22,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/toolbar"
-        android:layout_margin="4dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="4dp"
-        android:layout_marginBottom="4dp"
+        android:layout_gravity="center_horizontal"
         android:fontFamily="@font/andika"
-        android:text="Inicio de sesión"
-        android:textAppearance="@android:style/TextAppearance.Material.Headline" />
+        android:textStyle="bold"
+        android:text="@string/app_name"
+        android:textAppearance="@android:style/TextAppearance.Material.Display1" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -106,7 +103,7 @@
                     android:background="@drawable/button_background"
                     android:backgroundTint="@color/teal_200"
                     android:fontFamily="@font/andika"
-                    android:text="Omitir inicio de sesión"
+                    android:text="@string/omitir_init_sesion"
                     android:textAllCaps="false"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />

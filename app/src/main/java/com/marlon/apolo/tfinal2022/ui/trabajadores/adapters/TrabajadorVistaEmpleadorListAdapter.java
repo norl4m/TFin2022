@@ -125,15 +125,6 @@ public class TrabajadorVistaEmpleadorListAdapter extends RecyclerView.Adapter<Tr
             if (current.getEmail() != null) {
                 holder.textViewContacto.setText(current.getEmail());
             }
-            if (current.getCelular() != null) {
-                holder.textViewContacto.setText(current.getCelular());
-
-            }
-
-
-
-
-
 
         } else {
             // Covers the case of data not being ready yet.

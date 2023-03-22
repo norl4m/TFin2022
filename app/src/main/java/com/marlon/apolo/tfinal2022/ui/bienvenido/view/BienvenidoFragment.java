@@ -58,7 +58,6 @@ import com.marlon.apolo.tfinal2022.admin.viewModel.AdminViewModel;
 import com.marlon.apolo.tfinal2022.citasTrabajo.adapters.CitaListAdapter;
 import com.marlon.apolo.tfinal2022.citasTrabajo.viewModel.CitaViewModel;
 import com.marlon.apolo.tfinal2022.communicationAgora.video.view.AgoraVideoCallActivity;
-import com.marlon.apolo.tfinal2022.communicationAgora.voice.view.AgoraOnlyVoiceCallActivity;
 import com.marlon.apolo.tfinal2022.communicationAgora.voice.view.AgoraVoiceCallActivityPoc;
 import com.marlon.apolo.tfinal2022.databinding.FragmentBienvenidoBinding;
 import com.marlon.apolo.tfinal2022.individualChat.view.CrazyIndividualChatActivity;

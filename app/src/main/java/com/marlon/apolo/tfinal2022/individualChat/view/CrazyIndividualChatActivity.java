@@ -73,7 +73,6 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.citasTrabajo.view.NuevaCitaTrabajoActivity;
-import com.marlon.apolo.tfinal2022.communicationAgora.voice.view.AgoraOnlyVoiceCallActivity;
 import com.marlon.apolo.tfinal2022.communicationAgora.video.view.AgoraVideoCallActivity;
 import com.marlon.apolo.tfinal2022.communicationAgora.voice.view.AgoraVoiceCallActivityPoc;
 import com.marlon.apolo.tfinal2022.individualChat.adapters.SpecialMessageListAdapterPoc;

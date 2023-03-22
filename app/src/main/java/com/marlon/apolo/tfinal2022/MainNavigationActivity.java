@@ -321,6 +321,7 @@ public class MainNavigationActivity extends AppCompatActivity {
                 R.id.nav_empleadores,
                 R.id.nav_oficios,
                 R.id.nav_cerrar_sesion,
+                R.id.nav_iniciar_sesion,
                 R.id.nav_eliminar_cuenta,
                 R.id.nav_politica_priv,
                 R.id.nav_sobre_nos)
@@ -331,7 +332,7 @@ public class MainNavigationActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navigationView, navController);
 
         menu = navigationView.getMenu();
-        navLogin = menu.findItem(R.id.nav_iniciar_sesion);
+//        navLogin = menu.findItem(R.id.nav_iniciar_sesion);
         navPersonalData = menu.findItem(R.id.nav_datos_personales);
         navChats = menu.findItem(R.id.nav_chats);
         navCitas = menu.findItem(R.id.nav_citas);
@@ -529,10 +530,6 @@ public class MainNavigationActivity extends AppCompatActivity {
             textViewEmailOrPhone.setText(usuario.getEmail());
             textViewEmailOrPhone.setVisibility(View.VISIBLE);
         }
-        if (usuario.getCelular() != null) {
-            textViewEmailOrPhone.setText(usuario.getCelular());
-            textViewEmailOrPhone.setVisibility(View.VISIBLE);
-        }
     }
 
     private void setAdminUI() {
@@ -544,7 +541,7 @@ public class MainNavigationActivity extends AppCompatActivity {
         navEmpleadores.setVisible(true);
         navOficios.setVisible(true);
         navCerrarSesion.setVisible(true);
-        navIniciarSesion.setVisible(true);
+//        navIniciarSesion.setVisible(true);
         navIniciarSesion.setVisible(false);
         navEliminarCuenta.setVisible(true);
     }

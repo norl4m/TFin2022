@@ -53,9 +53,6 @@ public class EmpleadorCRUDListAdapter extends RecyclerView.Adapter<EmpleadorCRUD
         if (current.getEmail() != null) {
             holder.textViewContacto.setText(current.getEmail());
         }
-        if (current.getCelular() != null) {
-            holder.textViewContacto.setText(current.getCelular());
-        }
         /*Esto es una maravilla*/
         TypedValue typedValue = new TypedValue();
         contextInstance.getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);

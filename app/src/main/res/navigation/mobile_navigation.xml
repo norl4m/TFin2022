@@ -57,9 +57,14 @@
         android:name="com.marlon.apolo.tfinal2022.ui.sobreNosotros.InfoAppFragment"
         android:label="@string/menu_sobre_nosotros"
         tools:layout="@layout/info_app_fragment" />
+    <!--    <activity-->
+    <!--        android:id="@+id/nav_iniciar_sesion"-->
+    <!--        android:name="com.marlon.apolo.tfinal2022.login.LoginActivity"-->
+    <!--        android:label="@string/menu_iniciar_sesion"-->
+    <!--        tools:layout="@layout/activity_login" />-->
     <activity
         android:id="@+id/nav_iniciar_sesion"
-        android:name="com.marlon.apolo.tfinal2022.login.LoginActivity"
+        android:name="com.marlon.apolo.tfinal2022.login.LoginEmailPasswordActivity"
         android:label="@string/menu_iniciar_sesion"
         tools:layout="@layout/activity_login" />
     <!--    <fragment-->

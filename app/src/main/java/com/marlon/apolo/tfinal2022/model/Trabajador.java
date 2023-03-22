@@ -142,7 +142,6 @@ public class Trabajador extends Usuario {
 //                });
     }
 
-
     public void actualizarCita(Cita cita, DetalleServicioActivity detalleServicioActivity) {
 
         //ArrayList<String> idParticipants = cita.getParticipants();
@@ -240,9 +239,12 @@ public class Trabajador extends Usuario {
 
     }
 
+    public void crearOficio(OficioViewModel oficioViewModel, Activity activity, Oficio oficio) {
+        oficioViewModel.addOficioToFirebase(activity, oficio);
+    }
 
     @Override
-    public void registrarseEnFirebase(Activity activity, int metodoReg) {
+    public void registrarseEnFirebase(Activity activity) {
         SharedPreferences myPreferences = activity.getSharedPreferences("MyPreferences", MODE_PRIVATE);
 
         boolean adminFlag = myPreferences.getBoolean("adminFlag", false);
@@ -261,8 +263,7 @@ public class Trabajador extends Usuario {
                             Toast.makeText(activity, "Registro exitoso", Toast.LENGTH_LONG).show();
                             Log.d(TAG, "Registro de trabajador completado");
 
-                            switch (metodoReg) {
-                                case 1:/*email*/
+
 
                                     try {
                                         if (adminFlag) {
@@ -277,10 +278,9 @@ public class Trabajador extends Usuario {
                                     }
 //                                    RegWithEmailPasswordActivity regWithEmailPasswordActivity = (RegWithEmailPasswordActivity) activity;
 //                                    regWithEmailPasswordActivity.closeProgress();
-                                    break;
 
 
-                            }
+
 //                            if (adminFlag) {
 //                                signInAdmin(activity, myPreferences);
 //                            } else {
@@ -321,7 +321,7 @@ public class Trabajador extends Usuario {
     }
 
     @Override
-    public void registrarseEnFirebaseConFoto(Activity activity, int metodoReg) {
+    public void registrarseEnFirebaseConFoto(Activity activity) {
         Trabajador trabajadorReg = this;
         Log.d("TAG", "Trabajador");
         Log.d("TAG", "registrarseEnFirebaseConFoto");
@@ -386,7 +386,7 @@ public class Trabajador extends Usuario {
                     String message = "Finalizando registro...";
                     Uri downloadUri = task.getResult();
                     trabajadorReg.setFotoPerfil(downloadUri.toString());
-                    registrarseEnFirebase(activity, metodoReg);
+                    registrarseEnFirebase(activity);
                 } else {
                     // Handle failures
 
@@ -568,8 +568,4 @@ public class Trabajador extends Usuario {
                 .setValue(null);
     }
 
-
-    public void crearOficio(OficioViewModel oficioViewModel, Activity activity, Oficio oficio) {
-        oficioViewModel.addOficioToFirebase(activity, oficio);
-    }
 }

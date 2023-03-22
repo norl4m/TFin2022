@@ -23,6 +23,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.OpenableColumns;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
@@ -283,8 +284,17 @@ public class RegWithEmailPasswordActivity extends AppCompatActivity implements V
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 email = s.toString();
+
+                if (TextUtils.isEmpty(email)) {
+//                    textInputEditTextEmail.setError("Error: por favor ingrese un correo electrónico.");/*tambien funciona pero en el EDT*/
+                    textInputLayoutEmail.setError("Error: por favor ingrese un correo electrónico.");
+                } else {
+                    textInputLayoutEmail.setError(null);
+                }
+
                 try {
-                    if (!email.isEmpty() && !password.isEmpty()) {
+//                    if (!email.isEmpty() && !password.isEmpty()) {
+                    if (!email.isEmpty() && password.length() >= 6) {
                         buttonFinish.setEnabled(true);
                     } else {
                         buttonFinish.setEnabled(false);
@@ -292,6 +302,7 @@ public class RegWithEmailPasswordActivity extends AppCompatActivity implements V
                 } catch (Exception e) {
 
                 }
+
 
             }
 
@@ -320,8 +331,13 @@ public class RegWithEmailPasswordActivity extends AppCompatActivity implements V
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 password = s.toString();
+                if (TextUtils.isEmpty(password)) {
+                    textInputLayoutPassword.setError("Error: su clave o contraseña debe contener al menos 6 letras");
+                } else {
+                    textInputLayoutPassword.setError(null);
+                }
                 try {
-                    if (!email.isEmpty() && !password.isEmpty()) {
+                    if (!email.isEmpty() && password.length() >= 6) {
                         buttonFinish.setEnabled(true);
                     } else {
                         buttonFinish.setEnabled(false);
@@ -643,11 +659,11 @@ public class RegWithEmailPasswordActivity extends AppCompatActivity implements V
                         message = "Su cuenta ya casi está lista...";
                         showProgress(title, message);
 
-                        usuarioEmpleador.registrarseEnFirebaseConFoto(RegWithEmailPasswordActivity.this, 1);
+                        usuarioEmpleador.registrarseEnFirebaseConFoto(RegWithEmailPasswordActivity.this);
                     } else {
                         usuarioEmpleador.setFotoPerfil(null);
 //                        Toast.makeText(getApplicationContext(), usuarioTrabajador.toString(), Toast.LENGTH_LONG).show();
-                        usuarioEmpleador.registrarseEnFirebase(RegWithEmailPasswordActivity.this, 1);
+                        usuarioEmpleador.registrarseEnFirebase(RegWithEmailPasswordActivity.this);
                     }
                     break;
                 case 2:
@@ -687,11 +703,11 @@ public class RegWithEmailPasswordActivity extends AppCompatActivity implements V
                         message = "Su cuenta ya casi está lista...";
                         showProgress(title, message);
 
-                        usuarioTrabajador.registrarseEnFirebaseConFoto(RegWithEmailPasswordActivity.this, 1);
+                        usuarioTrabajador.registrarseEnFirebaseConFoto(RegWithEmailPasswordActivity.this);
                     } else {
                         usuarioTrabajador.setFotoPerfil(null);
 //                        Toast.makeText(getApplicationContext(), usuarioTrabajador.toString(), Toast.LENGTH_LONG).show();
-                        usuarioTrabajador.registrarseEnFirebase(RegWithEmailPasswordActivity.this, 1);
+                        usuarioTrabajador.registrarseEnFirebase(RegWithEmailPasswordActivity.this);
                     }
                     break;
             }

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE resources [<!ENTITY appname "Cachuelito"><!ENTITY  author "Marlon Apolo"><!ENTITY  empresa "NelectrogApps">]>
+<?xml version="1.0" encoding="utf-8"?><!DOCTYPE resources [<!ENTITY appname "Cachuelito"><!ENTITY  author "Marlon Apolo"><!ENTITY  empresa "NelectrogApps">]>
 
 <!--<!DOCTYPE resources [<!ENTITY appname "Cachuelito"><!ENTITY author "Marlon Apolo">]>-->
 <resources>
@@ -35,7 +34,9 @@
     <string name="slogan_text">La aplicación móvil que te permitirá conectarte con tus necesidades!.</string>
     <string name="citas_trabajo">Citas de trabajo</string>
     <!--    <string name="text_registro"><u><b>¿Eres nuevo? Regístrate ahora</b></u></string>-->
-    <string name="text_registro">¿Eres nuevo? Regístrate ahora</string>
+    <!--    <string name="text_registro">¿Eres nuevo? Regístrate ahora</string>-->
+    <string name="text_registro">¿Eres nuevo? Crea una cuenta</string>
+<!--    <string name="text_registro_2"><u>¿Eres nuevo? Crea una cuenta</u></string>-->
 
     <!--    <string name="iniciar_sesion">Iniciar sesión</string>-->
     <!--    MainActivity-->
@@ -45,7 +46,7 @@
     <string name="second_slide_title">Contáctalos por medio de \&appname;</string>
     <string name="third_slide_title">Establece un acuerdo con nuestros trabajadores y contrátalos de manera inmediata</string>
     <string name="fourth_slide_title">Regístrate y disfruta de una nueva forma de conectarte con tus necesidades</string>
-    <string name="iniciar_sesion_con_email">Iniciar sesión con email</string>
+    <string name="iniciar_sesion_con_email">Iniciar sesión</string>
     <string name="iniciar_sesion_con_google">Iniciar sesión con Google</string>
     <string name="iniciar_sesion_con_celular">Iniciar sesión con celular</string>
     <!--Comic Activity-->
@@ -565,5 +566,8 @@
     <string name="no_network">Please check your network connection and try again.</string>
     <string name="oficio_duplicado">Error: ya existe otro oficio registrado con ese nombre.</string>
     <string name="fotousuario">fotoUsuario</string>
+    <string name="omitir_init_sesion">Omitir inicio de sesión</string>
+    <string name="login_email_pasword">Iniciar sesión</string>
+    <string name="olvidaste_tu_contrase_a"><u>¿Olvidaste tu contraseña?</u></string>
 
 </resources>

@@ -5,9 +5,10 @@
         android:id="@+id/action_settings"
         android:orderInCategory="90"
         android:title="@string/action_settings"
+        android:visible="false"
         app:showAsAction="never" />
 
-<!--    <item-->
+    <!--    <item-->
     <!--        android:id="@+id/action_app_config"-->
     <!--        android:orderInCategory="80"-->
     <!--        android:title="Ajustes"-->

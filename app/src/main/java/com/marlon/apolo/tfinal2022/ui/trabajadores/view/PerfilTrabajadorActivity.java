@@ -37,7 +37,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.communicationAgora.video.view.AgoraVideoCallActivity;
-import com.marlon.apolo.tfinal2022.communicationAgora.voice.view.AgoraOnlyVoiceCallActivity;
 import com.marlon.apolo.tfinal2022.communicationAgora.voice.view.AgoraVoiceCallActivityPoc;
 import com.marlon.apolo.tfinal2022.individualChat.view.CrazyIndividualChatActivity;
 import com.marlon.apolo.tfinal2022.model.Administrador;
@@ -426,15 +425,6 @@ public class PerfilTrabajadorActivity extends AppCompatActivity {
                         textViewPhone.setVisibility(View.GONE);
                         linearLayoutEmail.setVisibility(View.VISIBLE);
                         linearLayoutPhone.setVisibility(View.GONE);
-                    }
-                    if (trabajador.getCelular() != null) {
-
-                        textViewPhone.setText(String.format("%s", trabajador.getCelular()));
-                        textViewEmail.setVisibility(View.GONE);
-                        textViewPhone.setVisibility(View.VISIBLE);
-
-                        linearLayoutEmail.setVisibility(View.GONE);
-                        linearLayoutPhone.setVisibility(View.VISIBLE);
                     }
 
 

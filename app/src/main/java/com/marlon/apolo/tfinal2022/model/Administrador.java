@@ -71,12 +71,12 @@ public class Administrador extends Usuario {
 
 
     @Override
-    public void registrarseEnFirebase(Activity activity, int metodoReg) {
+    public void registrarseEnFirebase(Activity activity) {
 
     }
 
     @Override
-    public void registrarseEnFirebaseConFoto(Activity activity, int metodoReg) {
+    public void registrarseEnFirebaseConFoto(Activity activity) {
 
     }
 
@@ -121,20 +121,20 @@ public class Administrador extends Usuario {
         oficioArchiViewModel.update(oficioArchiModelSelected, oficioArchiEditDeleteActivity, progressDialog);
     }
 
-    public void regEmpWithFoto(Usuario usuarioEmpleador, RegWithEmailPasswordActivityAdmin regWithEmailPasswordActivityAdmin, int i) {
-        usuarioEmpleador.registrarseEnFirebaseConFoto(regWithEmailPasswordActivityAdmin, 1);
+    public void regEmpWithFoto(Usuario usuarioEmpleador, RegWithEmailPasswordActivityAdmin regWithEmailPasswordActivityAdmin) {
+        usuarioEmpleador.registrarseEnFirebaseConFoto(regWithEmailPasswordActivityAdmin);
     }
 
-    public void regEmpNormal(Usuario usuarioEmpleador, RegWithEmailPasswordActivityAdmin regWithEmailPasswordActivityAdmin, int i) {
-        usuarioEmpleador.registrarseEnFirebase(regWithEmailPasswordActivityAdmin, 1);
+    public void regEmpNormal(Usuario usuarioEmpleador, RegWithEmailPasswordActivityAdmin regWithEmailPasswordActivityAdmin) {
+        usuarioEmpleador.registrarseEnFirebase(regWithEmailPasswordActivityAdmin);
     }
 
-    public void regTrabWithFoto(Usuario usuarioTrabajador, RegWithEmailPasswordActivityAdmin regWithEmailPasswordActivityAdmin, int i) {
-        usuarioTrabajador.registrarseEnFirebaseConFoto(regWithEmailPasswordActivityAdmin, 1);
+    public void regTrabWithFoto(Usuario usuarioTrabajador, RegWithEmailPasswordActivityAdmin regWithEmailPasswordActivityAdmin) {
+        usuarioTrabajador.registrarseEnFirebaseConFoto(regWithEmailPasswordActivityAdmin);
     }
 
-    public void regTraNormal(Usuario usuarioTrabajador, RegWithEmailPasswordActivityAdmin regWithEmailPasswordActivityAdmin, int i) {
-        usuarioTrabajador.registrarseEnFirebase(regWithEmailPasswordActivityAdmin, 1);
+    public void regTraNormal(Usuario usuarioTrabajador, RegWithEmailPasswordActivityAdmin regWithEmailPasswordActivityAdmin) {
+        usuarioTrabajador.registrarseEnFirebase(regWithEmailPasswordActivityAdmin);
 
     }
 }

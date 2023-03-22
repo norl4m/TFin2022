@@ -34,7 +34,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.communicationAgora.video.view.AgoraVideoCallActivity;
-import com.marlon.apolo.tfinal2022.communicationAgora.voice.view.AgoraOnlyVoiceCallActivity;
 import com.marlon.apolo.tfinal2022.communicationAgora.voice.view.AgoraVoiceCallActivityPoc;
 import com.marlon.apolo.tfinal2022.individualChat.view.CrazyIndividualChatActivity;
 import com.marlon.apolo.tfinal2022.model.Chat;
@@ -186,10 +185,6 @@ public class TrabajadorListAdapter extends RecyclerView.Adapter<TrabajadorListAd
 
         if (current.getEmail() != null) {
             holder.textViewContacto.setText(current.getEmail());
-        }
-        if (current.getCelular() != null) {
-            holder.textViewContacto.setText(current.getCelular());
-
         }
 
 

@@ -195,7 +195,7 @@ public class Empleador extends Usuario {
 
 
     @Override
-    public void registrarseEnFirebase(Activity activity, int metodoReg) {
+    public void registrarseEnFirebase(Activity activity) {
         SharedPreferences myPreferences = activity.getSharedPreferences("MyPreferences", MODE_PRIVATE);
 
         boolean adminFlag = myPreferences.getBoolean("adminFlag", false);
@@ -222,8 +222,7 @@ public class Empleador extends Usuario {
                             Log.d(TAG, "Registro de empleador completado");
                             sendEmailVerification(FirebaseAuth.getInstance(), activity);
 
-                            switch (metodoReg) {
-                                case 1:/*email*/
+
 //                                    RegWithEmailPasswordActivity regWithEmailPasswordActivity = (RegWithEmailPasswordActivity) activity;
 //                                    regWithEmailPasswordActivity.closeProgress();
                                     try {
@@ -237,11 +236,6 @@ public class Empleador extends Usuario {
                                     } catch (Exception e) {
 
                                     }
-
-                                    break;
-
-
-                            }
 
 
 //                            if (adminFlag) {
@@ -277,7 +271,7 @@ public class Empleador extends Usuario {
 
 
     @Override
-    public void registrarseEnFirebaseConFoto(Activity activity, int metodoReg) {
+    public void registrarseEnFirebaseConFoto(Activity activity) {
         Empleador empleadorReg = this;
         Log.d("TAG", "Empleador");
         Log.d("TAG", "registrarseEnFirebaseConFoto");
@@ -342,7 +336,7 @@ public class Empleador extends Usuario {
                     String message = "Finalizando registro...";
                     Uri downloadUri = task.getResult();
                     empleadorReg.setFotoPerfil(downloadUri.toString());
-                    registrarseEnFirebase(activity, metodoReg);
+                    registrarseEnFirebase(activity);
                 } else {
                     // Handle failures
 

@@ -155,10 +155,6 @@ public class TrabajadorCRUDListAdapter extends RecyclerView.Adapter<TrabajadorCR
         if (current.getEmail() != null) {
             holder.textViewContacto.setText(current.getEmail());
         }
-        if (current.getCelular() != null) {
-            holder.textViewContacto.setText(current.getCelular());
-        }
-
     }
 
     @Override

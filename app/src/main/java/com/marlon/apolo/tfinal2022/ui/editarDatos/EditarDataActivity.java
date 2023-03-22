@@ -153,10 +153,7 @@ public class EditarDataActivity extends AppCompatActivity implements View.OnClic
             textInputLayoutEmail.setVisibility(View.VISIBLE);
 
         }
-        if (usuarioEdt.getCelular() != null) {
-            textInputLayoutCelular.getEditText().setText(usuarioEdt.getCelular());
-            textInputLayoutCelular.setVisibility(View.VISIBLE);
-        }
+
         if (usuarioEdt.getFotoPerfil() != null) {
             Glide.with(EditarDataActivity.this)
                     .load(usuarioEdt.getFotoPerfil())
@@ -637,6 +634,7 @@ public class EditarDataActivity extends AppCompatActivity implements View.OnClic
                 Uri uriImageToSend = uriPhoto;
                 Glide.with(getApplicationContext()).load(uriPhoto).circleCrop().into(imageViewFoto);
                 // Toast.makeText(getApplicationContext(), uriPhoto.toString(), Toast.LENGTH_SHORT).show();
+                imageViewFoto.setColorFilter(null);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -651,6 +649,7 @@ public class EditarDataActivity extends AppCompatActivity implements View.OnClic
                 uriPhoto = imageUri;
                 Glide.with(getApplicationContext()).load(uriPhoto).circleCrop().into(imageViewFoto);
                 // Toast.makeText(getApplicationContext(), uriPhoto.toString(), Toast.LENGTH_SHORT).show();
+                imageViewFoto.setColorFilter(null);
 
             } catch (Exception e) {
                 e.printStackTrace();

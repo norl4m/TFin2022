@@ -392,10 +392,6 @@ public class DataUsuarioFragment extends Fragment implements View.OnClickListene
         if (usuario.getEmail() != null) {
             textInputLayoutEmail.getEditText().setText(usuario.getEmail());
         }
-
-        if (usuario.getCelular() != null) {
-            textInputLayoutCelular.getEditText().setText(usuario.getCelular());
-        }
     }
 
     @Override

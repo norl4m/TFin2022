@@ -99,11 +99,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.TFinal2022.NoActionBar" />
         <activity
-            android:name=".communicationAgora.voice.view.AgoraOnlyVoiceCallActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.TFinal2022.NoActionBar" />
-        <activity
             android:name=".communicationAgora.video.view.AgoraVideoCallActivity"
             android:exported="false"
             android:screenOrientation="portrait"

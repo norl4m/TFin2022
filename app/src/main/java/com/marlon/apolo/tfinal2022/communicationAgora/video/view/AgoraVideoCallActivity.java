@@ -293,17 +293,16 @@ public class AgoraVideoCallActivity extends AppCompatActivity implements PopupMe
                         linLytRemoteUser.setVisibility(View.GONE);
                         imageViewRemoteUser.setVisibility(View.GONE);
                         textViewRemoteUser.setVisibility(View.GONE);
-                    } else {
-                        //setupRemoteVideo(uid);
+                        textViewRemoteState.setVisibility(View.GONE);
                     }
                     if (muted && uid == remoteUid && flagexit >= 1) {
 //                        onRemoteUserVideoMuted(uid, muted);
                         linLytRemoteUser.setVisibility(View.VISIBLE);
                         imageViewRemoteUser.setVisibility(View.VISIBLE);
                         textViewRemoteUser.setVisibility(View.VISIBLE);
+                        textViewRemoteState.setVisibility(View.GONE);
                         onRemoteUserVideoMuted(uid, muted);
-                    } else {
-                        //setupRemoteVideo(uid);
+
                     }
 
                     flagexit++;

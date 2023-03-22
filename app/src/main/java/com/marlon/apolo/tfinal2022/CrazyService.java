@@ -43,7 +43,6 @@ import com.marlon.apolo.tfinal2022.citasTrabajo.receivers.AlarmReceiver;
 import com.marlon.apolo.tfinal2022.citasTrabajo.view.DetalleServicioActivity;
 import com.marlon.apolo.tfinal2022.communicationAgora.video.receivers.AcceptVideoCallBroadcastReceiver;
 import com.marlon.apolo.tfinal2022.communicationAgora.voice.receivers.AcceptVoiceCallBroadcastReceiver;
-import com.marlon.apolo.tfinal2022.communicationAgora.voice.view.AgoraOnlyVoiceCallActivity;
 import com.marlon.apolo.tfinal2022.communicationAgora.video.view.AgoraVideoCallActivity;
 import com.marlon.apolo.tfinal2022.communicationAgora.video.receivers.RejectVideoCallBroadcastReceiver;
 import com.marlon.apolo.tfinal2022.communicationAgora.voice.receivers.RejectVoiceCallBroadcastReceiver;

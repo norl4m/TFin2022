@@ -512,13 +512,13 @@ public class RegWithEmailPasswordActivityAdmin extends AppCompatActivity impleme
                                 title = "Por favor espere";
                                 message = "Su cuenta ya casi está lista...";
                                 showProgress(title, message);
-                                administrador.regEmpWithFoto(usuarioEmpleador, RegWithEmailPasswordActivityAdmin.this, 1);
+                                administrador.regEmpWithFoto(usuarioEmpleador, RegWithEmailPasswordActivityAdmin.this);
 //                                usuarioEmpleador.registrarseEnFirebaseConFoto(RegWithEmailPasswordActivityAdmin.this, 1);
                             } else {
                                 usuarioEmpleador.setFotoPerfil(null);
 //                        Toast.makeText(getApplicationContext(), usuarioTrabajador.toString(), Toast.LENGTH_LONG).show();
 //                                usuarioEmpleador.registrarseEnFirebase(RegWithEmailPasswordActivityAdmin.this, 1);
-                                administrador.regEmpNormal(usuarioEmpleador, RegWithEmailPasswordActivityAdmin.this, 1);
+                                administrador.regEmpNormal(usuarioEmpleador, RegWithEmailPasswordActivityAdmin.this);
 
                             }
                             break;
@@ -560,12 +560,12 @@ public class RegWithEmailPasswordActivityAdmin extends AppCompatActivity impleme
                                 message = "Su cuenta ya casi está lista...";
                                 showProgress(title, message);
 
-                                administrador.regTrabWithFoto(usuarioTrabajador, RegWithEmailPasswordActivityAdmin.this, 1);
+                                administrador.regTrabWithFoto(usuarioTrabajador, RegWithEmailPasswordActivityAdmin.this);
 //                                usuarioTrabajador.registrarseEnFirebaseConFoto(RegWithEmailPasswordActivityAdmin.this, 1);
                             } else {
                                 usuarioTrabajador.setFotoPerfil(null);
 //                        Toast.makeText(getApplicationContext(), usuarioTrabajador.toString(), Toast.LENGTH_LONG).show();
-                                administrador.regTraNormal(usuarioTrabajador, RegWithEmailPasswordActivityAdmin.this, 1);
+                                administrador.regTraNormal(usuarioTrabajador, RegWithEmailPasswordActivityAdmin.this);
 
 //                                usuarioTrabajador.registrarseEnFirebase(RegWithEmailPasswordActivityAdmin.this, 1);
                             }

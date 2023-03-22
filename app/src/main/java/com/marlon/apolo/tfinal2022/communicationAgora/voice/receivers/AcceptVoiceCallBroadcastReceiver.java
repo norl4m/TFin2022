@@ -8,7 +8,6 @@ import android.widget.Toast;
 
 import androidx.core.app.NotificationManagerCompat;
 
-import com.marlon.apolo.tfinal2022.communicationAgora.voice.view.AgoraOnlyVoiceCallActivity;
 import com.marlon.apolo.tfinal2022.communicationAgora.voice.view.AgoraVoiceCallActivityPoc;
 import com.marlon.apolo.tfinal2022.model.LlamadaVoz;
 
