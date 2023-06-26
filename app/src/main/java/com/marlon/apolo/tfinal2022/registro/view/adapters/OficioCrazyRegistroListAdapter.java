@@ -1,4 +1,4 @@
-package com.marlon.apolo.tfinal2022.registro.adapters;
+package com.marlon.apolo.tfinal2022.registro.view.adapters;
 
 import android.content.Context;
 import android.util.Log;

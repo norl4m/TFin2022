@@ -17,20 +17,40 @@
  */
 package com.marlon.apolo.tfinal2022.puntoEntrada.view;
 
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK;
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+import static com.google.android.play.core.install.model.AppUpdateType.IMMEDIATE;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.util.TypedValue;
+import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.play.core.appupdate.AppUpdateInfo;
+import com.google.android.play.core.appupdate.AppUpdateManager;
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
+import com.google.android.play.core.install.InstallState;
+import com.google.android.play.core.install.InstallStateUpdatedListener;
+import com.google.android.play.core.install.model.AppUpdateType;
+import com.google.android.play.core.install.model.InstallStatus;
+import com.google.android.play.core.install.model.UpdateAvailability;
+import com.google.android.play.core.tasks.Task;
 import com.marlon.apolo.tfinal2022.BuildConfig;
 import com.marlon.apolo.tfinal2022.MainNavigationActivity;
 import com.marlon.apolo.tfinal2022.R;
@@ -46,6 +66,8 @@ import com.marlon.apolo.tfinal2022.infoInicial.view.InformacionInicialActivity;
 public class MainActivity extends AppCompatActivity {
 
     private final static int TIME_SPLASH = 2500;
+    private static final int MY_REQUEST_CODE = 2000;
+    private AppUpdateManager appUpdateManager;
 
 
     /**
@@ -88,18 +110,58 @@ public class MainActivity extends AppCompatActivity {
         imageViewLogo.setColorFilter(colorNight);
         /*Esto es una maravilla*/
 
+        // Creates instance of the manager.
+        appUpdateManager = AppUpdateManagerFactory.create(this);
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (getInfoInicialActivityFlag()) {
-                    startActivity(new Intent(MainActivity.this, MainNavigationActivity.class));
-                } else {
-                    startActivity(new Intent(MainActivity.this, InformacionInicialActivity.class));
-                }
-                finish();
+// Returns an intent object that you use to check for an update.
+        Task<AppUpdateInfo> appUpdateInfoTask = appUpdateManager.getAppUpdateInfo();
+
+// Checks that the platform will allow the specified type of update.
+        appUpdateInfoTask.addOnSuccessListener(appUpdateInfo -> {
+            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+                    // For a flexible update, use AppUpdateType.FLEXIBLE
+                    && appUpdateInfo.isUpdateTypeAllowed(IMMEDIATE)) {
+                // Request the update.
+                Log.d("TAG", "EXISTE UNA ACTUALIZACIÓN");
+                requestUpdate(appUpdateInfo);
+            } else {
+                Log.d("TAG", "App actualizada");
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (getInfoInicialActivityFlag()) {
+                            startActivity(new Intent(MainActivity.this, MainNavigationActivity.class));
+                        } else {
+                            startActivity(new Intent(MainActivity.this, InformacionInicialActivity.class));
+                        }
+                        finish();
+                    }
+                }, TIME_SPLASH);
             }
-        }, TIME_SPLASH);
+        });
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                if (getInfoInicialActivityFlag()) {
+//                    startActivity(new Intent(MainActivity.this, MainNavigationActivity.class));
+//                } else {
+//                    startActivity(new Intent(MainActivity.this, InformacionInicialActivity.class));
+//                }
+//                finish();
+//            }
+//        }, TIME_SPLASH);
+        // Checks whether the platform allows the specified type of update,
+// and current version staleness.
+//        appUpdateInfoTask.addOnSuccessListener(appUpdateInfo -> {
+//            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+//                    && appUpdateInfo.clientVersionStalenessDays() != null
+//                    && appUpdateInfo.clientVersionStalenessDays() >= DAYS_FOR_FLEXIBLE_UPDATE
+//                    && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)) {
+//                // Request the update.
+//            }
+//        });
+
+
     }
 
     /**
@@ -117,5 +179,174 @@ public class MainActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
+    public void requestUpdate(AppUpdateInfo appUpdateInfo) {
+        // Create a listener to track request state updates.
+        InstallStateUpdatedListener listener = state -> {
+            // (Optional) Provide a download progress bar.
+            if (state.installStatus() == InstallStatus.DOWNLOADING) {
+                long bytesDownloaded = state.bytesDownloaded();
+                long totalBytesToDownload = state.totalBytesToDownload();
+                // Implement progress bar.
+                if (bytesDownloaded == totalBytesToDownload) {
+                    //finishAffinity();
+                    //startActivity(new Intent(this, MainActivity.class));
+                }
+            }
+            onStateUpdate(state);
+            // Log state or install the update.
+        };
+
+// Before starting an update, register a listener for updates.
+        appUpdateManager.registerListener(listener);
+
+// Start an update.
+
+// When status updates are no longer needed, unregister the listener.
+//        appUpdateManager.unregisterListener(listener);
+
+
+        try {
+            appUpdateManager.startUpdateFlowForResult(
+                    // Pass the intent that is returned by 'getAppUpdateInfo()'.
+                    appUpdateInfo,
+                    // Or 'AppUpdateType.FLEXIBLE' for flexible updates.
+                    AppUpdateType.IMMEDIATE,
+                    // The current activity making the update request.
+                    this,
+                    // Include a request code to later monitor this update request.
+                    MY_REQUEST_CODE);
+        } catch (IntentSender.SendIntentException e) {
+            e.printStackTrace();
+            Toast.makeText(this, this.getString(R.string.error_inesperado), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    public void onStateUpdate(InstallState state) {
+        if (state.installStatus() == InstallStatus.DOWNLOADED) {
+            // After the update is downloaded, show a notification
+            // and request user confirmation to restart the app.
+            popupSnackbarForCompleteUpdate();
+        }
+
+    }
+
+    /* Displays the snackbar notification and call to action. */
+    private void popupSnackbarForCompleteUpdate() {
+        Snackbar snackbar =
+                Snackbar.make(
+                        findViewById(R.id.imageViewLogo),
+                        "Se acaba de descargar una actualización..",
+                        Snackbar.LENGTH_INDEFINITE);
+        snackbar.setAction("Reiniciar", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                appUpdateManager.completeUpdate();
+                restartApp();
+
+            }
+        });
+        snackbar.setActionTextColor(
+                getResources().getColor(R.color.teal_200));
+        snackbar.show();
+    }
+
+    private void restartApp() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (getInfoInicialActivityFlag()) {
+                    startActivity(new Intent(MainActivity.this, MainNavigationActivity.class));
+                } else {
+                    startActivity(new Intent(MainActivity.this, InformacionInicialActivity.class));
+                }
+                finish();
+            }
+        }, TIME_SPLASH);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == MY_REQUEST_CODE) {
+            if (resultCode != RESULT_OK) {
+                Log.d("TAG", "Update flow failed! Result code: " + resultCode);
+                // If the update is cancelled or fails,
+                // you can request to start the update again.
+                alertDialogConfirmar();
+                //requestUpdate(appUpdateInfoRequest);
+
+            }
+        }
+    }
+
+    public void alertDialogConfirmar() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Para continuar utilizando la aplicación por favor descargue la última versión.")
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // START THE GAME!
+                        finish();
+                    }
+                });
+        // Create the AlertDialog object and return it
+        builder.create();
+        builder.show();
+    }
+
+    // Checks that the update is not stalled during 'onResume()'.
+// However, you should execute this check at all entry points into the app.
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//
+//        appUpdateManager
+//                .getAppUpdateInfo()
+//                .addOnSuccessListener(
+//                        appUpdateInfo -> {
+//                            if (appUpdateInfo.updateAvailability()
+//                                    == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {
+//                                // If an in-app update is already running, resume the update.
+//                                try {
+//                                    appUpdateManager.startUpdateFlowForResult(
+//                                            appUpdateInfo,
+//                                            IMMEDIATE,
+//                                            this,
+//                                            MY_REQUEST_CODE);
+//                                } catch (IntentSender.SendIntentException e) {
+//                                    e.printStackTrace();
+//                                }
+//                            }
+//                        });
+//    }
+
+
+    // Checks that the update is not stalled during 'onResume()'.
+// However, you should execute this check at all entry points into the app.
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//
+//        appUpdateManager
+//                .getAppUpdateInfo()
+//                .addOnSuccessListener(
+//                        appUpdateInfo -> {
+//
+//                            if (appUpdateInfo.updateAvailability()
+//                                    == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {
+//                                // If an in-app update is already running, resume the update.
+//                                try {
+//                                    appUpdateManager.startUpdateFlowForResult(
+//                                            appUpdateInfo,
+//                                            IMMEDIATE,
+//                                            this,
+//                                            MY_REQUEST_CODE);
+//                                } catch (IntentSender.SendIntentException e) {
+//                                    e.printStackTrace();
+//                                    Toast.makeText(this, this.getString(R.string.error_inesperado), Toast.LENGTH_SHORT).show();
+//                                }
+//                            }
+//                        });
+//    }
 
 }

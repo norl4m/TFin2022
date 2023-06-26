@@ -46,19 +46,19 @@ public class OficioArchiVistaListAdapter extends RecyclerView.Adapter<OficioArch
         if (mWords != null) {
             Oficio current = mWords.get(position);
             holder.wordItemView.setText(current.getNombre());
-            int itemsColor = ContextCompat.getColor(contextInstance, R.color.white);
-            holder.wordItemView.setTextColor(itemsColor);
-            Drawable[] itrems = new Drawable[]{
-//                    AppCompatResources.getDrawable(contextInstance, R.drawable.bg9),
-                    AppCompatResources.getDrawable(contextInstance, R.drawable.bg10),
-                    AppCompatResources.getDrawable(contextInstance, R.drawable.bg11),
-                    AppCompatResources.getDrawable(contextInstance, R.drawable.bg12)
-            };
-            final int min = 0;
-            final int max = itrems.length - 1;
-            int random = new Random().nextInt((max - min) + 1) + min;
-            holder.itemView.setBackground(itrems[random]);
-            holder.imageView.setColorFilter(itemsColor);
+//            int itemsColor = ContextCompat.getColor(contextInstance, R.color.white);
+//            holder.wordItemView.setTextColor(itemsColor);
+//            Drawable[] itrems = new Drawable[]{
+////                    AppCompatResources.getDrawable(contextInstance, R.drawable.bg9),
+//                    AppCompatResources.getDrawable(contextInstance, R.drawable.bg10),
+//                    AppCompatResources.getDrawable(contextInstance, R.drawable.bg11),
+//                    AppCompatResources.getDrawable(contextInstance, R.drawable.bg12)
+//            };
+//            final int min = 0;
+//            final int max = itrems.length - 1;
+//            int random = new Random().nextInt((max - min) + 1) + min;
+//            holder.itemView.setBackground(itrems[random]);
+//            holder.imageView.setColorFilter(itemsColor);
             if (current.getUriPhoto() != null) {
                 Glide.with(contextInstance)
                         .load(current.getUriPhoto())

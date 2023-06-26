@@ -37,7 +37,6 @@ import com.marlon.apolo.tfinal2022.ui.empleadores.viewModel.EmpleadorViewModel;
 import com.marlon.apolo.tfinal2022.ui.trabajadores.viewModel.TrabajadorViewModel;
 
 
-
 import java.util.ArrayList;
 
 public class ChatFragment extends Fragment {
@@ -53,6 +52,7 @@ public class ChatFragment extends Fragment {
     private EmpleadorViewModel empleadorViewModel;
     private TrabajadorViewModel trabajadorViewModel;
     //    private ChatListAdapter chatListAdapter;
+//    private ChatListAdapterPoc chatListAdapterPoc;
     private ChatListAdapterPoc chatListAdapterPoc;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -71,6 +71,7 @@ public class ChatFragment extends Fragment {
         empleadorViewModel = new ViewModelProvider(this).get(EmpleadorViewModel.class);
         trabajadorViewModel = new ViewModelProvider(this).get(TrabajadorViewModel.class);
 //        chatListAdapter = new ChatListAdapter(requireActivity());
+//        chatListAdapterPoc = new ChatListAdapterPoc(requireActivity());
         chatListAdapterPoc = new ChatListAdapterPoc(requireActivity());
         chatListAdapterPoc.setActivityInstance(requireActivity());
 

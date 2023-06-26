@@ -1,4 +1,4 @@
-package com.marlon.apolo.tfinal2022.buscador.adapters;
+package com.marlon.apolo.tfinal2022.buscador.view.adapters;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -57,13 +57,7 @@ public class TrabajadorListAdapterBuscador extends RecyclerView.Adapter<Trabajad
     private List<Trabajador> trabajadorsAux;
     private List<Oficio> oficioList;
     private List<Chat> chatList;
-    private String TAG;
     private Dialog dialogVar;
-
-    public void setUsuarioFrom(Usuario usuarioFrom) {
-        this.usuarioFrom = usuarioFrom;
-    }
-
     private Usuario usuarioFrom;
 
     public TrabajadorListAdapterBuscador(Context context) {
@@ -71,115 +65,6 @@ public class TrabajadorListAdapterBuscador extends RecyclerView.Adapter<Trabajad
         this.inflater = LayoutInflater.from(context);
         trabajadorsAux = new ArrayList<>();
 
-    }
-
-    public TrabajadorListAdapterBuscador(Context context, ArrayList<Oficio> oficioArrayList) {
-        this.context = context;
-        this.inflater = LayoutInflater.from(context);
-        oficioList = oficioArrayList;
-    }
-
-    @NonNull
-    @Override
-    public TrabajadorViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = inflater.inflate(R.layout.card_view_presentacion_trabajador_buscardor_bar, parent, false);
-        return new TrabajadorViewHolder(itemView);
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull TrabajadorViewHolder holder, int position) {
-        Trabajador current = trabajadorsAux.get(position);
-        holder.textViewNombre.setText(String.format("%s %s", current.getNombre(), current.getApellido()));
-        if (current.getFotoPerfil() != null) {
-//            Glide.with(context).load(current.getFotoPerfil()).placeholder(R.drawable.ic_baseline_person_24).circleCrop().into(holder.imageViewTrabajador);
-            holder.imageViewTrabajador.setColorFilter(null);
-
-            Glide
-                    .with(context)
-                    .load(current.getFotoPerfil())
-                    .circleCrop()
-                    .apply(new RequestOptions().override(200, 300))
-                    .placeholder(R.drawable.ic_baseline_person_24)
-                    .transition(DrawableTransitionOptions.withCrossFade())
-                    .into(holder.imageViewTrabajador);
-        } else {
-//            Glide
-//                    .with(context)
-//                    .load(ContextCompat.getDrawable(context, R.drawable.ic_baseline_person_24))
-//                    .placeholder(R.drawable.ic_baseline_person_24)
-//                    .into(holder.imageViewTrabajador);
-
-            TypedValue typedValue = new TypedValue();
-            context.getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
-            int colorPrimary = typedValue.data;
-            Glide.with(context).load(ContextCompat.getDrawable(context, R.drawable.ic_user_tra_emp)).placeholder(R.drawable.ic_user_tra_emp).into(holder.imageViewTrabajador);
-            holder.imageViewTrabajador.setColorFilter(colorPrimary);
-        }
-        Log.d(TAG, current.toString());
-
-
-        ArrayList<Oficio> oficiosFiltrados = new ArrayList<>();
-        for (Oficio o : oficioList) {
-            if (current.getIdOficios().contains(o.getIdOficio())) {
-//                ArrayList<Habilidad> habilidadsFiltradas = new ArrayList<>();
-//                ArrayList<Habilidad> habilidads = new ArrayList<>();
-//                habilidads = o.getHabilidadArrayList();
-//                o.setHabilidadArrayList(new ArrayList<>());
-//                try {
-//                    for (Habilidad h : habilidads) {
-//                        if (current.getIdHabilidades().contains(h.getIdHabilidad())) {
-//                            habilidadsFiltradas.add(h);
-//                        }
-//                    }
-//                    o.setHabilidadArrayList(habilidadsFiltradas);
-//                } catch (Exception e) {
-//                    Log.d(TAG, e.toString());
-//                }
-                oficiosFiltrados.add(o);
-            }
-        }
-
-
-        OficioTrabajadorVistaMiniListAdapter oficioTrabajadorVistaListAdapter = new OficioTrabajadorVistaMiniListAdapter(context);
-        holder.recyclerViewOficios.setAdapter(oficioTrabajadorVistaListAdapter);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
-
-        holder.recyclerViewOficios.setLayoutManager(layoutManager);
-        oficioTrabajadorVistaListAdapter.setOficios(oficiosFiltrados);
-//        oficioTrabajadorVistaListAdapter.setOficios(oficioList);
-//        oficioViewModel.getAllOficios().observe((LifecycleOwner) context, oficioRegistroListAdapter::setOficios);
-
-//        holder.textViewCalif.setText(String.format("Calificación: %.2f " + "/ 5.00", current.getCalificacion()));
-//        holder.textViewCalif.setText(String.format("Calificación: %.1f " + "/ 5.0", current.getCalificacion()));
-//        holder.textViewCalif.setText(String.format(Locale.getDefault(), " %.1f ", current.getCalificacion()));
-//        holder.ratingBar.setRating((float) current.getCalificacion());
-
-
-        if (current.getCalificacion() > 0.0) {
-//            holder.textViewCalif.setText(String.format(Locale.getDefault(), " %.1f ", current.getCalificacion()));
-            holder.ratingBar.setRating((float) current.getCalificacion());
-//            holder.ratingBar.setVisibility(View.VISIBLE);
-
-
-        } else {
-//            holder.textViewCalif.setText(String.format("*%s %s %s", current.getNombre(), current.getApellido(), context.getString(R.string.text_no_trabajo)));
-//            holder.ratingBar.setRating((float) current.getCalificacion());
-//            holder.ratingBar.setVisibility(View.GONE);
-        }
-
-
-        if (current.getEmail() != null) {
-            holder.textViewContacto.setText(current.getEmail());
-        }
-
-
-    }
-
-    @Override
-    public int getItemCount() {
-        if (trabajadorsAux != null)
-            return trabajadorsAux.size();
-        else return 0;
     }
 
     public List<Trabajador> getTrabajadors() {
@@ -251,7 +136,7 @@ public class TrabajadorListAdapterBuscador extends RecyclerView.Adapter<Trabajad
                 }
             }
             for (Trabajador tr : trabajadorsAux) {
-                Log.d(TAG, tr.getNombre().toString());
+//                Log.d(TAG, tr.getNombre().toString());
             }
             HashSet<Trabajador> hs = new HashSet<Trabajador>(trabajadorsAux);
             trabajadorsAux.clear();
@@ -262,93 +147,9 @@ public class TrabajadorListAdapterBuscador extends RecyclerView.Adapter<Trabajad
         notifyDataSetChanged();
     }
 
-
     public void setChatList(List<Chat> chatList) {
         this.chatList = chatList;
     }
-
-
-    public class TrabajadorViewHolder extends RecyclerView.ViewHolder {
-        private final TextView textViewNombre;
-        private final TextView textViewCalif;
-        private final RecyclerView recyclerViewOficios;
-        private final ImageView imageViewTrabajador;
-        private RatingBar ratingBar;
-        private final TextView textViewContacto;
-        private RelativeLayout relativeLayout;
-
-
-        public TrabajadorViewHolder(@NonNull View itemView) {
-            super(itemView);
-            textViewNombre = itemView.findViewById(R.id.textViewNombre);
-            relativeLayout = itemView.findViewById(R.id.elements);
-            textViewCalif = itemView.findViewById(R.id.textViewCalificacion);
-            recyclerViewOficios = itemView.findViewById(R.id.recyclerViewOficios);
-            imageViewTrabajador = itemView.findViewById(R.id.imageViewTrabajador);
-            ratingBar = itemView.findViewById(R.id.ratingBar);
-            textViewContacto = itemView.findViewById(R.id.textViewContacto);
-//            imageViewTrabajador.setOnClickListener(new View.OnClickListener() {
-//            itemView.setOnClickListener(new View.OnClickListener() {
-            recyclerViewOficios.setOnClickListener(test);
-            itemView.setOnClickListener(test);
-            relativeLayout.setOnClickListener(test);
-            textViewNombre.setOnClickListener(test);
-//            relativeLayout.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//
-////                    Toast.makeText(context, "AAAA", Toast.LENGTH_LONG).show();
-//                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-//                    if (user != null) {
-//                        SharedPreferences myPreferences = context.getSharedPreferences("MyPreferences", MODE_PRIVATE);
-//                        int usuario = myPreferences.getInt("usuario", -1);
-//
-//                        switch (usuario) {
-//                            case 0:/*admin*/
-//                            case 1:/*empleador*/
-//                                opcionesTrabajadorDialog(trabajadorsAux.get(getAbsoluteAdapterPosition()));
-//                                break;
-//                            case 2:
-//                                break;
-//                        }
-//                    } else {
-//                        alertDialogInfo();
-//                    }
-//                    //opcionesTrabajadorDialog(trabajadors.get(getAdapterPosition()));
-//
-//                }
-//            });
-
-
-        }
-
-        View.OnClickListener test = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-//                    Toast.makeText(context, "AAAA", Toast.LENGTH_LONG).show();
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                if (user != null) {
-                    SharedPreferences myPreferences = context.getSharedPreferences("MyPreferences", MODE_PRIVATE);
-                    int usuario = myPreferences.getInt("usuario", -1);
-
-                    switch (usuario) {
-                        case 0:/*admin*/
-                        case 1:/*empleador*/
-                            opcionesTrabajadorDialog(trabajadorsAux.get(getAdapterPosition()));
-                            break;
-                        case 2:
-                            break;
-                    }
-                } else {
-                    alertDialogInfo();
-                }
-                //opcionesTrabajadorDialog(trabajadors.get(getAdapterPosition()));
-
-            }
-        };
-    }
-
 
     public void opcionesTrabajadorDialog(Trabajador trabajador) {
 
@@ -584,7 +385,6 @@ public class TrabajadorListAdapterBuscador extends RecyclerView.Adapter<Trabajad
         dialogVar.show();
     }
 
-
     public void alertDialogInfo() {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         // Get the layout inflater
@@ -623,5 +423,195 @@ public class TrabajadorListAdapterBuscador extends RecyclerView.Adapter<Trabajad
 //        this.trabajadors = trabajadors;
         this.trabajadorsAux = trabajadors;
     }
+
+    public void setUsuarioFrom(Usuario usuarioFrom) {
+        this.usuarioFrom = usuarioFrom;
+    }
+
+
+    @NonNull
+    @Override
+    public TrabajadorViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View itemView = inflater.inflate(R.layout.card_view_presentacion_trabajador_buscardor_bar, parent, false);
+        return new TrabajadorViewHolder(itemView);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull TrabajadorViewHolder holder, int position) {
+        Trabajador current = trabajadorsAux.get(position);
+        holder.textViewNombre.setText(String.format("%s %s", current.getNombre(), current.getApellido()));
+        if (current.getFotoPerfil() != null) {
+//            Glide.with(context).load(current.getFotoPerfil()).placeholder(R.drawable.ic_baseline_person_24).circleCrop().into(holder.imageViewTrabajador);
+            holder.imageViewTrabajador.setColorFilter(null);
+
+            Glide
+                    .with(context)
+                    .load(current.getFotoPerfil())
+                    .circleCrop()
+                    .apply(new RequestOptions().override(200, 300))
+                    .placeholder(R.drawable.ic_baseline_person_24_color_app)
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .into(holder.imageViewTrabajador);
+        } else {
+//            Glide
+//                    .with(context)
+//                    .load(ContextCompat.getDrawable(context, R.drawable.ic_baseline_person_24))
+//                    .placeholder(R.drawable.ic_baseline_person_24)
+//                    .into(holder.imageViewTrabajador);
+
+            TypedValue typedValue = new TypedValue();
+            context.getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
+            int colorPrimary = typedValue.data;
+            Glide.with(context).load(ContextCompat.getDrawable(context, R.drawable.ic_user_tra_emp)).placeholder(R.drawable.ic_user_tra_emp).into(holder.imageViewTrabajador);
+            holder.imageViewTrabajador.setColorFilter(colorPrimary);
+        }
+//        Log.d(TAG, current.toString());
+
+
+        ArrayList<Oficio> oficiosFiltrados = new ArrayList<>();
+        for (Oficio o : oficioList) {
+            if (current.getIdOficios().contains(o.getIdOficio())) {
+//                ArrayList<Habilidad> habilidadsFiltradas = new ArrayList<>();
+//                ArrayList<Habilidad> habilidads = new ArrayList<>();
+//                habilidads = o.getHabilidadArrayList();
+//                o.setHabilidadArrayList(new ArrayList<>());
+//                try {
+//                    for (Habilidad h : habilidads) {
+//                        if (current.getIdHabilidades().contains(h.getIdHabilidad())) {
+//                            habilidadsFiltradas.add(h);
+//                        }
+//                    }
+//                    o.setHabilidadArrayList(habilidadsFiltradas);
+//                } catch (Exception e) {
+//                    Log.d(TAG, e.toString());
+//                }
+                oficiosFiltrados.add(o);
+            }
+        }
+
+
+        OficioTrabajadorVistaMiniListAdapter oficioTrabajadorVistaListAdapter = new OficioTrabajadorVistaMiniListAdapter(context);
+        holder.recyclerViewOficios.setAdapter(oficioTrabajadorVistaListAdapter);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+
+        holder.recyclerViewOficios.setLayoutManager(layoutManager);
+        oficioTrabajadorVistaListAdapter.setOficios(oficiosFiltrados);
+//        oficioTrabajadorVistaListAdapter.setOficios(oficioList);
+//        oficioViewModel.getAllOficios().observe((LifecycleOwner) context, oficioRegistroListAdapter::setOficios);
+
+//        holder.textViewCalif.setText(String.format("Calificación: %.2f " + "/ 5.00", current.getCalificacion()));
+//        holder.textViewCalif.setText(String.format("Calificación: %.1f " + "/ 5.0", current.getCalificacion()));
+//        holder.textViewCalif.setText(String.format(Locale.getDefault(), " %.1f ", current.getCalificacion()));
+//        holder.ratingBar.setRating((float) current.getCalificacion());
+
+
+        if (current.getCalificacion() > 0.0) {
+//            holder.textViewCalif.setText(String.format(Locale.getDefault(), " %.1f ", current.getCalificacion()));
+            holder.ratingBar.setRating((float) current.getCalificacion());
+//            holder.ratingBar.setVisibility(View.VISIBLE);
+
+
+        } else {
+//            holder.textViewCalif.setText(String.format("*%s %s %s", current.getNombre(), current.getApellido(), context.getString(R.string.text_no_trabajo)));
+//            holder.ratingBar.setRating((float) current.getCalificacion());
+//            holder.ratingBar.setVisibility(View.GONE);
+        }
+
+
+        if (current.getEmail() != null) {
+            holder.textViewContacto.setText(current.getEmail());
+        }
+
+
+    }
+
+    @Override
+    public int getItemCount() {
+        if (trabajadorsAux != null)
+            return trabajadorsAux.size();
+        else return 0;
+    }
+
+    public class TrabajadorViewHolder extends RecyclerView.ViewHolder {
+        private final TextView textViewNombre;
+        private final TextView textViewCalif;
+        private final RecyclerView recyclerViewOficios;
+        private final ImageView imageViewTrabajador;
+        private RatingBar ratingBar;
+        private final TextView textViewContacto;
+        private RelativeLayout relativeLayout;
+        private View.OnClickListener test = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+//                    Toast.makeText(context, "AAAA", Toast.LENGTH_LONG).show();
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                if (user != null) {
+                    SharedPreferences myPreferences = context.getSharedPreferences("MyPreferences", MODE_PRIVATE);
+                    int usuario = myPreferences.getInt("usuario", -1);
+
+                    switch (usuario) {
+                        case 0:/*admin*/
+                        case 1:/*empleador*/
+                            opcionesTrabajadorDialog(trabajadorsAux.get(getAdapterPosition()));
+                            break;
+                        case 2:
+                            break;
+                    }
+                } else {
+                    alertDialogInfo();
+                }
+                //opcionesTrabajadorDialog(trabajadors.get(getAdapterPosition()));
+
+            }
+        };
+
+
+        public TrabajadorViewHolder(@NonNull View itemView) {
+            super(itemView);
+            textViewNombre = itemView.findViewById(R.id.textViewNombre);
+            relativeLayout = itemView.findViewById(R.id.elements);
+            textViewCalif = itemView.findViewById(R.id.textViewCalificacion);
+            recyclerViewOficios = itemView.findViewById(R.id.recyclerViewOficios);
+            imageViewTrabajador = itemView.findViewById(R.id.imageViewTrabajador);
+            ratingBar = itemView.findViewById(R.id.ratingBar);
+            textViewContacto = itemView.findViewById(R.id.textViewContacto);
+//            imageViewTrabajador.setOnClickListener(new View.OnClickListener() {
+//            itemView.setOnClickListener(new View.OnClickListener() {
+            recyclerViewOficios.setOnClickListener(test);
+            itemView.setOnClickListener(test);
+            relativeLayout.setOnClickListener(test);
+            textViewNombre.setOnClickListener(test);
+//            relativeLayout.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//
+////                    Toast.makeText(context, "AAAA", Toast.LENGTH_LONG).show();
+//                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+//                    if (user != null) {
+//                        SharedPreferences myPreferences = context.getSharedPreferences("MyPreferences", MODE_PRIVATE);
+//                        int usuario = myPreferences.getInt("usuario", -1);
+//
+//                        switch (usuario) {
+//                            case 0:/*admin*/
+//                            case 1:/*empleador*/
+//                                opcionesTrabajadorDialog(trabajadorsAux.get(getAbsoluteAdapterPosition()));
+//                                break;
+//                            case 2:
+//                                break;
+//                        }
+//                    } else {
+//                        alertDialogInfo();
+//                    }
+//                    //opcionesTrabajadorDialog(trabajadors.get(getAdapterPosition()));
+//
+//                }
+//            });
+
+
+        }
+
+    }
+
 }
 

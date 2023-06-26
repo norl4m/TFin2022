@@ -36,7 +36,7 @@
     <!--    <string name="text_registro"><u><b>¿Eres nuevo? Regístrate ahora</b></u></string>-->
     <!--    <string name="text_registro">¿Eres nuevo? Regístrate ahora</string>-->
     <string name="text_registro">¿Eres nuevo? Crea una cuenta</string>
-<!--    <string name="text_registro_2"><u>¿Eres nuevo? Crea una cuenta</u></string>-->
+    <!--    <string name="text_registro_2"><u>¿Eres nuevo? Crea una cuenta</u></string>-->
 
     <!--    <string name="iniciar_sesion">Iniciar sesión</string>-->
     <!--    MainActivity-->
@@ -396,9 +396,9 @@
     </string>
     <string name="text_error_conexion_internet_pero_si_datos">
         \n
-        Atención: sus datos móviles están siendo utilizador por la aplicación.
+        Atención: sus datos móviles están siendo utilizados por la aplicación.
         \n\n
-        Se recomienda al usuario que utilice una red Wifi para completar el proceso de registro debido a que,
+        Se recomienda al usuario que utilice una red Wifi para completar el proceso de registro, debido a que
         los datos móviles imponen un valor adicional por cada transacción.
         \n\n
         ¿Le gustaría continuar con el proceso de registro?
@@ -414,7 +414,7 @@
     </string>
     <string name="text_select_trabjador_no_login">
         \n
-        Para continuar por favor inicie sesión dentro de la aplicación.
+        Para continuar por favor inicie sesión.
     </string>
     <string name="channel_name">Notificación desde Firebase</string>
     <string name="channel_description">Notificación de mensaje</string>
@@ -569,5 +569,11 @@
     <string name="omitir_init_sesion">Omitir inicio de sesión</string>
     <string name="login_email_pasword">Iniciar sesión</string>
     <string name="olvidaste_tu_contrase_a"><u>¿Olvidaste tu contraseña?</u></string>
+    <string name="elimiar_cuenta_email">
+        Lamentamos que te vayas. Una vez que se elimine su cuenta, todo su contenido desaparecerá de forma permanente,
+        incluido su perfil, mensajes, fotos, notas de voz y cualquier otro contenido almacenado en su cuenta de &appname;.
+        Si no está seguro de esto, le sugerimos comunicarse con marlon@gmail.com en su lugar.
+        Para continuar, por favor ingrese su clave o contraseña.
+    </string>
 
 </resources>

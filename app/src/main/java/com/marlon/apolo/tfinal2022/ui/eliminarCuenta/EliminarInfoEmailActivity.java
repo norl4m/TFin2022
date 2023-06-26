@@ -4,10 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -15,8 +17,11 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,16 +55,36 @@ public class EliminarInfoEmailActivity extends AppCompatActivity implements View
     private ProgressDialog progressDialog;
     private AlertDialog dialogInfo;
 
+    private void hideSystemBars() {
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        hideSystemBars();
         setContentView(R.layout.activity_eliminar_info_email);
 
 
+//        TypedValue typedValue = new TypedValue();
+//        this.getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
+//        int colorNight = typedValue.data;
+//        ((ImageView) findViewById(R.id.acLoginImageViewLogo)).setColorFilter(colorNight);
+
+
         TypedValue typedValue = new TypedValue();
-        this.getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
-        int colorNight = typedValue.data;
-        ((ImageView) findViewById(R.id.acLoginImageViewLogo)).setColorFilter(colorNight);
+        getTheme().resolveAttribute(R.attr.colorOnPrimary, typedValue, true);
+        int colorOnPrimary = typedValue.data;
+
+        ScrollView scrollView = findViewById(R.id.scrollView);
+        LinearLayout linearLayout = findViewById(R.id.linLytBack);
+
+
+        Drawable drawable = ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background);
+        drawable.setTint(colorOnPrimary);
+        scrollView.setBackground(drawable);
+
+        linearLayout.setBackgroundColor(colorOnPrimary);
 
 
         firebaseAuth = FirebaseAuth.getInstance();
@@ -131,6 +156,9 @@ public class EliminarInfoEmailActivity extends AppCompatActivity implements View
         textInputEditTextEmail = findViewById(R.id.editTextEmail);
         textInputEditTextPassword = findViewById(R.id.editTextPassword);
 
+
+        textInputEditTextEmail.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+        email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
         textInputEditTextEmail.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -141,9 +169,9 @@ public class EliminarInfoEmailActivity extends AppCompatActivity implements View
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 email = s.toString();
                 if (!email.isEmpty() && !password.isEmpty()) {
-                    buttonEliminar.setEnabled(true);
+//                    buttonEliminar.setEnabled(true);
                 } else {
-                    buttonEliminar.setEnabled(false);
+//                    buttonEliminar.setEnabled(false);
                 }
             }
 
@@ -162,7 +190,7 @@ public class EliminarInfoEmailActivity extends AppCompatActivity implements View
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 password = s.toString();
-                if (!email.isEmpty() && !password.isEmpty()) {
+                if (!password.isEmpty()) {
                     buttonEliminar.setEnabled(true);
                 } else {
                     buttonEliminar.setEnabled(false);

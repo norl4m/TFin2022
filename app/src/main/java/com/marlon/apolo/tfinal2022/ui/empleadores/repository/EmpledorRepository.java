@@ -45,7 +45,7 @@ public class EmpledorRepository {
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 try {
                     Empleador empleador = snapshot.getValue(Empleador.class);
-                    Log.e(TAG, empleador.toString());
+                    //Log.e(TAG, empleador.toString());
                     empleadorArrayList.add(empleador);
                     mAllEmpleadores.setValue(empleadorArrayList);
                 } catch (Exception e) {

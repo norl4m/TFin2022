@@ -55,7 +55,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.admin.viewModel.AdminViewModel;
-import com.marlon.apolo.tfinal2022.citasTrabajo.adapters.CitaListAdapter;
+import com.marlon.apolo.tfinal2022.citasTrabajo.view.adapters.CitaListAdapter;
 import com.marlon.apolo.tfinal2022.citasTrabajo.viewModel.CitaViewModel;
 import com.marlon.apolo.tfinal2022.communicationAgora.video.view.AgoraVideoCallActivity;
 import com.marlon.apolo.tfinal2022.communicationAgora.voice.view.AgoraVoiceCallActivityPoc;

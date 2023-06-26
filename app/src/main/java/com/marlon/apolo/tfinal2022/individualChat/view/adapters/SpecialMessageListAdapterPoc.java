@@ -1,4 +1,4 @@
-package com.marlon.apolo.tfinal2022.individualChat.adapters;
+package com.marlon.apolo.tfinal2022.individualChat.view.adapters;
 
 import android.app.Activity;
 import android.content.Intent;

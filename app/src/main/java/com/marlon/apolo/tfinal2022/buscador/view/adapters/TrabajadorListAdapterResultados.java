@@ -1,4 +1,4 @@
-package com.marlon.apolo.tfinal2022.buscador.adapters;
+package com.marlon.apolo.tfinal2022.buscador.view.adapters;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -52,18 +52,10 @@ public class TrabajadorListAdapterResultados extends RecyclerView.Adapter<Trabaj
     private Context context;
     private LayoutInflater inflater;
     private List<Trabajador> trabajadors;
-    //    private List<Trabajador> trabajadorsAux;
     private List<Oficio> oficioList;
     private List<Chat> chatList;
     private List<Cita> citaList;
-
-    private String TAG;
     private Dialog dialogVar;
-
-    public void setUsuarioFrom(Usuario usuarioFrom) {
-        this.usuarioFrom = usuarioFrom;
-    }
-
     private Usuario usuarioFrom;
 
     public TrabajadorListAdapterResultados(Context context) {
@@ -71,167 +63,6 @@ public class TrabajadorListAdapterResultados extends RecyclerView.Adapter<Trabaj
         this.inflater = LayoutInflater.from(context);
 //        trabajadorsAux = new ArrayList<>();
 
-    }
-
-    public TrabajadorListAdapterResultados(Context context, ArrayList<Oficio> oficioArrayList) {
-        this.context = context;
-        this.inflater = LayoutInflater.from(context);
-        oficioList = oficioArrayList;
-    }
-
-
-    public List<Cita> getCitaList() {
-        return citaList;
-    }
-
-    public void setCitaList(List<Cita> citaList) {
-        this.citaList = citaList;
-    }
-
-    @NonNull
-    @Override
-    public TrabajadorViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = inflater.inflate(R.layout.card_view_presentacion_trabajador, parent, false);
-        return new TrabajadorViewHolder(itemView);
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull TrabajadorViewHolder holder, int position) {
-        Trabajador current = trabajadors.get(position);
-
-        holder.textViewComplete.setVisibility(View.GONE);
-        holder.textViewInComplete.setVisibility(View.GONE);
-        holder.textViewNoAssit.setVisibility(View.GONE);
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            SharedPreferences myPreferences = context.getSharedPreferences("MyPreferences", MODE_PRIVATE);
-            int usuario = myPreferences.getInt("usuario", -1);
-
-            switch (usuario) {
-                case 0:/*admin*/
-                case 1:/*empleador*/
-                    holder.textViewComplete.setVisibility(View.VISIBLE);
-                    holder.textViewInComplete.setVisibility(View.VISIBLE);
-                    holder.textViewNoAssit.setVisibility(View.VISIBLE);
-                    break;
-                case 2:
-                    break;
-            }
-        } else {
-            holder.textViewComplete.setVisibility(View.GONE);
-            holder.textViewInComplete.setVisibility(View.GONE);
-            holder.textViewNoAssit.setVisibility(View.GONE);
-
-        }
-
-        holder.textViewNombre.setText(String.format("%s %s", current.getNombre(), current.getApellido()));
-        if (current.getFotoPerfil() != null) {
-            holder.imageViewTrabajador.setColorFilter(null);
-
-            Glide.with(context).load(current.getFotoPerfil()).placeholder(R.drawable.ic_baseline_person_24).circleCrop().into(holder.imageViewTrabajador);
-        } else {
-            TypedValue typedValue = new TypedValue();
-            context.getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
-            int colorPrimary = typedValue.data;
-            Glide.with(context).load(ContextCompat.getDrawable(context, R.drawable.ic_user_tra_emp)).placeholder(R.drawable.ic_user_tra_emp).into(holder.imageViewTrabajador);
-            holder.imageViewTrabajador.setColorFilter(colorPrimary);
-        }
-        Log.d(TAG, current.toString());
-
-
-        ArrayList<Oficio> oficiosFiltrados = new ArrayList<>();
-        for (Oficio o : oficioList) {
-            if (current.getIdOficios().contains(o.getIdOficio())) {
-
-                oficiosFiltrados.add(o);
-            }
-        }
-
-
-        OficioTrabajadorVistaListAdapter oficioTrabajadorVistaListAdapter = new OficioTrabajadorVistaListAdapter(context);
-        holder.recyclerViewOficios.setAdapter(oficioTrabajadorVistaListAdapter);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
-
-        holder.recyclerViewOficios.setLayoutManager(layoutManager);
-        oficioTrabajadorVistaListAdapter.setOficios(oficiosFiltrados);
-
-
-        if (current.getCalificacion() > 0.0) {
-            holder.textViewCalif.setText(String.format("Calificación: %.1f " + "/ 5.0", current.getCalificacion()));
-            holder.ratingBar.setRating((float) current.getCalificacion());
-            holder.ratingBar.setVisibility(View.VISIBLE);
-
-
-        } else {
-            holder.textViewCalif.setText(String.format("%s %s %s", current.getNombre(), current.getApellido(), context.getString(R.string.text_no_trabajo)));
-//            holder.ratingBar.setRating((float) current.getCalificacion());
-            holder.ratingBar.setVisibility(View.GONE);
-        }
-
-        if (current.getEmail() != null) {
-            holder.textViewContacto.setText(current.getEmail());
-        }
-
-
-        try {
-
-            ArrayList<Cita> citaArrayListNoAsist = new ArrayList<>();
-            ArrayList<Cita> citaArrayListIncomple = new ArrayList<>();
-            ArrayList<Cita> citaArrayList = new ArrayList<>();
-            for (Cita data : citaList) {
-                Cita citaDB = data;
-                Log.d(TAG, citaDB.toString());
-                if (citaDB.getFrom().equals(current.getIdUsuario())) {
-
-
-                    if (citaDB.isState()) {
-                        citaArrayList.add(citaDB);
-                    }
-
-                    try {
-
-                        switch (citaDB.getObservaciones()) {
-                            case "Trabajador no asistió":
-                                citaArrayListNoAsist.add(citaDB);
-                                break;
-                            case "Trabajador incumplido":
-                                citaArrayListIncomple.add(citaDB);
-                                break;
-                            case "Ninguna":
-                            default:
-//                            mnuFin.setVisible(true);
-//                            mnuFin.setVisible(!citaLocal.isState());
-
-                                //mnuEliminarCita.setVisible(true);
-                                //editCita.setVisible(true);
-                                break;
-                        }
-                    } catch (Exception e) {
-                        //mnuFin.setVisible(true);
-                        Log.d(TAG, e.toString());
-                    }
-                }
-            }
-
-            holder.textViewComplete.setText("Trabajos completados: " + String.valueOf(citaArrayList.size()));
-            holder.textViewInComplete.setText("Trabajos incompletos: " + String.valueOf(citaArrayListIncomple.size()));
-            holder.textViewNoAssit.setText("Trabajos no asistidos: " + String.valueOf(citaArrayListNoAsist.size()));
-
-        } catch (Exception e) {
-            Log.d(TAG, e.toString());
-            holder.textViewComplete.setText("Trabajos completados: " + "0");
-            holder.textViewInComplete.setText("Trabajos incompletos: " + "0");
-            holder.textViewNoAssit.setText("Trabajos no asistidos: " + "0");
-
-        }
-
-    }
-
-    @Override
-    public int getItemCount() {
-        if (trabajadors != null)
-            return trabajadors.size();
-        else return 0;
     }
 
     public List<Trabajador> getTrabajadors() {
@@ -243,65 +74,17 @@ public class TrabajadorListAdapterResultados extends RecyclerView.Adapter<Trabaj
         notifyDataSetChanged();
     }
 
+    public void setUsuarioFrom(Usuario usuarioFrom) {
+        this.usuarioFrom = usuarioFrom;
+    }
+
+    public void setCitaList(List<Cita> citaList) {
+        this.citaList = citaList;
+    }
 
     public void setChatList(List<Chat> chatList) {
         this.chatList = chatList;
     }
-
-
-    public class TrabajadorViewHolder extends RecyclerView.ViewHolder {
-        private final TextView textViewNombre;
-        private final TextView textViewCalif;
-        private final RecyclerView recyclerViewOficios;
-        private final ImageView imageViewTrabajador;
-        private RatingBar ratingBar;
-        private final TextView textViewContacto;
-        private final TextView textViewComplete;
-        private final TextView textViewInComplete;
-        private final TextView textViewNoAssit;
-
-        public TrabajadorViewHolder(@NonNull View itemView) {
-            super(itemView);
-            textViewNombre = itemView.findViewById(R.id.textViewNombre);
-            textViewCalif = itemView.findViewById(R.id.textViewCalificacion);
-            recyclerViewOficios = itemView.findViewById(R.id.recyclerViewOficios);
-            imageViewTrabajador = itemView.findViewById(R.id.imageViewTrabajador);
-            ratingBar = itemView.findViewById(R.id.ratingBar);
-            textViewContacto = itemView.findViewById(R.id.textViewContacto);
-
-            textViewComplete = itemView.findViewById(R.id.textViewTrabComple);
-            textViewInComplete = itemView.findViewById(R.id.textViewTrabIncom);
-            textViewNoAssit = itemView.findViewById(R.id.textViewNoAsist);
-//            imageViewTrabajador.setOnClickListener(new View.OnClickListener() {
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                    if (user != null) {
-                        SharedPreferences myPreferences = context.getSharedPreferences("MyPreferences", MODE_PRIVATE);
-                        int usuario = myPreferences.getInt("usuario", -1);
-
-                        switch (usuario) {
-                            case 0:/*admin*/
-                            case 1:/*empleador*/
-                                opcionesTrabajadorDialog(trabajadors.get(getAdapterPosition()));
-                                break;
-                            case 2:
-                                break;
-                        }
-                    } else {
-                        alertDialogInfo();
-                    }
-                    //opcionesTrabajadorDialog(trabajadors.get(getAdapterPosition()));
-
-                }
-            });
-
-
-        }
-    }
-
 
     public void opcionesTrabajadorDialog(Trabajador trabajador) {
 
@@ -339,9 +122,11 @@ public class TrabajadorListAdapterResultados extends RecyclerView.Adapter<Trabaj
 //
 
         textView.setText(String.format("%s %s", trabajador.getNombre(), trabajador.getApellido()));
+
+
         if (trabajador.getFotoPerfil() != null) {
 
-
+            imageView.setColorFilter(null);
             Glide
                     .with(context)
                     .load(trabajador.getFotoPerfil())
@@ -470,7 +255,6 @@ public class TrabajadorListAdapterResultados extends RecyclerView.Adapter<Trabaj
         dialogVar.show();
     }
 
-
     public void alertDialogInfo() {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         // Get the layout inflater
@@ -504,6 +288,207 @@ public class TrabajadorListAdapterResultados extends RecyclerView.Adapter<Trabaj
     public void setOficioList(List<Oficio> oficioList) {
         this.oficioList = oficioList;
     }
+
+    @NonNull
+    @Override
+    public TrabajadorViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View itemView = inflater.inflate(R.layout.card_view_presentacion_trabajador, parent, false);
+        return new TrabajadorViewHolder(itemView);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull TrabajadorViewHolder holder, int position) {
+        Trabajador current = trabajadors.get(position);
+
+        holder.textViewComplete.setVisibility(View.GONE);
+        holder.textViewInComplete.setVisibility(View.GONE);
+        holder.textViewNoAssit.setVisibility(View.GONE);
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            SharedPreferences myPreferences = context.getSharedPreferences("MyPreferences", MODE_PRIVATE);
+            int usuario = myPreferences.getInt("usuario", -1);
+
+            switch (usuario) {
+                case 0:/*admin*/
+                case 1:/*empleador*/
+                    holder.textViewComplete.setVisibility(View.VISIBLE);
+                    holder.textViewInComplete.setVisibility(View.VISIBLE);
+                    holder.textViewNoAssit.setVisibility(View.VISIBLE);
+                    break;
+                case 2:
+                    break;
+            }
+        } else {
+            holder.textViewComplete.setVisibility(View.GONE);
+            holder.textViewInComplete.setVisibility(View.GONE);
+            holder.textViewNoAssit.setVisibility(View.GONE);
+
+        }
+
+        holder.textViewNombre.setText(String.format("%s %s", current.getNombre(), current.getApellido()));
+        if (current.getFotoPerfil() != null) {
+            holder.imageViewTrabajador.setColorFilter(null);
+
+            Glide.with(context).load(current.getFotoPerfil()).placeholder(R.drawable.ic_baseline_person_24_color_app).circleCrop().into(holder.imageViewTrabajador);
+        } else {
+            TypedValue typedValue = new TypedValue();
+            context.getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
+            int colorPrimary = typedValue.data;
+            Glide.with(context).load(ContextCompat.getDrawable(context, R.drawable.ic_user_tra_emp)).placeholder(R.drawable.ic_user_tra_emp).into(holder.imageViewTrabajador);
+            holder.imageViewTrabajador.setColorFilter(colorPrimary);
+        }
+//        Log.d(TAG, current.toString());
+
+
+        ArrayList<Oficio> oficiosFiltrados = new ArrayList<>();
+        for (Oficio o : oficioList) {
+            if (current.getIdOficios().contains(o.getIdOficio())) {
+
+                oficiosFiltrados.add(o);
+            }
+        }
+
+
+        OficioTrabajadorVistaListAdapter oficioTrabajadorVistaListAdapter = new OficioTrabajadorVistaListAdapter(context);
+        holder.recyclerViewOficios.setAdapter(oficioTrabajadorVistaListAdapter);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+
+        holder.recyclerViewOficios.setLayoutManager(layoutManager);
+        oficioTrabajadorVistaListAdapter.setOficios(oficiosFiltrados);
+
+
+        if (current.getCalificacion() > 0.0) {
+            holder.textViewCalif.setText(String.format("Calificación: %.1f " + "/ 5.0", current.getCalificacion()));
+            holder.ratingBar.setRating((float) current.getCalificacion());
+            holder.ratingBar.setVisibility(View.VISIBLE);
+
+
+        } else {
+            holder.textViewCalif.setText(String.format("%s %s %s", current.getNombre(), current.getApellido(), context.getString(R.string.text_no_trabajo)));
+//            holder.ratingBar.setRating((float) current.getCalificacion());
+            holder.ratingBar.setVisibility(View.GONE);
+        }
+
+        if (current.getEmail() != null) {
+            holder.textViewContacto.setText(current.getEmail());
+        }
+
+
+        try {
+
+            ArrayList<Cita> citaArrayListNoAsist = new ArrayList<>();
+            ArrayList<Cita> citaArrayListIncomple = new ArrayList<>();
+            ArrayList<Cita> citaArrayList = new ArrayList<>();
+            for (Cita data : citaList) {
+                Cita citaDB = data;
+//                Log.d(TAG, citaDB.toString());
+                if (citaDB.getFrom().equals(current.getIdUsuario())) {
+
+
+                    if (citaDB.isState()) {
+                        citaArrayList.add(citaDB);
+                    }
+
+                    try {
+
+                        switch (citaDB.getObservaciones()) {
+                            case "Trabajador no asistió":
+                                citaArrayListNoAsist.add(citaDB);
+                                break;
+                            case "Trabajador incumplido":
+                                citaArrayListIncomple.add(citaDB);
+                                break;
+                            case "Ninguna":
+                            default:
+//                            mnuFin.setVisible(true);
+//                            mnuFin.setVisible(!citaLocal.isState());
+
+                                //mnuEliminarCita.setVisible(true);
+                                //editCita.setVisible(true);
+                                break;
+                        }
+                    } catch (Exception e) {
+                        //mnuFin.setVisible(true);
+//                        Log.d(TAG, e.toString());
+                    }
+                }
+            }
+
+            holder.textViewComplete.setText("Trabajos completados: " + String.valueOf(citaArrayList.size()));
+            holder.textViewInComplete.setText("Trabajos incompletos: " + String.valueOf(citaArrayListIncomple.size()));
+            holder.textViewNoAssit.setText("Trabajos no asistidos: " + String.valueOf(citaArrayListNoAsist.size()));
+
+        } catch (Exception e) {
+//            Log.d(TAG, e.toString());
+            holder.textViewComplete.setText("Trabajos completados: " + "0");
+            holder.textViewInComplete.setText("Trabajos incompletos: " + "0");
+            holder.textViewNoAssit.setText("Trabajos no asistidos: " + "0");
+
+        }
+
+    }
+
+    @Override
+    public int getItemCount() {
+        if (trabajadors != null)
+            return trabajadors.size();
+        else return 0;
+    }
+
+
+    public class TrabajadorViewHolder extends RecyclerView.ViewHolder {
+        private final TextView textViewNombre;
+        private final TextView textViewCalif;
+        private final RecyclerView recyclerViewOficios;
+        private final ImageView imageViewTrabajador;
+        private RatingBar ratingBar;
+        private final TextView textViewContacto;
+        private final TextView textViewComplete;
+        private final TextView textViewInComplete;
+        private final TextView textViewNoAssit;
+
+        public TrabajadorViewHolder(@NonNull View itemView) {
+            super(itemView);
+            textViewNombre = itemView.findViewById(R.id.textViewNombre);
+            textViewCalif = itemView.findViewById(R.id.textViewCalificacion);
+            recyclerViewOficios = itemView.findViewById(R.id.recyclerViewOficios);
+            imageViewTrabajador = itemView.findViewById(R.id.imageViewTrabajador);
+            ratingBar = itemView.findViewById(R.id.ratingBar);
+            textViewContacto = itemView.findViewById(R.id.textViewContacto);
+
+            textViewComplete = itemView.findViewById(R.id.textViewTrabComple);
+            textViewInComplete = itemView.findViewById(R.id.textViewTrabIncom);
+            textViewNoAssit = itemView.findViewById(R.id.textViewNoAsist);
+//            imageViewTrabajador.setOnClickListener(new View.OnClickListener() {
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    if (user != null) {
+                        SharedPreferences myPreferences = context.getSharedPreferences("MyPreferences", MODE_PRIVATE);
+                        int usuario = myPreferences.getInt("usuario", -1);
+
+                        switch (usuario) {
+                            case 0:/*admin*/
+                            case 1:/*empleador*/
+                                opcionesTrabajadorDialog(trabajadors.get(getAdapterPosition()));
+                                break;
+                            case 2:
+                                break;
+                        }
+                    } else {
+                        alertDialogInfo();
+                    }
+                    //opcionesTrabajadorDialog(trabajadors.get(getAdapterPosition()));
+
+                }
+            });
+
+
+        }
+    }
+
 
 }
 

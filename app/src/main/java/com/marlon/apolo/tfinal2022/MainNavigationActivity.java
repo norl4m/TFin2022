@@ -45,7 +45,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.marlon.apolo.tfinal2022.admin.viewModel.AdminViewModel;
 import com.marlon.apolo.tfinal2022.buscador.view.BuscadorActivity;
-import com.marlon.apolo.tfinal2022.config.ConfiguracionActivity;
 import com.marlon.apolo.tfinal2022.databinding.ActivityMainNavigationBinding;
 import com.marlon.apolo.tfinal2022.individualChat.model.MensajeNube;
 import com.marlon.apolo.tfinal2022.model.Chat;
@@ -543,7 +542,8 @@ public class MainNavigationActivity extends AppCompatActivity {
         navCerrarSesion.setVisible(true);
 //        navIniciarSesion.setVisible(true);
         navIniciarSesion.setVisible(false);
-        navEliminarCuenta.setVisible(true);
+//        navEliminarCuenta.setVisible(true);
+        navEliminarCuenta.setVisible(false);
     }
 
     public void setTrabajadorUI() {
@@ -600,7 +600,7 @@ public class MainNavigationActivity extends AppCompatActivity {
 //                startActivity(new Intent(MainNavigationActivity.this, AgoraVideoCallActivity.class));
 
 
-                startActivity(new Intent(MainNavigationActivity.this, ConfiguracionActivity.class));
+//                startActivity(new Intent(MainNavigationActivity.this, ConfiguracionActivity.class));
 //                startActivity(new Intent(MainNavigationActivity.this, SettingsActivity.class));
                 break;
             case R.id.mnu_nav_search:

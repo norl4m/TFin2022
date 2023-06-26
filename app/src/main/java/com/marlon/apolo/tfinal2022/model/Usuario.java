@@ -203,70 +203,76 @@ public abstract class Usuario implements Serializable {
                 String baseReference = "gs://tfinal2022-afc91.appspot.com";
                 String imagePath = baseReference + "/" + locationToFirebase + "/" + usuarioUpdate.getIdUsuario() + "/" + "fotoPerfil.jpg";
                 Log.d(TAG, "Path reference on fireStorage");
-                StorageReference storageRef = storage.getReferenceFromUrl(imagePath);
+                Log.d(TAG, "Path reference on fireStorage"+Uri.parse(usuarioUpdate.getFotoPerfil()));
+                if (usuarioUpdate.getFotoPerfil().contains("https://")){
+                    updateNormalInfo(locationToFirebase, activity, metodoReg, password, usuarioUpdate, progressDialog);
+                }else {
+                    StorageReference storageRef = storage.getReferenceFromUrl(imagePath);
 
-                UploadTask uploadTask = storageRef.putFile(Uri.parse(usuarioUpdate.getFotoPerfil()), metadata);
+                    UploadTask uploadTask = storageRef.putFile(Uri.parse(usuarioUpdate.getFotoPerfil()), metadata);
 
-                // Listen for state changes, errors, and completion of the upload.
-                uploadTask.addOnProgressListener(taskSnapshot -> {
-                    double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-                    Log.d(TAG, "Upload is " + progress + "% done");
+                    // Listen for state changes, errors, and completion of the upload.
+                    uploadTask.addOnProgressListener(taskSnapshot -> {
+                        double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                        Log.d(TAG, "Upload is " + progress + "% done");
 
-                }).addOnPausedListener(new OnPausedListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onPaused(UploadTask.TaskSnapshot taskSnapshot) {
-                        Log.d(TAG, "Upload is paused");
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        // Handle unsuccessful uploads
-                        Log.d(TAG, "on failure Foto complete...");
-                        try {
-                            progressDialog.dismiss();
-                        } catch (Exception e) {
-                            Log.d(TAG, e.toString());
+                    }).addOnPausedListener(new OnPausedListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onPaused(UploadTask.TaskSnapshot taskSnapshot) {
+                            Log.d(TAG, "Upload is paused");
                         }
-                        Toast.makeText(activity, activity.getString(R.string.error_inesperado), Toast.LENGTH_LONG).show();
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            // Handle unsuccessful uploads
+                            Log.d(TAG, "on failure Foto complete...");
+                            try {
+                                progressDialog.dismiss();
+                            } catch (Exception e) {
+                                Log.d(TAG, e.toString());
+                            }
+                            Toast.makeText(activity, activity.getString(R.string.error_inesperado), Toast.LENGTH_LONG).show();
 
-
-                    }
-                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        // Handle successful uploads on complete
-                        // ...
-                        Log.d(TAG, "Upload is complete...");
-                        //  registroActivity.limpiarUI();
-                    }
-                }).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                    @Override
-                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                        if (!task.isSuccessful()) {
-                            throw task.getException();
-                        }
-
-                        // Continue with the task to get the download URL
-                        return storageRef.getDownloadUrl();
-                    }
-                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Uri> task) {
-                        if (task.isSuccessful()) {
-                            /*Tercer mensaje*/
-                            String title = "Por favor espere";
-                            String message = "Finalizando registro...";
-                            Uri downloadUri = task.getResult();
-                            usuarioUpdate.setFotoPerfil(downloadUri.toString());
-
-                            updateNormalInfo(locationToFirebase, activity, metodoReg, password, usuarioUpdate, progressDialog);
-
-                        } else {
-                            // Handle failures
 
                         }
-                    }
-                });
+                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            // Handle successful uploads on complete
+                            // ...
+                            Log.d(TAG, "Upload is complete...");
+                            //  registroActivity.limpiarUI();
+                        }
+                    }).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                        @Override
+                        public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                            if (!task.isSuccessful()) {
+                                throw task.getException();
+                            }
+
+                            // Continue with the task to get the download URL
+                            return storageRef.getDownloadUrl();
+                        }
+                    }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Uri> task) {
+                            if (task.isSuccessful()) {
+                                /*Tercer mensaje*/
+                                String title = "Por favor espere";
+                                String message = "Finalizando registro...";
+                                Uri downloadUri = task.getResult();
+                                usuarioUpdate.setFotoPerfil(downloadUri.toString());
+
+                                updateNormalInfo(locationToFirebase, activity, metodoReg, password, usuarioUpdate, progressDialog);
+
+                            } else {
+                                // Handle failures
+
+                            }
+                        }
+                    });
+                }
+
             }
         } else {
             updateNormalInfo(locationToFirebase, activity, metodoReg, password, usuarioUpdate, progressDialog);

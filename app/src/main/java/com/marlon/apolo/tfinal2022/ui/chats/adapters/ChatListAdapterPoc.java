@@ -58,6 +58,7 @@ public class ChatListAdapterPoc extends RecyclerView.Adapter<ChatListAdapterPoc.
     private Activity activityInstance;
     private LayoutInflater inflater;
     private List<ChatPocData> chats;
+    private List<ChatPocData> chatsSeleccionados;
     private Usuario usuarioFrom;
     private RecyclerView recyclerView;
     private SparseBooleanArray seleccionados;
@@ -69,12 +70,14 @@ public class ChatListAdapterPoc extends RecyclerView.Adapter<ChatListAdapterPoc.
     private Dialog dialogVar;
     private int selectedItemPosition;
     private int crazyPosition;
+    private String colorSelect = "#FF0000";
 
     public ChatListAdapterPoc(Context context) {
         selectedItemPosition = -1;
         this.context = context;
         this.inflater = LayoutInflater.from(context);
         seleccionados = new SparseBooleanArray();
+        chatsSeleccionados = new ArrayList<>();
         modoSeleccion = false;
     }
 
@@ -105,6 +108,7 @@ public class ChatListAdapterPoc extends RecyclerView.Adapter<ChatListAdapterPoc.
     public void onBindViewHolder(@NonNull ChatListAdapterViewHolder holder, int position) {
         ChatPocData current = chats.get(position);
         //Log.d(TAG,current.toString());
+        holder.itemView.setBackgroundColor(Color.TRANSPARENT);
 
         if (current.getStateRemoteUser() != null)
             if (current.getStateRemoteUser().equals("eliminado"))
@@ -171,35 +175,39 @@ public class ChatListAdapterPoc extends RecyclerView.Adapter<ChatListAdapterPoc.
             holder.imageViewEstadoLectura.setColorFilter(context.getResources().getColor(R.color.purple_700));
         }
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (modoSeleccion) {
-                    selectedItemPosition = position;
-                    notifyDataSetChanged();
-                    chatListAdapterViewHolderSelected = new ChatListAdapterPoc.ChatListAdapterViewHolder(holder.itemView);
-                } else {
-                    crazyPosition = position;
-                    ChatPocData chat = chats.get(crazyPosition);
-                    //Toast.makeText(context, chat.toString(), Toast.LENGTH_LONG).show();
-//                    Intent intent = new Intent(context, IndividualChatActivity.class);
-                    Intent intent = new Intent(context, CrazyIndividualChatActivity.class);
-                    //intent.putExtra("chat", chat);
-                    intent.putExtra("idRemoteUser", chat.getIdRemoteUser());
-                    intent.putExtra("stateRemoteUser", chat.getStateRemoteUser());
-                    context.startActivity(intent);
-                }
-            }
-        });
-//
-        if (modoSeleccion) {
+        /*************/
+//        holder.itemView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (modoSeleccion) {
+//                    selectedItemPosition = position;
+//                    notifyDataSetChanged();
+//                    chatListAdapterViewHolderSelected = new ChatListAdapterPoc.ChatListAdapterViewHolder(holder.itemView);
+//                } else {
+//                    crazyPosition = position;
+//                    ChatPocData chat = chats.get(crazyPosition);
+//                    //Toast.makeText(context, chat.toString(), Toast.LENGTH_LONG).show();
+////                    Intent intent = new Intent(context, IndividualChatActivity.class);
+//                    Intent intent = new Intent(context, CrazyIndividualChatActivity.class);
+//                    //intent.putExtra("chat", chat);
+//                    intent.putExtra("idRemoteUser", chat.getIdRemoteUser());
+//                    intent.putExtra("stateRemoteUser", chat.getStateRemoteUser());
+//                    context.startActivity(intent);
+//                }
+//            }
+//        });
+
+        /*************/
+/*************/
+       /* if (modoSeleccion) {
             if (selectedItemPosition == position) {
                 holder.itemView.setBackgroundColor(Color.parseColor("#00FF00"));
             } else {
-                holder.itemView.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                holder.itemView.setBackgroundColor(Color.TRANSPARENT);
             }
-        }
+        }*/
 
+        /**************/
 //        else
 //            holder.itemView.setBackgroundColor(Color.parseColor("#E49B83"));
 
@@ -284,37 +292,77 @@ public class ChatListAdapterPoc extends RecyclerView.Adapter<ChatListAdapterPoc.
 //            } else
 //                itemView.setSelected(false);
 
+//            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+//                @Override
+//                public boolean onLongClick(View v) {
+//
+//                    if (mActionMode != null) return false;
+//                    // Start the contextual action bar
+//                    // using the ActionMode.Callback.
+//                    mActionMode = activityInstance.startActionMode(mActionModeCallback);
+//                    modoSeleccion = true;
+///***************/
+//                    v.setSelected(true);
+//                    v.setBackgroundColor(Color.parseColor("#00FF00"));
+//                    chatListAdapterViewHolderSelected = new ChatListAdapterPoc.ChatListAdapterViewHolder(v);
+///**************/
+//
+//                    seleccionados.put(getAdapterPosition(), true);
+//                    return true;
+////                }
+////                    return false;
+//                }
+//            });
 
+
+            /***************************/
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
                     if (modoSeleccion) {
-                        if (!v.isSelected()) {
-                            v.setSelected(true);
-                            v.setBackgroundColor(Color.parseColor("#00FF00"));
+                        Log.d(TAG, "MODO SELECCIÓN");
+                        if (!seleccionados.get(getAdapterPosition())) {
+                            v.setBackgroundColor(Color.parseColor(colorSelect));
                             seleccionados.put(getAdapterPosition(), true);
-                            chatListAdapterViewHolderSelected = new ChatListAdapterPoc.ChatListAdapterViewHolder(itemView);
-
-
                         } else {
-                            v.setSelected(false);
-                            v.setBackgroundColor(Color.parseColor("#FFFFFF"));
-                            seleccionados.put(getAdapterPosition(), false);
-//                            if (!haySeleccionados())
-//                                modoSeleccion = false;
-                            chatListAdapterViewHolderSelected = new ChatListAdapterPoc.ChatListAdapterViewHolder(itemView);
-
+                            v.setBackgroundColor(Color.TRANSPARENT);
+                            seleccionados.delete(getAdapterPosition());
                         }
+                        Log.d(TAG, String.valueOf(seleccionados.size()));
 
+                        if (seleccionados.size() == 0) {
+                            mActionMode.finish();
+                            modoSeleccion = false;
+                        }
+                        /***************************/
+//                        if (!v.isSelected()) {
+//                            v.setSelected(true);
+//                            v.setBackgroundColor(Color.parseColor("#00FF00"));
+//                            seleccionados.put(getAdapterPosition(), true);
+//                            /*chatListAdapterViewHolderSelected = new ChatListAdapterPoc.ChatListAdapterViewHolder(itemView);*/
+//
+//
+//                        } else {
+//                            /*v.setSelected(false);*/
+////                            v.setBackgroundColor(Color.parseColor("#FFFFFF"));
+//                            v.setBackgroundColor(Color.TRANSPARENT);
+//                            seleccionados.delete(getAdapterPosition());
+//                            /*seleccionados.put(getAdapterPosition(), false);*/
+////                            if (!haySeleccionados())
+////                                modoSeleccion = false;
+//                            chatListAdapterViewHolderSelected = new ChatListAdapterPoc.ChatListAdapterViewHolder(itemView);
+//
+//                        }
+                        /******************/
 
                     } else {
                         //Log.d(TAG, String.valueOf(chats.size()));
                         //Log.d(TAG, String.valueOf(seleccionados.size()));
                         //Log.d(TAG, String.valueOf(seleccionados.size()));
                         //Log.d(TAG, String.valueOf(getAdapterPosition()));
-//                        ChatPocData chat = chats.get(getAdapterPosition());
-                        ChatPocData chat = chats.get(crazyPosition);
+                        ChatPocData chat = chats.get(getAdapterPosition());
+                        /*                        ChatPocData chat = chats.get(crazyPosition);*/
                         //Toast.makeText(context, chat.toString(), Toast.LENGTH_LONG).show();
 //                    Intent intent = new Intent(context, IndividualChatActivity.class);
                         Intent intent = new Intent(context, CrazyIndividualChatActivity.class);
@@ -329,22 +377,39 @@ public class ChatListAdapterPoc extends RecyclerView.Adapter<ChatListAdapterPoc.
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
+                    Log.d(TAG, "MODO SELECCIÓN");
+                    if (!seleccionados.get(getAdapterPosition())) {
+                        v.setBackgroundColor(Color.parseColor(colorSelect));
+                        seleccionados.put(getAdapterPosition(), true);
+                    } else {
+                        v.setBackgroundColor(Color.TRANSPARENT);
+                        seleccionados.delete(getAdapterPosition());
+                    }
+
+                    Log.d(TAG, String.valueOf(seleccionados.size()));
+                    if (seleccionados.size() == 0) {
+                        mActionMode.finish();
+                        modoSeleccion = false;
+                    }
 
                     if (mActionMode != null) return false;
                     // Start the contextual action bar
                     // using the ActionMode.Callback.
                     mActionMode = activityInstance.startActionMode(mActionModeCallback);
                     modoSeleccion = true;
-                    v.setSelected(true);
-                    v.setBackgroundColor(Color.parseColor("#00FF00"));
-                    chatListAdapterViewHolderSelected = new ChatListAdapterPoc.ChatListAdapterViewHolder(v);
+                    /*v.setSelected(true);*/
+                    /*v.setBackgroundColor(Color.parseColor(colorSelect));*/
+                    /*chatListAdapterViewHolderSelected = new ChatListAdapterPoc.ChatListAdapterViewHolder(v);*/
 
-                    seleccionados.put(getAdapterPosition(), true);
+
+                    /*seleccionados.put(getAdapterPosition(), true);*/
                     return true;
 //                }
 //                    return false;
                 }
             });
+            /***************************/
+
 
         }
     }
@@ -393,23 +458,24 @@ public class ChatListAdapterPoc extends RecyclerView.Adapter<ChatListAdapterPoc.
                     switch (item.getItemId()) {
                         case R.id.mnu_eliminar_chat:
                             Log.d(TAG, "Eliminando chat...");
-                            LinkedList<ChatPocData> chatPocs = obtenerSeleccionados();
-                            modoSeleccion = false;
-
-                            if (chatPocs != null) {
-                                Log.d(TAG, String.valueOf(chatPocs.size()));
-                                for (ChatPocData cpd : chatPocs) {
-                                    Log.d(TAG, cpd.toString());
-                                    deleteChat(cpd.getIdRemoteUser());
-                                }
-                                if (chatPocs.size() == 0) {
-                                    Log.d(TAG, "No existen elementos para eliminar");
-                                    Toast.makeText(context, "No se ha seleccionado ningún elemento", Toast.LENGTH_LONG).show();
-                                }
-                            } else {
-                                Log.d(TAG, "No existen elementos para eliminar");
-                            }
-                            mode.finish();
+                            alertDialogConfirmar(mode);
+//                            LinkedList<ChatPocData> chatPocs = obtenerSeleccionados();
+//                            modoSeleccion = false;
+//
+//                            if (chatPocs != null) {
+//                                Log.d(TAG, String.valueOf(chatPocs.size()));
+//                                for (ChatPocData cpd : chatPocs) {
+//                                    Log.d(TAG, cpd.toString());
+//                                    deleteChat(cpd.getIdRemoteUser());
+//                                }
+//                                if (chatPocs.size() == 0) {
+//                                    Log.d(TAG, "No existen elementos para eliminar");
+//                                    Toast.makeText(context, "No se ha seleccionado ningún elemento", Toast.LENGTH_LONG).show();
+//                                }
+//                            } else {
+//                                Log.d(TAG, "No existen elementos para eliminar");
+//                            }
+//                            mode.finish();
                             return true;
                         default:
                             return false;
@@ -423,17 +489,60 @@ public class ChatListAdapterPoc extends RecyclerView.Adapter<ChatListAdapterPoc.
                     mActionMode = null;
                     modoSeleccion = false;
                     try {
-                        chatListAdapterViewHolderSelected.itemView.setBackgroundColor(Color.parseColor("#FFFFFF"));
+//                        chatListAdapterViewHolderSelected.itemView.setBackgroundColor(Color.parseColor("#FFFFFF"));
+//                        chatListAdapterViewHolderSelected.itemView.setBackgroundColor(Color.TRANSPARENT);
                     } catch (Exception e) {
                         Log.d(TAG, e.toString());
                     }
                     Log.d(TAG, "DESTROY CONTEX MENU");
+                    setChats(chats);
+                    seleccionados.clear();
 //                    recyclerView.
                 }
 
                 // Add code to create action mode here.
 
             };
+
+
+    public void alertDialogConfirmar(ActionMode mode) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage("¿Está seguro que desea eliminar los chats seleccionados?")
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // START THE GAME!
+
+                        LinkedList<ChatPocData> chatPocs = obtenerSeleccionados();
+                        modoSeleccion = false;
+
+                        if (chatPocs != null) {
+                            Log.d(TAG, String.valueOf(chatPocs.size()));
+                            for (ChatPocData cpd : chatPocs) {
+                                Log.d(TAG, cpd.toString());
+                                deleteChat(cpd.getIdRemoteUser());
+                            }
+                            if (chatPocs.size() == 0) {
+                                Log.d(TAG, "No existen elementos para eliminar");
+                                Toast.makeText(context, "No se ha seleccionado ningún elemento", Toast.LENGTH_LONG).show();
+                            }
+                        } else {
+                            Log.d(TAG, "No existen elementos para eliminar");
+                        }
+                        mode.finish();
+                    }
+                })
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+
+                        modoSeleccion = false;
+                        mode.finish();
+                    }
+                });
+        // Create the AlertDialog object and return it
+        builder.create();
+        builder.show();
+    }
 
     private void deleteChat(String idRemoteUser) {
 

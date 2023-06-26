@@ -1,4 +1,4 @@
-package com.marlon.apolo.tfinal2022.citasTrabajo.adapters;
+package com.marlon.apolo.tfinal2022.citasTrabajo.view.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -19,19 +19,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
-
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.citasTrabajo.view.DetalleServicioActivity;
 import com.marlon.apolo.tfinal2022.citasTrabajo.view.NuevaCitaTrabajoActivity;
 import com.marlon.apolo.tfinal2022.model.Item;
 
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
-public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder> {
+public class ItemAdapterPoCCreate extends RecyclerView.Adapter<ItemAdapterPoCCreate.ItemViewHolder> {
 
-    private final String TAG = ItemAdapter.class.getSimpleName();
+    private final String TAG = ItemAdapterPoCCreate.class.getSimpleName();
 
     private int viewMode;
 
@@ -47,7 +47,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
     private LayoutInflater layoutInflater;
     private Context context;
 
-    public ItemAdapter(Context context, int viewMode) {
+    public ItemAdapterPoCCreate(Context context, int viewMode) {
         this.layoutInflater = LayoutInflater.from(context);
         this.viewMode = viewMode;
         this.context = context;
@@ -57,7 +57,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
     @Override
     public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View mItemView =
-                layoutInflater.inflate(R.layout.card_view_item,
+                layoutInflater.inflate(R.layout.card_view_item_poc,
                         parent, false);
         return new ItemViewHolder(mItemView, this);
     }
@@ -69,10 +69,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
         Item mCurrent = itemArrayList.get(position);
         // Add the data to the view
         holder.detailItem.setText(String.format("%s", mCurrent.getDetail()));
-
-        holder.detailItemPrice.setText(String.format("%.2f ", mCurrent.getPrice()));
-
-//        holder.detailItemPrice.setText(String.valueOf(mCurrent.getPrice()));
+//        holder.detailItemPrice.setText(mCurrent.getPriceFormat());
 
         switch (viewMode) {
             case 0:
@@ -91,7 +88,6 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
                 holder.imageButtonQuitarItem.setEnabled(true);
                 break;
         }
-
 
         int someColorFrom = 0;
         int someColorTo = 0;
@@ -114,7 +110,6 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
 //        holder.linearLayout.setBackgroundColor(someColorTo);
         holder.detailItem.setTextColor(someColorFrom);
         holder.detailItemPrice.setTextColor(someColorFrom);
-//        holder.detailItemPriceCents1.setTextColor(someColorFrom);
 
 
     }
@@ -132,13 +127,13 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
 
         private final TextInputEditText detailItem;
         private final TextInputEditText detailItemPrice;
-        private final ItemAdapter mAdapter;
+        private final ItemAdapterPoCCreate mAdapter;
         private final ImageButton imageButtonQuitarItem;
         private final LinearLayout linearLayout;
 
 
         @SuppressLint("ResourceAsColor")
-        public ItemViewHolder(@NonNull View itemView, ItemAdapter jobAdapter) {
+        public ItemViewHolder(@NonNull View itemView, ItemAdapterPoCCreate jobAdapter) {
             super(itemView);
             detailItem = itemView.findViewById(R.id.cardViewItemTextDetail);
             detailItemPrice = itemView.findViewById(R.id.cardViewItemTextPrice);
@@ -146,10 +141,6 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
             linearLayout = itemView.findViewById(R.id.linLytBack);
 
             this.mAdapter = jobAdapter;
-            /*detailItem.setEnabled(false);
-            detailItemPrice.setEnabled(false);
-            detailItemPriceCents1.setEnabled(false);
-            imageButtonQuitarItem.setEnabled(false);*/
 
 //            itemView.setOnClickListener(this);
             imageButtonQuitarItem.setOnClickListener(this);
@@ -161,11 +152,6 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
                     String elNuevoTexto = s.toString();
                     Log.d(TAG, "Cambio a" + elNuevoTexto);
                     int mPosition = getLayoutPosition();
@@ -180,8 +166,12 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
                     // update the RecyclerView to display the data.
                     //   mAdapter.notifyDataSetChanged();
                 }
-            });
 
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+            });
 
             detailItemPrice.addTextChangedListener(new TextWatcher() {
                 @Override
@@ -266,8 +256,6 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
 
 
             });
-
-
         }
 
         @Override
@@ -332,18 +320,22 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
             // update the RecyclerView to display the data.
 
         }
+
     }
 
 
     public void setItems(ArrayList<Item> items) {
-//        itemArrayList = new ArrayList<>();
+        itemArrayList = new ArrayList<>();
         itemArrayList = items;
         notifyDataSetChanged();
     }
 
     public void addItem(Item item) {
+        if (itemArrayList == null) {
+            itemArrayList = new ArrayList<>();
+        }
         itemArrayList.add(item);
-        notifyDataSetChanged();
+        notifyItemInserted(getItemCount() - 1);
     }
 
     public void snackBar(View view) {
@@ -357,4 +349,11 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
         mySnackbar.show();
 
     }
+
+    public String formatNumber(String number) {
+        DecimalFormat formatter = new DecimalFormat("###,###,##0.00");
+        return formatter.format(Double.parseDouble(number));
+    }
+
+
 }

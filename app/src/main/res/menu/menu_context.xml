@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/mnu_eliminar_chat"
-        android:icon="@drawable/ic_baseline_delete_forever_24"
+        android:icon="@drawable/ic_baseline_delete_forever_24_white"
         android:title="Eliminar"
         app:showAsAction="collapseActionView|always" />
 </menu>

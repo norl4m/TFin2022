@@ -18,7 +18,6 @@ import android.widget.ProgressBar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.buscador.view.BuscadorActivity;
-import com.marlon.apolo.tfinal2022.config.ConfiguracionActivity;
 import com.marlon.apolo.tfinal2022.model.Oficio;
 import com.marlon.apolo.tfinal2022.ui.bienvenido.viewModel.BienvenidoViewModel;
 import com.marlon.apolo.tfinal2022.ui.bienvenido.adaptaders.OficioArchiVistaListAdapter;
@@ -134,7 +133,7 @@ public class OficiosActivityVista extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_settings:
-                startActivity(new Intent(OficiosActivityVista.this, ConfiguracionActivity.class));
+//                startActivity(new Intent(OficiosActivityVista.this, ConfiguracionActivity.class));
                 break;
             case R.id.mnu_nav_search:
                 startActivity(new Intent(OficiosActivityVista.this, BuscadorActivity.class));

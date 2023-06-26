@@ -1,9 +1,7 @@
 package com.marlon.apolo.tfinal2022.herramientas;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -16,7 +14,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.preference.PreferenceManager;
 
 import com.marlon.apolo.tfinal2022.R;
-import com.marlon.apolo.tfinal2022.config.ConfiguracionActivity;
 
 public class NetworkTool {
     private static final String TAG = NetworkTool.class.getSimpleName();
@@ -189,45 +186,45 @@ public class NetworkTool {
     }
 
 
-    public void alertDialogNoConectadoWifiInfo() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        // Get the layout inflater
-        LayoutInflater inflater = LayoutInflater.from(context);
-
-        View promptsView = inflater.inflate(R.layout.dialog_info, null);
-        builder.setView(promptsView);
-        builder.setCancelable(false);
-
-        // set prompts.xml to alertdialog builder
-        final TextView textViewInfo = promptsView.findViewById(R.id.textViewInfo);
-
-        textViewInfo.setText(context.getResources().getString(R.string.text_error_no_connectado_con_wifi));
-        builder.setPositiveButton("Entendido", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-                try {
-                    dialogInfo.dismiss();
-                } catch (Exception e) {
-
-                }
-
-            }
-        }).setNegativeButton("Cambiar configuración", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                context.startActivity(new Intent(context, ConfiguracionActivity.class));
-            }
-        });
-
-
-        // Inflate and set the layout for the dialog
-        // Pass null as the parent view because its going in the dialog layout
-//        builder.setView(inflater.inflate(R.layout.dialog_info, null))
-        // Add action buttons
-
-        dialogInfo = builder.create();
-        dialogInfo.show();
-    }
+//    public void alertDialogNoConectadoWifiInfo() {
+//        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+//        // Get the layout inflater
+//        LayoutInflater inflater = LayoutInflater.from(context);
+//
+//        View promptsView = inflater.inflate(R.layout.dialog_info, null);
+//        builder.setView(promptsView);
+//        builder.setCancelable(false);
+//
+//        // set prompts.xml to alertdialog builder
+//        final TextView textViewInfo = promptsView.findViewById(R.id.textViewInfo);
+//
+//        textViewInfo.setText(context.getResources().getString(R.string.text_error_no_connectado_con_wifi));
+//        builder.setPositiveButton("Entendido", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int id) {
+//                try {
+//                    dialogInfo.dismiss();
+//                } catch (Exception e) {
+//
+//                }
+//
+//            }
+//        }).setNegativeButton("Cambiar configuración", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                context.startActivity(new Intent(context, ConfiguracionActivity.class));
+//            }
+//        });
+//
+//
+//        // Inflate and set the layout for the dialog
+//        // Pass null as the parent view because its going in the dialog layout
+////        builder.setView(inflater.inflate(R.layout.dialog_info, null))
+//        // Add action buttons
+//
+//        dialogInfo = builder.create();
+//        dialogInfo.show();
+//    }
 
     public boolean isSyncNetwork() {
         return syncNetwork;

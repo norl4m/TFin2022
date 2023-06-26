@@ -124,7 +124,7 @@ public class TrabajadorListAdapter extends RecyclerView.Adapter<TrabajadorListAd
         holder.textViewNombre.setText(String.format("%s %s", current.getNombre(), current.getApellido()));
         if (current.getFotoPerfil() != null) {
             holder.imageViewTrabajador.setColorFilter(null);
-            Glide.with(context).load(current.getFotoPerfil()).placeholder(R.drawable.ic_user_tra_emp).circleCrop().into(holder.imageViewTrabajador);
+            Glide.with(context).load(current.getFotoPerfil()).placeholder(R.drawable.ic_baseline_person_24_color_app).circleCrop().into(holder.imageViewTrabajador);
         } else {
             TypedValue typedValue = new TypedValue();
             context.getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);

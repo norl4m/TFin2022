@@ -133,6 +133,7 @@ public class LoginEmailPasswordActivity extends AppCompatActivity implements Vie
 
         buttonLogin.setEnabled(false);
         findViewById(R.id.textViewSubTitle).setOnClickListener(this);
+        findViewById(R.id.textViewRecuperar).setOnClickListener(this);
 
         try {
             if (!email.isEmpty() && !password.isEmpty()) {
@@ -240,6 +241,9 @@ public class LoginEmailPasswordActivity extends AppCompatActivity implements Vie
                 break;
             case R.id.textViewSubTitle:
                 startActivity(new Intent(LoginEmailPasswordActivity.this, PerfilActivity.class));
+                break;
+            case R.id.textViewRecuperar:
+                startActivity(new Intent(LoginEmailPasswordActivity.this, ResetPasswordActivity.class));
                 break;
         }
     }

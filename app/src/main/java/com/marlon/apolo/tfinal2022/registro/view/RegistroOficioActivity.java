@@ -30,7 +30,7 @@ import com.marlon.apolo.tfinal2022.model.Empleador;
 import com.marlon.apolo.tfinal2022.model.Oficio;
 import com.marlon.apolo.tfinal2022.model.OficioPoc;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
-import com.marlon.apolo.tfinal2022.registro.adapters.OficioCrazyRegistroListAdapter;
+import com.marlon.apolo.tfinal2022.registro.view.adapters.OficioCrazyRegistroListAdapter;
 import com.marlon.apolo.tfinal2022.ui.bienvenido.viewModel.BienvenidoViewModel;
 import com.marlon.apolo.tfinal2022.ui.oficios.viewModel.OficioViewModel;
 

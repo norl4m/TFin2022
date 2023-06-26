@@ -16,7 +16,6 @@ import android.widget.ProgressBar;
 
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.buscador.view.BuscadorActivity;
-import com.marlon.apolo.tfinal2022.config.ConfiguracionActivity;
 import com.marlon.apolo.tfinal2022.ui.bienvenido.viewModel.OficioViewModel;
 import com.marlon.apolo.tfinal2022.ui.bienvenido.viewModel.TrabajadorViewModel;
 import com.marlon.apolo.tfinal2022.ui.trabajadores.adapters.TrabajadorListAdapter;
@@ -74,7 +73,7 @@ public class TrabajadoresActivityVista extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_settings:
-                startActivity(new Intent(TrabajadoresActivityVista.this, ConfiguracionActivity.class));
+//                startActivity(new Intent(TrabajadoresActivityVista.this, ConfiguracionActivity.class));
                 break;
             case R.id.mnu_nav_search:
                 startActivity(new Intent(TrabajadoresActivityVista.this, BuscadorActivity.class));

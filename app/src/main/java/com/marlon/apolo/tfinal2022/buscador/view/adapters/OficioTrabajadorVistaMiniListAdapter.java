@@ -1,35 +1,36 @@
-package com.marlon.apolo.tfinal2022.buscador.adapters;
+package com.marlon.apolo.tfinal2022.buscador.view.adapters;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.content.res.AppCompatResources;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.model.Oficio;
 
 import java.util.List;
-import java.util.Random;
 
 public class OficioTrabajadorVistaMiniListAdapter extends RecyclerView.Adapter<OficioTrabajadorVistaMiniListAdapter.OficioViewHolder> {
 
-    private final Context context;
+//    private final Context context;
     private final LayoutInflater inflater;
     private List<Oficio> oficios;
 
     public OficioTrabajadorVistaMiniListAdapter(Context context) {
-        this.context = context;
+//        this.context = context;
         this.inflater = LayoutInflater.from(context);
     }
 
     public List<Oficio> getOficios() {
         return oficios;
+    }
+    public void setOficios(List<Oficio> oficiosVar) {
+        oficios = oficiosVar;
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -54,11 +55,6 @@ public class OficioTrabajadorVistaMiniListAdapter extends RecyclerView.Adapter<O
 //        int random = new Random().nextInt((max - min) + 1) + min;
 //        holder.itemView.setBackground(itrems[random]);
 
-    }
-
-    public void setOficios(List<Oficio> oficiosVar) {
-        oficios = oficiosVar;
-        notifyDataSetChanged();
     }
 
     // getItemCount() is called many times, and when it is first called,

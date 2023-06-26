@@ -6,7 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import com.marlon.apolo.tfinal2022.admin.repository.AdminRepository;
+import com.marlon.apolo.tfinal2022.admin.model.repository.AdminRepository;
 import com.marlon.apolo.tfinal2022.model.Administrador;
 
 public class AdminViewModel extends AndroidViewModel {
@@ -26,6 +26,5 @@ public class AdminViewModel extends AndroidViewModel {
     public void removeValueEventListener() {
         adminRepository.removeValueListener();
     }
-
 
 }

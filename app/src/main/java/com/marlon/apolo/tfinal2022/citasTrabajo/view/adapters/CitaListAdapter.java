@@ -1,4 +1,4 @@
-package com.marlon.apolo.tfinal2022.citasTrabajo.adapters;
+package com.marlon.apolo.tfinal2022.citasTrabajo.view.adapters;
 
 import android.content.Context;
 import android.content.Intent;
