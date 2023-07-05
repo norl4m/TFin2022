@@ -75,7 +75,7 @@ import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.citasTrabajo.view.NuevaCitaTrabajoActivity;
 import com.marlon.apolo.tfinal2022.communicationAgora.video.view.AgoraVideoCallActivity;
 import com.marlon.apolo.tfinal2022.communicationAgora.voice.view.AgoraVoiceCallActivityPoc;
-import com.marlon.apolo.tfinal2022.individualChat.view.adapters.SpecialMessageListAdapterPoc;
+import com.marlon.apolo.tfinal2022.individualChat.adapters.SpecialMessageListAdapterPoc;
 import com.marlon.apolo.tfinal2022.individualChat.model.ChatPoc;
 import com.marlon.apolo.tfinal2022.individualChat.model.MensajeNube;
 import com.marlon.apolo.tfinal2022.individualChat.model.MessageCloudPoc;
@@ -137,6 +137,10 @@ public class CrazyIndividualChatActivity extends AppCompatActivity implements Vi
     private FloatingActionButton fabChooseImageProfile;
 
 
+    private Uri uriPhoto;
+    private AlertDialog alertDialogVar;
+    private TextView textViewMessage;
+    private String stateRemoteUser;
     private View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -151,12 +155,9 @@ public class CrazyIndividualChatActivity extends AppCompatActivity implements Vi
             }
         }
     };
-    private Uri uriPhoto;
-    private AlertDialog alertDialogVar;
-    private TextView textViewMessage;
-    private String stateRemoteUser;
 
-    private void pauseSong() {
+
+    public void pauseSong() {
         playing = true;
         mediaPlayer.pause();
     }
@@ -235,7 +236,6 @@ public class CrazyIndividualChatActivity extends AppCompatActivity implements Vi
 
     }
 
-
     private void updateSeekbar() {
         int currentPos = mediaPlayer.getCurrentPosition();
         seekBarProgress.setProgress(currentPos);
@@ -256,7 +256,6 @@ public class CrazyIndividualChatActivity extends AppCompatActivity implements Vi
 
 
     }
-
 
     public void showAlertDialogEliminarMensajes() {
         AlertDialog dialog = null;
@@ -302,7 +301,7 @@ public class CrazyIndividualChatActivity extends AppCompatActivity implements Vi
         dialog.show();
     }
 
-    private void startRecording() {
+    public void startRecording() {
         findViewById(R.id.playConstrols).setVisibility(View.GONE);
         Animation animBlink = AnimationUtils.loadAnimation(getApplicationContext(),
                 R.anim.blink);
@@ -326,7 +325,7 @@ public class CrazyIndividualChatActivity extends AppCompatActivity implements Vi
         recorder.start();
     }
 
-    private void stopRecording() {
+    public void stopRecording() {
         // Toast.makeText(getApplicationContext(), "Finalizando grabación...", Toast.LENGTH_LONG).show();
 
         recorder.stop();
@@ -344,6 +343,1150 @@ public class CrazyIndividualChatActivity extends AppCompatActivity implements Vi
         }
 
     }
+
+    public void blockingUI(String idRemoto) {
+
+        listenerMensajesLocales(idRemoto);
+        findViewById(R.id.toolbar).setEnabled(false);
+        findViewById(R.id.content_main).setEnabled(false);
+        textViewNameContactTo.setText(String.format("%s %s", "Usuario", "no disponible"));
+
+        findViewById(R.id.textInputEditTextMessage).setEnabled(false);
+        findViewById(R.id.buttonAttachFile).setEnabled(false);
+        findViewById(R.id.buttonCamera).setEnabled(false);
+        findViewById(R.id.buttonMessageAndMic).setEnabled(false);
+        findViewById(R.id.imageButtonVideoCall).setEnabled(false);
+        findViewById(R.id.imageButtonVideoCall).setBackgroundResource(R.drawable.ic_baseline_videocam_24_focused);
+        findViewById(R.id.imageButtonCall).setEnabled(false);
+        findViewById(R.id.imageButtonCall).setBackgroundResource(R.drawable.ic_baseline_call_24_focused);
+//        ((ImageButton) findViewById(R.id.imageButtonCall)).setColorFilter(Color.parseColor("#fc0101"));
+
+        findViewById(R.id.messageContainer).setEnabled(false);
+        //findViewById(R.id.messageContainer).setBackgroundColor(getResources().getColor(R.color.green_light));
+        usuarioRemoto = new Trabajador();
+        usuarioRemoto.setIdUsuario(idRemoto);
+    }
+
+    public void sendAudioMessageWithFilename(MessageCloudPoc messageCloudPoc) {
+        String title = "Por favor espere";
+        String message = "Cargando audio...";
+        showCustomProgressDialog(title, message);
+        Log.d(TAG, "###########################");
+        Log.d(TAG, "sendMessage");
+        Log.d(TAG, messageCloudPoc.toString());
+        Log.d(TAG, "###########################");
+        Timestamp timestamp = new Timestamp(new Date());
+        messageCloudPoc.setTimeStamp(timestamp.toString());
+
+        // Create new post at /user-posts/$userid/$postid and at
+        // /posts/$postid simultaneously
+        String key = FirebaseDatabase.getInstance().getReference().child("crazyMessages").push().getKey();
+        messageCloudPoc.setIdMensaje(key);
+
+
+        FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+
+        Uri audioUri = Uri.fromFile(new File(fileName));
+
+        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+        mmr.setDataSource(getApplicationContext(), audioUri);
+        String durationStr = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+        messageCloudPoc.setAudioDuration(durationStr);
+
+        String fileExtensionImage = MimeTypeMap.getFileExtensionFromUrl(audioUri.toString());
+        String mimeTypeImage = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtensionImage);
+        StorageMetadata storageMetadata = new StorageMetadata.Builder()
+                .setContentType(mimeTypeImage)
+                .build();
+//
+//                Toast.makeText(activity, mimeType, Toast.LENGTH_LONG).show();
+//                Toast.makeText(activity, fileExtension, Toast.LENGTH_LONG).show();
+//                Toast.makeText(activity, mensajeNube.toString(), Toast.LENGTH_LONG).show();
+//                Toast.makeText(activity, chat.toString(), Toast.LENGTH_LONG).show();
+//                Toast.makeText(activity, selectedUri.toString(), Toast.LENGTH_LONG).show();
+
+
+        String baseReference = "gs://tfinal2022-afc91.appspot.com";
+//        String imagePath = baseReference + "/" + "mensajes" + "/" + chat.getIdChat() + "/" + mensajeNube.getIdMensaje() + "." + fileExtensionImage;
+        String imagePath = baseReference + "/" + "mensajes" + "/" + messageCloudPoc.getFrom() + "/" + messageCloudPoc.getTo() + "/" + key + "." + fileExtensionImage;
+        Log.d(TAG, "Path reference on fireStorage");
+        StorageReference storageRef = firebaseStorage.getReferenceFromUrl(imagePath);
+
+
+//                UploadTask uploadTask = storageRef.putFile(Uri.parse(mensajeNube.getContenido()), storageMetadata);
+//                UploadTask uploadTask = storageRef.putFile(Uri.parse(mensajeNube.getContenido()));
+//                UploadTask uploadTask = storageRef.putFile(Uri.parse(mensajeNube.getContenido()));
+
+        Uri imageUriSend = Uri.fromFile(new File(fileName));
+        UploadTask uploadTask = storageRef.putFile(imageUriSend, storageMetadata);
+
+        //uploadTask = storageRef.putFile(imageUriSend, storageMetadata);
+
+
+//        if (mensajeNube.getContenido().contains("content:")) {
+//            uploadTask = storageRef.putFile(uriImage, storageMetadata);
+//
+//        } else {
+//            Uri imageUriSend = Uri.fromFile(new File(mensajeNube.getContenido()));
+//            uploadTask = storageRef.putFile(imageUriSend, storageMetadata);
+//
+//        }
+
+
+//                uploadTask = storageRef.putFile(imageUri, storageMetadata);
+        // Listen for state changes, errors, and completion of the upload.
+        StorageReference finalStorageRef = storageRef;
+        uploadTask.addOnProgressListener(taskSnapshot -> {
+            double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+            updateAudioProgress(progress);
+            Log.d(TAG, "Upload is " + progress + "% done");
+
+        }).addOnPausedListener(new OnPausedListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onPaused(UploadTask.TaskSnapshot taskSnapshot) {
+                Log.d(TAG, "Upload is paused");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+                Log.d(TAG, "on failure Foto complete...");
+                closeAlertDialogLoad();
+
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // Handle successful uploads on complete
+                // ...
+                Log.d(TAG, "Upload is complete...");
+                //  registroActivity.limpiarUI();
+            }
+        }).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+            @Override
+            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                if (!task.isSuccessful()) {
+                    throw task.getException();
+                }
+
+                // Continue with the task to get the download URL
+                return finalStorageRef.getDownloadUrl();
+            }
+        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (task.isSuccessful()) {
+
+                    Uri downloadUri = task.getResult();
+//                            Toast.makeText(activity, downloadUri.toString(), Toast.LENGTH_LONG).show();
+
+
+                    //MessageCloudPoc post = new MessageCloudPoc();
+                    messageCloudPoc.setContenido(downloadUri.toString());
+                    messageCloudPoc.setType(2);
+                    Map<String, Object> postValues = messageCloudPoc.toMap();
+//
+//                    Map<String, Object> childUpdates = new HashMap<>();
+//                    childUpdates.put("/" + messageCloudPoc.getFrom() + "/" + messageCloudPoc.getTo() + "/" + key, postValues);
+//                    childUpdates.put("/" + messageCloudPoc.getTo() + "/" + messageCloudPoc.getFrom() + "/" + key, postValues);
+//                    FirebaseDatabase.getInstance().getReference().child("crazyMessages").updateChildren(childUpdates);
+
+
+                    Map<String, Object> childUpdates = new HashMap<>();
+                    childUpdates.put("/crazyMessages/" + messageCloudPoc.getFrom() + "/" + messageCloudPoc.getTo() + "/" + key, postValues);
+                    childUpdates.put("/crazyMessages/" + messageCloudPoc.getTo() + "/" + messageCloudPoc.getFrom() + "/" + key, postValues);
+                    childUpdates.put("/notificaciones/" + messageCloudPoc.getTo() + "/" + messageCloudPoc.getFrom() + "/" + key, postValues);
+
+                    FirebaseDatabase.getInstance().getReference().updateChildren(childUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Log.d(TAG, "Mensaje enviado");
+                            } else {
+                                Log.d(TAG, "Error al enviar mensaje");
+                            }
+                        }
+                    });
+
+
+                    ChatPoc chatPoc = new ChatPoc();
+                    chatPoc.setIdRemoteUser(messageCloudPoc.getTo());
+                    chatPoc.setLastMessageCloudPoc(messageCloudPoc);
+                    FirebaseDatabase.getInstance().getReference().child("crazyChats")
+                            .child(messageCloudPoc.getFrom())
+                            .child(chatPoc.getIdRemoteUser())
+                            .setValue(chatPoc);
+
+                    ChatPoc chatPocRemoto = new ChatPoc();
+                    chatPocRemoto.setIdRemoteUser(messageCloudPoc.getFrom());
+                    chatPocRemoto.setLastMessageCloudPoc(messageCloudPoc);
+                    FirebaseDatabase.getInstance().getReference().child("crazyChats")
+                            .child(messageCloudPoc.getTo())
+                            .child(chatPocRemoto.getIdRemoteUser())
+                            .setValue(chatPocRemoto);
+
+                    closeAlertDialogLoad();
+                    //finish();
+
+                } else {
+                    // Handle failures
+
+                }
+            }
+        });
+    }
+
+    public void loadRemoteUserInfoWithID(String idRemoteUser) {
+
+        FirebaseDatabase.getInstance().getReference()
+                .child("administrador")
+                .child(idRemoteUser)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Administrador administrador = snapshot.getValue(Administrador.class);
+                        if (administrador != null) {
+                            usuarioRemoto = administrador;
+                            loadRemoteUserInfo(usuarioRemoto);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+        FirebaseDatabase.getInstance().getReference()
+                .child("trabajadores")
+                .child(idRemoteUser)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Trabajador trabajador = snapshot.getValue(Trabajador.class);
+                        if (trabajador != null) {
+                            usuarioRemoto = trabajador;
+                            loadRemoteUserInfo(usuarioRemoto);
+
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+        FirebaseDatabase.getInstance().getReference()
+                .child("empleadores")
+                .child(idRemoteUser)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Empleador empleador = snapshot.getValue(Empleador.class);
+                        if (empleador != null) {
+                            usuarioRemoto = empleador;
+                            loadRemoteUserInfo(usuarioRemoto);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+    }
+
+    public void animationButtonMic(int i) {
+        switch (i) {
+            case 0:
+                fabMessageMic.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_send_24));
+//                rocketAnimation = (AnimationDrawable) fabMessageMic.getDrawable();
+//                rocketAnimation.start();
+                micMode = false;
+                break;
+            case 1:
+                fabMessageMic.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_mic_24));
+                micMode = true;
+                break;
+        }
+    }
+
+    public void loadUsuarioLocal() {
+        FirebaseDatabase.getInstance().getReference()
+                .child("administrador")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Administrador administrador = snapshot.getValue(Administrador.class);
+                        if (administrador != null) {
+                            usuarioLocal = administrador;
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+        FirebaseDatabase.getInstance().getReference()
+                .child("trabajadores")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Trabajador trabajador = snapshot.getValue(Trabajador.class);
+                        if (trabajador != null) {
+                            usuarioLocal = trabajador;
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+        FirebaseDatabase.getInstance().getReference()
+                .child("empleadores")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Empleador empleador = snapshot.getValue(Empleador.class);
+                        if (empleador != null) {
+                            usuarioLocal = empleador;
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+    }
+
+    public void loadRemoteUserInfo(Usuario usuario) {
+        usuarioRemoto = usuario;
+        if (!usuario.getNombre().isEmpty() && !usuario.getApellido().isEmpty()) {
+            textViewNameContactTo.setText(String.format("%s %s", usuario.getNombre(), usuario.getApellido()));
+        } else {
+            textViewNameContactTo.setText(String.format("%s %s", "Usuario", "no encontrado"));
+        }
+        if (usuario.getFotoPerfil() != null) {
+            Glide.with(getApplicationContext()).load(usuario.getFotoPerfil()).placeholder(R.drawable.ic_baseline_person_24).circleCrop().into(imageViewNameContactTo);
+        }
+        listenerMensajesLocales(usuario.getIdUsuario());
+        deleteNotifications(usuarioRemoto.getIdUsuario());
+        setUsuarioBloqueado(usuarioRemoto.getIdUsuario());
+//        try {
+//            setUsuarioBloqueado(usuarioTo.getIdUsuario());
+//        } catch (Exception e) {
+//
+//        }
+    }
+
+
+    public void deleteNotifications(String idRemoteUser) {
+        Log.d(TAG, "ELIMINANDO NOTIFICACIONES");
+        FirebaseDatabase.getInstance().getReference()
+                .child("notificaciones")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child(idRemoteUser)
+                .setValue(null).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "Notificaciones eliminadas");
+
+                        } else {
+                            Log.d(TAG, "Error al eliminar notificaciones");
+
+                        }
+                    }
+                });
+    }
+
+    public void listenerMensajesLocales(String idRemoto) {
+        Log.d(TAG, "####################################");
+        Log.d(TAG, "listenerMensajesLocales");
+        Log.d(TAG, "####################################");
+//        FirebaseDatabase.getInstance().getReference()
+//                .child("crazyMessages")
+//                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+//        x        .child(usuarioRemoto.getIdUsuario())
+//                .addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                        ArrayList<MessageCloudPoc> messageCloudPocArrayList = new ArrayList<>();
+//                        for (DataSnapshot data : snapshot.getChildren()) {
+//                            MessageCloudPoc messageCloudPoc = data.getValue(MessageCloudPoc.class);
+//                            Log.d(TAG, messageCloudPoc.toString());
+//                            messageCloudPocArrayList.add(messageCloudPoc);
+//                        }
+////                ArrayList<MessageCloudPoc> messageCloudPocsAux = messageCloudPocArrayList;
+////                updateMessagesPoc(messageCloudPocsAux);
+////                updateMessagesPoc(messageCloudPocsAux);
+//
+//                        specialMessagePoc.setMensajeNubeArrayList(messageCloudPocArrayList);
+//                        recyclerViewMensajes.scrollToPosition(messageCloudPocArrayList.size() - 1);
+//                        //updateMessagesPoc(messageCloudPocArrayList);
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//
+//                    }
+//                });
+
+        valueEventListenerMessagesPoc = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Log.d(TAG, "####################################");
+                Log.d(TAG, "change messages");
+                Log.d(TAG, "####################################");
+                ArrayList<MessageCloudPoc> messageCloudPocArrayList = new ArrayList<>();
+                for (DataSnapshot data : snapshot.getChildren()) {
+                    MessageCloudPoc messageCloudPoc = data.getValue(MessageCloudPoc.class);
+                    Log.d(TAG, messageCloudPoc.toString());
+                    messageCloudPocArrayList.add(messageCloudPoc);
+                }
+//                ArrayList<MessageCloudPoc> messageCloudPocsAux = messageCloudPocArrayList;
+//                updateMessagesPoc(messageCloudPocsAux);
+//                updateMessagesPoc(messageCloudPocsAux);
+
+                specialMessageListAdapterPoc.setMensajeNubeArrayList(messageCloudPocArrayList);
+                recyclerViewMensajes.scrollToPosition(messageCloudPocArrayList.size() - 1);
+                if (stateRemoteUser != null) {
+                    if (stateRemoteUser.equals("eliminado")) {
+
+                    }
+                } else {
+                    updateMessagesPoc(messageCloudPocArrayList);
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        };
+        FirebaseDatabase.getInstance().getReference().child("crazyMessages")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+//                .child(usuarioRemoto.getIdUsuario())
+                .child(idRemoto)
+                .addValueEventListener(valueEventListenerMessagesPoc);
+    }
+
+    public void updateMessagesPoc(ArrayList<MessageCloudPoc> messageCloudPocArrayList) {
+        Log.d(TAG, "####################################");
+        Log.d(TAG, "updateMessagesPoc");
+        Log.d(TAG, "####################################");
+
+
+        for (MessageCloudPoc m : messageCloudPocArrayList) {
+            if (m.getTo().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                if (!m.isEstadoLectura()) {
+
+                    m.setEstadoLectura(true);
+
+                    FirebaseDatabase.getInstance().getReference().child("crazyMessages")
+                            .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                            .child(usuarioRemoto.getIdUsuario())
+                            .child(m.getIdMensaje())
+                            .setValue(m);
+
+                    FirebaseDatabase.getInstance().getReference().child("crazyMessages")
+                            .child(usuarioRemoto.getIdUsuario())
+                            .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                            .addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    long numberMessages = snapshot.getChildrenCount();
+
+                                    if (numberMessages > 0) {
+                                        FirebaseDatabase.getInstance().getReference().child("crazyMessages")
+                                                .child(usuarioRemoto.getIdUsuario())
+                                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                                .child(m.getIdMensaje())
+                                                .setValue(m);
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+
+
+                    //Map<String, Object> postValues = m.toMap();
+
+                    //Map<String, Object> childUpdates = new HashMap<>();
+                    //childUpdates.put("/" + FirebaseAuth.getInstance().getCurrentUser().getUid() + "/" + m.getTo() + "/" + m.getIdMensaje(), postValues);
+                    //childUpdates.put("/" + m.getFrom() + "/" + FirebaseAuth.getInstance().getCurrentUser().getUid() + "/" + m.getIdMensaje(), postValues);
+//                    childUpdates.put("/" + m.getTo() + "/" + m.getFrom() + "/" + m.getIdMensaje(), postValues);
+                    //FirebaseDatabase.getInstance().getReference().child("crazyMessages").updateChildren(childUpdates);
+
+//                    FirebaseDatabase.getInstance().getReference().child("crazyMessages")
+//                            .child(m.getFrom())
+//                            .child(m.getTo())
+//                            .addListenerForSingleValueEvent(new ValueEventListener() {
+//                                @Override
+//                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                                    Log.d(TAG, "Number of messages: " + snapshot.getChildrenCount());
+//                                    long numberMessages = snapshot.getChildrenCount();
+//                                    for (DataSnapshot data : snapshot.getChildren()) {
+//                                        MessageCloudPoc messageCloudPoc = data.getValue(MessageCloudPoc.class);
+//                                        Log.d(TAG, messageCloudPoc.getContenido());
+//                                    }
+//                                    if (numberMessages > 0) {
+//                                        childUpdates.put("/" + m.getTo() + "/" + m.getFrom() + "/" + m.getIdMensaje(), postValues);
+//                                        //FirebaseDatabase.getInstance().getReference().child("crazyMessages").updateChildren(childUpdates);
+//                                    }
+//                                }
+//
+//                                @Override
+//                                public void onCancelled(@NonNull DatabaseError error) {
+//
+//                                }
+//                            });
+//                    ChatPoc chatPoc = new ChatPoc();
+//                    chatPoc.setIdRemoteUser(m.getTo());
+//                    chatPoc.setLastMessageCloudPoc(m);
+//                    FirebaseDatabase.getInstance().getReference().child("crazyChats")
+//                            .child(m.getFrom())
+//                            .child(chatPoc.getIdRemoteUser())
+//                            .setValue(chatPoc);
+
+//                    ChatPoc chatPocRemoto = new ChatPoc();
+//                    chatPocRemoto.setIdRemoteUser(m.getFrom());
+//                    chatPocRemoto.setLastMessageCloudPoc(m);
+//                    FirebaseDatabase.getInstance().getReference().child("crazyChats")
+//                            .child(m.getTo())
+//                            .child(chatPocRemoto.getIdRemoteUser())
+//                            .setValue(chatPocRemoto);
+                }
+            }
+        }
+        if (messageCloudPocArrayList.size() > 0) {
+            if (messageCloudPocArrayList.get(messageCloudPocArrayList.size() - 1).getTo().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+//                if (!messageCloudPocArrayList.get(messageCloudPocArrayList.size() - 1).isEstadoLectura()) {
+                updateLastMessageOnChat(messageCloudPocArrayList.get(messageCloudPocArrayList.size() - 1));
+//                }
+            }
+
+        }
+
+    }
+
+    public void updateLastMessageOnChat(MessageCloudPoc messageCloudPoc) {
+        Log.d(TAG, "####################################");
+        Log.d(TAG, "updateLastMessageOnChat");
+        Log.d(TAG, "####################################");
+        messageCloudPoc.setEstadoLectura(true);
+        ChatPoc chatPoc = new ChatPoc();
+        chatPoc.setIdRemoteUser(messageCloudPoc.getTo());
+        chatPoc.setLastMessageCloudPoc(messageCloudPoc);
+        FirebaseDatabase.getInstance().getReference().child("crazyChats")
+                .child(messageCloudPoc.getFrom())
+                .child(chatPoc.getIdRemoteUser())
+                .setValue(chatPoc);
+
+        ChatPoc chatPocRemoto = new ChatPoc();
+        chatPocRemoto.setIdRemoteUser(messageCloudPoc.getFrom());
+        chatPocRemoto.setLastMessageCloudPoc(messageCloudPoc);
+        FirebaseDatabase.getInstance().getReference().child("crazyChats")
+                .child(messageCloudPoc.getTo())
+                .child(chatPocRemoto.getIdRemoteUser())
+                .setValue(chatPocRemoto);
+    }
+
+
+    public void sendMessage(MessageCloudPoc messageCloudPoc) {
+        Log.d(TAG, "###########################");
+        Log.d(TAG, "sendMessage");
+        Log.d(TAG, messageCloudPoc.toString());
+        Log.d(TAG, "###########################");
+        Timestamp timestamp = new Timestamp(new Date());
+        messageCloudPoc.setTimeStamp(timestamp.toString());
+
+        String key = FirebaseDatabase.getInstance().getReference()
+                .child("crazyMessages").push().getKey();
+        messageCloudPoc.setIdMensaje(key);
+        Map<String, Object> postValues = messageCloudPoc.toMap();
+
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put("/crazyMessages/" + messageCloudPoc.getFrom()
+                + "/" + messageCloudPoc.getTo() + "/" + key, postValues);
+        childUpdates.put("/crazyMessages/" + messageCloudPoc.getTo()
+                + "/" + messageCloudPoc.getFrom() + "/" + key, postValues);
+        childUpdates.put("/notificaciones/" + messageCloudPoc.getTo()
+                + "/" + messageCloudPoc.getFrom() + "/" + key, postValues);
+
+        FirebaseDatabase.getInstance().getReference().updateChildren(childUpdates).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Log.d(TAG, "Mensaje enviado");
+            } else {
+                Log.d(TAG, "Error al enviar mensaje");
+            }
+        });
+
+
+        ChatPoc chatPoc = new ChatPoc();
+        chatPoc.setIdRemoteUser(messageCloudPoc.getTo());
+        chatPoc.setLastMessageCloudPoc(messageCloudPoc);
+        FirebaseDatabase.getInstance().getReference().child("crazyChats")
+                .child(messageCloudPoc.getFrom())
+                .child(chatPoc.getIdRemoteUser())
+                .setValue(chatPoc);
+
+        ChatPoc chatPocRemoto = new ChatPoc();
+        chatPocRemoto.setIdRemoteUser(messageCloudPoc.getFrom());
+        chatPocRemoto.setLastMessageCloudPoc(messageCloudPoc);
+        FirebaseDatabase.getInstance().getReference().child("crazyChats")
+                .child(messageCloudPoc.getTo())
+                .child(chatPocRemoto.getIdRemoteUser())
+                .setValue(chatPocRemoto);
+
+
+        textInputEditTextMessage.setText("");
+        micMode = true;
+        animationButtonMic(1);
+
+        /*Guardando localmente en la nube*/
+        //FirebaseDatabase.getInstance().getReference().child("crazyMessages").child(messageCloudPoc.getFrom()).updateChildren(childUpdates);
+        /*Guardando localmente en la nube*/
+        //FirebaseDatabase.getInstance().getReference().child("crazyMessages").child(messageCloudPoc.getTo()).updateChildren(childUpdates);
+
+    }
+    // [END write_fan_out]
+
+    public Dialog alertDialogAttachFile() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Compartir: ");
+        String[] elements = {"Audio", "Imagen", "Ubicación"};
+        builder.setItems(elements, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                switch (i) {
+                    case 0:
+                        selectAudio();
+                        break;
+                    case 1:
+//                        selectImage();
+                        escogerDesdeGaleria();
+                        break;
+                    case 2:
+                        shareLocation();
+                        break;
+                }
+            }
+        });
+        return builder.create();
+    }
+
+    public void shareLocation() {
+        Intent intent = new Intent(getApplicationContext(), LocationActivity.class);
+        intent.putExtra("usuarioTo", usuarioRemoto);
+        intent.putExtra("usuarioLocal", usuarioLocal);
+//        intent.putExtra("chat", chat);
+//        startActivity(intent);
+        startActivityForResult(intent, LOCATION_CODE);
+
+    }
+
+    public void selectAudio() {
+
+//        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+//        intent.setDataAndType(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, "audio/*");
+//        startActivityForResult(intent, SELECT_AUDIO);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            Intent intent_upload = new Intent();
+            intent_upload.setDataAndType(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, "audio/*");
+            intent_upload.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(intent_upload, SELECT_AUDIO);
+        } else {
+
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setDataAndType(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, "audio/*");
+            if (intent.resolveActivity(getPackageManager()) != null) {
+//            startActivityForResult(Intent.createChooser(intent, "Seleccionar archivo de audio desde: "),SELECT_AUDIO);
+                startActivityForResult(intent, SELECT_AUDIO);
+            }
+        }
+
+    }
+
+    public void escogerDesdeGaleria() {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
+        startActivityForResult(intent, SELECCIONAR_FOTO_GALERIA_REQ_ID);
+
+    }
+
+
+    public void openAlertDialogPhotoOptions() {
+        tomarfoto();
+    }
+
+    public void tomarfoto() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        try {
+            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+
+                ContentResolver resolver = getApplicationContext().getContentResolver();
+
+                Uri audioCollection;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    audioCollection = MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY);
+                } else {
+                    audioCollection = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+                }
+
+                String displayName = "image." + System.currentTimeMillis() + ".jpeg";
+
+                ContentValues newSongDetails = new ContentValues();
+                newSongDetails.put(MediaStore.Images.Media.DISPLAY_NAME, System.currentTimeMillis());
+                newSongDetails.put(MediaStore.Images.Media.TITLE, System.currentTimeMillis());
+                newSongDetails.put(MediaStore.Images.Media.DESCRIPTION, "Photo taken on " + System.currentTimeMillis());
+                newSongDetails.put(MediaStore.MediaColumns.DISPLAY_NAME, displayName);
+
+
+                Uri picUri = resolver.insert(audioCollection, newSongDetails);
+                uriPhoto = picUri;
+
+                Log.d("FotoUdir asda", uriPhoto.toString());
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, picUri);
+                startActivityForResult(takePictureIntent, REQUEST_CAMERA_PERMISSION_FOTO_PERFIL);
+
+            }
+
+
+        } catch (Exception e) {
+            Log.e(TAG, "ERRORRRRRRR!");
+            Log.e(TAG, e.toString());
+            Log.e(TAG, e.getLocalizedMessage());
+            Log.e(TAG, e.getMessage());
+            Log.e(TAG, e.getStackTrace().toString());
+//            startActivity(new Intent(getApplicationContext(), CamActivity.class));
+        }
+    }
+
+
+    public void selectPhoto() {
+        // BEGIN_INCLUDE(startCamera)
+        // Check if the Camera permission has been granted
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                == PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED) {
+//            openAlertDialogPhotoOptions();
+            tomarfoto();
+        } else {
+            // Permission is missing and must be requested.
+            requestCameraAndWExtStPermission();
+        }
+        // END_INCLUDE(startCamera)
+    }
+
+
+    public void requestCameraAndWExtStPermission() {
+        // Permission has not been granted and must be requested.
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.CAMERA) || ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            // Provide an additional rationale to the user if the permission was not granted
+            // and the user would benefit from additional context for the use of the permission.
+            // Display a SnackBar with cda button to request the missing permission.
+            Snackbar.make(fabChooseImageProfile, R.string.camera_access_required,
+                    Snackbar.LENGTH_INDEFINITE).setAction(R.string.ok, new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // Request the permission
+                    ActivityCompat.requestPermissions(CrazyIndividualChatActivity.this,
+                            new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            PERMISSION_REQUEST_CAMERA);
+                }
+            }).show();
+
+        } else {
+            Snackbar.make(fabChooseImageProfile, R.string.camera_unavailable, Snackbar.LENGTH_SHORT).show();
+            // Request the permission. The result will be received in onRequestPermissionResult().
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CAMERA);
+        }
+    }
+
+    public void requestCameraPermission() {
+        // Permission has not been granted and must be requested.
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.CAMERA)) {
+            // Provide an additional rationale to the user if the permission was not granted
+            // and the user would benefit from additional context for the use of the permission.
+            // Display a SnackBar with cda button to request the missing permission.
+            Snackbar.make(fabChooseImageProfile, R.string.camera_access_required,
+                    Snackbar.LENGTH_INDEFINITE).setAction(R.string.ok, new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // Request the permission
+                    ActivityCompat.requestPermissions(CrazyIndividualChatActivity.this,
+                            new String[]{Manifest.permission.CAMERA},
+                            PERMISSION_REQUEST_CAMERA_ONLY);
+                }
+            }).show();
+
+        } else {
+            Snackbar.make(fabChooseImageProfile, R.string.camera_unavailable, Snackbar.LENGTH_SHORT).show();
+            // Request the permission. The result will be received in onRequestPermissionResult().
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.CAMERA},
+                    PERMISSION_REQUEST_CAMERA_ONLY);
+        }
+    }
+
+    public void requestCameraAPILocaPermission() {
+//        Toast.makeText(getApplicationContext(), "Request camera permision", Toast.LENGTH_LONG).show();
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
+                Snackbar.make(fabChooseImageProfile, R.string.camera_access_required,
+                        Snackbar.LENGTH_INDEFINITE).setAction(R.string.ok, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // Request the permission
+                        ActivityCompat.requestPermissions(CrazyIndividualChatActivity.this,
+                                new String[]{Manifest.permission.CAMERA},
+                                PERMISSION_REQUEST_CAMERA_LOCA);
+                    }
+                }).show();
+            } else {
+
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        builder.setTitle("");
+                    builder.setMessage(R.string.permiso_camera_text);
+                    // Add the buttons
+                    builder.setPositiveButton("Ajustes", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // User clicked OK button
+
+                            Intent intent = new Intent();
+                            intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                            intent.setData(Uri.parse("package:" + getPackageName()));
+                            startActivity(intent);
+                        }
+                    });
+                    builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // User cancelled the dialog
+                        }
+                    });
+                    // Set other dialog properties
+
+                    // Create the AlertDialog
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+
+                } else {
+                    // You can directly ask for the permission.
+                    Snackbar.make(fabChooseImageProfile, R.string.camera_unavailable, Snackbar.LENGTH_SHORT).show();
+                    requestPermissions(new String[]{Manifest.permission.CAMERA}, PERMISSION_REQUEST_CAMERA_LOCA);
+
+                }
+
+
+                // The registered ActivityResultCallback gets the result of this request.
+                // You can directly ask for the permission.
+                // The registered ActivityResultCallback gets the result of this request.
+//                requestPermissionLauncher.launch(Manifest.permission.CAMERA);
+                try {
+                    //requestPermissions(new String[]{Manifest.permission.CAMERA}, PERMISSION_REQUEST_CAMERA_LOCA);
+                } catch (Exception e) {
+                    Log.d(TAG, e.toString());
+                }
+            }
+        } else {
+
+        }
+
+
+//        // Permission has not been granted and must be requested.
+//        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+//                Manifest.permission.CAMERA)) {
+//            // Provide an additional rationale to the user if the permission was not granted
+//            // and the user would benefit from additional context for the use of the permission.
+//            // Display a SnackBar with cda button to request the missing permission.
+//            Snackbar.make(fabChooseImageProfile, R.string.camera_access_required,
+//                    Snackbar.LENGTH_INDEFINITE).setAction(R.string.ok, new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    // Request the permission
+//                    ActivityCompat.requestPermissions(CrazyIndividualChatActivity.this,
+//                            new String[]{Manifest.permission.CAMERA},
+//                            PERMISSION_REQUEST_CAMERA_LOCA);
+//                }
+//            }).show();
+//
+//        } else {
+//            Snackbar.make(fabChooseImageProfile, R.string.camera_unavailable, Snackbar.LENGTH_SHORT).show();
+//            // Request the permission. The result will be received in onRequestPermissionResult().
+//            ActivityCompat.requestPermissions(this,
+//                    new String[]{Manifest.permission.CAMERA}, PERMISSION_REQUEST_CAMERA_LOCA);
+//        }
+    }
+
+    public void cleanMessagesPocListener() {
+        // Clean up value listener
+        // [START clean_basic_listen]
+        Log.d(TAG, "####################################");
+        Log.d(TAG, "cleanMessagesPocListener");
+        Log.d(TAG, "####################################");
+        FirebaseDatabase.getInstance().getReference().child("crazyMessages")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child(usuarioRemoto.getIdUsuario())
+                .removeEventListener(valueEventListenerMessagesPoc);
+    }
+
+    public static boolean isExternalStorageDocument(Uri uri) {
+        return "com.android.externalstorage.documents".equals(uri.getAuthority());
+    }
+
+    public static boolean isMediaDocument(Uri uri) {
+        return "com.android.providers.media.documents".equals(uri.getAuthority());
+    }
+
+    private void closeAlertDialogLoad() {
+        try {
+            alertDialogVar.dismiss();
+        } catch (Exception e) {
+
+        }
+    }
+
+    public void showCustomProgressDialog(String title, String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(false);
+        // Get the layout inflater
+        LayoutInflater inflater = this.getLayoutInflater();
+        View promptsView = inflater.inflate(R.layout.custom_progress_dialog, null);
+
+
+        // set prompts.xml to alertdialog builder
+        builder.setView(promptsView);
+        // Inflate and set the layout for the dialog
+        // Pass null as the parent view because its going in the dialog layout
+//        builder.setView(inflater.inflate(R.layout.custom_progress_dialog, null));
+//        return builder.create();
+        final TextView textViewTitle = promptsView.findViewById(R.id.textViewTitle);
+        textViewMessage = promptsView.findViewById(R.id.textViewMessage);
+
+        textViewTitle.setText(title);
+        textViewMessage.setText(message);
+
+        alertDialogVar = builder.create();
+        alertDialogVar.show();
+//        builder.show();
+    }
+
+    public void updateProgress(Double progress) {
+
+        String message = String.format(Locale.getDefault(), "Cargando imagen: %.2f %s", progress, "%");
+        textViewMessage.setText(message);
+    }
+
+    private void sendAudioMessage(MessageCloudPoc messageCloudPoc, Uri audioUri) {
+        String title = "Por favor espere";
+        String message = "Cargando audio...";
+        showCustomProgressDialog(title, message);
+        Log.d(TAG, "###########################");
+        Log.d(TAG, "sendMessage");
+        Log.d(TAG, messageCloudPoc.toString());
+        Log.d(TAG, "###########################");
+        Timestamp timestamp = new Timestamp(new Date());
+        messageCloudPoc.setTimeStamp(timestamp.toString());
+
+        // Create new post at /user-posts/$userid/$postid and at
+        // /posts/$postid simultaneously
+        String key = FirebaseDatabase.getInstance().getReference().child("crazyMessages").push().getKey();
+        messageCloudPoc.setIdMensaje(key);
+
+        Uri uri = audioUri;
+        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+        mmr.setDataSource(getApplicationContext(), uri);
+        String durationStr = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+        messageCloudPoc.setAudioDuration(durationStr);
+
+
+        FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+
+
+        String fileExtensionImage = MimeTypeMap.getFileExtensionFromUrl(audioUri.toString());
+        String mimeTypeImage = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtensionImage);
+        StorageMetadata storageMetadata = new StorageMetadata.Builder()
+                .setContentType(mimeTypeImage)
+                .build();
+//
+//                Toast.makeText(activity, mimeType, Toast.LENGTH_LONG).show();
+//                Toast.makeText(activity, fileExtension, Toast.LENGTH_LONG).show();
+//                Toast.makeText(activity, mensajeNube.toString(), Toast.LENGTH_LONG).show();
+//                Toast.makeText(activity, chat.toString(), Toast.LENGTH_LONG).show();
+//                Toast.makeText(activity, selectedUri.toString(), Toast.LENGTH_LONG).show();
+
+
+        String baseReference = "gs://tfinal2022-afc91.appspot.com";
+//        String imagePath = baseReference + "/" + "mensajes" + "/" + chat.getIdChat() + "/" + mensajeNube.getIdMensaje() + "." + fileExtensionImage;
+        String imagePath = baseReference + "/" + "mensajes" + "/" + messageCloudPoc.getFrom() + "/" + messageCloudPoc.getTo() + "/" + key + "." + fileExtensionImage;
+        Log.d(TAG, "Path reference on fireStorage");
+        StorageReference storageRef = firebaseStorage.getReferenceFromUrl(imagePath);
+
+
+//                UploadTask uploadTask = storageRef.putFile(Uri.parse(mensajeNube.getContenido()), storageMetadata);
+//                UploadTask uploadTask = storageRef.putFile(Uri.parse(mensajeNube.getContenido()));
+//                UploadTask uploadTask = storageRef.putFile(Uri.parse(mensajeNube.getContenido()));
+
+        UploadTask uploadTask = storageRef.putFile(audioUri, storageMetadata);
+
+//        if (mensajeNube.getContenido().contains("content:")) {
+//            uploadTask = storageRef.putFile(uriImage, storageMetadata);
+//
+//        } else {
+//            Uri imageUriSend = Uri.fromFile(new File(mensajeNube.getContenido()));
+//            uploadTask = storageRef.putFile(imageUriSend, storageMetadata);
+//
+//        }
+
+
+//                uploadTask = storageRef.putFile(imageUri, storageMetadata);
+        // Listen for state changes, errors, and completion of the upload.
+        StorageReference finalStorageRef = storageRef;
+        uploadTask.addOnProgressListener(taskSnapshot -> {
+            double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+            updateAudioProgress(progress);
+            Log.d(TAG, "Upload is " + progress + "% done");
+
+        }).addOnPausedListener(new OnPausedListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onPaused(UploadTask.TaskSnapshot taskSnapshot) {
+                Log.d(TAG, "Upload is paused");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+                Log.d(TAG, "on failure Foto complete...");
+                closeAlertDialogLoad();
+
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // Handle successful uploads on complete
+                // ...
+                Log.d(TAG, "Upload is complete...");
+                //  registroActivity.limpiarUI();
+            }
+        }).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+            @Override
+            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                if (!task.isSuccessful()) {
+                    throw task.getException();
+                }
+
+                // Continue with the task to get the download URL
+                return finalStorageRef.getDownloadUrl();
+            }
+        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (task.isSuccessful()) {
+
+                    Uri downloadUri = task.getResult();
+//                            Toast.makeText(activity, downloadUri.toString(), Toast.LENGTH_LONG).show();
+
+
+                    //MessageCloudPoc post = new MessageCloudPoc();
+                    messageCloudPoc.setContenido(downloadUri.toString());
+                    messageCloudPoc.setType(2);
+                    Map<String, Object> postValues = messageCloudPoc.toMap();
+
+//                    Map<String, Object> childUpdates = new HashMap<>();
+//                    childUpdates.put("/" + messageCloudPoc.getFrom() + "/" + messageCloudPoc.getTo() + "/" + key, postValues);
+//                    childUpdates.put("/" + messageCloudPoc.getTo() + "/" + messageCloudPoc.getFrom() + "/" + key, postValues);
+//                    FirebaseDatabase.getInstance().getReference().child("crazyMessages").updateChildren(childUpdates);
+
+                    Map<String, Object> childUpdates = new HashMap<>();
+                    childUpdates.put("/crazyMessages/" + messageCloudPoc.getFrom() + "/" + messageCloudPoc.getTo() + "/" + key, postValues);
+                    childUpdates.put("/crazyMessages/" + messageCloudPoc.getTo() + "/" + messageCloudPoc.getFrom() + "/" + key, postValues);
+                    childUpdates.put("/notificaciones/" + messageCloudPoc.getTo() + "/" + messageCloudPoc.getFrom() + "/" + key, postValues);
+
+                    FirebaseDatabase.getInstance().getReference().updateChildren(childUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Log.d(TAG, "Mensaje enviado");
+                            } else {
+                                Log.d(TAG, "Error al enviar mensaje");
+                            }
+                        }
+                    });
+
+
+                    ChatPoc chatPoc = new ChatPoc();
+                    chatPoc.setIdRemoteUser(messageCloudPoc.getTo());
+                    chatPoc.setLastMessageCloudPoc(messageCloudPoc);
+                    FirebaseDatabase.getInstance().getReference().child("crazyChats")
+                            .child(messageCloudPoc.getFrom())
+                            .child(chatPoc.getIdRemoteUser())
+                            .setValue(chatPoc);
+
+                    ChatPoc chatPocRemoto = new ChatPoc();
+                    chatPocRemoto.setIdRemoteUser(messageCloudPoc.getFrom());
+                    chatPocRemoto.setLastMessageCloudPoc(messageCloudPoc);
+                    FirebaseDatabase.getInstance().getReference().child("crazyChats")
+                            .child(messageCloudPoc.getTo())
+                            .child(chatPocRemoto.getIdRemoteUser())
+                            .setValue(chatPocRemoto);
+
+                    closeAlertDialogLoad();
+                    //finish();
+
+                } else {
+                    // Handle failures
+
+                }
+            }
+        });
+
+
+
+
+
+        /*Guardando localmente en la nube*/
+        //FirebaseDatabase.getInstance().getReference().child("crazyMessages").child(messageCloudPoc.getFrom()).updateChildren(childUpdates);
+        /*Guardando localmente en la nube*/
+        //FirebaseDatabase.getInstance().getReference().child("crazyMessages").child(messageCloudPoc.getTo()).updateChildren(childUpdates);
+
+    }
+
+    private void updateAudioProgress(double progress) {
+        String message = String.format(Locale.getDefault(), "Cargando audio: %.2f %s", progress, "%");
+        textViewMessage.setText(message);
+    }
+
+    public void setUsuarioBloqueado(String idTo) {
+        SharedPreferences myPreferences = this.getSharedPreferences("MyPreferences", MODE_PRIVATE);
+        SharedPreferences.Editor editorPref = myPreferences.edit();
+        editorPref = myPreferences.edit();
+        editorPref.putString("idUserBlocking", idTo);
+        editorPref.apply();
+//        Toast.makeText(getApplicationContext(), "Usuario bloqueado: \n" + myPreferences.getString("idUserBlocking", ""), Toast.LENGTH_LONG).show();
+    }
+
 
 
     @Override
@@ -710,565 +1853,6 @@ public class CrazyIndividualChatActivity extends AppCompatActivity implements Vi
 
     }
 
-    private void blockingUI(String idRemoto) {
-
-        listenerMensajesLocales(idRemoto);
-        findViewById(R.id.toolbar).setEnabled(false);
-        findViewById(R.id.content_main).setEnabled(false);
-        textViewNameContactTo.setText(String.format("%s %s", "Usuario", "no disponible"));
-
-        findViewById(R.id.textInputEditTextMessage).setEnabled(false);
-        findViewById(R.id.buttonAttachFile).setEnabled(false);
-        findViewById(R.id.buttonCamera).setEnabled(false);
-        findViewById(R.id.buttonMessageAndMic).setEnabled(false);
-        findViewById(R.id.imageButtonVideoCall).setEnabled(false);
-        findViewById(R.id.imageButtonVideoCall).setBackgroundResource(R.drawable.ic_baseline_videocam_24_focused);
-        findViewById(R.id.imageButtonCall).setEnabled(false);
-        findViewById(R.id.imageButtonCall).setBackgroundResource(R.drawable.ic_baseline_call_24_focused);
-//        ((ImageButton) findViewById(R.id.imageButtonCall)).setColorFilter(Color.parseColor("#fc0101"));
-
-        findViewById(R.id.messageContainer).setEnabled(false);
-        //findViewById(R.id.messageContainer).setBackgroundColor(getResources().getColor(R.color.green_light));
-        usuarioRemoto = new Trabajador();
-        usuarioRemoto.setIdUsuario(idRemoto);
-    }
-
-    private void sendAudioMessageWithFilename(MessageCloudPoc messageCloudPoc) {
-        String title = "Por favor espere";
-        String message = "Cargando audio...";
-        showCustomProgressDialog(title, message);
-        Log.d(TAG, "###########################");
-        Log.d(TAG, "sendMessage");
-        Log.d(TAG, messageCloudPoc.toString());
-        Log.d(TAG, "###########################");
-        Timestamp timestamp = new Timestamp(new Date());
-        messageCloudPoc.setTimeStamp(timestamp.toString());
-
-        // Create new post at /user-posts/$userid/$postid and at
-        // /posts/$postid simultaneously
-        String key = FirebaseDatabase.getInstance().getReference().child("crazyMessages").push().getKey();
-        messageCloudPoc.setIdMensaje(key);
-
-
-        FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
-
-        Uri audioUri = Uri.fromFile(new File(fileName));
-
-        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-        mmr.setDataSource(getApplicationContext(), audioUri);
-        String durationStr = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-        messageCloudPoc.setAudioDuration(durationStr);
-
-        String fileExtensionImage = MimeTypeMap.getFileExtensionFromUrl(audioUri.toString());
-        String mimeTypeImage = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtensionImage);
-        StorageMetadata storageMetadata = new StorageMetadata.Builder()
-                .setContentType(mimeTypeImage)
-                .build();
-//
-//                Toast.makeText(activity, mimeType, Toast.LENGTH_LONG).show();
-//                Toast.makeText(activity, fileExtension, Toast.LENGTH_LONG).show();
-//                Toast.makeText(activity, mensajeNube.toString(), Toast.LENGTH_LONG).show();
-//                Toast.makeText(activity, chat.toString(), Toast.LENGTH_LONG).show();
-//                Toast.makeText(activity, selectedUri.toString(), Toast.LENGTH_LONG).show();
-
-
-        String baseReference = "gs://tfinal2022-afc91.appspot.com";
-//        String imagePath = baseReference + "/" + "mensajes" + "/" + chat.getIdChat() + "/" + mensajeNube.getIdMensaje() + "." + fileExtensionImage;
-        String imagePath = baseReference + "/" + "mensajes" + "/" + messageCloudPoc.getFrom() + "/" + messageCloudPoc.getTo() + "/" + key + "." + fileExtensionImage;
-        Log.d(TAG, "Path reference on fireStorage");
-        StorageReference storageRef = firebaseStorage.getReferenceFromUrl(imagePath);
-
-
-//                UploadTask uploadTask = storageRef.putFile(Uri.parse(mensajeNube.getContenido()), storageMetadata);
-//                UploadTask uploadTask = storageRef.putFile(Uri.parse(mensajeNube.getContenido()));
-//                UploadTask uploadTask = storageRef.putFile(Uri.parse(mensajeNube.getContenido()));
-
-        Uri imageUriSend = Uri.fromFile(new File(fileName));
-        UploadTask uploadTask = storageRef.putFile(imageUriSend, storageMetadata);
-
-        //uploadTask = storageRef.putFile(imageUriSend, storageMetadata);
-
-
-//        if (mensajeNube.getContenido().contains("content:")) {
-//            uploadTask = storageRef.putFile(uriImage, storageMetadata);
-//
-//        } else {
-//            Uri imageUriSend = Uri.fromFile(new File(mensajeNube.getContenido()));
-//            uploadTask = storageRef.putFile(imageUriSend, storageMetadata);
-//
-//        }
-
-
-//                uploadTask = storageRef.putFile(imageUri, storageMetadata);
-        // Listen for state changes, errors, and completion of the upload.
-        StorageReference finalStorageRef = storageRef;
-        uploadTask.addOnProgressListener(taskSnapshot -> {
-            double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-            updateAudioProgress(progress);
-            Log.d(TAG, "Upload is " + progress + "% done");
-
-        }).addOnPausedListener(new OnPausedListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onPaused(UploadTask.TaskSnapshot taskSnapshot) {
-                Log.d(TAG, "Upload is paused");
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle unsuccessful uploads
-                Log.d(TAG, "on failure Foto complete...");
-                closeAlertDialogLoad();
-
-            }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                // Handle successful uploads on complete
-                // ...
-                Log.d(TAG, "Upload is complete...");
-                //  registroActivity.limpiarUI();
-            }
-        }).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-            @Override
-            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                if (!task.isSuccessful()) {
-                    throw task.getException();
-                }
-
-                // Continue with the task to get the download URL
-                return finalStorageRef.getDownloadUrl();
-            }
-        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-            @Override
-            public void onComplete(@NonNull Task<Uri> task) {
-                if (task.isSuccessful()) {
-
-                    Uri downloadUri = task.getResult();
-//                            Toast.makeText(activity, downloadUri.toString(), Toast.LENGTH_LONG).show();
-
-
-                    //MessageCloudPoc post = new MessageCloudPoc();
-                    messageCloudPoc.setContenido(downloadUri.toString());
-                    messageCloudPoc.setType(2);
-                    Map<String, Object> postValues = messageCloudPoc.toMap();
-//
-//                    Map<String, Object> childUpdates = new HashMap<>();
-//                    childUpdates.put("/" + messageCloudPoc.getFrom() + "/" + messageCloudPoc.getTo() + "/" + key, postValues);
-//                    childUpdates.put("/" + messageCloudPoc.getTo() + "/" + messageCloudPoc.getFrom() + "/" + key, postValues);
-//                    FirebaseDatabase.getInstance().getReference().child("crazyMessages").updateChildren(childUpdates);
-
-
-                    Map<String, Object> childUpdates = new HashMap<>();
-                    childUpdates.put("/crazyMessages/" + messageCloudPoc.getFrom() + "/" + messageCloudPoc.getTo() + "/" + key, postValues);
-                    childUpdates.put("/crazyMessages/" + messageCloudPoc.getTo() + "/" + messageCloudPoc.getFrom() + "/" + key, postValues);
-                    childUpdates.put("/notificaciones/" + messageCloudPoc.getTo() + "/" + messageCloudPoc.getFrom() + "/" + key, postValues);
-
-                    FirebaseDatabase.getInstance().getReference().updateChildren(childUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                Log.d(TAG, "Mensaje enviado");
-                            } else {
-                                Log.d(TAG, "Error al enviar mensaje");
-                            }
-                        }
-                    });
-
-
-                    ChatPoc chatPoc = new ChatPoc();
-                    chatPoc.setIdRemoteUser(messageCloudPoc.getTo());
-                    chatPoc.setLastMessageCloudPoc(messageCloudPoc);
-                    FirebaseDatabase.getInstance().getReference().child("crazyChats")
-                            .child(messageCloudPoc.getFrom())
-                            .child(chatPoc.getIdRemoteUser())
-                            .setValue(chatPoc);
-
-                    ChatPoc chatPocRemoto = new ChatPoc();
-                    chatPocRemoto.setIdRemoteUser(messageCloudPoc.getFrom());
-                    chatPocRemoto.setLastMessageCloudPoc(messageCloudPoc);
-                    FirebaseDatabase.getInstance().getReference().child("crazyChats")
-                            .child(messageCloudPoc.getTo())
-                            .child(chatPocRemoto.getIdRemoteUser())
-                            .setValue(chatPocRemoto);
-
-                    closeAlertDialogLoad();
-                    //finish();
-
-                } else {
-                    // Handle failures
-
-                }
-            }
-        });
-    }
-
-    private void loadRemoteUserInfoWithID(String idRemoteUser) {
-
-        FirebaseDatabase.getInstance().getReference()
-                .child("administrador")
-                .child(idRemoteUser)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Administrador administrador = snapshot.getValue(Administrador.class);
-                        if (administrador != null) {
-                            usuarioRemoto = administrador;
-                            loadRemoteUserInfo(usuarioRemoto);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-        FirebaseDatabase.getInstance().getReference()
-                .child("trabajadores")
-                .child(idRemoteUser)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Trabajador trabajador = snapshot.getValue(Trabajador.class);
-                        if (trabajador != null) {
-                            usuarioRemoto = trabajador;
-                            loadRemoteUserInfo(usuarioRemoto);
-
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-        FirebaseDatabase.getInstance().getReference()
-                .child("empleadores")
-                .child(idRemoteUser)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Empleador empleador = snapshot.getValue(Empleador.class);
-                        if (empleador != null) {
-                            usuarioRemoto = empleador;
-                            loadRemoteUserInfo(usuarioRemoto);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-    }
-
-
-    private void animationButtonMic(int i) {
-        switch (i) {
-            case 0:
-                fabMessageMic.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_send_24));
-//                rocketAnimation = (AnimationDrawable) fabMessageMic.getDrawable();
-//                rocketAnimation.start();
-                micMode = false;
-                break;
-            case 1:
-                fabMessageMic.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_mic_24));
-                micMode = true;
-                break;
-        }
-    }
-
-    private void loadUsuarioLocal() {
-        FirebaseDatabase.getInstance().getReference()
-                .child("administrador")
-                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Administrador administrador = snapshot.getValue(Administrador.class);
-                        if (administrador != null) {
-                            usuarioLocal = administrador;
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-        FirebaseDatabase.getInstance().getReference()
-                .child("trabajadores")
-                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Trabajador trabajador = snapshot.getValue(Trabajador.class);
-                        if (trabajador != null) {
-                            usuarioLocal = trabajador;
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-        FirebaseDatabase.getInstance().getReference()
-                .child("empleadores")
-                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Empleador empleador = snapshot.getValue(Empleador.class);
-                        if (empleador != null) {
-                            usuarioLocal = empleador;
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-    }
-
-    private void loadRemoteUserInfo(Usuario usuario) {
-        usuarioRemoto = usuario;
-        if (!usuario.getNombre().isEmpty() && !usuario.getApellido().isEmpty()) {
-            textViewNameContactTo.setText(String.format("%s %s", usuario.getNombre(), usuario.getApellido()));
-        } else {
-            textViewNameContactTo.setText(String.format("%s %s", "Usuario", "no encontrado"));
-        }
-        if (usuario.getFotoPerfil() != null) {
-            Glide.with(getApplicationContext()).load(usuario.getFotoPerfil()).placeholder(R.drawable.ic_baseline_person_24).circleCrop().into(imageViewNameContactTo);
-        }
-        listenerMensajesLocales(usuario.getIdUsuario());
-        deleteNotifications(usuarioRemoto.getIdUsuario());
-        setUsuarioBloqueado(usuarioRemoto.getIdUsuario());
-//        try {
-//            setUsuarioBloqueado(usuarioTo.getIdUsuario());
-//        } catch (Exception e) {
-//
-//        }
-    }
-
-
-    private void deleteNotifications(String idRemoteUser) {
-        Log.d(TAG, "ELIMINANDO NOTIFICACIONES");
-        FirebaseDatabase.getInstance().getReference()
-                .child("notificaciones")
-                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .child(idRemoteUser)
-                .setValue(null).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "Notificaciones eliminadas");
-
-                        } else {
-                            Log.d(TAG, "Error al eliminar notificaciones");
-
-                        }
-                    }
-                });
-    }
-
-    private void listenerMensajesLocales(String idRemoto) {
-        Log.d(TAG, "####################################");
-        Log.d(TAG, "listenerMensajesLocales");
-        Log.d(TAG, "####################################");
-//        FirebaseDatabase.getInstance().getReference()
-//                .child("crazyMessages")
-//                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-//        x        .child(usuarioRemoto.getIdUsuario())
-//                .addValueEventListener(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                        ArrayList<MessageCloudPoc> messageCloudPocArrayList = new ArrayList<>();
-//                        for (DataSnapshot data : snapshot.getChildren()) {
-//                            MessageCloudPoc messageCloudPoc = data.getValue(MessageCloudPoc.class);
-//                            Log.d(TAG, messageCloudPoc.toString());
-//                            messageCloudPocArrayList.add(messageCloudPoc);
-//                        }
-////                ArrayList<MessageCloudPoc> messageCloudPocsAux = messageCloudPocArrayList;
-////                updateMessagesPoc(messageCloudPocsAux);
-////                updateMessagesPoc(messageCloudPocsAux);
-//
-//                        specialMessagePoc.setMensajeNubeArrayList(messageCloudPocArrayList);
-//                        recyclerViewMensajes.scrollToPosition(messageCloudPocArrayList.size() - 1);
-//                        //updateMessagesPoc(messageCloudPocArrayList);
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError error) {
-//
-//                    }
-//                });
-
-        valueEventListenerMessagesPoc = new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Log.d(TAG, "####################################");
-                Log.d(TAG, "change messages");
-                Log.d(TAG, "####################################");
-                ArrayList<MessageCloudPoc> messageCloudPocArrayList = new ArrayList<>();
-                for (DataSnapshot data : snapshot.getChildren()) {
-                    MessageCloudPoc messageCloudPoc = data.getValue(MessageCloudPoc.class);
-                    Log.d(TAG, messageCloudPoc.toString());
-                    messageCloudPocArrayList.add(messageCloudPoc);
-                }
-//                ArrayList<MessageCloudPoc> messageCloudPocsAux = messageCloudPocArrayList;
-//                updateMessagesPoc(messageCloudPocsAux);
-//                updateMessagesPoc(messageCloudPocsAux);
-
-                specialMessageListAdapterPoc.setMensajeNubeArrayList(messageCloudPocArrayList);
-                recyclerViewMensajes.scrollToPosition(messageCloudPocArrayList.size() - 1);
-                if (stateRemoteUser != null) {
-                    if (stateRemoteUser.equals("eliminado")) {
-
-                    }
-                } else {
-                    updateMessagesPoc(messageCloudPocArrayList);
-                }
-
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        };
-        FirebaseDatabase.getInstance().getReference().child("crazyMessages")
-                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-//                .child(usuarioRemoto.getIdUsuario())
-                .child(idRemoto)
-                .addValueEventListener(valueEventListenerMessagesPoc);
-    }
-
-    private void updateMessagesPoc(ArrayList<MessageCloudPoc> messageCloudPocArrayList) {
-        Log.d(TAG, "####################################");
-        Log.d(TAG, "updateMessagesPoc");
-        Log.d(TAG, "####################################");
-
-
-        for (MessageCloudPoc m : messageCloudPocArrayList) {
-            if (m.getTo().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
-                if (!m.isEstadoLectura()) {
-
-                    m.setEstadoLectura(true);
-
-                    FirebaseDatabase.getInstance().getReference().child("crazyMessages")
-                            .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                            .child(usuarioRemoto.getIdUsuario())
-                            .child(m.getIdMensaje())
-                            .setValue(m);
-
-                    FirebaseDatabase.getInstance().getReference().child("crazyMessages")
-                            .child(usuarioRemoto.getIdUsuario())
-                            .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                            .addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    long numberMessages = snapshot.getChildrenCount();
-
-                                    if (numberMessages > 0) {
-                                        FirebaseDatabase.getInstance().getReference().child("crazyMessages")
-                                                .child(usuarioRemoto.getIdUsuario())
-                                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                                .child(m.getIdMensaje())
-                                                .setValue(m);
-                                    }
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-
-                                }
-                            });
-
-
-                    //Map<String, Object> postValues = m.toMap();
-
-                    //Map<String, Object> childUpdates = new HashMap<>();
-                    //childUpdates.put("/" + FirebaseAuth.getInstance().getCurrentUser().getUid() + "/" + m.getTo() + "/" + m.getIdMensaje(), postValues);
-                    //childUpdates.put("/" + m.getFrom() + "/" + FirebaseAuth.getInstance().getCurrentUser().getUid() + "/" + m.getIdMensaje(), postValues);
-//                    childUpdates.put("/" + m.getTo() + "/" + m.getFrom() + "/" + m.getIdMensaje(), postValues);
-                    //FirebaseDatabase.getInstance().getReference().child("crazyMessages").updateChildren(childUpdates);
-
-//                    FirebaseDatabase.getInstance().getReference().child("crazyMessages")
-//                            .child(m.getFrom())
-//                            .child(m.getTo())
-//                            .addListenerForSingleValueEvent(new ValueEventListener() {
-//                                @Override
-//                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                                    Log.d(TAG, "Number of messages: " + snapshot.getChildrenCount());
-//                                    long numberMessages = snapshot.getChildrenCount();
-//                                    for (DataSnapshot data : snapshot.getChildren()) {
-//                                        MessageCloudPoc messageCloudPoc = data.getValue(MessageCloudPoc.class);
-//                                        Log.d(TAG, messageCloudPoc.getContenido());
-//                                    }
-//                                    if (numberMessages > 0) {
-//                                        childUpdates.put("/" + m.getTo() + "/" + m.getFrom() + "/" + m.getIdMensaje(), postValues);
-//                                        //FirebaseDatabase.getInstance().getReference().child("crazyMessages").updateChildren(childUpdates);
-//                                    }
-//                                }
-//
-//                                @Override
-//                                public void onCancelled(@NonNull DatabaseError error) {
-//
-//                                }
-//                            });
-//                    ChatPoc chatPoc = new ChatPoc();
-//                    chatPoc.setIdRemoteUser(m.getTo());
-//                    chatPoc.setLastMessageCloudPoc(m);
-//                    FirebaseDatabase.getInstance().getReference().child("crazyChats")
-//                            .child(m.getFrom())
-//                            .child(chatPoc.getIdRemoteUser())
-//                            .setValue(chatPoc);
-
-//                    ChatPoc chatPocRemoto = new ChatPoc();
-//                    chatPocRemoto.setIdRemoteUser(m.getFrom());
-//                    chatPocRemoto.setLastMessageCloudPoc(m);
-//                    FirebaseDatabase.getInstance().getReference().child("crazyChats")
-//                            .child(m.getTo())
-//                            .child(chatPocRemoto.getIdRemoteUser())
-//                            .setValue(chatPocRemoto);
-                }
-            }
-        }
-        if (messageCloudPocArrayList.size() > 0) {
-            if (messageCloudPocArrayList.get(messageCloudPocArrayList.size() - 1).getTo().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
-//                if (!messageCloudPocArrayList.get(messageCloudPocArrayList.size() - 1).isEstadoLectura()) {
-                updateLastMessageOnChat(messageCloudPocArrayList.get(messageCloudPocArrayList.size() - 1));
-//                }
-            }
-
-        }
-
-    }
-
-    private void updateLastMessageOnChat(MessageCloudPoc messageCloudPoc) {
-        Log.d(TAG, "####################################");
-        Log.d(TAG, "updateLastMessageOnChat");
-        Log.d(TAG, "####################################");
-        messageCloudPoc.setEstadoLectura(true);
-        ChatPoc chatPoc = new ChatPoc();
-        chatPoc.setIdRemoteUser(messageCloudPoc.getTo());
-        chatPoc.setLastMessageCloudPoc(messageCloudPoc);
-        FirebaseDatabase.getInstance().getReference().child("crazyChats")
-                .child(messageCloudPoc.getFrom())
-                .child(chatPoc.getIdRemoteUser())
-                .setValue(chatPoc);
-
-        ChatPoc chatPocRemoto = new ChatPoc();
-        chatPocRemoto.setIdRemoteUser(messageCloudPoc.getFrom());
-        chatPocRemoto.setLastMessageCloudPoc(messageCloudPoc);
-        FirebaseDatabase.getInstance().getReference().child("crazyChats")
-                .child(messageCloudPoc.getTo())
-                .child(chatPocRemoto.getIdRemoteUser())
-                .setValue(chatPocRemoto);
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -1318,68 +1902,6 @@ public class CrazyIndividualChatActivity extends AppCompatActivity implements Vi
         }
         return super.onPrepareOptionsMenu(menu);
     }
-
-    // [START write_fan_out]
-    private void sendMessage(MessageCloudPoc messageCloudPoc) {
-        Log.d(TAG, "###########################");
-        Log.d(TAG, "sendMessage");
-        Log.d(TAG, messageCloudPoc.toString());
-        Log.d(TAG, "###########################");
-        Timestamp timestamp = new Timestamp(new Date());
-        messageCloudPoc.setTimeStamp(timestamp.toString());
-
-        // Create new post at /user-posts/$userid/$postid and at
-        // /posts/$postid simultaneously
-        String key = FirebaseDatabase.getInstance().getReference().child("crazyMessages").push().getKey();
-        messageCloudPoc.setIdMensaje(key);
-        //MessageCloudPoc post = new MessageCloudPoc();
-        Map<String, Object> postValues = messageCloudPoc.toMap();
-
-        Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/crazyMessages/" + messageCloudPoc.getFrom() + "/" + messageCloudPoc.getTo() + "/" + key, postValues);
-        childUpdates.put("/crazyMessages/" + messageCloudPoc.getTo() + "/" + messageCloudPoc.getFrom() + "/" + key, postValues);
-        childUpdates.put("/notificaciones/" + messageCloudPoc.getTo() + "/" + messageCloudPoc.getFrom() + "/" + key, postValues);
-
-        FirebaseDatabase.getInstance().getReference().updateChildren(childUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    Log.d(TAG, "Mensaje enviado");
-                } else {
-                    Log.d(TAG, "Error al enviar mensaje");
-                }
-            }
-        });
-
-
-        ChatPoc chatPoc = new ChatPoc();
-        chatPoc.setIdRemoteUser(messageCloudPoc.getTo());
-        chatPoc.setLastMessageCloudPoc(messageCloudPoc);
-        FirebaseDatabase.getInstance().getReference().child("crazyChats")
-                .child(messageCloudPoc.getFrom())
-                .child(chatPoc.getIdRemoteUser())
-                .setValue(chatPoc);
-
-        ChatPoc chatPocRemoto = new ChatPoc();
-        chatPocRemoto.setIdRemoteUser(messageCloudPoc.getFrom());
-        chatPocRemoto.setLastMessageCloudPoc(messageCloudPoc);
-        FirebaseDatabase.getInstance().getReference().child("crazyChats")
-                .child(messageCloudPoc.getTo())
-                .child(chatPocRemoto.getIdRemoteUser())
-                .setValue(chatPocRemoto);
-
-
-        textInputEditTextMessage.setText("");
-        micMode = true;
-        animationButtonMic(1);
-
-        /*Guardando localmente en la nube*/
-        //FirebaseDatabase.getInstance().getReference().child("crazyMessages").child(messageCloudPoc.getFrom()).updateChildren(childUpdates);
-        /*Guardando localmente en la nube*/
-        //FirebaseDatabase.getInstance().getReference().child("crazyMessages").child(messageCloudPoc.getTo()).updateChildren(childUpdates);
-
-    }
-    // [END write_fan_out]
 
     @Override
     public void onClick(View v) {
@@ -1846,322 +2368,12 @@ public class CrazyIndividualChatActivity extends AppCompatActivity implements Vi
 
     }
 
-    public Dialog alertDialogAttachFile() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Compartir: ");
-        String[] elements = {"Audio", "Imagen", "Ubicación"};
-        builder.setItems(elements, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                switch (i) {
-                    case 0:
-                        selectAudio();
-                        break;
-                    case 1:
-//                        selectImage();
-                        escogerDesdeGaleria();
-                        break;
-                    case 2:
-                        shareLocation();
-                        break;
-                }
-            }
-        });
-        return builder.create();
-    }
-
-    private void shareLocation() {
-        Intent intent = new Intent(getApplicationContext(), LocationActivity.class);
-        intent.putExtra("usuarioTo", usuarioRemoto);
-        intent.putExtra("usuarioLocal", usuarioLocal);
-//        intent.putExtra("chat", chat);
-//        startActivity(intent);
-        startActivityForResult(intent, LOCATION_CODE);
-
-    }
-
-    private void selectAudio() {
-
-//        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-//        intent.setDataAndType(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, "audio/*");
-//        startActivityForResult(intent, SELECT_AUDIO);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            Intent intent_upload = new Intent();
-            intent_upload.setDataAndType(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, "audio/*");
-            intent_upload.setAction(Intent.ACTION_GET_CONTENT);
-            startActivityForResult(intent_upload, SELECT_AUDIO);
-        } else {
-
-            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-            intent.setDataAndType(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, "audio/*");
-            if (intent.resolveActivity(getPackageManager()) != null) {
-//            startActivityForResult(Intent.createChooser(intent, "Seleccionar archivo de audio desde: "),SELECT_AUDIO);
-                startActivityForResult(intent, SELECT_AUDIO);
-            }
-        }
-
-    }
-
-    private void escogerDesdeGaleria() {
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        intent.setType("image/*");
-        startActivityForResult(intent, SELECCIONAR_FOTO_GALERIA_REQ_ID);
-
-    }
-
-
-    private void openAlertDialogPhotoOptions() {
-        tomarfoto();
-    }
-
-    private void tomarfoto() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        try {
-            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-
-                ContentResolver resolver = getApplicationContext().getContentResolver();
-
-                Uri audioCollection;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    audioCollection = MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY);
-                } else {
-                    audioCollection = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-                }
-
-                String displayName = "image." + System.currentTimeMillis() + ".jpeg";
-
-                ContentValues newSongDetails = new ContentValues();
-                newSongDetails.put(MediaStore.Images.Media.DISPLAY_NAME, System.currentTimeMillis());
-                newSongDetails.put(MediaStore.Images.Media.TITLE, System.currentTimeMillis());
-                newSongDetails.put(MediaStore.Images.Media.DESCRIPTION, "Photo taken on " + System.currentTimeMillis());
-                newSongDetails.put(MediaStore.MediaColumns.DISPLAY_NAME, displayName);
-
-
-                Uri picUri = resolver.insert(audioCollection, newSongDetails);
-                uriPhoto = picUri;
-
-                Log.d("FotoUdir asda", uriPhoto.toString());
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, picUri);
-                startActivityForResult(takePictureIntent, REQUEST_CAMERA_PERMISSION_FOTO_PERFIL);
-
-            }
-
-
-        } catch (Exception e) {
-            Log.e(TAG, "ERRORRRRRRR!");
-            Log.e(TAG, e.toString());
-            Log.e(TAG, e.getLocalizedMessage());
-            Log.e(TAG, e.getMessage());
-            Log.e(TAG, e.getStackTrace().toString());
-//            startActivity(new Intent(getApplicationContext(), CamActivity.class));
-        }
-    }
-
-
-    private void selectPhoto() {
-        // BEGIN_INCLUDE(startCamera)
-        // Check if the Camera permission has been granted
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-                == PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                == PackageManager.PERMISSION_GRANTED) {
-//            openAlertDialogPhotoOptions();
-            tomarfoto();
-        } else {
-            // Permission is missing and must be requested.
-            requestCameraAndWExtStPermission();
-        }
-        // END_INCLUDE(startCamera)
-    }
-
-
-    private void requestCameraAndWExtStPermission() {
-        // Permission has not been granted and must be requested.
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                Manifest.permission.CAMERA) || ActivityCompat.shouldShowRequestPermissionRationale(this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            // Provide an additional rationale to the user if the permission was not granted
-            // and the user would benefit from additional context for the use of the permission.
-            // Display a SnackBar with cda button to request the missing permission.
-            Snackbar.make(fabChooseImageProfile, R.string.camera_access_required,
-                    Snackbar.LENGTH_INDEFINITE).setAction(R.string.ok, new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    // Request the permission
-                    ActivityCompat.requestPermissions(CrazyIndividualChatActivity.this,
-                            new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                            PERMISSION_REQUEST_CAMERA);
-                }
-            }).show();
-
-        } else {
-            Snackbar.make(fabChooseImageProfile, R.string.camera_unavailable, Snackbar.LENGTH_SHORT).show();
-            // Request the permission. The result will be received in onRequestPermissionResult().
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CAMERA);
-        }
-    }
-
-    private void requestCameraPermission() {
-        // Permission has not been granted and must be requested.
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                Manifest.permission.CAMERA)) {
-            // Provide an additional rationale to the user if the permission was not granted
-            // and the user would benefit from additional context for the use of the permission.
-            // Display a SnackBar with cda button to request the missing permission.
-            Snackbar.make(fabChooseImageProfile, R.string.camera_access_required,
-                    Snackbar.LENGTH_INDEFINITE).setAction(R.string.ok, new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    // Request the permission
-                    ActivityCompat.requestPermissions(CrazyIndividualChatActivity.this,
-                            new String[]{Manifest.permission.CAMERA},
-                            PERMISSION_REQUEST_CAMERA_ONLY);
-                }
-            }).show();
-
-        } else {
-            Snackbar.make(fabChooseImageProfile, R.string.camera_unavailable, Snackbar.LENGTH_SHORT).show();
-            // Request the permission. The result will be received in onRequestPermissionResult().
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.CAMERA},
-                    PERMISSION_REQUEST_CAMERA_ONLY);
-        }
-    }
-
-
-    private void requestCameraAPILocaPermission() {
-//        Toast.makeText(getApplicationContext(), "Request camera permision", Toast.LENGTH_LONG).show();
-
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
-                Snackbar.make(fabChooseImageProfile, R.string.camera_access_required,
-                        Snackbar.LENGTH_INDEFINITE).setAction(R.string.ok, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        // Request the permission
-                        ActivityCompat.requestPermissions(CrazyIndividualChatActivity.this,
-                                new String[]{Manifest.permission.CAMERA},
-                                PERMISSION_REQUEST_CAMERA_LOCA);
-                    }
-                }).show();
-            } else {
-
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//        builder.setTitle("");
-                    builder.setMessage(R.string.permiso_camera_text);
-                    // Add the buttons
-                    builder.setPositiveButton("Ajustes", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            // User clicked OK button
-
-                            Intent intent = new Intent();
-                            intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                            intent.setData(Uri.parse("package:" + getPackageName()));
-                            startActivity(intent);
-                        }
-                    });
-                    builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            // User cancelled the dialog
-                        }
-                    });
-                    // Set other dialog properties
-
-                    // Create the AlertDialog
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
-
-                } else {
-                    // You can directly ask for the permission.
-                    Snackbar.make(fabChooseImageProfile, R.string.camera_unavailable, Snackbar.LENGTH_SHORT).show();
-                    requestPermissions(new String[]{Manifest.permission.CAMERA}, PERMISSION_REQUEST_CAMERA_LOCA);
-
-                }
-
-
-                // The registered ActivityResultCallback gets the result of this request.
-                // You can directly ask for the permission.
-                // The registered ActivityResultCallback gets the result of this request.
-//                requestPermissionLauncher.launch(Manifest.permission.CAMERA);
-                try {
-                    //requestPermissions(new String[]{Manifest.permission.CAMERA}, PERMISSION_REQUEST_CAMERA_LOCA);
-                } catch (Exception e) {
-                    Log.d(TAG, e.toString());
-                }
-            }
-        } else {
-
-        }
-
-
-//        // Permission has not been granted and must be requested.
-//        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-//                Manifest.permission.CAMERA)) {
-//            // Provide an additional rationale to the user if the permission was not granted
-//            // and the user would benefit from additional context for the use of the permission.
-//            // Display a SnackBar with cda button to request the missing permission.
-//            Snackbar.make(fabChooseImageProfile, R.string.camera_access_required,
-//                    Snackbar.LENGTH_INDEFINITE).setAction(R.string.ok, new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    // Request the permission
-//                    ActivityCompat.requestPermissions(CrazyIndividualChatActivity.this,
-//                            new String[]{Manifest.permission.CAMERA},
-//                            PERMISSION_REQUEST_CAMERA_LOCA);
-//                }
-//            }).show();
-//
-//        } else {
-//            Snackbar.make(fabChooseImageProfile, R.string.camera_unavailable, Snackbar.LENGTH_SHORT).show();
-//            // Request the permission. The result will be received in onRequestPermissionResult().
-//            ActivityCompat.requestPermissions(this,
-//                    new String[]{Manifest.permission.CAMERA}, PERMISSION_REQUEST_CAMERA_LOCA);
-//        }
-    }
-
-
-    // Register the permissions callback, which handles the user's response to the
-// system permissions dialog. Save the return value, an instance of
-// ActivityResultLauncher, as an instance variable.
-    private ActivityResultLauncher<String> requestPermissionLauncher =
-            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
-                if (isGranted) {
-                    // Permission is granted. Continue the action or workflow in your
-                    // app.
-                } else {
-                    // Explain to the user that the feature is unavailable because the
-                    // features requires a permission that the user has denied. At the
-                    // same time, respect the user's decision. Don't link to system
-                    // settings in an effort to convince the user to change their
-                    // decision.
-                }
-            });
-
-
-    public void cleanMessagesPocListener() {
-        // Clean up value listener
-        // [START clean_basic_listen]
-        Log.d(TAG, "####################################");
-        Log.d(TAG, "cleanMessagesPocListener");
-        Log.d(TAG, "####################################");
-        FirebaseDatabase.getInstance().getReference().child("crazyMessages")
-                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .child(usuarioRemoto.getIdUsuario())
-                .removeEventListener(valueEventListenerMessagesPoc);
-    }
 
     @Override
     public void onStop() {
         super.onStop();
         //cleanMessagesPocListener();
     }
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
@@ -2256,259 +2468,6 @@ public class CrazyIndividualChatActivity extends AppCompatActivity implements Vi
 
         // END_INCLUDE(onRequestPermissionsResult)
     }
-
-
-    /**
-     * @param uri The Uri to check.
-     * @return Whether the Uri authority is ExternalStorageProvider.
-     */
-    public static boolean isExternalStorageDocument(Uri uri) {
-        return "com.android.externalstorage.documents".equals(uri.getAuthority());
-    }
-
-    /**
-     * @param uri The Uri to check.
-     * @return Whether the Uri authority is DownloadsProvider.
-     */
-    public static boolean isDownloadsDocument(Uri uri) {
-        return "com.android.providers.downloads.documents".equals(uri.getAuthority());
-    }
-
-    /**
-     * @param uri The Uri to check.
-     * @return Whether the Uri authority is MediaProvider.
-     */
-    public static boolean isMediaDocument(Uri uri) {
-        return "com.android.providers.media.documents".equals(uri.getAuthority());
-    }
-
-    /**
-     * @param uri The Uri to check.
-     * @return Whether the Uri authority is Google Photos.
-     */
-    public static boolean isGooglePhotosUri(Uri uri) {
-        return "com.google.android.apps.photos.content".equals(uri.getAuthority());
-    }
-
-    private void closeAlertDialogLoad() {
-        try {
-            alertDialogVar.dismiss();
-        } catch (Exception e) {
-
-        }
-    }
-
-    public void showCustomProgressDialog(String title, String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setCancelable(false);
-        // Get the layout inflater
-        LayoutInflater inflater = this.getLayoutInflater();
-        View promptsView = inflater.inflate(R.layout.custom_progress_dialog, null);
-
-
-        // set prompts.xml to alertdialog builder
-        builder.setView(promptsView);
-        // Inflate and set the layout for the dialog
-        // Pass null as the parent view because its going in the dialog layout
-//        builder.setView(inflater.inflate(R.layout.custom_progress_dialog, null));
-//        return builder.create();
-        final TextView textViewTitle = promptsView.findViewById(R.id.textViewTitle);
-        textViewMessage = promptsView.findViewById(R.id.textViewMessage);
-
-        textViewTitle.setText(title);
-        textViewMessage.setText(message);
-
-        alertDialogVar = builder.create();
-        alertDialogVar.show();
-//        builder.show();
-    }
-
-
-    public void updateProgress(Double progress) {
-
-        String message = String.format(Locale.getDefault(), "Cargando imagen: %.2f %s", progress, "%");
-        textViewMessage.setText(message);
-    }
-
-    private void sendAudioMessage(MessageCloudPoc messageCloudPoc, Uri audioUri) {
-        String title = "Por favor espere";
-        String message = "Cargando audio...";
-        showCustomProgressDialog(title, message);
-        Log.d(TAG, "###########################");
-        Log.d(TAG, "sendMessage");
-        Log.d(TAG, messageCloudPoc.toString());
-        Log.d(TAG, "###########################");
-        Timestamp timestamp = new Timestamp(new Date());
-        messageCloudPoc.setTimeStamp(timestamp.toString());
-
-        // Create new post at /user-posts/$userid/$postid and at
-        // /posts/$postid simultaneously
-        String key = FirebaseDatabase.getInstance().getReference().child("crazyMessages").push().getKey();
-        messageCloudPoc.setIdMensaje(key);
-
-        Uri uri = audioUri;
-        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-        mmr.setDataSource(getApplicationContext(), uri);
-        String durationStr = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-        messageCloudPoc.setAudioDuration(durationStr);
-
-
-        FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
-
-
-        String fileExtensionImage = MimeTypeMap.getFileExtensionFromUrl(audioUri.toString());
-        String mimeTypeImage = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtensionImage);
-        StorageMetadata storageMetadata = new StorageMetadata.Builder()
-                .setContentType(mimeTypeImage)
-                .build();
-//
-//                Toast.makeText(activity, mimeType, Toast.LENGTH_LONG).show();
-//                Toast.makeText(activity, fileExtension, Toast.LENGTH_LONG).show();
-//                Toast.makeText(activity, mensajeNube.toString(), Toast.LENGTH_LONG).show();
-//                Toast.makeText(activity, chat.toString(), Toast.LENGTH_LONG).show();
-//                Toast.makeText(activity, selectedUri.toString(), Toast.LENGTH_LONG).show();
-
-
-        String baseReference = "gs://tfinal2022-afc91.appspot.com";
-//        String imagePath = baseReference + "/" + "mensajes" + "/" + chat.getIdChat() + "/" + mensajeNube.getIdMensaje() + "." + fileExtensionImage;
-        String imagePath = baseReference + "/" + "mensajes" + "/" + messageCloudPoc.getFrom() + "/" + messageCloudPoc.getTo() + "/" + key + "." + fileExtensionImage;
-        Log.d(TAG, "Path reference on fireStorage");
-        StorageReference storageRef = firebaseStorage.getReferenceFromUrl(imagePath);
-
-
-//                UploadTask uploadTask = storageRef.putFile(Uri.parse(mensajeNube.getContenido()), storageMetadata);
-//                UploadTask uploadTask = storageRef.putFile(Uri.parse(mensajeNube.getContenido()));
-//                UploadTask uploadTask = storageRef.putFile(Uri.parse(mensajeNube.getContenido()));
-
-        UploadTask uploadTask = storageRef.putFile(audioUri, storageMetadata);
-
-//        if (mensajeNube.getContenido().contains("content:")) {
-//            uploadTask = storageRef.putFile(uriImage, storageMetadata);
-//
-//        } else {
-//            Uri imageUriSend = Uri.fromFile(new File(mensajeNube.getContenido()));
-//            uploadTask = storageRef.putFile(imageUriSend, storageMetadata);
-//
-//        }
-
-
-//                uploadTask = storageRef.putFile(imageUri, storageMetadata);
-        // Listen for state changes, errors, and completion of the upload.
-        StorageReference finalStorageRef = storageRef;
-        uploadTask.addOnProgressListener(taskSnapshot -> {
-            double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-            updateAudioProgress(progress);
-            Log.d(TAG, "Upload is " + progress + "% done");
-
-        }).addOnPausedListener(new OnPausedListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onPaused(UploadTask.TaskSnapshot taskSnapshot) {
-                Log.d(TAG, "Upload is paused");
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle unsuccessful uploads
-                Log.d(TAG, "on failure Foto complete...");
-                closeAlertDialogLoad();
-
-            }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                // Handle successful uploads on complete
-                // ...
-                Log.d(TAG, "Upload is complete...");
-                //  registroActivity.limpiarUI();
-            }
-        }).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-            @Override
-            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                if (!task.isSuccessful()) {
-                    throw task.getException();
-                }
-
-                // Continue with the task to get the download URL
-                return finalStorageRef.getDownloadUrl();
-            }
-        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-            @Override
-            public void onComplete(@NonNull Task<Uri> task) {
-                if (task.isSuccessful()) {
-
-                    Uri downloadUri = task.getResult();
-//                            Toast.makeText(activity, downloadUri.toString(), Toast.LENGTH_LONG).show();
-
-
-                    //MessageCloudPoc post = new MessageCloudPoc();
-                    messageCloudPoc.setContenido(downloadUri.toString());
-                    messageCloudPoc.setType(2);
-                    Map<String, Object> postValues = messageCloudPoc.toMap();
-
-//                    Map<String, Object> childUpdates = new HashMap<>();
-//                    childUpdates.put("/" + messageCloudPoc.getFrom() + "/" + messageCloudPoc.getTo() + "/" + key, postValues);
-//                    childUpdates.put("/" + messageCloudPoc.getTo() + "/" + messageCloudPoc.getFrom() + "/" + key, postValues);
-//                    FirebaseDatabase.getInstance().getReference().child("crazyMessages").updateChildren(childUpdates);
-
-                    Map<String, Object> childUpdates = new HashMap<>();
-                    childUpdates.put("/crazyMessages/" + messageCloudPoc.getFrom() + "/" + messageCloudPoc.getTo() + "/" + key, postValues);
-                    childUpdates.put("/crazyMessages/" + messageCloudPoc.getTo() + "/" + messageCloudPoc.getFrom() + "/" + key, postValues);
-                    childUpdates.put("/notificaciones/" + messageCloudPoc.getTo() + "/" + messageCloudPoc.getFrom() + "/" + key, postValues);
-
-                    FirebaseDatabase.getInstance().getReference().updateChildren(childUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                Log.d(TAG, "Mensaje enviado");
-                            } else {
-                                Log.d(TAG, "Error al enviar mensaje");
-                            }
-                        }
-                    });
-
-
-                    ChatPoc chatPoc = new ChatPoc();
-                    chatPoc.setIdRemoteUser(messageCloudPoc.getTo());
-                    chatPoc.setLastMessageCloudPoc(messageCloudPoc);
-                    FirebaseDatabase.getInstance().getReference().child("crazyChats")
-                            .child(messageCloudPoc.getFrom())
-                            .child(chatPoc.getIdRemoteUser())
-                            .setValue(chatPoc);
-
-                    ChatPoc chatPocRemoto = new ChatPoc();
-                    chatPocRemoto.setIdRemoteUser(messageCloudPoc.getFrom());
-                    chatPocRemoto.setLastMessageCloudPoc(messageCloudPoc);
-                    FirebaseDatabase.getInstance().getReference().child("crazyChats")
-                            .child(messageCloudPoc.getTo())
-                            .child(chatPocRemoto.getIdRemoteUser())
-                            .setValue(chatPocRemoto);
-
-                    closeAlertDialogLoad();
-                    //finish();
-
-                } else {
-                    // Handle failures
-
-                }
-            }
-        });
-
-
-
-
-
-        /*Guardando localmente en la nube*/
-        //FirebaseDatabase.getInstance().getReference().child("crazyMessages").child(messageCloudPoc.getFrom()).updateChildren(childUpdates);
-        /*Guardando localmente en la nube*/
-        //FirebaseDatabase.getInstance().getReference().child("crazyMessages").child(messageCloudPoc.getTo()).updateChildren(childUpdates);
-
-    }
-
-    private void updateAudioProgress(double progress) {
-        String message = String.format(Locale.getDefault(), "Cargando audio: %.2f %s", progress, "%");
-        textViewMessage.setText(message);
-    }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -3222,16 +3181,6 @@ public class CrazyIndividualChatActivity extends AppCompatActivity implements Vi
             }
         }
 
-    }
-
-
-    public void setUsuarioBloqueado(String idTo) {
-        SharedPreferences myPreferences = this.getSharedPreferences("MyPreferences", MODE_PRIVATE);
-        SharedPreferences.Editor editorPref = myPreferences.edit();
-        editorPref = myPreferences.edit();
-        editorPref.putString("idUserBlocking", idTo);
-        editorPref.apply();
-//        Toast.makeText(getApplicationContext(), "Usuario bloqueado: \n" + myPreferences.getString("idUserBlocking", ""), Toast.LENGTH_LONG).show();
     }
 
     @Override

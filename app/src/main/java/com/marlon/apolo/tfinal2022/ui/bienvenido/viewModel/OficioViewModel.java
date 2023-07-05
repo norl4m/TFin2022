@@ -21,15 +21,7 @@ public class OficioViewModel extends ViewModel {
     private static final String TAG = OficioViewModel.class.getSimpleName();
     private MutableLiveData<List<Oficio>> allOficios;
 
-    public LiveData<List<Oficio>> getAllOficios() {
-        if (allOficios == null) {
-            allOficios = new MutableLiveData<List<Oficio>>();
-            loadOficios();
-        }
-        return allOficios;
-    }
-
-    private void loadOficios() {
+    public void loadOficios() {
         ArrayList<Oficio> oficioArrayList = new ArrayList<>();
         // Do an asynchronous operation to fetch data.
         ChildEventListener childEventListenerOficios = new ChildEventListener() {
@@ -99,5 +91,14 @@ public class OficioViewModel extends ViewModel {
                 .child("oficios")
                 .addChildEventListener(childEventListenerOficios);
     }
+
+    public LiveData<List<Oficio>> getAllOficios() {
+        if (allOficios == null) {
+            allOficios = new MutableLiveData<List<Oficio>>();
+            loadOficios();
+        }
+        return allOficios;
+    }
+
 
 }

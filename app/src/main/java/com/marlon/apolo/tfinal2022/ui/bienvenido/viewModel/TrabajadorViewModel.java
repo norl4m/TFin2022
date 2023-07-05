@@ -19,18 +19,9 @@ import java.util.List;
 
 public class TrabajadorViewModel extends ViewModel {
     private static final String TAG = TrabajadorViewModel.class.getSimpleName();
-
     private MutableLiveData<List<Trabajador>> allTrabajadores;
 
-    public MutableLiveData<List<Trabajador>> getAllTrabajadores() {
-        if (allTrabajadores == null) {
-            allTrabajadores = new MutableLiveData<>();
-            loadTrabajadores();
-        }
-        return allTrabajadores;
-    }
-
-    private void loadTrabajadores() {
+    public void loadTrabajadores() {
         ArrayList<Trabajador> trabajadorArrayList = new ArrayList<>();
 
         ChildEventListener childEventListenerTrabajadores = new ChildEventListener() {
@@ -101,4 +92,13 @@ public class TrabajadorViewModel extends ViewModel {
                 .addChildEventListener(childEventListenerTrabajadores);
 
     }
+
+    public MutableLiveData<List<Trabajador>> getAllTrabajadores() {
+        if (allTrabajadores == null) {
+            allTrabajadores = new MutableLiveData<>();
+            loadTrabajadores();
+        }
+        return allTrabajadores;
+    }
+
 }

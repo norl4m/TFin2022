@@ -1,4 +1,4 @@
-package com.marlon.apolo.tfinal2022.citasTrabajo.view.adapters;
+package com.marlon.apolo.tfinal2022.citasTrabajo.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

@@ -1,5 +1,6 @@
 package com.marlon.apolo.tfinal2022.registro.view;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -759,19 +760,7 @@ public class RegWithEmailPasswordActivityAdmin extends AppCompatActivity impleme
 //        // [END sign_in_with_email]
 //    }
 
-    private void sendEmailVerification() {
-        // Send verification email
-        // [START send_email_verification]
-        final FirebaseUser user = mAuth.getCurrentUser();
-        user.sendEmailVerification()
-                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        // Email sent
-                    }
-                });
-        // [END send_email_verification]
-    }
+
 
 //    private void updateUI(FirebaseUser user) {
 //        boolean photoFlag = false;
@@ -1153,6 +1142,7 @@ public class RegWithEmailPasswordActivityAdmin extends AppCompatActivity impleme
 
 
     }
+
 
     public void closeProgress() {
         try {

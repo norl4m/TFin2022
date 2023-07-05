@@ -75,7 +75,7 @@
 
     <activity
         android:id="@+id/nav_citas"
-        android:name="com.marlon.apolo.tfinal2022.ui.citaTrabajo.CitaTrabajoViewActivity"
+        android:name="com.marlon.apolo.tfinal2022.ui.citaTrabajo.view.CitaTrabajoViewActivity"
         android:label="@string/citas_trabajo"
         tools:layout="@layout/activity_cita_trabajo_view" />
     <fragment

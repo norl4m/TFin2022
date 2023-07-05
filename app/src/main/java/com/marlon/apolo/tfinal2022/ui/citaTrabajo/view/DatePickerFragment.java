@@ -1,4 +1,4 @@
-package com.marlon.apolo.tfinal2022.ui.citaTrabajo;
+package com.marlon.apolo.tfinal2022.ui.citaTrabajo.view;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -9,12 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.DatePicker;
-
-import com.marlon.apolo.tfinal2022.R;
 
 import java.util.Calendar;
 

@@ -2,7 +2,6 @@ package com.marlon.apolo.tfinal2022.login;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
 
 import android.content.Context;
@@ -14,14 +13,14 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
-import com.marlon.apolo.tfinal2022.MainNavigationActivity;
+import com.marlon.apolo.tfinal2022.ui.MainNavigationActivity;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.registro.view.PerfilActivity;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
 
-    private void setTempFlags() {
+    public void setTempFlags() {
         SharedPreferences myPreferences = LoginActivity.this.getSharedPreferences("MyPreferences", MODE_PRIVATE);
         SharedPreferences.Editor editorPref = myPreferences.edit();
         editorPref.putInt("methodTemp", -1);
@@ -32,10 +31,27 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
-    private void hideSystemBars() {
+    public void hideSystemBars() {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
+    /**
+     * Este método permite saltar el Activity que coresponde a la información inicial.
+     * <p>
+     * El Activity de información inicial aparece solo la primera vez al instalar la aplicación, cuando
+     * la bandera se encuentra en false.
+     */
+    public boolean getOmitirLoginFlag() {
+        SharedPreferences prefs = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
+        return prefs.getBoolean("omitirLogin", false);
+    }
+
+    public void setOmitirLoginFlag() {
+        SharedPreferences prefs = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean("omitirLogin", true);
+        editor.apply();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,21 +107,4 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    /**
-     * Este método permite saltar el Activity que coresponde a la información inicial.
-     * <p>
-     * El Activity de información inicial aparece solo la primera vez al instalar la aplicación, cuando
-     * la bandera se encuentra en false.
-     */
-    public boolean getOmitirLoginFlag() {
-        SharedPreferences prefs = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
-        return prefs.getBoolean("omitirLogin", false);
-    }
-
-    public void setOmitirLoginFlag() {
-        SharedPreferences prefs = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putBoolean("omitirLogin", true);
-        editor.apply();
-    }
 }

@@ -18,7 +18,6 @@ public class TrabajadorViewModel extends AndroidViewModel {
     private final TrabajadorRepository trabajadorRepository;
     private LiveData<List<Trabajador>> allTrabajadores;
     private LiveData<Trabajador> oneTrabajador;
-    private LiveData<Trabajador> auxTrabajador;
 
     public TrabajadorViewModel(@NonNull Application application) {
         super(application);
@@ -39,9 +38,6 @@ public class TrabajadorViewModel extends AndroidViewModel {
         return oneTrabajador;
     }
 
-    public LiveData<Trabajador> getAuxTrabajador(String idTrabajador) {
-        auxTrabajador = trabajadorRepository.getAuxTrabajador(idTrabajador);
-        return auxTrabajador;
-    }
+
 
 }

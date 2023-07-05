@@ -1,4 +1,4 @@
-package com.marlon.apolo.tfinal2022;
+package com.marlon.apolo.tfinal2022.ui;
 
 import android.app.ActivityManager;
 import android.app.AlertDialog;
@@ -43,6 +43,8 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.marlon.apolo.tfinal2022.CrazyService;
+import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.admin.viewModel.AdminViewModel;
 import com.marlon.apolo.tfinal2022.buscador.view.BuscadorActivity;
 import com.marlon.apolo.tfinal2022.databinding.ActivityMainNavigationBinding;

@@ -66,7 +66,11 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public class DataUsuarioFragment extends Fragment implements View.OnClickListener {
-
+    private static final int SELECCIONAR_FOTO_GALERIA_REQ_ID = 1001;
+    private static final int PERMISSION_REQUEST_CAMERA = 2000;
+    private static final int REQUEST_CAMERA_PERMISSION_FOTO_PERFIL = 1000;
+    private static final int PERMISSION_REQUEST_CAMERA_ONLY = 2001;
+    private static final int PERMISSION_REQUEST_CAMERA_LOCA = 2003;
     private static final String TAG = DataUsuarioFragment.class.getSimpleName();
     private FragmentDataUsuarioBinding binding;
     private TextInputLayout textInputLayoutNombre;
@@ -81,11 +85,7 @@ public class DataUsuarioFragment extends Fragment implements View.OnClickListene
     private ImageView imageViewProfile;
     private int metodoRegistro;
     private AdminViewModel adminViewModel;
-    private static final int SELECCIONAR_FOTO_GALERIA_REQ_ID = 1001;
-    private static final int PERMISSION_REQUEST_CAMERA = 2000;
-    private static final int REQUEST_CAMERA_PERMISSION_FOTO_PERFIL = 1000;
-    private static final int PERMISSION_REQUEST_CAMERA_ONLY = 2001;
-    private static final int PERMISSION_REQUEST_CAMERA_LOCA = 2003;
+
 
     private Uri uriPhoto;
     private Uri uriPhotoHttp;
@@ -98,70 +98,6 @@ public class DataUsuarioFragment extends Fragment implements View.OnClickListene
     private ValueEventListener valueEventListenerCitasCrazys;
 
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_editar_oficio, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.mnu_edit_oficio) {
-//            Intent intent = new Intent(requireActivity(), EditarOficioHabilidadActivity.class);
-            Intent intent = new Intent(requireActivity(), EditarOficioActivity.class);
-            intent.putExtra("trabajador", (Trabajador) usuarioLocal);
-//            ArrayList<String> idOficios = this.trabajador.getIdOficios();
-//            ArrayList<String> idHabilidades = this.trabajador.getIdHabilidades();
-//            intent.putStringArrayListExtra("idOficios", idOficios);
-//            intent.putStringArrayListExtra("idHabilidades", idHabilidades);
-            requireActivity().startActivity(intent);
-            return true;
-
-        }
-
-
-//        if (id == R.id.habilidades_reg) {
-//            Intent intent = new Intent(requireActivity(), UpdateHabilidadActivity.class);
-//            ArrayList<String> idOficios = this.trabajador.getIdOficios();
-//            ArrayList<String> idHabilidades = this.trabajador.getIdHabilidades();
-//            intent.putStringArrayListExtra("idOficios", idOficios);
-//            intent.putStringArrayListExtra("idHabilidades", idHabilidades);
-//            requireActivity().startActivity(intent);
-//            return true;
-//
-//        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onPrepareOptionsMenu(@NonNull Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-        MenuItem item = menu.findItem(R.id.mnu_edit_oficio);
-        item.setVisible(false);
-        if (user == 2) {
-            item.setVisible(true);
-        }
-
-    }
-
-    public void updateOptionsMenu() {
-        //isEditing = !isEditing;
-        requireActivity().invalidateOptionsMenu();
-    }
-
     public void showProgress(String title, String message) {
         progressDialog = new ProgressDialog(requireActivity());
         progressDialog.setCancelable(false);
@@ -171,9 +107,7 @@ public class DataUsuarioFragment extends Fragment implements View.OnClickListene
 
     }
 
-
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         binding = FragmentDataUsuarioBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -227,7 +161,7 @@ public class DataUsuarioFragment extends Fragment implements View.OnClickListene
         return root;
     }
 
-    private void filterByUser(FirebaseUser firebaseUser) {
+    public void filterByUser(FirebaseUser firebaseUser) {
 
         TrabajadorViewModel trabajadorViewModel = new ViewModelProvider(this).get(TrabajadorViewModel.class);
         trabajadorViewModel.getOneTrabajador(firebaseUser.getUid()).observe(requireActivity(), trabajador -> {
@@ -371,7 +305,7 @@ public class DataUsuarioFragment extends Fragment implements View.OnClickListene
 
     }
 
-    private void loadLocalInfo(Usuario usuario) {
+    public void loadLocalInfo(Usuario usuario) {
         if (usuario.getFotoPerfil() != null) {
             try {
                 Glide.with(requireActivity())
@@ -391,6 +325,222 @@ public class DataUsuarioFragment extends Fragment implements View.OnClickListene
         }
         if (usuario.getEmail() != null) {
             textInputLayoutEmail.getEditText().setText(usuario.getEmail());
+        }
+    }
+
+    public void closeProgressDialog() {
+        try {
+            progressDialog.dismiss();
+        } catch (Exception e) {
+            Log.d(TAG, e.toString());
+        }
+    }
+
+    public void openAlertDialogPhotoOptions() {
+        // setup the alert builder
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(requireActivity());
+        builder.setTitle("Completar acción mediante:");
+
+// add a list
+        String[] animals = {"Galería de imágenes", "Tomar foto"};
+        builder.setItems(animals, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case 0: // horse
+                        escogerDesdeGaleria();
+                        break;
+                    case 1: // cow
+                        tomarfoto();
+                        break;
+                }
+            }
+        });
+
+// create and show the alert dialog
+        android.app.AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    public void requestCameraPermission() {
+        // Permission has not been granted and must be requested.
+        if (ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(),
+                Manifest.permission.CAMERA)) {
+            // Provide an additional rationale to the user if the permission was not granted
+            // and the user would benefit from additional context for the use of the permission.
+            // Display a SnackBar with cda button to request the missing permission.
+            Snackbar.make(floatingActionButtonImagenPerfil, R.string.camera_access_required,
+                    Snackbar.LENGTH_INDEFINITE).setAction(R.string.ok, new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // Request the permission
+//                    ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.CAMERA}, PERMISSION_REQUEST_CAMERA_ONLY);
+                    requestPermissions(new String[]{Manifest.permission.CAMERA}, PERMISSION_REQUEST_CAMERA_ONLY);
+                }
+            }).show();
+
+        } else {
+            Snackbar.make(floatingActionButtonImagenPerfil, R.string.camera_unavailable, Snackbar.LENGTH_SHORT).show();
+            // Request the permission. The result will be received in onRequestPermissionResult().
+//            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.CAMERA}, PERMISSION_REQUEST_CAMERA_ONLY);
+            requestPermissions(new String[]{Manifest.permission.CAMERA}, PERMISSION_REQUEST_CAMERA_ONLY);
+        }
+    }
+
+    public void requestCameraAPILocaPermission() {
+        // Permission has not been granted and must be requested.
+        if (ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(),
+                Manifest.permission.CAMERA)) {
+            // Provide an additional rationale to the user if the permission was not granted
+            // and the user would benefit from additional context for the use of the permission.
+            // Display a SnackBar with cda button to request the missing permission.
+            Snackbar.make(floatingActionButtonImagenPerfil, R.string.camera_access_required,
+                    Snackbar.LENGTH_INDEFINITE).setAction(R.string.ok, new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // Request the permission
+//                    ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.CAMERA}, PERMISSION_REQUEST_CAMERA_LOCA);
+                    requestPermissions(new String[]{Manifest.permission.CAMERA}, PERMISSION_REQUEST_CAMERA_LOCA);
+                }
+            }).show();
+
+        } else {
+
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+//        builder.setTitle("");
+                builder.setMessage(R.string.permiso_camera_text_data);
+                // Add the buttons
+                builder.setPositiveButton("Ajustes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User clicked OK button
+
+                        Intent intent = new Intent();
+                        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        intent.setData(Uri.parse("package:" + requireActivity().getPackageName()));
+                        startActivity(intent);
+                    }
+                });
+                builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+                    }
+                });
+                // Set other dialog properties
+
+                // Create the AlertDialog
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
+            } else {
+                Snackbar.make(floatingActionButtonImagenPerfil, R.string.camera_unavailable, Snackbar.LENGTH_SHORT).show();
+                // Request the permission. The result will be received in onRequestPermissionResult().
+//            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.CAMERA}, PERMISSION_REQUEST_CAMERA_LOCA);
+                requestPermissions(new String[]{Manifest.permission.CAMERA}, PERMISSION_REQUEST_CAMERA_LOCA);
+
+
+            }
+        }
+    }
+
+
+    public void tomarfoto() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        try {
+            if (takePictureIntent.resolveActivity(requireActivity().getPackageManager()) != null) {
+
+
+                ContentResolver resolver = requireActivity()
+                        .getContentResolver();
+
+                Uri audioCollection;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    audioCollection = MediaStore.Images.Media
+                            .getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY);
+                } else {
+                    audioCollection = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+                }
+
+                String displayName = "image." + System.currentTimeMillis() + ".jpeg";
+
+                ContentValues newSongDetails = new ContentValues();
+                newSongDetails.put(MediaStore.Images.Media.DISPLAY_NAME, System.currentTimeMillis());
+                newSongDetails.put(MediaStore.Images.Media.TITLE, System.currentTimeMillis());
+                newSongDetails.put(MediaStore.Images.Media.DESCRIPTION, "Photo taken on " + System.currentTimeMillis());
+                newSongDetails.put(MediaStore.MediaColumns.DISPLAY_NAME, displayName);
+
+
+                Uri picUri = resolver.insert(audioCollection, newSongDetails);
+                uriPhoto = picUri;
+
+                Log.d("FotoUdir asda", uriPhoto.toString());
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, picUri);
+                startActivityForResult(takePictureIntent, REQUEST_CAMERA_PERMISSION_FOTO_PERFIL);
+
+            }
+
+
+        } catch (Exception e) {
+            Log.e(TAG, "ERRORRRRRRR!");
+            Log.e(TAG, e.toString());
+            Log.e(TAG, e.getLocalizedMessage());
+            Log.e(TAG, e.getMessage());
+            Log.e(TAG, e.getStackTrace().toString());
+//            startActivity(new Intent(getApplicationContext(), CamActivity.class));
+        }
+    }
+
+
+    public void escogerDesdeGaleria() {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
+        startActivityForResult(intent, SELECCIONAR_FOTO_GALERIA_REQ_ID);
+
+    }
+
+
+    public void selectPhoto() {
+        // BEGIN_INCLUDE(startCamera)
+        // Check if the Camera permission has been granted
+        if (ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.CAMERA)
+                == PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED) {
+            openAlertDialogPhotoOptions();
+        } else {
+            // Permission is missing and must be requested.
+            requestCameraAndWExtStPermission();
+        }
+        // END_INCLUDE(startCamera)
+    }
+
+
+    public void requestCameraAndWExtStPermission() {
+        // Permission has not been granted and must be requested.
+        if (ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(),
+                Manifest.permission.CAMERA) || ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(),
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            // Provide an additional rationale to the user if the permission was not granted
+            // and the user would benefit from additional context for the use of the permission.
+            // Display a SnackBar with cda button to request the missing permission.
+            Snackbar.make(floatingActionButtonImagenPerfil, R.string.camera_access_required,
+                    Snackbar.LENGTH_INDEFINITE).setAction(R.string.ok, new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // Request the permission
+//                    ActivityCompat.requestPermissions(requireActivity(),
+                    requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            PERMISSION_REQUEST_CAMERA);
+                }
+            }).show();
+
+        } else {
+            Snackbar.make(floatingActionButtonImagenPerfil, R.string.camera_unavailable, Snackbar.LENGTH_SHORT).show();
+            // Request the permission. The result will be received in onRequestPermissionResult().
+//            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CAMERA);
+            requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CAMERA);
         }
     }
 
@@ -613,221 +763,63 @@ public class DataUsuarioFragment extends Fragment implements View.OnClickListene
         }
     }
 
-    private void closeProgressDialog() {
-        try {
-            progressDialog.dismiss();
-        } catch (Exception e) {
-            Log.d(TAG, e.toString());
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_editar_oficio, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.mnu_edit_oficio) {
+//            Intent intent = new Intent(requireActivity(), EditarOficioHabilidadActivity.class);
+            Intent intent = new Intent(requireActivity(), EditarOficioActivity.class);
+            intent.putExtra("trabajador", (Trabajador) usuarioLocal);
+//            ArrayList<String> idOficios = this.trabajador.getIdOficios();
+//            ArrayList<String> idHabilidades = this.trabajador.getIdHabilidades();
+//            intent.putStringArrayListExtra("idOficios", idOficios);
+//            intent.putStringArrayListExtra("idHabilidades", idHabilidades);
+            requireActivity().startActivity(intent);
+            return true;
+
         }
+
+
+//        if (id == R.id.habilidades_reg) {
+//            Intent intent = new Intent(requireActivity(), UpdateHabilidadActivity.class);
+//            ArrayList<String> idOficios = this.trabajador.getIdOficios();
+//            ArrayList<String> idHabilidades = this.trabajador.getIdHabilidades();
+//            intent.putStringArrayListExtra("idOficios", idOficios);
+//            intent.putStringArrayListExtra("idHabilidades", idHabilidades);
+//            requireActivity().startActivity(intent);
+//            return true;
+//
+//        }
+
+        return super.onOptionsItemSelected(item);
     }
 
-    private void requestCameraPermission() {
-        // Permission has not been granted and must be requested.
-        if (ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(),
-                Manifest.permission.CAMERA)) {
-            // Provide an additional rationale to the user if the permission was not granted
-            // and the user would benefit from additional context for the use of the permission.
-            // Display a SnackBar with cda button to request the missing permission.
-            Snackbar.make(floatingActionButtonImagenPerfil, R.string.camera_access_required,
-                    Snackbar.LENGTH_INDEFINITE).setAction(R.string.ok, new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    // Request the permission
-//                    ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.CAMERA}, PERMISSION_REQUEST_CAMERA_ONLY);
-                    requestPermissions(new String[]{Manifest.permission.CAMERA}, PERMISSION_REQUEST_CAMERA_ONLY);
-                }
-            }).show();
-
-        } else {
-            Snackbar.make(floatingActionButtonImagenPerfil, R.string.camera_unavailable, Snackbar.LENGTH_SHORT).show();
-            // Request the permission. The result will be received in onRequestPermissionResult().
-//            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.CAMERA}, PERMISSION_REQUEST_CAMERA_ONLY);
-            requestPermissions(new String[]{Manifest.permission.CAMERA}, PERMISSION_REQUEST_CAMERA_ONLY);
+    @Override
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        MenuItem item = menu.findItem(R.id.mnu_edit_oficio);
+        item.setVisible(false);
+        if (user == 2) {
+            item.setVisible(true);
         }
-    }
 
-    private void requestCameraAPILocaPermission() {
-        // Permission has not been granted and must be requested.
-        if (ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(),
-                Manifest.permission.CAMERA)) {
-            // Provide an additional rationale to the user if the permission was not granted
-            // and the user would benefit from additional context for the use of the permission.
-            // Display a SnackBar with cda button to request the missing permission.
-            Snackbar.make(floatingActionButtonImagenPerfil, R.string.camera_access_required,
-                    Snackbar.LENGTH_INDEFINITE).setAction(R.string.ok, new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    // Request the permission
-//                    ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.CAMERA}, PERMISSION_REQUEST_CAMERA_LOCA);
-                    requestPermissions(new String[]{Manifest.permission.CAMERA}, PERMISSION_REQUEST_CAMERA_LOCA);
-                }
-            }).show();
-
-        } else {
-
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
-//        builder.setTitle("");
-                builder.setMessage(R.string.permiso_camera_text_data);
-                // Add the buttons
-                builder.setPositiveButton("Ajustes", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // User clicked OK button
-
-                        Intent intent = new Intent();
-                        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                        intent.setData(Uri.parse("package:" + requireActivity().getPackageName()));
-                        startActivity(intent);
-                    }
-                });
-                builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // User cancelled the dialog
-                    }
-                });
-                // Set other dialog properties
-
-                // Create the AlertDialog
-                AlertDialog dialog = builder.create();
-                dialog.show();
-
-            } else {
-                Snackbar.make(floatingActionButtonImagenPerfil, R.string.camera_unavailable, Snackbar.LENGTH_SHORT).show();
-                // Request the permission. The result will be received in onRequestPermissionResult().
-//            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.CAMERA}, PERMISSION_REQUEST_CAMERA_LOCA);
-                requestPermissions(new String[]{Manifest.permission.CAMERA}, PERMISSION_REQUEST_CAMERA_LOCA);
-
-
-            }
-        }
-    }
-
-
-    private void openAlertDialogPhotoOptions() {
-        // setup the alert builder
-        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(requireActivity());
-        builder.setTitle("Completar acción mediante:");
-
-// add a list
-        String[] animals = {"Galería de imágenes", "Tomar foto"};
-        builder.setItems(animals, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which) {
-                    case 0: // horse
-                        escogerDesdeGaleria();
-                        break;
-                    case 1: // cow
-                        tomarfoto();
-                        break;
-                }
-            }
-        });
-
-// create and show the alert dialog
-        android.app.AlertDialog dialog = builder.create();
-        dialog.show();
-    }
-
-
-    private void tomarfoto() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        try {
-            if (takePictureIntent.resolveActivity(requireActivity().getPackageManager()) != null) {
-
-
-                ContentResolver resolver = requireActivity()
-                        .getContentResolver();
-
-                Uri audioCollection;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    audioCollection = MediaStore.Images.Media
-                            .getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY);
-                } else {
-                    audioCollection = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-                }
-
-                String displayName = "image." + System.currentTimeMillis() + ".jpeg";
-
-                ContentValues newSongDetails = new ContentValues();
-                newSongDetails.put(MediaStore.Images.Media.DISPLAY_NAME, System.currentTimeMillis());
-                newSongDetails.put(MediaStore.Images.Media.TITLE, System.currentTimeMillis());
-                newSongDetails.put(MediaStore.Images.Media.DESCRIPTION, "Photo taken on " + System.currentTimeMillis());
-                newSongDetails.put(MediaStore.MediaColumns.DISPLAY_NAME, displayName);
-
-
-                Uri picUri = resolver.insert(audioCollection, newSongDetails);
-                uriPhoto = picUri;
-
-                Log.d("FotoUdir asda", uriPhoto.toString());
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, picUri);
-                startActivityForResult(takePictureIntent, REQUEST_CAMERA_PERMISSION_FOTO_PERFIL);
-
-            }
-
-
-        } catch (Exception e) {
-            Log.e(TAG, "ERRORRRRRRR!");
-            Log.e(TAG, e.toString());
-            Log.e(TAG, e.getLocalizedMessage());
-            Log.e(TAG, e.getMessage());
-            Log.e(TAG, e.getStackTrace().toString());
-//            startActivity(new Intent(getApplicationContext(), CamActivity.class));
-        }
-    }
-
-
-    private void escogerDesdeGaleria() {
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        intent.setType("image/*");
-        startActivityForResult(intent, SELECCIONAR_FOTO_GALERIA_REQ_ID);
-
-    }
-
-
-    private void selectPhoto() {
-        // BEGIN_INCLUDE(startCamera)
-        // Check if the Camera permission has been granted
-        if (ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.CAMERA)
-                == PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                == PackageManager.PERMISSION_GRANTED) {
-            openAlertDialogPhotoOptions();
-        } else {
-            // Permission is missing and must be requested.
-            requestCameraAndWExtStPermission();
-        }
-        // END_INCLUDE(startCamera)
-    }
-
-
-    private void requestCameraAndWExtStPermission() {
-        // Permission has not been granted and must be requested.
-        if (ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(),
-                Manifest.permission.CAMERA) || ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(),
-                Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            // Provide an additional rationale to the user if the permission was not granted
-            // and the user would benefit from additional context for the use of the permission.
-            // Display a SnackBar with cda button to request the missing permission.
-            Snackbar.make(floatingActionButtonImagenPerfil, R.string.camera_access_required,
-                    Snackbar.LENGTH_INDEFINITE).setAction(R.string.ok, new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    // Request the permission
-//                    ActivityCompat.requestPermissions(requireActivity(),
-                    requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                            PERMISSION_REQUEST_CAMERA);
-                }
-            }).show();
-
-        } else {
-            Snackbar.make(floatingActionButtonImagenPerfil, R.string.camera_unavailable, Snackbar.LENGTH_SHORT).show();
-            // Request the permission. The result will be received in onRequestPermissionResult().
-//            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CAMERA);
-            requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CAMERA);
-        }
     }
 
 

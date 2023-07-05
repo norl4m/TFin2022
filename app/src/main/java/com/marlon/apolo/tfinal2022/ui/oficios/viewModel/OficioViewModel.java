@@ -16,8 +16,6 @@ public class OficioViewModel extends AndroidViewModel {
 
     private final OficioRepository mRepository;
     private LiveData<List<Oficio>> allOficios;
-    private LiveData<Oficio> oneOficio;
-
 
     public OficioViewModel(Application application) {
         super(application);
@@ -38,9 +36,4 @@ public class OficioViewModel extends AndroidViewModel {
         mRepository.addOficioTofirebase(activity, oficio);
     }
 
-
-    public LiveData<Oficio> getOneOficio(String id) {
-        oneOficio = mRepository.getOneOficio(id);
-        return oneOficio;
-    }
 }

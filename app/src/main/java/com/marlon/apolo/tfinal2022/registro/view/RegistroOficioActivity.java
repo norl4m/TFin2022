@@ -41,80 +41,16 @@ public class RegistroOficioActivity extends AppCompatActivity implements View.On
 
     private static final String TAG = RegistroOficioActivity.class.getSimpleName();
     private int regUsuario;
-    private Empleador empleador;
     private Trabajador trabajador;
     private OficioViewModel oficioViewModel;
     //    private OficioRegistroListAdapter oficioRegistroListAdapter;
     private Dialog dialogInfo;
     private Dialog dialogNuevoOficio;
-    private String oficioSelected;
-    private int positionSelected;
-    private boolean click;
-    private int c;
-    private ArrayList<Oficio> oficioArrayListSelected;
-    //    private OficioSuperSpecialListAdapter oficioSuperSpecialListAdapter;
-    private String idOficioSelected;
-    private String nombreHab;
-    private BienvenidoViewModel bienvenidoViewModel;
     private OficioCrazyRegistroListAdapter oficioCrazyRegistroListAdapter;
     private ChildEventListener childEventListenerOficios;
     private SharedPreferences myPreferences;
-    private SharedPreferences.Editor editorPref;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_registro_oficio);
-        myPreferences = this.getSharedPreferences("MyPreferences", MODE_PRIVATE);
-
-
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
-        oficioArrayListSelected = new ArrayList<>();
-        RecyclerView recyclerView = findViewById(R.id.recyclerViewOficios);
-//        oficioRegistroListAdapter = new OficioRegistroListAdapter(this);
-//        recyclerView.setAdapter(oficioRegistroListAdapter);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-
-        oficioViewModel = new ViewModelProvider(this).get(OficioViewModel.class);
-
-        bienvenidoViewModel = new ViewModelProvider(this).get(BienvenidoViewModel.class);
-
-        oficioViewModel = new ViewModelProvider(this).get(OficioViewModel.class);
-
-        oficioCrazyRegistroListAdapter = new OficioCrazyRegistroListAdapter(this);
-        recyclerView.setAdapter(oficioCrazyRegistroListAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        loadOficios();
-
-
-        findViewById(R.id.buttonNext).setOnClickListener(this);
-        findViewById(R.id.buttonInfo).setOnClickListener(this);
-        findViewById(R.id.fabANuevoOficio).setOnClickListener(this);
-
-        regUsuario = getIntent().getIntExtra("usuario", -1);
-
-        switch (regUsuario) {
-            case 1:
-                empleador = (Empleador) getIntent().getSerializableExtra("empleador");
-                break;
-            case 2:
-                trabajador = (Trabajador) getIntent().getSerializableExtra("trabajador");
-                //Toast.makeText(getApplicationContext(), trabajador.toString(), Toast.LENGTH_SHORT).show();
-                break;
-        }
-    }
-
-    private void loadOficios() {
+    public void loadOficios() {
         childEventListenerOficios = new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
@@ -170,76 +106,6 @@ public class RegistroOficioActivity extends AppCompatActivity implements View.On
                 .orderByChild("nombre")
                 .addChildEventListener(childEventListenerOficios);
     }
-
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.buttonNext:
-
-
-                ArrayList<Oficio> oficiosReg = new ArrayList<>();
-                ArrayList<String> idOficiosReg = new ArrayList<>();
-                ArrayList<String> idHabilidadesReg = new ArrayList<>();
-                if (oficioCrazyRegistroListAdapter.getItemCount() > 0) {
-                    for (OficioPoc o : oficioCrazyRegistroListAdapter.getOficioPocArrayList()) {
-                        if (o.isEstadoRegistro()) {
-                            oficiosReg.add(o);
-                            idOficiosReg.add(o.getIdOficio());
-
-                        }
-                    }
-                    if (oficiosReg.size() > 0) {
-                        trabajador.setIdOficios(idOficiosReg);
-//                        Intent intent = new Intent(RegistroOficioActivity.this, MetodoRegActivity.class);
-
-//        startActivity(new Intent(this, PoCActivity.class));
-                        editorPref = myPreferences.edit();
-                        int checkAdmin = myPreferences.getInt("usuario", -1);
-                        Intent intent = new Intent(RegistroOficioActivity.this, RegWithEmailPasswordActivity.class);
-
-                        if (checkAdmin == 0) {
-                            intent = new Intent(RegistroOficioActivity.this, RegWithEmailPasswordActivityAdmin.class);
-                        }
-
-//                        Intent intent = new Intent(RegistroOficioActivity.this, RegWithEmailPasswordActivity.class);
-//                        Intent intent = new Intent(RegistroOficioActivity.this, RegistroHabilidadActivity.class);
-                        switch (regUsuario) {
-//                            case 1:/*empleador*/
-//
-//                                intent.putExtra("usuario", regUsuario);
-//                                intent.putExtra("empleador", empleador);
-//                                break;
-                            case 2:/*trabajador*/
-
-                                intent.putExtra("usuario", regUsuario);
-                                intent.putExtra("trabajador", trabajador);
-                                break;
-                        }
-                        startActivity(intent);
-
-
-                        Log.d(TAG, String.valueOf(oficiosReg.size()));
-                        Log.d(TAG, String.valueOf(idHabilidadesReg.size()));
-                    } else {
-                        Toast.makeText(getApplicationContext(), "No ha seleccionado ningún oficio", Toast.LENGTH_LONG).show();
-                    }
-
-                } else {
-//                    Toast.makeText(getApplicationContext(), "No ha seleccionado ningún oficio", Toast.LENGTH_LONG).show();
-                }
-
-
-                break;
-            case R.id.buttonInfo:
-                alertDialogInfo();
-                break;
-            case R.id.fabANuevoOficio:
-                alertDialogNuevoOficio();
-                break;
-        }
-    }
-
 
     public void alertDialogInfo() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -340,6 +206,122 @@ public class RegistroOficioActivity extends AppCompatActivity implements View.On
         dialogNuevoOficio.show();
     }
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_registro_oficio);
+        myPreferences = this.getSharedPreferences("MyPreferences", MODE_PRIVATE);
+
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        RecyclerView recyclerView = findViewById(R.id.recyclerViewOficios);
+//        oficioRegistroListAdapter = new OficioRegistroListAdapter(this);
+//        recyclerView.setAdapter(oficioRegistroListAdapter);
+//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+
+        oficioViewModel = new ViewModelProvider(this).get(OficioViewModel.class);
+
+
+        oficioViewModel = new ViewModelProvider(this).get(OficioViewModel.class);
+
+        oficioCrazyRegistroListAdapter = new OficioCrazyRegistroListAdapter(this);
+        recyclerView.setAdapter(oficioCrazyRegistroListAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        loadOficios();
+
+
+        findViewById(R.id.buttonNext).setOnClickListener(this);
+        findViewById(R.id.buttonInfo).setOnClickListener(this);
+        findViewById(R.id.fabANuevoOficio).setOnClickListener(this);
+
+        regUsuario = getIntent().getIntExtra("usuario", -1);
+
+        switch (regUsuario) {
+            case 1:
+                break;
+            case 2:
+                trabajador = (Trabajador) getIntent().getSerializableExtra("trabajador");
+                //Toast.makeText(getApplicationContext(), trabajador.toString(), Toast.LENGTH_SHORT).show();
+                break;
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.buttonNext:
+
+
+                ArrayList<Oficio> oficiosReg = new ArrayList<>();
+                ArrayList<String> idOficiosReg = new ArrayList<>();
+                ArrayList<String> idHabilidadesReg = new ArrayList<>();
+                if (oficioCrazyRegistroListAdapter.getItemCount() > 0) {
+                    for (OficioPoc o : oficioCrazyRegistroListAdapter.getOficioPocArrayList()) {
+                        if (o.isEstadoRegistro()) {
+                            oficiosReg.add(o);
+                            idOficiosReg.add(o.getIdOficio());
+
+                        }
+                    }
+                    if (oficiosReg.size() > 0) {
+                        trabajador.setIdOficios(idOficiosReg);
+//                        Intent intent = new Intent(RegistroOficioActivity.this, MetodoRegActivity.class);
+
+//        startActivity(new Intent(this, PoCActivity.class));
+                        int checkAdmin = myPreferences.getInt("usuario", -1);
+                        Intent intent = new Intent(RegistroOficioActivity.this, RegWithEmailPasswordActivity.class);
+
+                        if (checkAdmin == 0) {
+                            intent = new Intent(RegistroOficioActivity.this, RegWithEmailPasswordActivityAdmin.class);
+                        }
+
+//                        Intent intent = new Intent(RegistroOficioActivity.this, RegWithEmailPasswordActivity.class);
+//                        Intent intent = new Intent(RegistroOficioActivity.this, RegistroHabilidadActivity.class);
+                        switch (regUsuario) {
+//                            case 1:/*empleador*/
+//
+//                                intent.putExtra("usuario", regUsuario);
+//                                intent.putExtra("empleador", empleador);
+//                                break;
+                            case 2:/*trabajador*/
+
+                                intent.putExtra("usuario", regUsuario);
+                                intent.putExtra("trabajador", trabajador);
+                                break;
+                        }
+                        startActivity(intent);
+
+
+                        Log.d(TAG, String.valueOf(oficiosReg.size()));
+                        Log.d(TAG, String.valueOf(idHabilidadesReg.size()));
+                    } else {
+                        Toast.makeText(getApplicationContext(), "No ha seleccionado ningún oficio", Toast.LENGTH_LONG).show();
+                    }
+
+                } else {
+//                    Toast.makeText(getApplicationContext(), "No ha seleccionado ningún oficio", Toast.LENGTH_LONG).show();
+                }
+
+
+                break;
+            case R.id.buttonInfo:
+                alertDialogInfo();
+                break;
+            case R.id.fabANuevoOficio:
+                alertDialogNuevoOficio();
+                break;
+        }
+    }
 
     @Override
     protected void onDestroy() {

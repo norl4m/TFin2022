@@ -16,8 +16,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.IgnoreExtraProperties;
 import com.google.firebase.storage.FirebaseStorage;
@@ -25,13 +25,12 @@ import com.google.firebase.storage.OnPausedListener;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.marlon.apolo.tfinal2022.MainNavigationActivity;
+import com.marlon.apolo.tfinal2022.ui.MainNavigationActivity;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.citasTrabajo.view.NuevaCitaTrabajoActivity;
 import com.marlon.apolo.tfinal2022.citasTrabajo.view.DetalleServicioActivity;
 import com.marlon.apolo.tfinal2022.registro.view.RegWithEmailPasswordActivity;
 import com.marlon.apolo.tfinal2022.registro.view.RegWithEmailPasswordActivityAdmin;
-import com.marlon.apolo.tfinal2022.registro.view.RegistroOficioActivity;
 import com.marlon.apolo.tfinal2022.ui.editarDatos.EditarDataActivity;
 import com.marlon.apolo.tfinal2022.ui.oficios.viewModel.OficioViewModel;
 
@@ -76,70 +75,30 @@ public class Trabajador extends Usuario {
     }
 
     public void enviarCita(Cita cita, NuevaCitaTrabajoActivity citaActivity) {
-
         Cita citaAux = cita;
-        Log.d(TAG, "ENVIANDO CITA DE TRABAJO");
-        //ArrayList<String> idParticipants = cita.getParticipants();
         ArrayList<Item> itemArrayList = cita.getItems();
-        //cita.setParticipants(null);
+
         cita.setItems(null);
         cita.setStateReceive(false);
-
         String idCita = FirebaseDatabase.getInstance().getReference().child("citas").push().getKey();
         cita.setIdCita(idCita);
 
-
-        // Create new post at /user-posts/$userid/$postid and at
-        // /posts/$postid simultaneously
-        // String key = mDatabase.child("posts").push().getKey();
-        //Post post = new Post(userId, username, title, body);
         Map<String, Object> postValues = cita.toMap();
 
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("/citas/" + idCita, postValues);
-//        childUpdates.put("/citasIds/" + idParticipants.get(0) + "/citaId/", idCita);
-//        childUpdates.put("/citasIds/" + idParticipants.get(1) + "/citaId/", idCita);
-//        childUpdates.put("/citasIds/" + idCita + "/", idParticipants);
         childUpdates.put("/citaItems/" + idCita + "/", itemArrayList);
 
-        FirebaseDatabase
-                .getInstance()
-                .getReference()
+        FirebaseDatabase.getInstance().getReference()
                 .updateChildren(childUpdates)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(@NonNull Void unused) {
-                        Log.d("TAG", "Registro de cita exitoso");
+                .addOnSuccessListener(unused -> {
+                    Log.d("TAG", "Registro de cita exitoso");
 //                        citaActivity.programarAlarmaLocal(cita);
-                        citaActivity.programarAlarmaLocalCustomLoco(cita);
-                        Toast.makeText(citaActivity, "Cita enviada!", Toast.LENGTH_LONG).show();
-                        citaActivity.finish();
-                    }
+                    citaActivity.programarAlarmaLocalCustomLoco(cita);
+                    Toast.makeText(citaActivity, "Cita enviada!", Toast.LENGTH_LONG).show();
+                    citaActivity.finish();
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, e.toString());
-                    }
-                });
-
-
-//        FirebaseDatabase.getInstance().getReference()
-//                .child("citas")
-//                .child(idCita)
-//                .setValue(cita)
-//                .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                    @Override
-//                    public void onSuccess(Void unused) {
-//                        Log.d("TAG", "Registro exitoso");
-//                        Toast.makeText(citaActivity, "Cita enviada!", Toast.LENGTH_LONG).show();
-//                        citaActivity.finish();
-////                        registroActivity.getProgressBar().setVisibility(View.GONE);
-////                        registroActivity.getTextViewSavingData().setText(R.string.reg_exitoso);
-////                        registroActivity.limpiarUI();
-//
-//                    }
-//                });
+                .addOnFailureListener(e -> Log.e(TAG, e.toString()));
     }
 
     public void actualizarCita(Cita cita, DetalleServicioActivity detalleServicioActivity) {
@@ -243,16 +202,28 @@ public class Trabajador extends Usuario {
         oficioViewModel.addOficioToFirebase(activity, oficio);
     }
 
+    public void sendEmailVerification(FirebaseAuth mAuth, Activity activity) {
+        final FirebaseUser user = mAuth.getCurrentUser();
+        assert user != null;
+        user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                String message = "Se ha enviado un correo electrónico de confirmación al e-mail: "+user.getEmail();
+                Toast.makeText(activity, message, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
     @Override
     public void registrarseEnFirebase(Activity activity) {
         SharedPreferences myPreferences = activity.getSharedPreferences("MyPreferences", MODE_PRIVATE);
-
         boolean adminFlag = myPreferences.getBoolean("adminFlag", false);
         Log.d(TAG, "Iniciando registro");
         Log.d(TAG, "Registrando Trabajador en Firebase");
         this.setCalificacion(0.0);
+        Trabajador trabajador = this;
         Log.d(TAG, this.toString());
-
         FirebaseDatabase.getInstance().getReference().child("trabajadores")
                 .child(this.getIdUsuario())
                 .setValue(this)
@@ -262,9 +233,7 @@ public class Trabajador extends Usuario {
                         if (task.isSuccessful()) {
                             Toast.makeText(activity, "Registro exitoso", Toast.LENGTH_LONG).show();
                             Log.d(TAG, "Registro de trabajador completado");
-
-
-
+                            trabajador.sendEmailVerification(FirebaseAuth.getInstance(),activity);
                                     try {
                                         if (adminFlag) {
                                             RegWithEmailPasswordActivityAdmin regWithEmailPasswordActivity = (RegWithEmailPasswordActivityAdmin) activity;
@@ -276,14 +245,7 @@ public class Trabajador extends Usuario {
                                     } catch (Exception e) {
 
                                     }
-//                                    RegWithEmailPasswordActivity regWithEmailPasswordActivity = (RegWithEmailPasswordActivity) activity;
-//                                    regWithEmailPasswordActivity.closeProgress();
 
-
-
-//                            if (adminFlag) {
-//                                signInAdmin(activity, myPreferences);
-//                            } else {
                             activity.finishAffinity();
                             Intent intent = new Intent(activity, MainNavigationActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -293,17 +255,6 @@ public class Trabajador extends Usuario {
                             } catch (Exception e) {
 
                             }
-//                            }
-
-
-//                            Intent intent = new Intent(activity, MainNavigationActivity.class);
-//                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                            activity.startActivity(intent);
-//                            try {
-//                                activity.finish();
-//                            } catch (Exception e) {
-//
-//                            }
                         } else {
                             Toast.makeText(activity, activity.getString(R.string.error_inesperado), Toast.LENGTH_SHORT).show();
                         }
@@ -399,20 +350,15 @@ public class Trabajador extends Usuario {
     @Override
     public void actualizarInfo(Activity activity) {
         FirebaseDatabase.getInstance().getReference()
-                .child("trabajadores")
-                .child(this.getIdUsuario())
-                .setValue(this)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(activity, "Infomación actualizada", Toast.LENGTH_LONG).show();
-                            try {
-                                EditarDataActivity editarDataActivity = (EditarDataActivity) activity;
-                                editarDataActivity.closeProgressDialog();
-                            } catch (Exception e) {
-                                Log.d(TAG, e.toString());
-                            }
+                .child("trabajadores").child(this.getIdUsuario()).setValue(this)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(activity, "Infomación actualizada", Toast.LENGTH_LONG).show();
+                        try {
+                            EditarDataActivity editarDataActivity = (EditarDataActivity) activity;
+                            editarDataActivity.closeProgressDialog();
+                        } catch (Exception e) {
+                            Log.d(TAG, e.toString());
                         }
                     }
                 });

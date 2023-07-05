@@ -17,7 +17,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -29,7 +28,7 @@ import com.google.firebase.storage.OnPausedListener;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.marlon.apolo.tfinal2022.MainNavigationActivity;
+import com.marlon.apolo.tfinal2022.ui.MainNavigationActivity;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.citasTrabajo.view.DetalleServicioActivity;
 import com.marlon.apolo.tfinal2022.registro.view.RegWithEmailPasswordActivity;
@@ -39,7 +38,6 @@ import com.marlon.apolo.tfinal2022.ui.editarDatos.EditarDataActivity;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public class Empleador extends Usuario {
     private static final String TAG = Empleador.class.getSimpleName();
@@ -47,22 +45,19 @@ public class Empleador extends Usuario {
     public Empleador() {
     }
 
-    private void sendEmailVerification(FirebaseAuth mAuth, Activity activity) {
-        // Send verification email
-        // [START send_email_verification]
-        final FirebaseUser user = mAuth.getCurrentUser();
-        user.sendEmailVerification()
-                .addOnCompleteListener(activity, new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        // Email sent
-//                        RegWithEmailPasswordActivityAux regWithEmailPasswordActivityAux = (RegWithEmailPasswordActivityAux) activity;
-//                        regWithEmailPasswordActivityAux.alertDialogEmailVerificationInfo();
-//                        Toast.makeText(activity, "Se ha enviado un mensaje a su correo electrónico. Para completar el registro por favor revise su bandeja de entrada.", Toast.LENGTH_SHORT).show();
-                    }
-                });
-        // [END send_email_verification]
-    }
+//    public void sendEmailVerification(FirebaseAuth mAuth, Activity activity) {
+//        // Send verification email
+//        // [START send_email_verification]
+//        final FirebaseUser user = mAuth.getCurrentUser();
+//        user.sendEmailVerification()
+//                .addOnCompleteListener(activity, new OnCompleteListener<Void>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<Void> task) {
+//                        // Email sent
+//               }
+//                });
+//        // [END send_email_verification]
+//    }
 
     public void calificarTrabajador(Cita cita, DetalleServicioActivity detalleServicioActivity) {
 
@@ -193,38 +188,33 @@ public class Empleador extends Usuario {
 
     }
 
+    public void sendEmailVerification(FirebaseAuth mAuth, Activity activity) {
+        final FirebaseUser user = mAuth.getCurrentUser();
+        assert user != null;
+        user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                String message = "Se ha enviado un correo electrónico de confirmación al e-mail: "+user.getEmail();
+                Toast.makeText(activity, message, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
 
     @Override
     public void registrarseEnFirebase(Activity activity) {
         SharedPreferences myPreferences = activity.getSharedPreferences("MyPreferences", MODE_PRIVATE);
-
         boolean adminFlag = myPreferences.getBoolean("adminFlag", false);
-
-        Log.d(TAG, "Iniciando registro");
-        Log.d(TAG, "Registrando emplador en Firebase");
-        Log.d(TAG, String.valueOf(adminFlag));
-        Log.d(TAG, String.valueOf(myPreferences.getString("key", null)));
-        Log.d(TAG, String.valueOf(myPreferences.getString("email", null)));
-
         Empleador empleador = this;
-//        empleador.setIdUsuario(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid());
-        Log.d(TAG, this.toString());
-//        Log.d(TAG, Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid());
-
-        FirebaseDatabase.getInstance().getReference().child("empleadores")
-                .child(this.getIdUsuario())
-                .setValue(this)
+        FirebaseDatabase.getInstance().getReference().child("empleadores").child(this.getIdUsuario()).setValue(this)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
                             Toast.makeText(activity, "Registro exitoso", Toast.LENGTH_LONG).show();
-                            Log.d(TAG, "Registro de empleador completado");
-                            sendEmailVerification(FirebaseAuth.getInstance(), activity);
-
-
-//                                    RegWithEmailPasswordActivity regWithEmailPasswordActivity = (RegWithEmailPasswordActivity) activity;
-//                                    regWithEmailPasswordActivity.closeProgress();
+                            Log.d(TAG,"Registro exitoso");
+                            empleador.sendEmailVerification(FirebaseAuth.getInstance(), activity);
                                     try {
                                         if (adminFlag) {
                                             RegWithEmailPasswordActivityAdmin regWithEmailPasswordActivity = (RegWithEmailPasswordActivityAdmin) activity;
@@ -234,14 +224,8 @@ public class Empleador extends Usuario {
                                             regWithEmailPasswordActivity.closeProgress();
                                         }
                                     } catch (Exception e) {
-
+                                        Log.d(TAG, e.toString());
                                     }
-
-
-//                            if (adminFlag) {
-//                                signInAdmin(activity, myPreferences);
-//
-//                            } else {
                             activity.finishAffinity();
                             Intent intent = new Intent(activity, MainNavigationActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -249,11 +233,8 @@ public class Empleador extends Usuario {
                             try {
                                 activity.finish();
                             } catch (Exception e) {
-
+                                Log.d(TAG, e.toString());
                             }
-//                            }
-
-
                         } else {
                             Toast.makeText(activity, activity.getString(R.string.error_inesperado), Toast.LENGTH_SHORT).show();
                         }
@@ -261,12 +242,9 @@ public class Empleador extends Usuario {
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, e.toString());
                         Toast.makeText(activity, activity.getString(R.string.error_inesperado), Toast.LENGTH_SHORT).show();
-
                     }
                 });
-
     }
 
 

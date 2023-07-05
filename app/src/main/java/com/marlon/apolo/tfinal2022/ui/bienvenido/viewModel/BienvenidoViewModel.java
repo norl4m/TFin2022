@@ -14,12 +14,9 @@ public class BienvenidoViewModel extends ViewModel {
 
     private BienvenidoRepository bienvenidoRepository;
     private MutableLiveData<ArrayList<Trabajador>> allTrabajadores;
-    private MutableLiveData<ArrayList<Trabajador>> allTrabajadoresbyEmail;
     private MutableLiveData<ArrayList<Empleador>> allEmpleadores;
-    private MutableLiveData<ArrayList<Empleador>> allEmpleadoresByEmail;
 
     private MutableLiveData<ArrayList<Oficio>> allOficios;
-
 
     public BienvenidoViewModel() {
         bienvenidoRepository = new BienvenidoRepository();
@@ -40,18 +37,6 @@ public class BienvenidoViewModel extends ViewModel {
         return allOficios;
     }
 
-    public MutableLiveData<ArrayList<Trabajador>> getAllTrabajadoresbyEmail() {
-        allTrabajadoresbyEmail = bienvenidoRepository.getTrabajadoresByEmail();
-        return allTrabajadoresbyEmail;
-    }
-
-
-
-    public MutableLiveData<ArrayList<Empleador>> getAllEmpleadoresByEmail() {
-        allEmpleadoresByEmail = bienvenidoRepository.getEmpleadoresByEmail();
-
-        return allEmpleadoresByEmail;
-    }
 
 
 }

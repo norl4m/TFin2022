@@ -111,7 +111,6 @@ public class CrazyService extends Service {
     private ChildEventListener childEventListenerNotificacionesConMensajesLocas;
     private ChildEventListener childEventListenerCitasTrabajo;
     private ChildEventListener childEventListenerVideoCalls;
-    //    private ArrayList<Integer> arrayListNotificationIds;
     private BroadcastReceiver acceptVideoCallBroadcastReceiver;
     private BroadcastReceiver rejectVideoCallBroadcastReceiver;
     private HashMap<String, Integer> meMap;
@@ -163,7 +162,7 @@ public class CrazyService extends Service {
 //    }
 
 
-    private void createForegroundNotificationChannel() {
+    public void createForegroundNotificationChannel() {
 
         Log.d(TAG, "########################################");
         Log.d(TAG, "createForegroundNotificationChannel");
@@ -190,7 +189,7 @@ public class CrazyService extends Service {
         }
     }
 
-    private void createNotificationChannel() {
+    public void createNotificationChannel() {
         Log.d(TAG, "########################################");
         Log.d(TAG, "createNotificationChannel");
         Log.d(TAG, "########################################");
@@ -216,7 +215,7 @@ public class CrazyService extends Service {
         }
     }
 
-    private void createLlamadasVozNotificationChannel() {
+    public void createLlamadasVozNotificationChannel() {
         Log.d(TAG, "########################################");
         Log.d(TAG, "createNotificationChannel");
         Log.d(TAG, "########################################");
@@ -241,7 +240,7 @@ public class CrazyService extends Service {
         }
     }
 
-    private void sendForegroundNotification() {
+    public void sendForegroundNotification() {
         // If the notification supports a direct reply action, use
 // PendingIntent.FLAG_MUTABLE instead.
         Log.d(TAG, "########################################");
@@ -295,32 +294,7 @@ public class CrazyService extends Service {
 
         }
     }
-
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        // TODO: Return the communication channel to the service.
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
-
-    @Override
-    public void onCreate() {
-//        Toast.makeText(this, "CRAZY service creating...", Toast.LENGTH_SHORT).show();
-
-        // Get a reference to the Firebase Database
-        databaseReference = FirebaseDatabase.getInstance().getReference();
-        createForegroundNotificationChannel();
-
-        listenerForegroundAdminFunctions();
-
-        createNotificationChannel();
-        createLlamadasVozNotificationChannel();
-        createVideoCallChannel();
-        createNotificationsTempChannel();
-
-    }
-
-    private void createVideoCallChannel() {
+    public void createVideoCallChannel() {
         Log.d(TAG, "########################################");
         Log.d(TAG, "createVideoCallChannel");
         Log.d(TAG, "########################################");
@@ -346,7 +320,7 @@ public class CrazyService extends Service {
         }
     }
 
-    private void createNotificationsTempChannel() {
+    public void createNotificationsTempChannel() {
         Log.d(TAG, "########################################");
         Log.d(TAG, "createVideoCallChannel");
         Log.d(TAG, "########################################");
@@ -383,7 +357,7 @@ public class CrazyService extends Service {
 
     }
 
-    private void listenerForegroundAdminFunctions() {
+    public void listenerForegroundAdminFunctions() {
         FirebaseDatabase.getInstance().getReference()
                 .child("usuariosEliminados")
                 .addChildEventListener(new ChildEventListener() {
@@ -424,38 +398,7 @@ public class CrazyService extends Service {
 
     }
 
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-
-        startIdLocal = startId;
-        contextInstance = this;
-//        Toast.makeText(this, "CRAZY service starting", Toast.LENGTH_SHORT).show();
-        sendForegroundNotification();
-        crazyDeleteBroadcastReceiver = new CrazyDeleteBroadcastReceiver();
-        crazyReplyBroadcastReceiver = new CrazyReplyBroadcastReceiver();
-
-
-//        loadUsuarioLocal();
-
-        myPreferences = this.getSharedPreferences("MyPreferences", MODE_PRIVATE);
-        defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-
-
-        listenerMessagePocNotificacionesFirebase();
-//        listenerLlamadasDeVozFirebase();
-//        listenerNotificacionesDeVideoLlamadas();
-        listenerNotificacionesDeCitasTrabajo();
-
-        listenerVideoCalls();
-        listenerVoiceCalls();
-
-
-        // If we get killed, after returning from here, restart
-        return START_STICKY;
-    }
-
-    private void listenerVoiceCalls() {
+    public void listenerVoiceCalls() {
         meMapVoice = new HashMap<String, Integer>();
 //        meMap.put("Color2","Blue");
 //        meMap.put("Color3","Green");
@@ -539,7 +482,7 @@ public class CrazyService extends Service {
                 .addChildEventListener(childEventListenerVoiceCalls);
     }
 
-    private void listenerVideoCalls() {
+    public void listenerVideoCalls() {
 
         Log.d(TAG, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
         Log.d(TAG, "listenerVideoCalls");
@@ -630,7 +573,7 @@ public class CrazyService extends Service {
                 .addChildEventListener(childEventListenerVideoCalls);
     }
 
-    private NotificationCompat.Builder createVideoCallNotification(LlamadaVideo llamadaVideo, int notificationId) {
+    public NotificationCompat.Builder createVideoCallNotification(LlamadaVideo llamadaVideo, int notificationId) {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, VIDEO_CALLS_CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_oficios)
@@ -713,7 +656,7 @@ public class CrazyService extends Service {
     }
 
 
-    private NotificationCompat.Builder createVoiceCallNotification(LlamadaVoz llamadaVideo, int notificationId) {
+    public NotificationCompat.Builder createVoiceCallNotification(LlamadaVoz llamadaVideo, int notificationId) {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, VIDEO_CALLS_CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_oficios)
@@ -852,7 +795,7 @@ public class CrazyService extends Service {
 
     }
 
-    private NotificationCompat.Builder createTempNotification(Cita cita, int notificationId) {
+    public NotificationCompat.Builder createTempNotification(Cita cita, int notificationId) {
 
         Intent contentIntent = new Intent(this, DetalleServicioActivity.class);
         contentIntent.putExtra("cita", cita);
@@ -957,7 +900,7 @@ public class CrazyService extends Service {
 //    }
 
 
-    private void listenerMessagePocNotificacionesFirebase() {
+    public void listenerMessagePocNotificacionesFirebase() {
 //        basicListen();
         registerReceiver(crazyDeleteBroadcastReceiver, new IntentFilter(ACTION_DELETE_NOTIFICATION));
         registerReceiver(crazyReplyBroadcastReceiver, new IntentFilter(ACTION_REPLY_NOTIFICATION));
@@ -2456,6 +2399,60 @@ public class CrazyService extends Service {
 
                     }
                 });
+    }
+
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        // TODO: Return the communication channel to the service.
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+
+    @Override
+    public void onCreate() {
+//        Toast.makeText(this, "CRAZY service creating...", Toast.LENGTH_SHORT).show();
+
+        // Get a reference to the Firebase Database
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+        createForegroundNotificationChannel();
+
+        listenerForegroundAdminFunctions();
+
+        createNotificationChannel();
+        createLlamadasVozNotificationChannel();
+        createVideoCallChannel();
+        createNotificationsTempChannel();
+
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+
+        startIdLocal = startId;
+        contextInstance = this;
+//        Toast.makeText(this, "CRAZY service starting", Toast.LENGTH_SHORT).show();
+        sendForegroundNotification();
+        crazyDeleteBroadcastReceiver = new CrazyDeleteBroadcastReceiver();
+        crazyReplyBroadcastReceiver = new CrazyReplyBroadcastReceiver();
+
+
+//        loadUsuarioLocal();
+
+        myPreferences = this.getSharedPreferences("MyPreferences", MODE_PRIVATE);
+        defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+
+        listenerMessagePocNotificacionesFirebase();
+//        listenerLlamadasDeVozFirebase();
+//        listenerNotificacionesDeVideoLlamadas();
+        listenerNotificacionesDeCitasTrabajo();
+
+        listenerVideoCalls();
+        listenerVoiceCalls();
+
+
+        // If we get killed, after returning from here, restart
+        return START_STICKY;
     }
 
     @Override

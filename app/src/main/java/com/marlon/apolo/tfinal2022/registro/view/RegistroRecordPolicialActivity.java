@@ -55,14 +55,6 @@ import java.util.ArrayList;
 public class RegistroRecordPolicialActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = RegistroRecordPolicialActivity.class.getSimpleName();
-    private int regUsuario;
-    private Empleador empleador;
-    private Trabajador trabajador;
-    private Dialog dialogInfo;
-
-    private Button buttonNext;
-//    private Button buttonRecord;
-
     private static final int PERMISSION_REQUEST_CAMERA = 2000;
     private static final int PERMISSION_REQUEST_CAMERA_ONLY = 2001;
     private static final int PERMISSION_REQUEST_CAMERA_LOCA = 2003;
@@ -70,10 +62,14 @@ public class RegistroRecordPolicialActivity extends AppCompatActivity implements
     private int REQUEST_CAMERA_PERMISSION_FOTO_PERFIL = 1000;
     private static final int SELECCIONAR_PDF_REQ_ID = 1003;
 
+    private int regUsuario;
+    private Empleador empleador;
+    private Trabajador trabajador;
+    private Dialog dialogInfo;
 
+    private Button buttonNext;
     private Uri uriPhoto;
 
-    private ImageButton imageButtonFotoRecord;
     private PoliceRecord policeRecord;
     private Dialog dialogRecordPolicial;
     private ProgressDialog progressDialog;
@@ -83,8 +79,12 @@ public class RegistroRecordPolicialActivity extends AppCompatActivity implements
     private ImageView imageViewCam;
     private ImageView imageViewGallery;
     private ImageView imageViewPdf;
+    private void hideSystemBars() {
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-    private void extractPDF(String filename, InputStream inputStream) {
+    }
+
+    private void extractPDF(InputStream inputStream) {
         try {
             // creating a string for
             // storing our extracted text.
@@ -128,233 +128,6 @@ public class RegistroRecordPolicialActivity extends AppCompatActivity implements
             // for handling error while extracting the text file.
 //            extractedTV.setText("Error found is : \n" + e);
             Log.e(TAG, e.toString());
-        }
-    }
-
-    private void hideSystemBars() {
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_registro_record_policial);
-        hideSystemBars();
-        setContentView(R.layout.activity_registro_record_policial_poc);
-
-        selectMethod = -1;
-
-        /*Esto es una maravilla*/
-        TypedValue typedValue = new TypedValue();
-        getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
-        colorTheme = typedValue.data;
-        /*Esto es una maravilla*/
-
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-//        findViewById(R.id.buttonNext).setOnClickListener(this);
-
-//
-//        imageButtonFotoRecord = findViewById(R.id.imageButtonRecordPolicial);
-        buttonNext = findViewById(R.id.buttonNext);
-//        buttonRecord = findViewById(R.id.buttonRecordPolicial);
-//
-//        findViewById(R.id.buttonInfo).setOnClickListener(this);
-        findViewById(R.id.cardViewCamera).setOnClickListener(this);
-        imageViewCam = findViewById(R.id.imgViewCamera);
-        imageViewCam.setColorFilter(colorTheme);
-
-        findViewById(R.id.cardViewGallery).setOnClickListener(this);
-        imageViewGallery = findViewById(R.id.imgViewGallery);
-        imageViewGallery.setColorFilter(colorTheme);
-
-        findViewById(R.id.cardViewPdf).setOnClickListener(this);
-        imageViewPdf = findViewById(R.id.imgViewPdf);
-        imageViewPdf.setColorFilter(colorTheme);
-//        buttonRecord.setOnClickListener(this);
-        buttonNext.setOnClickListener(this);
-//        imageButtonFotoRecord.setOnClickListener(this);
-//
-        buttonNext.setEnabled(false);
-
-        regUsuario = getIntent().getIntExtra("usuario", -1);
-
-        switch (regUsuario) {
-            case 1:
-                empleador = (Empleador) getIntent().getSerializableExtra("empleador");
-                break;
-            case 2:
-                trabajador = (Trabajador) getIntent().getSerializableExtra("trabajador");
-                trabajador.setEstadoRrcordP(true);/*Config inicial*/
-                /*Asumo que el trabajador tiene antecedentes para solo pasar en el caso de que:
-                El record policial ingresado sea valido
-                Y la detección de los antecedentes en el mismo sean válidos y la respuesta detectada sea: NO
-                */
-                break;
-        }
-    }
-
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.buttonNext:
-                Intent intent = new Intent(RegistroRecordPolicialActivity.this, RegistroOficioActivity.class);
-//                Intent intent = new Intent(RegistroRecordPolicialActivity.this, RegistroOficioActivityPoc.class);
-                switch (regUsuario) {
-                    case 1:/*empleador*/
-
-                        intent.putExtra("usuario", regUsuario);
-                        intent.putExtra("empleador", empleador);
-                        break;
-                    case 2:/*trabajador*/
-
-                        intent.putExtra("usuario", regUsuario);
-                        intent.putExtra("trabajador", trabajador);
-                        break;
-                }
-                startActivity(intent);
-                break;
-            case R.id.buttonInfo:
-                alertDialogInfo();
-                break;
-            case R.id.buttonRecordPolicial:
-//                Toast.makeText(getApplicationContext(), "Seleccioar record policial", Toast.LENGTH_SHORT).show();
-                //system os is less then marshallow
-//                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-//                    openAlertDialogPhotoOptions();
-//                }
-//
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
-////                    selectPhoto();
-//                    // BEGIN_INCLUDE(startCamera)
-//                    // Check if the Camera permission has been granted
-//                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-//                            == PackageManager.PERMISSION_GRANTED
-//                            && ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-//                            == PackageManager.PERMISSION_GRANTED) {
-//                        openAlertDialogPhotoOptions();
-//                    } else {
-//                        // Permission is missing and must be requested.
-//                        requestCameraAndWExtStPermission();
-//                    }
-//                    // END_INCLUDE(startCamera)
-//                }
-//
-//                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P && Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
-//                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-//                        // Permission is already available
-//                        openAlertDialogPhotoOptions();
-//                    } else {
-//                        // Permission is missing and must be requested.
-//                        requestCameraPermission();
-//                    }
-//                }
-//
-//                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
-//                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-//                        // Permission is already available
-//                        openAlertDialogPhotoOptions();
-//                    } else {
-//                        // Permission is missing and must be requested.
-//                        requestCameraAPILocaPermission();
-//                    }
-//                }
-                break;
-            case R.id.imageButtonRecordPolicial:
-                try {
-                    if (policeRecord != null) {
-                        if (!policeRecord.isStatusCriminalRecord()) {
-                            alertDialogRecordPolicial(policeRecord);
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Record policial inválido", Toast.LENGTH_LONG).show();
-                        }
-                    } else {
-                        Toast.makeText(getApplicationContext(), "No se ha registrado ningún record policial", Toast.LENGTH_LONG).show();
-                        Toast.makeText(getApplicationContext(), "Por favor ingrese su record policial nuevamente", Toast.LENGTH_LONG).show();
-                    }
-                    /*if (!policeRecord.isStatusCriminalRecord()){
-                        showPoliceRecordInfo();
-                    }*/
-                } catch (Exception e) {
-                    Toast.makeText(getApplicationContext(), "Error en la lectura de datos", Toast.LENGTH_LONG).show();
-                    Toast.makeText(getApplicationContext(), "Por favor ingrese su record policial nuevamente", Toast.LENGTH_LONG).show();
-                }
-                break;
-
-            case R.id.cardViewCamera:
-                selectMethod = 1;
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-                    tomarfoto();
-                }
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
-//                    selectPhoto();
-                    // BEGIN_INCLUDE(startCamera)
-                    // Check if the Camera permission has been granted
-                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-                            == PackageManager.PERMISSION_GRANTED
-                            && ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                            == PackageManager.PERMISSION_GRANTED) {
-                        tomarfoto();
-                    } else {
-                        // Permission is missing and must be requested.
-                        requestCameraAndWExtStPermission();
-                    }
-                    // END_INCLUDE(startCamera)
-                }
-
-                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P && Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
-                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-                        // Permission is already available
-                        tomarfoto();
-                    } else {
-                        // Permission is missing and must be requested.
-                        requestCameraPermission();
-                    }
-                }
-
-                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
-                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-                        // Permission is already available
-                        tomarfoto();
-                    } else {
-                        // Permission is missing and must be requested.
-                        requestCameraAPILocaPermission();
-                    }
-                }
-
-                break;
-            case R.id.cardViewGallery:
-                selectMethod = 2;
-                escogerDesdeGaleria();
-                break;
-            case R.id.cardViewPdf:
-//                Toast.makeText(getApplicationContext(), "PDF", Toast.LENGTH_LONG).show();
-                selectMethod = 3;
-//                String filenamePdf = "storage/emulated/0/Download/cert_ant_penales_1719099127.pdf";
-//                try {
-//                    extractPDF(filenamePdf);
-//                } catch (Exception e) {
-//                    Log.d(TAG, e.toString());
-//                }
-                /*Almacenamiento interno*/
-                File internoFileDir = getFilesDir();
-                File internoCacheDir = getCacheDir();
-                /*Almacenamiento interno*/
-                File externoFileDir = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
-                File externoCacheDir = getExternalCacheDir();
-
-
-                escogerPDF();
-                break;
         }
     }
 
@@ -534,7 +307,6 @@ public class RegistroRecordPolicialActivity extends AppCompatActivity implements
 //        dialogNuevoOficio.show();
     }
 
-
     public void alertDialogInfo() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         // Get the layout inflater
@@ -566,33 +338,6 @@ public class RegistroRecordPolicialActivity extends AppCompatActivity implements
         dialogInfo.show();
     }
 
-
-//    private void openAlertDialogPhotoOptions() {
-//        // setup the alert builder
-//        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
-//        builder.setTitle("Completar acción mediante:");
-//
-//// add a list
-//        String[] animals = {"Galería de imágenes", "Tomar foto"};
-//        builder.setItems(animals, new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                switch (which) {
-//                    case 0: // horse
-//                        escogerDesdeGaleria();
-//                        break;
-//                    case 1: // cow
-//                        tomarfoto();
-//                        break;
-//                }
-//            }
-//        });
-//
-//// create and show the alert dialog
-//        android.app.AlertDialog dialog = builder.create();
-//        dialog.show();
-//    }
-
     private void escogerDesdeGaleria() {
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -600,7 +345,6 @@ public class RegistroRecordPolicialActivity extends AppCompatActivity implements
         startActivityForResult(intent, SELECCIONAR_FOTO_GALERIA_REQ_ID);
 
     }
-
 
     private void escogerPDF() {
 //        Intent intent = new Intent();
@@ -666,22 +410,6 @@ public class RegistroRecordPolicialActivity extends AppCompatActivity implements
 //            startActivity(new Intent(getApplicationContext(), CamActivity.class));
         }
     }
-
-//    private void selectPhoto() {
-//        // BEGIN_INCLUDE(startCamera)
-//        // Check if the Camera permission has been granted
-//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-//                == PackageManager.PERMISSION_GRANTED
-//                && ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-//                == PackageManager.PERMISSION_GRANTED) {
-//            openAlertDialogPhotoOptions();
-//        } else {
-//            // Permission is missing and must be requested.
-//            requestCameraAndWExtStPermission();
-//        }
-//        // END_INCLUDE(startCamera)
-//    }
-
 
     private void requestCameraAndWExtStPermission() {
         // Permission has not been granted and must be requested.
@@ -794,132 +522,6 @@ public class RegistroRecordPolicialActivity extends AppCompatActivity implements
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        // BEGIN_INCLUDE(onRequestPermissionsResult)
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case PERMISSION_REQUEST_CAMERA:
-                // Request for camera permission.
-                if (grantResults.length == 2 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                    // Permission has been granted. Start camera preview Activity.
-//                    openAlertDialogPhotoOptions();
-                    if (selectMethod == 1) {
-                        tomarfoto();
-                    }
-                } else {
-                    // Permission request was denied.
-                    Snackbar.make(buttonNext, R.string.camera_permission_denied,
-                                    Snackbar.LENGTH_SHORT)
-                            .show();
-                }
-                break;
-
-            case PERMISSION_REQUEST_CAMERA_ONLY:
-                // Request for camera permission.
-                if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // Permission has been granted. Start camera preview Activity.
-//                    openAlertDialogPhotoOptions();
-                    if (selectMethod == 1) {
-                        tomarfoto();
-                    }
-                } else {
-                    // Permission request was denied.
-                    /*Snackbar.make(fabChooseImageProfile, R.string.camera_permission_denied,
-                            Snackbar.LENGTH_SHORT)
-                            .show();*/
-
-                    Snackbar.make(buttonNext, R.string.camera_permission_denied,
-                                    Snackbar.LENGTH_SHORT)
-                            .show();
-                }
-                break;
-
-            case PERMISSION_REQUEST_CAMERA_LOCA:
-                // Request for camera permission.
-                if (grantResults.length >= 1 && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    // Permission has been granted. Start camera preview Activity.
-//                    openAlertDialogPhotoOptions();
-                    if (selectMethod == 1) {
-                        tomarfoto();
-                    }
-                } else {
-                    // Permission request was denied.
-                    /*Snackbar.make(fabChooseImageProfile, R.string.camera_permission_denied,
-                            Snackbar.LENGTH_SHORT)
-                            .show();*/
-                    Snackbar.make(buttonNext, R.string.camera_permission_denied,
-                                    Snackbar.LENGTH_SHORT)
-                            .show();
-                }
-                break;
-        }
-
-        // END_INCLUDE(onRequestPermissionsResult)
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-
-        if (requestCode == REQUEST_CAMERA_PERMISSION_FOTO_PERFIL && resultCode == RESULT_OK) {
-
-            try {
-//                final Uri imageUri = data.getData();
-                Uri uriImageToSend = uriPhoto;
-//                Glide.with(getApplicationContext()).load(uriPhoto).into(imageViewCam);
-//                imageViewCam.setColorFilter(null);
-                // Toast.makeText(getApplicationContext(), uriPhoto.toString(), Toast.LENGTH_SHORT).show();
-                InputStream imageStream = getContentResolver().openInputStream(uriPhoto);
-                final Bitmap recordPolicialImg = BitmapFactory.decodeStream(imageStream);
-                procesarRecordPolicial(recordPolicialImg);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                Toast.makeText(this, "Ha ocurrido un error inesperado!", Toast.LENGTH_SHORT).show();
-            }
-        }
-        if (requestCode == SELECCIONAR_FOTO_GALERIA_REQ_ID && resultCode == RESULT_OK) {
-
-            try {
-                Log.e(TAG, "Seleccionando imagen...");
-                final Uri imageUri = data.getData();
-                uriPhoto = imageUri;
-                Glide.with(getApplicationContext()).load(uriPhoto).into(imageViewGallery);
-                imageViewGallery.setColorFilter(null);
-                InputStream imageStream = getContentResolver().openInputStream(uriPhoto);
-                final Bitmap recordPolicialImg = BitmapFactory.decodeStream(imageStream);
-                // Toast.makeText(getApplicationContext(), uriPhoto.toString(), Toast.LENGTH_SHORT).show();
-                procesarRecordPolicial(recordPolicialImg);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                Toast.makeText(this, "Ha ocurrido un error inesperado!", Toast.LENGTH_SHORT).show();
-            }
-        }
-        if (requestCode == SELECCIONAR_PDF_REQ_ID && resultCode == RESULT_OK) {
-
-            try {
-                final Uri pdfUri = data.getData();
-                uriPhoto = pdfUri;
-//                Glide.with(getApplicationContext()).load(uriPhoto).into(imageViewPdf);
-                InputStream imageStream = getContentResolver().openInputStream(uriPhoto);
-                extractPDF(data.getData().getPath(), imageStream);
-
-//                final Bitmap recordPolicialImg = BitmapFactory.decodeStream(imageStream);
-//                Toast.makeText(getApplicationContext(), uriPhoto.getPath().toString(), Toast.LENGTH_SHORT).show();
-//                procesarRecordPolicial(recordPolicialImg);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                Toast.makeText(this, "Ha ocurrido un error inesperado!", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-
     private void procesarRecordPolicial(Bitmap recordPolicialBitmap) {
 //        progressDialog = getDialogProgressBar().create();
 //        progressDialog.show();
@@ -1015,5 +617,350 @@ public class RegistroRecordPolicialActivity extends AppCompatActivity implements
 
     }
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+//        setContentView(R.layout.activity_registro_record_policial);
+        hideSystemBars();
+        setContentView(R.layout.activity_registro_record_policial_poc);
+
+        selectMethod = -1;
+
+        /*Esto es una maravilla*/
+        TypedValue typedValue = new TypedValue();
+        getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
+        colorTheme = typedValue.data;
+        /*Esto es una maravilla*/
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+//        findViewById(R.id.buttonNext).setOnClickListener(this);
+
+//
+//        imageButtonFotoRecord = findViewById(R.id.imageButtonRecordPolicial);
+        buttonNext = findViewById(R.id.buttonNext);
+//        buttonRecord = findViewById(R.id.buttonRecordPolicial);
+//
+//        findViewById(R.id.buttonInfo).setOnClickListener(this);
+        findViewById(R.id.cardViewCamera).setOnClickListener(this);
+        imageViewCam = findViewById(R.id.imgViewCamera);
+        imageViewCam.setColorFilter(colorTheme);
+
+        findViewById(R.id.cardViewGallery).setOnClickListener(this);
+        imageViewGallery = findViewById(R.id.imgViewGallery);
+        imageViewGallery.setColorFilter(colorTheme);
+
+        findViewById(R.id.cardViewPdf).setOnClickListener(this);
+        imageViewPdf = findViewById(R.id.imgViewPdf);
+        imageViewPdf.setColorFilter(colorTheme);
+//        buttonRecord.setOnClickListener(this);
+        buttonNext.setOnClickListener(this);
+//        imageButtonFotoRecord.setOnClickListener(this);
+//
+        buttonNext.setEnabled(false);
+
+        regUsuario = getIntent().getIntExtra("usuario", -1);
+
+        switch (regUsuario) {
+            case 1:
+                empleador = (Empleador) getIntent().getSerializableExtra("empleador");
+                break;
+            case 2:
+                trabajador = (Trabajador) getIntent().getSerializableExtra("trabajador");
+                trabajador.setEstadoRrcordP(true);/*Config inicial*/
+                /*Asumo que el trabajador tiene antecedentes para solo pasar en el caso de que:
+                El record policial ingresado sea valido
+                Y la detección de los antecedentes en el mismo sean válidos y la respuesta detectada sea: NO
+                */
+                break;
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.buttonNext:
+                Intent intent = new Intent(RegistroRecordPolicialActivity.this, RegistroOficioActivity.class);
+//                Intent intent = new Intent(RegistroRecordPolicialActivity.this, RegistroOficioActivityPoc.class);
+                switch (regUsuario) {
+                    case 1:/*empleador*/
+
+                        intent.putExtra("usuario", regUsuario);
+                        intent.putExtra("empleador", empleador);
+                        break;
+                    case 2:/*trabajador*/
+
+                        intent.putExtra("usuario", regUsuario);
+                        intent.putExtra("trabajador", trabajador);
+                        break;
+                }
+                startActivity(intent);
+                break;
+            case R.id.buttonInfo:
+                alertDialogInfo();
+                break;
+            case R.id.buttonRecordPolicial:
+//                Toast.makeText(getApplicationContext(), "Seleccioar record policial", Toast.LENGTH_SHORT).show();
+                //system os is less then marshallow
+//                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+//                    openAlertDialogPhotoOptions();
+//                }
+//
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+////                    selectPhoto();
+//                    // BEGIN_INCLUDE(startCamera)
+//                    // Check if the Camera permission has been granted
+//                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+//                            == PackageManager.PERMISSION_GRANTED
+//                            && ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+//                            == PackageManager.PERMISSION_GRANTED) {
+//                        openAlertDialogPhotoOptions();
+//                    } else {
+//                        // Permission is missing and must be requested.
+//                        requestCameraAndWExtStPermission();
+//                    }
+//                    // END_INCLUDE(startCamera)
+//                }
+//
+//                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P && Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
+//                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+//                        // Permission is already available
+//                        openAlertDialogPhotoOptions();
+//                    } else {
+//                        // Permission is missing and must be requested.
+//                        requestCameraPermission();
+//                    }
+//                }
+//
+//                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
+//                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+//                        // Permission is already available
+//                        openAlertDialogPhotoOptions();
+//                    } else {
+//                        // Permission is missing and must be requested.
+//                        requestCameraAPILocaPermission();
+//                    }
+//                }
+                break;
+            case R.id.imageButtonRecordPolicial:
+                try {
+                    if (policeRecord != null) {
+                        if (!policeRecord.isStatusCriminalRecord()) {
+                            alertDialogRecordPolicial(policeRecord);
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Record policial inválido", Toast.LENGTH_LONG).show();
+                        }
+                    } else {
+                        Toast.makeText(getApplicationContext(), "No se ha registrado ningún record policial", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "Por favor ingrese su record policial nuevamente", Toast.LENGTH_LONG).show();
+                    }
+                    /*if (!policeRecord.isStatusCriminalRecord()){
+                        showPoliceRecordInfo();
+                    }*/
+                } catch (Exception e) {
+                    Toast.makeText(getApplicationContext(), "Error en la lectura de datos", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Por favor ingrese su record policial nuevamente", Toast.LENGTH_LONG).show();
+                }
+                break;
+
+            case R.id.cardViewCamera:
+                selectMethod = 1;
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                    tomarfoto();
+                }
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+//                    selectPhoto();
+                    // BEGIN_INCLUDE(startCamera)
+                    // Check if the Camera permission has been granted
+                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                            == PackageManager.PERMISSION_GRANTED
+                            && ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                            == PackageManager.PERMISSION_GRANTED) {
+                        tomarfoto();
+                    } else {
+                        // Permission is missing and must be requested.
+                        requestCameraAndWExtStPermission();
+                    }
+                    // END_INCLUDE(startCamera)
+                }
+
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P && Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
+                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                        // Permission is already available
+                        tomarfoto();
+                    } else {
+                        // Permission is missing and must be requested.
+                        requestCameraPermission();
+                    }
+                }
+
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
+                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                        // Permission is already available
+                        tomarfoto();
+                    } else {
+                        // Permission is missing and must be requested.
+                        requestCameraAPILocaPermission();
+                    }
+                }
+
+                break;
+            case R.id.cardViewGallery:
+                selectMethod = 2;
+                escogerDesdeGaleria();
+                break;
+            case R.id.cardViewPdf:
+//                Toast.makeText(getApplicationContext(), "PDF", Toast.LENGTH_LONG).show();
+                selectMethod = 3;
+//                String filenamePdf = "storage/emulated/0/Download/cert_ant_penales_1719099127.pdf";
+//                try {
+//                    extractPDF(filenamePdf);
+//                } catch (Exception e) {
+//                    Log.d(TAG, e.toString());
+//                }
+                /*Almacenamiento interno*/
+                File internoFileDir = getFilesDir();
+                File internoCacheDir = getCacheDir();
+                /*Almacenamiento interno*/
+                File externoFileDir = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
+                File externoCacheDir = getExternalCacheDir();
+
+
+                escogerPDF();
+                break;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        // BEGIN_INCLUDE(onRequestPermissionsResult)
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case PERMISSION_REQUEST_CAMERA:
+                // Request for camera permission.
+                if (grantResults.length == 2 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                    // Permission has been granted. Start camera preview Activity.
+//                    openAlertDialogPhotoOptions();
+                    if (selectMethod == 1) {
+                        tomarfoto();
+                    }
+                } else {
+                    // Permission request was denied.
+                    Snackbar.make(buttonNext, R.string.camera_permission_denied,
+                                    Snackbar.LENGTH_SHORT)
+                            .show();
+                }
+                break;
+
+            case PERMISSION_REQUEST_CAMERA_ONLY:
+                // Request for camera permission.
+                if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Permission has been granted. Start camera preview Activity.
+//                    openAlertDialogPhotoOptions();
+                    if (selectMethod == 1) {
+                        tomarfoto();
+                    }
+                } else {
+                    // Permission request was denied.
+                    /*Snackbar.make(fabChooseImageProfile, R.string.camera_permission_denied,
+                            Snackbar.LENGTH_SHORT)
+                            .show();*/
+
+                    Snackbar.make(buttonNext, R.string.camera_permission_denied,
+                                    Snackbar.LENGTH_SHORT)
+                            .show();
+                }
+                break;
+
+            case PERMISSION_REQUEST_CAMERA_LOCA:
+                // Request for camera permission.
+                if (grantResults.length >= 1 && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    // Permission has been granted. Start camera preview Activity.
+//                    openAlertDialogPhotoOptions();
+                    if (selectMethod == 1) {
+                        tomarfoto();
+                    }
+                } else {
+                    // Permission request was denied.
+                    /*Snackbar.make(fabChooseImageProfile, R.string.camera_permission_denied,
+                            Snackbar.LENGTH_SHORT)
+                            .show();*/
+                    Snackbar.make(buttonNext, R.string.camera_permission_denied,
+                                    Snackbar.LENGTH_SHORT)
+                            .show();
+                }
+                break;
+        }
+
+        // END_INCLUDE(onRequestPermissionsResult)
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+
+        if (requestCode == REQUEST_CAMERA_PERMISSION_FOTO_PERFIL && resultCode == RESULT_OK) {
+
+            try {
+//                final Uri imageUri = data.getData();
+                Uri uriImageToSend = uriPhoto;
+//                Glide.with(getApplicationContext()).load(uriPhoto).into(imageViewCam);
+//                imageViewCam.setColorFilter(null);
+                // Toast.makeText(getApplicationContext(), uriPhoto.toString(), Toast.LENGTH_SHORT).show();
+                InputStream imageStream = getContentResolver().openInputStream(uriPhoto);
+                final Bitmap recordPolicialImg = BitmapFactory.decodeStream(imageStream);
+                procesarRecordPolicial(recordPolicialImg);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(this, "Ha ocurrido un error inesperado!", Toast.LENGTH_SHORT).show();
+            }
+        }
+        if (requestCode == SELECCIONAR_FOTO_GALERIA_REQ_ID && resultCode == RESULT_OK) {
+
+            try {
+                Log.e(TAG, "Seleccionando imagen...");
+                final Uri imageUri = data.getData();
+                uriPhoto = imageUri;
+                Glide.with(getApplicationContext()).load(uriPhoto).into(imageViewGallery);
+                imageViewGallery.setColorFilter(null);
+                InputStream imageStream = getContentResolver().openInputStream(uriPhoto);
+                final Bitmap recordPolicialImg = BitmapFactory.decodeStream(imageStream);
+                // Toast.makeText(getApplicationContext(), uriPhoto.toString(), Toast.LENGTH_SHORT).show();
+                procesarRecordPolicial(recordPolicialImg);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(this, "Ha ocurrido un error inesperado!", Toast.LENGTH_SHORT).show();
+            }
+        }
+        if (requestCode == SELECCIONAR_PDF_REQ_ID && resultCode == RESULT_OK) {
+
+            try {
+                final Uri pdfUri = data.getData();
+                uriPhoto = pdfUri;
+//                Glide.with(getApplicationContext()).load(uriPhoto).into(imageViewPdf);
+                InputStream imageStream = getContentResolver().openInputStream(uriPhoto);
+//                extractPDF(data.getData().getPath(), imageStream);
+                extractPDF(imageStream);
+
+//                final Bitmap recordPolicialImg = BitmapFactory.decodeStream(imageStream);
+//                Toast.makeText(getApplicationContext(), uriPhoto.getPath().toString(), Toast.LENGTH_SHORT).show();
+//                procesarRecordPolicial(recordPolicialImg);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(this, "Ha ocurrido un error inesperado!", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 
 }

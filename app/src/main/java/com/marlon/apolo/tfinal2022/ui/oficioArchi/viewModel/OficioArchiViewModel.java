@@ -21,12 +21,10 @@ public class OficioArchiViewModel extends AndroidViewModel {
     private OficioArchiRepository mRepository;
 
     private LiveData<List<OficioArchiModel>> allOficios;
-    private MutableLiveData<Integer> numberOficios;
 
     public OficioArchiViewModel(@NonNull Application application) {
         super(application);
         mRepository = new OficioArchiRepository();
-        numberOficios = mRepository.getTotalSize();
         allOficios = mRepository.getAllOficios();
     }
 
@@ -45,13 +43,5 @@ public class OficioArchiViewModel extends AndroidViewModel {
     public void update(Oficio oficioArchiModel, OficioArchiEditDeleteActivity oficioArchiEditDeleteActivity, ProgressDialog progressDialog) {
         mRepository.updateOficio(oficioArchiModel, oficioArchiEditDeleteActivity, progressDialog);
     }
-//
-//    public int getNumberOficios() {
-//        return numberOficios;
-//    }
 
-
-    public MutableLiveData<Integer> getNumberOficios() {
-        return numberOficios;
-    }
 }

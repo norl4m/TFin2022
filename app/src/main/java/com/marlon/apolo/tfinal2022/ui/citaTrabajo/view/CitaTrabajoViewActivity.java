@@ -1,4 +1,4 @@
-package com.marlon.apolo.tfinal2022.ui.citaTrabajo;
+package com.marlon.apolo.tfinal2022.ui.citaTrabajo.view;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,7 +20,7 @@ import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.marlon.apolo.tfinal2022.R;
-import com.marlon.apolo.tfinal2022.citasTrabajo.view.adapters.CitaListAdapter;
+import com.marlon.apolo.tfinal2022.citasTrabajo.adapters.CitaListAdapter;
 import com.marlon.apolo.tfinal2022.citasTrabajo.viewModel.CitaViewModel;
 import com.marlon.apolo.tfinal2022.citasTrabajo.view.SeleccionarEmpleadorActivity;
 import com.marlon.apolo.tfinal2022.model.Cita;

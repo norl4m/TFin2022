@@ -30,12 +30,42 @@ public class ResetPasswordActivity extends AppCompatActivity {
     private ScrollView scrollView;
     private LinearLayout linearLayout;
     private ProgressDialog progressDialog;
+    private TextInputLayout textInputLayout;
 
     private void hideSystemBars() {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
-    TextInputLayout textInputLayout;
+    public void sendEmailDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(ResetPasswordActivity.this);
+
+        // 2. Chain together various setter methods to set the dialog characteristics
+        builder.setMessage("Se ha enviando un correo electrónico con las instrucciones para recuperar la contraseña");
+// Add the buttons
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked OK button
+                finish();
+            }
+        });
+// Set other dialog properties
+
+// Create the AlertDialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    public void showProgress(String title, String message) {
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setCancelable(false);
+//        dialog.setTitle("Por favor espere");
+        progressDialog.setTitle(title);
+//        dialog.setMessage("Trabix se encuentra verificando su nùmero celular...");
+        progressDialog.setMessage(message);
+        progressDialog.show();
+
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,33 +138,4 @@ public class ResetPasswordActivity extends AppCompatActivity {
         });
     }
 
-    public void sendEmailDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(ResetPasswordActivity.this);
-
-        // 2. Chain together various setter methods to set the dialog characteristics
-        builder.setMessage("Se ha enviando un correo electrónico con las instrucciones para recuperar la contraseña");
-// Add the buttons
-        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // User clicked OK button
-                finish();
-            }
-        });
-// Set other dialog properties
-
-// Create the AlertDialog
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
-
-    public void showProgress(String title, String message) {
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setCancelable(false);
-//        dialog.setTitle("Por favor espere");
-        progressDialog.setTitle(title);
-//        dialog.setMessage("Trabix se encuentra verificando su nùmero celular...");
-        progressDialog.setMessage(message);
-        progressDialog.show();
-
-    }
 }

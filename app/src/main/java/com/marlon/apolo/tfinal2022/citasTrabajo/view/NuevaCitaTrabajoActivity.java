@@ -31,7 +31,7 @@ import android.widget.Toast;
 
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.citasTrabajo.receivers.AlarmReceiver;
-import com.marlon.apolo.tfinal2022.citasTrabajo.view.adapters.ItemAdapterPoCCreate;
+import com.marlon.apolo.tfinal2022.citasTrabajo.adapters.ItemAdapterPoCCreate;
 import com.marlon.apolo.tfinal2022.model.Cita;
 import com.marlon.apolo.tfinal2022.model.Item;
 import com.marlon.apolo.tfinal2022.model.Trabajador;

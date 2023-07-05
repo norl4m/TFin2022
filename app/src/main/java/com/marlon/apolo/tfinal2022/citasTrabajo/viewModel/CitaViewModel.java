@@ -27,50 +27,11 @@ import java.util.Locale;
 
 public class CitaViewModel extends ViewModel {
     private static final String TAG = CitaViewModel.class.getSimpleName();
-    // TODO: Implement the ViewModel
-    // Create a LiveData with a String
-    private MutableLiveData<String> currentName;
-    private MutableLiveData<ArrayList<Chat>> chats;
-    private ArrayList<Chat> chatsDBLocal;
-    private ArrayList<Cita> citaArrayListFilter;
     private MutableLiveData<ArrayList<Cita>> citas;
-    private ArrayList<Chat> chatArrayList;
     private ArrayList<Cita> citaArrayList;
     private MutableLiveData<ArrayList<Item>> items;
-    ArrayList<Item> itemArrayList;
-
-
-    public MutableLiveData<ArrayList<Cita>> getCitas() {
-        if (citas == null) {
-            citas = new MutableLiveData<>();
-            chatsDBLocal = new ArrayList<>();
-            citaArrayList = new ArrayList<>();
-            citaArrayListFilter = new ArrayList<>();
-            loadCitas();
-        }
-        return citas;
-    }
-
-
-    public void removeChildLister() {
-        FirebaseDatabase
-                .getInstance()
-                .getReference()
-                .child("citas")
-                .removeEventListener(childEventListenerCita);
-
-    }
-
-    private void loadCitas() {
-        citaArrayList = new ArrayList<>();
-        FirebaseDatabase
-                .getInstance()
-                .getReference()
-                .child("citas")
-                .addChildEventListener(childEventListenerCita);
-    }
-
-    ChildEventListener childEventListenerCita = new ChildEventListener() {
+    private ArrayList<Item> itemArrayList;
+    private ChildEventListener childEventListenerCita = new ChildEventListener() {
         @Override
         public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
 
@@ -179,104 +140,13 @@ public class CitaViewModel extends ViewModel {
         }
     };
 
-    public MutableLiveData<String> getCurrentName() {
-        if (currentName == null) {
-            currentName = new MutableLiveData<String>();
-        }
-        return currentName;
-    }
-
-    public MutableLiveData<ArrayList<Chat>> getArrayListCitas() {
-        chatArrayList = new ArrayList<>();
-        if (chats == null) {
-            chats = new MutableLiveData<>();
-            loadChats();
-        }
-        return chats;
-    }
-
-    private void loadChats() {
+    public void loadCitas() {
+        citaArrayList = new ArrayList<>();
         FirebaseDatabase
                 .getInstance()
                 .getReference()
-                .child("chats")
-                .addChildEventListener(childEventListener);
-    }
-
-    ChildEventListener childEventListener = new ChildEventListener() {
-        @Override
-        public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-            Log.i(TAG, "onChildAdded: " + snapshot.getKey());
-
-            try {
-                Chat chat = snapshot.getValue(Chat.class);
-                for (Participante parti : chat.getParticipantes()) {
-                    if (parti.getIdParticipante().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
-                        //Log.d(TAG, chat.toString());
-                        chatArrayList.add(chat);
-                    }
-                }
-                chats.setValue(chatArrayList);
-            } catch (Exception e) {
-
-            }
-
-        }
-
-        @Override
-        public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-            try {
-                Log.i(TAG, "onChildChanged: " + snapshot.getKey());
-                Chat chat = snapshot.getValue(Chat.class);
-                for (Participante parti : chat.getParticipantes()) {
-                    if (parti.getIdParticipante().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
-                        Log.d(TAG, chat.toString());
-                    }
-                }
-//                Log.d(TAG, chat.toString());
-            } catch (Exception e) {
-
-            }
-        }
-
-        @Override
-        public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-            try {
-                Log.i(TAG, "onChildRemoved: " + snapshot.getKey());
-                Chat chat = snapshot.getValue(Chat.class);
-                Log.d(TAG, chat.toString());
-            } catch (Exception e) {
-
-            }
-        }
-
-        @Override
-        public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-            try {
-                Log.i(TAG, "onChildMoved: " + snapshot.getKey());
-                Chat chat = snapshot.getValue(Chat.class);
-                Log.d(TAG, chat.toString());
-            } catch (Exception e) {
-
-            }
-        }
-
-        @Override
-        public void onCancelled(@NonNull DatabaseError error) {
-            Log.w(TAG, "citas:onCancelled", error.toException());
-            Log.d(TAG, "Failed to load citas.: ");
-
-        }
-    };
-
-    public MutableLiveData<ArrayList<Item>> getItems(String idCita) {
-        if (items == null) {
-            itemArrayList = new ArrayList<>();
-            items = new MutableLiveData<>();
-            loadItems(idCita);
-        }
-
-        return items;
+                .child("citas")
+                .addChildEventListener(childEventListenerCita);
     }
 
     private void loadItems(String idCita) {
@@ -311,41 +181,25 @@ public class CitaViewModel extends ViewModel {
                 });
     }
 
-//    private ChildEventListener childEventListenerItem = new ChildEventListener() {
-//
-//        @Override
-//        public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-//            Log.d(TAG, "onChildAdded: " + snapshot.getKey());
-//            Item item = snapshot.getValue(Item.class);
-//            itemArrayList.add(item);
-//            items.setValue(itemArrayList);
-////            for (DataSnapshot data:snapshot.getChildren()) {
-////                Item item = data.getValue(Item.class);
-////                itemArrayList.add(item);
-////                items.setValue(itemArrayList);
-////            }
-//
-//        }
-//
-//        @Override
-//        public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-//
-//        }
-//
-//        @Override
-//        public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-//
-//        }
-//
-//        @Override
-//        public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-//
-//        }
-//
-//        @Override
-//        public void onCancelled(@NonNull DatabaseError error) {
-//
-//        }
-//    };
+    public MutableLiveData<ArrayList<Cita>> getCitas() {
+        if (citas == null) {
+            citas = new MutableLiveData<>();
+            citaArrayList = new ArrayList<>();
+            loadCitas();
+        }
+        return citas;
+    }
+
+    public MutableLiveData<ArrayList<Item>> getItems(String idCita) {
+        if (items == null) {
+            itemArrayList = new ArrayList<>();
+            items = new MutableLiveData<>();
+            loadItems(idCita);
+        }
+
+        return items;
+    }
+
+
 
 }

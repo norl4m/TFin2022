@@ -4,7 +4,6 @@ import static android.content.Context.ACTIVITY_SERVICE;
 import static android.content.Context.MODE_PRIVATE;
 
 import androidx.core.app.NotificationManagerCompat;
-import androidx.lifecycle.ViewModelProvider;
 
 import android.app.ActivityManager;
 import android.app.NotificationManager;
@@ -27,7 +26,7 @@ import android.view.ViewGroup;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.marlon.apolo.tfinal2022.CrazyService;
-import com.marlon.apolo.tfinal2022.MainNavigationActivity;
+import com.marlon.apolo.tfinal2022.ui.MainNavigationActivity;
 import com.marlon.apolo.tfinal2022.R;
 
 

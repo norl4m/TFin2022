@@ -140,7 +140,6 @@ public class OficioRepository {
     }
 
     public void addOficioTofirebase(Activity activity, Oficio oficio) {
-
         String idOficio = FirebaseDatabase.getInstance().getReference().child("oficios").push().getKey();
         oficio.setIdOficio(idOficio);
         FirebaseDatabase.getInstance().getReference()
@@ -162,7 +161,6 @@ public class OficioRepository {
                         Toast.makeText(activity, "Registro fallido: " + e.toString(), Toast.LENGTH_SHORT).show();
                     }
                 });
-
     }
 
 

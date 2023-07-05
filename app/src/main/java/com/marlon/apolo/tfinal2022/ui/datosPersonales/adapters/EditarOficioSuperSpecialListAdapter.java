@@ -1,4 +1,4 @@
-package com.marlon.apolo.tfinal2022.ui.datosPersonales.adapterrs;
+package com.marlon.apolo.tfinal2022.ui.datosPersonales.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;

@@ -42,7 +42,6 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
 
 
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewOficios"
         android:layout_width="match_parent"
@@ -52,7 +51,8 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp" />
+        android:layout_marginBottom="8dp"
+        tools:listitem="@layout/card_view_presentacion_oficio"/>
 
     <Button
         android:id="@+id/buttonNext"

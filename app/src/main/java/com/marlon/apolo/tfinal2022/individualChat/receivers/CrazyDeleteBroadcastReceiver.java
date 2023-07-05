@@ -17,23 +17,8 @@ public class CrazyDeleteBroadcastReceiver extends BroadcastReceiver {
 
     private static final String TAG = CrazyDeleteBroadcastReceiver.class.getSimpleName();
 
-//    public CrazyDeleteBroadcastReceiver() {
+    //    public CrazyDeleteBroadcastReceiver() {
 //    }
-
-    @Override
-    public void onReceive(Context context, Intent intent) {
-        //Toast.makeText(context, "Eliminando notificaciones", Toast.LENGTH_LONG).show();
-        String idRemoteUser = intent.getStringExtra("idRemoteUser");
-        int idNotification = intent.getIntExtra("idNotification", -1);
-        deleteNotifications(idRemoteUser);
-        Log.d(TAG, "Eliminando notificaciones");
-        StringBuilder sb = new StringBuilder();
-        sb.append("Action: " + intent.getAction() + "\n");
-//        sb.append("URI: " + intent.toUri(Intent.URI_INTENT_SCHEME).toString() + "\n");
-        String log = sb.toString();
-        Log.d(TAG, log);
-    }
-
     private void deleteNotifications(String idRemoteUser) {
         FirebaseDatabase.getInstance().getReference()
                 .child("notificaciones")
@@ -52,4 +37,19 @@ public class CrazyDeleteBroadcastReceiver extends BroadcastReceiver {
                     }
                 });
     }
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        //Toast.makeText(context, "Eliminando notificaciones", Toast.LENGTH_LONG).show();
+        String idRemoteUser = intent.getStringExtra("idRemoteUser");
+        int idNotification = intent.getIntExtra("idNotification", -1);
+        deleteNotifications(idRemoteUser);
+        Log.d(TAG, "Eliminando notificaciones");
+        StringBuilder sb = new StringBuilder();
+        sb.append("Action: " + intent.getAction() + "\n");
+//        sb.append("URI: " + intent.toUri(Intent.URI_INTENT_SCHEME).toString() + "\n");
+        String log = sb.toString();
+        Log.d(TAG, log);
+    }
+
 }

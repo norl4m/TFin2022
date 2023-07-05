@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -91,7 +92,6 @@ public class RegWithEmailPasswordActivity extends AppCompatActivity implements V
     private String title;
     private String message;
     private Usuario usuarioEmpleador;
-    private AlertDialog alertDialogVar;
     private LinearLayout linearLayout;
     private TextView textViewHeading;
 
@@ -100,17 +100,416 @@ public class RegWithEmailPasswordActivity extends AppCompatActivity implements V
     private TextInputLayout textInputLayoutEmail;
     private TextInputLayout textInputLayoutPassword;
 
-    public static boolean issPref() {
-        return sPref;
-    }
-
-    public static void setsPref(boolean sPref) {
-        RegWithEmailPasswordActivity.sPref = sPref;
-    }
-
-
-    private void hideSystemBars() {
+    public void hideSystemBars() {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+    }
+
+    /*Paso 1*/
+    public void createAccount(String email, String password) {
+//        title = "Por favor espere " + "(Rev)";
+        title = "Por favor espere ";
+//        message = "Cachuelito se encuentra verificando su información personal..." + "(Rev)";
+        message = "Cachuelito se encuentra verificando su información personal...";
+
+        showProgress(title, message);
+//        showCustomProgressDialog(title, message);
+//            Toast.makeText(getApplicationContext(), "Normalin", Toast.LENGTH_LONG).show();
+
+        if (email != null && password != null) {
+            normalReg(email, password);
+        } else {
+            Toast.makeText(getApplicationContext(), "Se produjo un error, por favor revise que la información ingresada sea correcta.", Toast.LENGTH_SHORT).show();
+            closeProgress();
+        }
+
+        /*if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+
+            SharedPreferences myPreferences = this.getSharedPreferences("MyPreferences", MODE_PRIVATE);
+            SharedPreferences.Editor editorPref = myPreferences.edit();
+            int u = myPreferences.getInt("usuario", -1);
+            if (u == 0) {
+                Toast.makeText(getApplicationContext(), "Admin", Toast.LENGTH_LONG).show();
+
+                regWithAdmin(email, password);
+            }
+        } else {
+            showCustomProgressDialog(title, message);
+//            Toast.makeText(getApplicationContext(), "Normalin", Toast.LENGTH_LONG).show();
+            normalReg(email, password);
+        }*/
+//
+//        showProgress(title, message);
+
+    }
+
+    public void normalReg(String email, String password) {
+        // [START create_user_with_email]
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "createUserWithEmail:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            updateUI(user);
+                        } else {
+                            // If sign in fails, display a message to the user.
+//                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
+//                            Toast.makeText(EmailPasswordActivity.this, "Authentication failed.",
+//                                    Toast.LENGTH_SHORT).show();
+                            updateUI(null);
+
+                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                            String errorCode = ((FirebaseAuthException) Objects.requireNonNull(task.getException())).getErrorCode();
+                            Log.w(TAG, "signInWithPhone:failure -- " + errorCode);
+                            switch (errorCode) {
+                                case "ERROR_EMAIL_ALREADY_IN_USE":
+                                    alertDialogInfoError(0);
+                                    break;
+                                case "ERROR_WEAK_PASSWORD":
+                                    alertDialogInfoError(1);
+                                    break;
+                                case "ERROR_INVALID_EMAIL":
+                                    alertDialogInfoError(2);
+                                    break;
+                            }
+
+                            try {
+                                closeProgress();
+                            } catch (Exception exception) {
+
+                            }
+
+                        }
+                    }
+                });
+        // [END create_user_with_email]
+    }
+
+    public void updateUI(FirebaseUser user) {
+        boolean photoFlag = false;
+        if (user != null) {
+            switch (regUsuario) {
+                case 1:
+                    photoFlag = false;
+                    if (usuarioEmpleador.getFotoPerfil() != null) {
+                        Uri returnUri = Uri.parse(usuarioEmpleador.getFotoPerfil().toString());
+                        Cursor returnCursor = RegWithEmailPasswordActivity.this.getContentResolver().query(returnUri, null, null, null, null);
+                        /*
+                         * Get the column indexes of the data in the Cursor,
+                         * move to the first row in the Cursor, get the data,
+                         * and display it.
+                         */
+                        int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                        int sizeIndex = returnCursor.getColumnIndex(OpenableColumns.SIZE);
+                        returnCursor.moveToFirst();
+                        Log.d(TAG, returnCursor.getString(nameIndex));
+                        Log.d(TAG, String.format("Tamaño de archivo: %s", Long.toString(returnCursor.getLong(sizeIndex))));
+
+                        if (returnCursor.getLong(sizeIndex) > 0) {
+                            //Toast.makeText(getApplicationContext(), "Registro con foto", Toast.LENGTH_SHORT).show();
+                            Log.d(TAG, String.format("Tamaño de archivo: %s", Long.toString(returnCursor.getLong(sizeIndex))));
+                            photoFlag = true;
+                        } else {
+                            //Toast.makeText(getApplicationContext(), "Registro normal", Toast.LENGTH_SHORT).show();
+                            photoFlag = false;
+                        }
+                    } else {
+                        photoFlag = false;
+                    }
+                    /*Paso 2*/
+                    usuarioEmpleador.setIdUsuario(user.getUid());
+                    if (photoFlag) {
+//                        Toast.makeText(getApplicationContext(), usuarioTrabajador.toString(), Toast.LENGTH_LONG).show();
+                        closeProgress();
+//                        closeCustomAlertDialog();
+                        title = "Por favor espere";
+                        message = "Su cuenta ya casi está lista...";
+                        showProgress(title, message);
+
+                        usuarioEmpleador.registrarseEnFirebaseConFoto(RegWithEmailPasswordActivity.this);
+                    } else {
+                        usuarioEmpleador.setFotoPerfil(null);
+//                        Toast.makeText(getApplicationContext(), usuarioTrabajador.toString(), Toast.LENGTH_LONG).show();
+                        usuarioEmpleador.registrarseEnFirebase(RegWithEmailPasswordActivity.this);
+                    }
+                    break;
+                case 2:
+                    photoFlag = false;
+                    if (usuarioTrabajador.getFotoPerfil() != null) {
+                        Uri returnUri = Uri.parse(usuarioTrabajador.getFotoPerfil().toString());
+                        Cursor returnCursor = RegWithEmailPasswordActivity.this.getContentResolver().query(returnUri, null, null, null, null);
+                        /*
+                         * Get the column indexes of the data in the Cursor,
+                         * move to the first row in the Cursor, get the data,
+                         * and display it.
+                         */
+                        int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                        int sizeIndex = returnCursor.getColumnIndex(OpenableColumns.SIZE);
+                        returnCursor.moveToFirst();
+                        Log.d(TAG, returnCursor.getString(nameIndex));
+                        Log.d(TAG, String.format("Tamaño de archivo: %s", Long.toString(returnCursor.getLong(sizeIndex))));
+
+                        if (returnCursor.getLong(sizeIndex) > 0) {
+                            //Toast.makeText(getApplicationContext(), "Registro con foto", Toast.LENGTH_SHORT).show();
+                            Log.d(TAG, String.format("Tamaño de archivo: %s", Long.toString(returnCursor.getLong(sizeIndex))));
+                            photoFlag = true;
+                        } else {
+                            //Toast.makeText(getApplicationContext(), "Registro normal", Toast.LENGTH_SHORT).show();
+                            photoFlag = false;
+                        }
+                    } else {
+                        photoFlag = false;
+                    }
+                    /*Paso 2*/
+                    usuarioTrabajador.setIdUsuario(user.getUid());
+                    if (photoFlag) {
+//                        Toast.makeText(getApplicationContext(), usuarioTrabajador.toString(), Toast.LENGTH_LONG).show();
+                        closeProgress();
+//                        closeCustomAlertDialog();
+                        title = "Por favor espere";
+                        message = "Su cuenta ya casi está lista...";
+                        showProgress(title, message);
+
+                        usuarioTrabajador.registrarseEnFirebaseConFoto(RegWithEmailPasswordActivity.this);
+                    } else {
+                        usuarioTrabajador.setFotoPerfil(null);
+//                        Toast.makeText(getApplicationContext(), usuarioTrabajador.toString(), Toast.LENGTH_LONG).show();
+                        usuarioTrabajador.registrarseEnFirebase(RegWithEmailPasswordActivity.this);
+                    }
+                    break;
+            }
+//            if (((!sPref) && (networkFlag)) || ((sPref) && (networkFlag))) {
+//                // AsyncTask subclass
+//                if (networkTool.isOnlineWithWifi()) {
+//                    usuarioTrabajador.registrarseEnFirebase(EmailPasswordActivity.this);
+//                } else {
+//                    if (networkTool.isOnlineWithData()) {
+//                        if (!sPref) {
+//                            alertDialogContinuarRegistroConDatos();
+//                        } else {
+//                            networkTool.alertDialogNoConectadoWifiInfo();
+//                        }
+////                                        networkTool.alertDialogNoConectadoWifiInfo();
+//                    } else {
+//                        networkTool.alertDialogNoConectadoInfo();
+//                    }
+//                }
+//            } else {
+//                networkTool.alertDialogNoConectadoInfo();
+//            }
+        }
+
+    }
+
+    public void alertDialogInfoError(int error) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        // Get the layout inflater
+        LayoutInflater inflater = this.getLayoutInflater();
+
+        View promptsView = inflater.inflate(R.layout.dialog_info, null);
+        builder.setView(promptsView);
+
+        // set prompts.xml to alertdialog builder
+        final TextView textViewInfo = promptsView.findViewById(R.id.textViewInfo);
+        switch (error) {
+            case 0:/*email repetido*/
+                textViewInfo.setText(getResources().getString(R.string.text_error_email_repetido));
+                builder.setPositiveButton("Iniciar sesión", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                // sign in the user ...
+
+                                try {
+//                            Intent intent = new Intent(RegWithEmailPasswordActivity.this, LoginEmailPasswordActivity.class);
+                                    Intent intent = new Intent(RegWithEmailPasswordActivity.this, LoginActivity.class);
+//                            intent.putExtra("email", email);
+//                            intent.putExtra("password", password);
+                                    startActivity(intent);
+                                    dialogInfo.dismiss();
+
+                                } catch (Exception e) {
+
+                                }
+                            }
+                        })
+                        .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                closeProgress();
+//                                closeCustomAlertDialog();
+
+                            }
+                        });
+                break;
+            case 1:/*clave insegura*/
+                textViewInfo.setText(getResources().getString(R.string.text_error_password));
+                builder.setPositiveButton("Entendido", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        // sign in the user ...
+
+                        try {
+                            dialogInfo.dismiss();
+                        } catch (Exception e) {
+
+                        }
+                    }
+                });
+                break;
+            case 2:/*email inválido*/
+                textViewInfo.setText(getResources().getString(R.string.text_error_email));
+                builder.setPositiveButton("Entendido", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        // sign in the user ...
+                        try {
+                            dialogInfo.dismiss();
+
+                        } catch (Exception e) {
+
+                        }
+                    }
+                });
+                break;
+        }
+
+
+        // Inflate and set the layout for the dialog
+        // Pass null as the parent view because its going in the dialog layout
+//        builder.setView(inflater.inflate(R.layout.dialog_info, null))
+        // Add action buttons
+
+        dialogInfo = builder.create();
+        dialogInfo.show();
+
+    }
+
+    public void showProgress(String title, String message) {
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setCancelable(false);
+//        dialog.setTitle("Por favor espere");
+        progressDialog.setTitle(title);
+//        dialog.setMessage("Trabix se encuentra verificando su nùmero celular...");
+        progressDialog.setMessage(message);
+        progressDialog.show();
+
+
+    }
+
+    public void sendEmailVerification(FirebaseAuth mAuth, Activity activity) {
+        // Send verification email
+        // [START send_email_verification]
+        Log.d(TAG,"Enviando e-mail de confirmación");
+        final FirebaseUser user = mAuth.getCurrentUser();
+        assert user != null;
+        user.sendEmailVerification()
+                .addOnCompleteListener(activity, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        // Email sent
+                        String message = "Se ha enviado un correo electrónico de confirmación al e-mail: ";
+                        Toast.makeText(activity, message, Toast.LENGTH_SHORT).show();
+                    }
+                });
+        // [END send_email_verification]
+    }
+
+    public void closeProgress() {
+        try {
+            progressDialog.dismiss();
+        } catch (Exception e) {
+
+        }
+    }
+
+    public Dialog alertDialogInfo() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        // Get the layout inflater
+        LayoutInflater inflater = this.getLayoutInflater();
+
+        View promptsView = inflater.inflate(R.layout.dialog_info, null);
+        builder.setView(promptsView);
+
+        // set prompts.xml to alertdialog builder
+        final TextView textViewInfo = promptsView.findViewById(R.id.textViewInfo);
+        textViewInfo.setText(getResources().getString(R.string.text_info_reg_email_password));
+
+
+        // Inflate and set the layout for the dialog
+        // Pass null as the parent view because its going in the dialog layout
+//        builder.setView(inflater.inflate(R.layout.dialog_info, null))
+        // Add action buttons
+        builder.setPositiveButton("Entendido", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                // sign in the user ...
+                try {
+                    dialogInfo.dismiss();
+                } catch (Exception e) {
+
+                }
+            }
+        });
+        return builder.create();
+    }
+
+    public void alertDialogContinuarRegistroConDatos() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        // Get the layout inflater
+        LayoutInflater inflater = this.getLayoutInflater();
+
+        View promptsView = inflater.inflate(R.layout.dialog_info, null);
+        builder.setView(promptsView);
+
+        // set prompts.xml to alertdialog builder
+        final TextView textViewInfo = promptsView.findViewById(R.id.textViewInfo);
+
+        textViewInfo.setText(getResources().getString(R.string.text_error_conexion_internet_pero_si_datos));
+        builder.setPositiveButton("Continuar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                // sign in the user ...
+                switch (regUsuario) {
+                    case 1:
+                        //empleador.crearCuentaConEmailPassword(mAuth, password, (Activity) RegWithEmailPasswordActivity.this);
+                        //usuarioEmpleador.registrarseEnFirebase(EmailPasswordActivity.this,1);
+                        createAccount(usuarioEmpleador.getEmail(), password);
+                        break;
+                    case 2:
+                        createAccount(usuarioTrabajador.getEmail(), password);
+                        //usuarioTrabajador.registrarseEnFirebase(EmailPasswordActivity.this,1);
+                        break;
+                }
+                try {
+                    dialogInfo.dismiss();
+                } catch (Exception e) {
+
+                }
+//                empleador.setFotoPerfil(null);
+
+//                Intent intent = new Intent(RegWithEmailPasswordActivity.this, MainNavigationActivity.class);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                startActivity(intent);
+            }
+        }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                try {
+                    dialogInfo.dismiss();
+                } catch (Exception e) {
+
+                }
+            }
+        });
+
+        builder.setCancelable(false);
+
+
+        dialogInfo = builder.create();
+        dialogInfo.show();
+
     }
 
     @Override
@@ -354,386 +753,6 @@ public class RegWithEmailPasswordActivity extends AppCompatActivity implements V
             }
         });
     }
-
-    /*Paso 1*/
-    private void createAccount(String email, String password) {
-//        title = "Por favor espere " + "(Rev)";
-        title = "Por favor espere ";
-//        message = "Cachuelito se encuentra verificando su información personal..." + "(Rev)";
-        message = "Cachuelito se encuentra verificando su información personal...";
-
-        showProgress(title, message);
-//        showCustomProgressDialog(title, message);
-//            Toast.makeText(getApplicationContext(), "Normalin", Toast.LENGTH_LONG).show();
-
-        if (email != null && password != null) {
-            normalReg(email, password);
-        } else {
-            Toast.makeText(getApplicationContext(), "Se produjo un error, por favor revise que la información ingresada sea correcta.", Toast.LENGTH_SHORT).show();
-            closeProgress();
-        }
-
-        /*if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-
-            SharedPreferences myPreferences = this.getSharedPreferences("MyPreferences", MODE_PRIVATE);
-            SharedPreferences.Editor editorPref = myPreferences.edit();
-            int u = myPreferences.getInt("usuario", -1);
-            if (u == 0) {
-                Toast.makeText(getApplicationContext(), "Admin", Toast.LENGTH_LONG).show();
-
-                regWithAdmin(email, password);
-            }
-        } else {
-            showCustomProgressDialog(title, message);
-//            Toast.makeText(getApplicationContext(), "Normalin", Toast.LENGTH_LONG).show();
-            normalReg(email, password);
-        }*/
-//
-//        showProgress(title, message);
-
-    }
-
-    public void regWithAdmin(String email, String password) {
-
-        JSONObject jsonObject = new JSONObject();
-        PostAsyncTask postAsyncTask = null;
-        try {
-            jsonObject = new JSONObject();
-
-            jsonObject.put("uid", "xxxxxxxxxxxx");
-            jsonObject.put("displayName", usuarioEmpleador.getNombre() + " " + usuarioEmpleador.getApellido());
-            jsonObject.put("email", email);
-//                            jsonObject.put("phoneNumber", "+593983228466");
-            jsonObject.put("phoneNumber", null);
-            jsonObject.put("password", password);
-
-        } catch (Exception e) {
-            Log.d(TAG, e.toString());
-        }
-        postAsyncTask = new PostAsyncTask(jsonObject.toString(), this);
-        postAsyncTask.execute();
-        postAsyncTask.setOnListenerAsyncTask(new PostAsyncTask.ClickListener() {
-            @Override
-            public void onTokenListener(String publicKey) {
-                if (publicKey.equals("1")) {
-
-                    /**
-                     * Scar uid y respuetras
-                     *
-                     * */
-                    boolean photoFlag = false;
-//                    switch (regUsuario) {
-//                        case 1:
-//                            photoFlag = false;
-//                            if (usuarioEmpleador.getFotoPerfil() != null) {
-//                                Uri returnUri = Uri.parse(usuarioEmpleador.getFotoPerfil().toString());
-//                                Cursor returnCursor = EmailPasswordActivity.this.getContentResolver().query(returnUri, null, null, null, null);
-//                                /*
-//                                 * Get the column indexes of the data in the Cursor,
-//                                 * move to the first row in the Cursor, get the data,
-//                                 * and display it.
-//                                 */
-//                                int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
-//                                int sizeIndex = returnCursor.getColumnIndex(OpenableColumns.SIZE);
-//                                returnCursor.moveToFirst();
-//                                Log.d(TAG, returnCursor.getString(nameIndex));
-//                                Log.d(TAG, String.format("Tamaño de archivo: %s", Long.toString(returnCursor.getLong(sizeIndex))));
-//
-//                                if (returnCursor.getLong(sizeIndex) > 0) {
-//                                    //Toast.makeText(getApplicationContext(), "Registro con foto", Toast.LENGTH_SHORT).show();
-//                                    Log.d(TAG, String.format("Tamaño de archivo: %s", Long.toString(returnCursor.getLong(sizeIndex))));
-//                                    photoFlag = true;
-//                                } else {
-//                                    //Toast.makeText(getApplicationContext(), "Registro normal", Toast.LENGTH_SHORT).show();
-//                                    photoFlag = false;
-//
-//                                }
-//                            } else {
-//                                photoFlag = false;
-//                            }
-//                            /*Paso 2*/
-//                            usuarioEmpleador.setIdUsuario(user.getUid());
-//                            if (photoFlag) {
-////                        Toast.makeText(getApplicationContext(), usuarioTrabajador.toString(), Toast.LENGTH_LONG).show();
-////                        closeProgress();
-////                        closeCustomAlertDialog();
-//                                title = "Por favor espere";
-//                                message = "Su cuenta ya casi está lista!";
-////                        showProgress(title, message);
-//                                showCustomProgressDialog(title, message);
-//
-//                                usuarioEmpleador.registrarseEnFirebaseConFoto(EmailPasswordActivity.this, 1);
-//                            } else {
-//                                usuarioEmpleador.setFotoPerfil(null);
-////                        Toast.makeText(getApplicationContext(), usuarioTrabajador.toString(), Toast.LENGTH_LONG).show();
-//                                usuarioEmpleador.registrarseEnFirebase(EmailPasswordActivity.this, 1);
-//                            }
-//                            break;
-//                        case 2:
-//                            photoFlag = false;
-//                            if (usuarioTrabajador.getFotoPerfil() != null) {
-//                                Uri returnUri = Uri.parse(usuarioTrabajador.getFotoPerfil().toString());
-//                                Cursor returnCursor = EmailPasswordActivity.this.getContentResolver().query(returnUri, null, null, null, null);
-//                                /*
-//                                 * Get the column indexes of the data in the Cursor,
-//                                 * move to the first row in the Cursor, get the data,
-//                                 * and display it.
-//                                 */
-//                                int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
-//                                int sizeIndex = returnCursor.getColumnIndex(OpenableColumns.SIZE);
-//                                returnCursor.moveToFirst();
-//                                Log.d(TAG, returnCursor.getString(nameIndex));
-//                                Log.d(TAG, String.format("Tamaño de archivo: %s", Long.toString(returnCursor.getLong(sizeIndex))));
-//
-//                                if (returnCursor.getLong(sizeIndex) > 0) {
-//                                    //Toast.makeText(getApplicationContext(), "Registro con foto", Toast.LENGTH_SHORT).show();
-//                                    Log.d(TAG, String.format("Tamaño de archivo: %s", Long.toString(returnCursor.getLong(sizeIndex))));
-//                                    photoFlag = true;
-//                                } else {
-//                                    //Toast.makeText(getApplicationContext(), "Registro normal", Toast.LENGTH_SHORT).show();
-//                                    photoFlag = false;
-//                                }
-//                            } else {
-//                                photoFlag = false;
-//                            }
-//                            /*Paso 2*/
-//                            usuarioTrabajador.setIdUsuario(user.getUid());
-//                            if (photoFlag) {
-////                        Toast.makeText(getApplicationContext(), usuarioTrabajador.toString(), Toast.LENGTH_LONG).show();
-////                        closeProgress();
-////                        closeCustomAlertDialog();
-//                                title = "Por favor espere";
-//                                message = "Su cuenta ya casi está lista!";
-////                        showProgress(title, message);
-//                                showCustomProgressDialog(title, message);
-//
-//                                usuarioTrabajador.registrarseEnFirebaseConFoto(EmailPasswordActivity.this, 1);
-//                            } else {
-//                                usuarioTrabajador.setFotoPerfil(null);
-////                        Toast.makeText(getApplicationContext(), usuarioTrabajador.toString(), Toast.LENGTH_LONG).show();
-//                                usuarioTrabajador.registrarseEnFirebase(EmailPasswordActivity.this, 1);
-//                            }
-//                            break;
-//                    }
-
-                } else {
-                    Toast.makeText(getApplicationContext(), R.string.error_inesperado, Toast.LENGTH_LONG).show();
-                }
-            }
-        });
-    }
-
-    public void normalReg(String email, String password) {
-        // [START create_user_with_email]
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "createUserWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            updateUI(user);
-                        } else {
-                            // If sign in fails, display a message to the user.
-//                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
-//                            Toast.makeText(EmailPasswordActivity.this, "Authentication failed.",
-//                                    Toast.LENGTH_SHORT).show();
-                            updateUI(null);
-
-                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            String errorCode = ((FirebaseAuthException) Objects.requireNonNull(task.getException())).getErrorCode();
-                            Log.w(TAG, "signInWithPhone:failure -- " + errorCode);
-                            switch (errorCode) {
-                                case "ERROR_EMAIL_ALREADY_IN_USE":
-                                    alertDialogInfoError(0);
-                                    break;
-                                case "ERROR_WEAK_PASSWORD":
-                                    alertDialogInfoError(1);
-                                    break;
-                                case "ERROR_INVALID_EMAIL":
-                                    alertDialogInfoError(2);
-                                    break;
-                            }
-
-                            try {
-                                closeProgress();
-                            } catch (Exception exception) {
-
-                            }
-
-                        }
-                    }
-                });
-        // [END create_user_with_email]
-    }
-
-    public void controlErrorsUI() {
-        try {
-            unlockbuttonFinalizar();
-        } catch (Exception e) {
-
-        }
-    }
-
-    private void unlockbuttonFinalizar() {
-        buttonFinish.setEnabled(true);
-    }
-
-
-    private void signIn(String email, String password) {
-        // [START sign_in_with_email]
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            //updateUI(user);
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            Toast.makeText(RegWithEmailPasswordActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                            updateUI(null);
-                        }
-                    }
-                });
-        // [END sign_in_with_email]
-    }
-
-    private void sendEmailVerification() {
-        // Send verification email
-        // [START send_email_verification]
-        final FirebaseUser user = mAuth.getCurrentUser();
-        user.sendEmailVerification()
-                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        // Email sent
-                    }
-                });
-        // [END send_email_verification]
-    }
-
-    private void updateUI(FirebaseUser user) {
-        boolean photoFlag = false;
-        if (user != null) {
-            switch (regUsuario) {
-                case 1:
-                    photoFlag = false;
-                    if (usuarioEmpleador.getFotoPerfil() != null) {
-                        Uri returnUri = Uri.parse(usuarioEmpleador.getFotoPerfil().toString());
-                        Cursor returnCursor = RegWithEmailPasswordActivity.this.getContentResolver().query(returnUri, null, null, null, null);
-                        /*
-                         * Get the column indexes of the data in the Cursor,
-                         * move to the first row in the Cursor, get the data,
-                         * and display it.
-                         */
-                        int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
-                        int sizeIndex = returnCursor.getColumnIndex(OpenableColumns.SIZE);
-                        returnCursor.moveToFirst();
-                        Log.d(TAG, returnCursor.getString(nameIndex));
-                        Log.d(TAG, String.format("Tamaño de archivo: %s", Long.toString(returnCursor.getLong(sizeIndex))));
-
-                        if (returnCursor.getLong(sizeIndex) > 0) {
-                            //Toast.makeText(getApplicationContext(), "Registro con foto", Toast.LENGTH_SHORT).show();
-                            Log.d(TAG, String.format("Tamaño de archivo: %s", Long.toString(returnCursor.getLong(sizeIndex))));
-                            photoFlag = true;
-                        } else {
-                            //Toast.makeText(getApplicationContext(), "Registro normal", Toast.LENGTH_SHORT).show();
-                            photoFlag = false;
-                        }
-                    } else {
-                        photoFlag = false;
-                    }
-                    /*Paso 2*/
-                    usuarioEmpleador.setIdUsuario(user.getUid());
-                    if (photoFlag) {
-//                        Toast.makeText(getApplicationContext(), usuarioTrabajador.toString(), Toast.LENGTH_LONG).show();
-                        closeProgress();
-//                        closeCustomAlertDialog();
-                        title = "Por favor espere";
-                        message = "Su cuenta ya casi está lista...";
-                        showProgress(title, message);
-
-                        usuarioEmpleador.registrarseEnFirebaseConFoto(RegWithEmailPasswordActivity.this);
-                    } else {
-                        usuarioEmpleador.setFotoPerfil(null);
-//                        Toast.makeText(getApplicationContext(), usuarioTrabajador.toString(), Toast.LENGTH_LONG).show();
-                        usuarioEmpleador.registrarseEnFirebase(RegWithEmailPasswordActivity.this);
-                    }
-                    break;
-                case 2:
-                    photoFlag = false;
-                    if (usuarioTrabajador.getFotoPerfil() != null) {
-                        Uri returnUri = Uri.parse(usuarioTrabajador.getFotoPerfil().toString());
-                        Cursor returnCursor = RegWithEmailPasswordActivity.this.getContentResolver().query(returnUri, null, null, null, null);
-                        /*
-                         * Get the column indexes of the data in the Cursor,
-                         * move to the first row in the Cursor, get the data,
-                         * and display it.
-                         */
-                        int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
-                        int sizeIndex = returnCursor.getColumnIndex(OpenableColumns.SIZE);
-                        returnCursor.moveToFirst();
-                        Log.d(TAG, returnCursor.getString(nameIndex));
-                        Log.d(TAG, String.format("Tamaño de archivo: %s", Long.toString(returnCursor.getLong(sizeIndex))));
-
-                        if (returnCursor.getLong(sizeIndex) > 0) {
-                            //Toast.makeText(getApplicationContext(), "Registro con foto", Toast.LENGTH_SHORT).show();
-                            Log.d(TAG, String.format("Tamaño de archivo: %s", Long.toString(returnCursor.getLong(sizeIndex))));
-                            photoFlag = true;
-                        } else {
-                            //Toast.makeText(getApplicationContext(), "Registro normal", Toast.LENGTH_SHORT).show();
-                            photoFlag = false;
-                        }
-                    } else {
-                        photoFlag = false;
-                    }
-                    /*Paso 2*/
-                    usuarioTrabajador.setIdUsuario(user.getUid());
-                    if (photoFlag) {
-//                        Toast.makeText(getApplicationContext(), usuarioTrabajador.toString(), Toast.LENGTH_LONG).show();
-                        closeProgress();
-//                        closeCustomAlertDialog();
-                        title = "Por favor espere";
-                        message = "Su cuenta ya casi está lista...";
-                        showProgress(title, message);
-
-                        usuarioTrabajador.registrarseEnFirebaseConFoto(RegWithEmailPasswordActivity.this);
-                    } else {
-                        usuarioTrabajador.setFotoPerfil(null);
-//                        Toast.makeText(getApplicationContext(), usuarioTrabajador.toString(), Toast.LENGTH_LONG).show();
-                        usuarioTrabajador.registrarseEnFirebase(RegWithEmailPasswordActivity.this);
-                    }
-                    break;
-            }
-//            if (((!sPref) && (networkFlag)) || ((sPref) && (networkFlag))) {
-//                // AsyncTask subclass
-//                if (networkTool.isOnlineWithWifi()) {
-//                    usuarioTrabajador.registrarseEnFirebase(EmailPasswordActivity.this);
-//                } else {
-//                    if (networkTool.isOnlineWithData()) {
-//                        if (!sPref) {
-//                            alertDialogContinuarRegistroConDatos();
-//                        } else {
-//                            networkTool.alertDialogNoConectadoWifiInfo();
-//                        }
-////                                        networkTool.alertDialogNoConectadoWifiInfo();
-//                    } else {
-//                        networkTool.alertDialogNoConectadoInfo();
-//                    }
-//                }
-//            } else {
-//                networkTool.alertDialogNoConectadoInfo();
-//            }
-        }
-
-    }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -902,231 +921,6 @@ public class RegWithEmailPasswordActivity extends AppCompatActivity implements V
                 break;
         }
     }
-
-    public void alertDialogInfoError(int error) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        // Get the layout inflater
-        LayoutInflater inflater = this.getLayoutInflater();
-
-        View promptsView = inflater.inflate(R.layout.dialog_info, null);
-        builder.setView(promptsView);
-
-        // set prompts.xml to alertdialog builder
-        final TextView textViewInfo = promptsView.findViewById(R.id.textViewInfo);
-        switch (error) {
-            case 0:/*email repetido*/
-                textViewInfo.setText(getResources().getString(R.string.text_error_email_repetido));
-                builder.setPositiveButton("Iniciar sesión", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                // sign in the user ...
-
-                                try {
-//                            Intent intent = new Intent(RegWithEmailPasswordActivity.this, LoginEmailPasswordActivity.class);
-                                    Intent intent = new Intent(RegWithEmailPasswordActivity.this, LoginActivity.class);
-//                            intent.putExtra("email", email);
-//                            intent.putExtra("password", password);
-                                    startActivity(intent);
-                                    dialogInfo.dismiss();
-
-                                } catch (Exception e) {
-
-                                }
-                            }
-                        })
-                        .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                closeProgress();
-//                                closeCustomAlertDialog();
-
-                            }
-                        });
-                break;
-            case 1:/*clave insegura*/
-                textViewInfo.setText(getResources().getString(R.string.text_error_password));
-                builder.setPositiveButton("Entendido", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        // sign in the user ...
-
-                        try {
-                            dialogInfo.dismiss();
-                        } catch (Exception e) {
-
-                        }
-                    }
-                });
-                break;
-            case 2:/*email inválido*/
-                textViewInfo.setText(getResources().getString(R.string.text_error_email));
-                builder.setPositiveButton("Entendido", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        // sign in the user ...
-                        try {
-                            dialogInfo.dismiss();
-
-                        } catch (Exception e) {
-
-                        }
-                    }
-                });
-                break;
-        }
-
-
-        // Inflate and set the layout for the dialog
-        // Pass null as the parent view because its going in the dialog layout
-//        builder.setView(inflater.inflate(R.layout.dialog_info, null))
-        // Add action buttons
-
-        dialogInfo = builder.create();
-        dialogInfo.show();
-
-    }
-
-
-    public void showProgress(String title, String message) {
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setCancelable(false);
-//        dialog.setTitle("Por favor espere");
-        progressDialog.setTitle(title);
-//        dialog.setMessage("Trabix se encuentra verificando su nùmero celular...");
-        progressDialog.setMessage(message);
-        progressDialog.show();
-
-
-    }
-
-    public void closeProgress() {
-        try {
-            progressDialog.dismiss();
-        } catch (Exception e) {
-
-        }
-    }
-
-
-    public Dialog alertDialogInfo() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        // Get the layout inflater
-        LayoutInflater inflater = this.getLayoutInflater();
-
-        View promptsView = inflater.inflate(R.layout.dialog_info, null);
-        builder.setView(promptsView);
-
-        // set prompts.xml to alertdialog builder
-        final TextView textViewInfo = promptsView.findViewById(R.id.textViewInfo);
-        textViewInfo.setText(getResources().getString(R.string.text_info_reg_email_password));
-
-
-        // Inflate and set the layout for the dialog
-        // Pass null as the parent view because its going in the dialog layout
-//        builder.setView(inflater.inflate(R.layout.dialog_info, null))
-        // Add action buttons
-        builder.setPositiveButton("Entendido", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-                // sign in the user ...
-                try {
-                    dialogInfo.dismiss();
-                } catch (Exception e) {
-
-                }
-            }
-        });
-        return builder.create();
-    }
-
-    public Dialog alertDialogInfoNoSePuedeRegistrar() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        // Get the layout inflater
-        LayoutInflater inflater = this.getLayoutInflater();
-
-        View promptsView = inflater.inflate(R.layout.dialog_info, null);
-        builder.setView(promptsView);
-
-        // set prompts.xml to alertdialog builder
-        final TextView textViewInfo = promptsView.findViewById(R.id.textViewInfo);
-        textViewInfo.setText(getResources().getString(R.string.text_error_email_repetido));
-
-
-        // Inflate and set the layout for the dialog
-        // Pass null as the parent view because its going in the dialog layout
-//        builder.setView(inflater.inflate(R.layout.dialog_info, null))
-        // Add action buttons
-        builder.setPositiveButton("Entendido", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-                // sign in the user ...
-                try {
-                    dialogInfo.dismiss();
-                } catch (Exception e) {
-
-                }
-            }
-        });
-        return builder.create();
-    }
-
-    public void alertDialogContinuarRegistroConDatos() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        // Get the layout inflater
-        LayoutInflater inflater = this.getLayoutInflater();
-
-        View promptsView = inflater.inflate(R.layout.dialog_info, null);
-        builder.setView(promptsView);
-
-        // set prompts.xml to alertdialog builder
-        final TextView textViewInfo = promptsView.findViewById(R.id.textViewInfo);
-
-        textViewInfo.setText(getResources().getString(R.string.text_error_conexion_internet_pero_si_datos));
-        builder.setPositiveButton("Continuar", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-                // sign in the user ...
-                switch (regUsuario) {
-                    case 1:
-                        //empleador.crearCuentaConEmailPassword(mAuth, password, (Activity) RegWithEmailPasswordActivity.this);
-                        //usuarioEmpleador.registrarseEnFirebase(EmailPasswordActivity.this,1);
-                        createAccount(usuarioEmpleador.getEmail(), password);
-                        break;
-                    case 2:
-                        createAccount(usuarioTrabajador.getEmail(), password);
-                        //usuarioTrabajador.registrarseEnFirebase(EmailPasswordActivity.this,1);
-                        break;
-                }
-                try {
-                    dialogInfo.dismiss();
-                } catch (Exception e) {
-
-                }
-//                empleador.setFotoPerfil(null);
-
-//                Intent intent = new Intent(RegWithEmailPasswordActivity.this, MainNavigationActivity.class);
-//                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                startActivity(intent);
-            }
-        }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                try {
-                    dialogInfo.dismiss();
-                } catch (Exception e) {
-
-                }
-            }
-        });
-
-        builder.setCancelable(false);
-
-
-        dialogInfo = builder.create();
-        dialogInfo.show();
-
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();

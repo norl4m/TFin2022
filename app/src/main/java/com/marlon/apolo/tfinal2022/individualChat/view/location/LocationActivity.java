@@ -52,13 +52,12 @@ public class LocationActivity extends AppCompatActivity implements
         FetchAddressTask.OnTaskCompleted {
 
     // Constants
+    private String TAG = LocationActivity.class.getSimpleName();
     private static final int REQUEST_LOCATION_PERMISSION = 1;
-    private static final int REQUEST_PICK_PLACE = 2;
     private static final String TRACKING_LOCATION_KEY = "tracking_location";
 
     // Views
     private Button mLocationButton;
-    private Button mPlacePickerButton;
     private TextView mLocationTextView;
     private ImageView mAndroidImageView;
 
@@ -69,18 +68,15 @@ public class LocationActivity extends AppCompatActivity implements
 
     // Animation
     private AnimatorSet mRotateAnim;
-    private String TAG = LocationActivity.class.getSimpleName();
     private String latitude;
     private String longitude;
     private Button mshareLocationButton;
+    private Usuario usuarioTo;
 
     //    String contactTo;
 //    String chatID;
-    private String location;
+   // private String location;
 
-    private Usuario usuarioTo;
-    private Usuario usuarioLocal;
-    private Chat chat;
 
     // [START write_fan_out]
     private void sendMessage(MessageCloudPoc messageCloudPoc) {
@@ -147,6 +143,33 @@ public class LocationActivity extends AppCompatActivity implements
     }
     // [END write_fan_out]
 
+    /**
+     * Stops tracking the device. Removes the location
+     * updates, stops the animation, and resets the UI.
+     */
+    private void stopTrackingLocation() {
+        if (mTrackingLocation) {
+            mTrackingLocation = false;
+            mLocationButton.setText(R.string.start_tracking_location);
+            mLocationTextView.setText(R.string.textview_hint);
+            mRotateAnim.end();
+        }
+    }
+
+
+    /**
+     * Sets up the location request.
+     *
+     * @return The LocationRequest object containing the desired parameters.
+     */
+    private LocationRequest getLocationRequest() {
+        LocationRequest locationRequest = new LocationRequest();
+        locationRequest.setInterval(10000);
+        locationRequest.setFastestInterval(5000);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        return locationRequest;
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -162,9 +185,9 @@ public class LocationActivity extends AppCompatActivity implements
         mshareLocationButton.setVisibility(View.GONE);
 
 //        contactTo = getIntent().getStringExtra("contactTo");
-        usuarioLocal = (Usuario) getIntent().getSerializableExtra("usuarioLocal");
+         // usuarioLocal = (Usuario) getIntent().getSerializableExtra("usuarioLocal");
         usuarioTo = (Usuario) getIntent().getSerializableExtra("usuarioTo");
-        chat = (Chat) getIntent().getSerializableExtra("chat");
+         //chat = (Chat) getIntent().getSerializableExtra("chat");
 //        chatID = getIntent().getStringExtra("idChat");
 
         // Initialize the FusedLocationClient.
@@ -401,35 +424,6 @@ public class LocationActivity extends AppCompatActivity implements
         }
     }
 
-
-    /**
-     * Stops tracking the device. Removes the location
-     * updates, stops the animation, and resets the UI.
-     */
-    private void stopTrackingLocation() {
-        if (mTrackingLocation) {
-            mTrackingLocation = false;
-            mLocationButton.setText(R.string.start_tracking_location);
-            mLocationTextView.setText(R.string.textview_hint);
-            mRotateAnim.end();
-        }
-    }
-
-
-    /**
-     * Sets up the location request.
-     *
-     * @return The LocationRequest object containing the desired parameters.
-     */
-    private LocationRequest getLocationRequest() {
-        LocationRequest locationRequest = new LocationRequest();
-        locationRequest.setInterval(10000);
-        locationRequest.setFastestInterval(5000);
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        return locationRequest;
-    }
-
-
     /**
      * Saves the last location on configuration change
      */
@@ -482,7 +476,7 @@ public class LocationActivity extends AppCompatActivity implements
 //            Log.d(TAG,result[2]);
             latitude = result[1];
             longitude = result[2];
-            location = result[0];
+           // location = result[0];
             Log.d(TAG, "Latitude: " + result[1]);
             Log.d(TAG, "Longitude: " + result[2]);
 //            Log.d(TAG,result[0]);

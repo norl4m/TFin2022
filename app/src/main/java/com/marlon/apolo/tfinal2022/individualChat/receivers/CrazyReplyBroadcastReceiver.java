@@ -36,6 +36,95 @@ public class CrazyReplyBroadcastReceiver extends BroadcastReceiver {
     public CrazyReplyBroadcastReceiver() {
     }
 
+    public void responderNotificacion(String idRemoteUser, String respuesta) {
+        MessageCloudPoc messageCloudPoc = new MessageCloudPoc();
+        //mensajeNube.setIdMensaje();
+        //mensajeNube.setIdChat("-N5Jb_EbmyyX7RXVyhs");
+        messageCloudPoc.setContenido(respuesta);
+        messageCloudPoc.setFrom(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        messageCloudPoc.setTo(idRemoteUser);
+        messageCloudPoc.setEstadoLectura(false);
+        messageCloudPoc.setType(0);/*0 texto */
+        Log.d(TAG, messageCloudPoc.toString());
+        sendMessage(messageCloudPoc);
+    }
+
+    // [START write_fan_out]
+    public void sendMessage(MessageCloudPoc messageCloudPoc) {
+        Log.d(TAG, "###########################");
+        Log.d(TAG, "sendMessage");
+        Log.d(TAG, messageCloudPoc.toString());
+        Log.d(TAG, "###########################");
+        Timestamp timestamp = new Timestamp(new Date());
+        messageCloudPoc.setTimeStamp(timestamp.toString());
+
+        // Create new post at /user-posts/$userid/$postid and at
+        // /posts/$postid simultaneously
+        String key = FirebaseDatabase.getInstance().getReference().child("crazyMessages").push().getKey();
+        messageCloudPoc.setIdMensaje(key);
+        //MessageCloudPoc post = new MessageCloudPoc();
+        Map<String, Object> postValues = messageCloudPoc.toMap();
+
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put("/crazyMessages/" + messageCloudPoc.getFrom() + "/" + messageCloudPoc.getTo() + "/" + key, postValues);
+        childUpdates.put("/crazyMessages/" + messageCloudPoc.getTo() + "/" + messageCloudPoc.getFrom() + "/" + key, postValues);
+        childUpdates.put("/notificaciones/" + messageCloudPoc.getTo() + "/" + messageCloudPoc.getFrom() + "/" + key, postValues);
+
+        FirebaseDatabase.getInstance().getReference().updateChildren(childUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    Log.d(TAG, "Mensaje enviado");
+                } else {
+                    Log.d(TAG, "Error al enviar mensaje");
+                }
+            }
+        });
+
+
+        ChatPoc chatPoc = new ChatPoc();
+        chatPoc.setIdRemoteUser(messageCloudPoc.getTo());
+        chatPoc.setLastMessageCloudPoc(messageCloudPoc);
+        FirebaseDatabase.getInstance().getReference().child("crazyChats")
+                .child(messageCloudPoc.getFrom())
+                .child(chatPoc.getIdRemoteUser())
+                .setValue(chatPoc);
+
+        ChatPoc chatPocRemoto = new ChatPoc();
+        chatPocRemoto.setIdRemoteUser(messageCloudPoc.getFrom());
+        chatPocRemoto.setLastMessageCloudPoc(messageCloudPoc);
+        FirebaseDatabase.getInstance().getReference().child("crazyChats")
+                .child(messageCloudPoc.getTo())
+                .child(chatPocRemoto.getIdRemoteUser())
+                .setValue(chatPocRemoto);
+
+        /*Guardando localmente en la nube*/
+        //FirebaseDatabase.getInstance().getReference().child("crazyMessages").child(messageCloudPoc.getFrom()).updateChildren(childUpdates);
+        /*Guardando localmente en la nube*/
+        //FirebaseDatabase.getInstance().getReference().child("crazyMessages").child(messageCloudPoc.getTo()).updateChildren(childUpdates);
+
+    }
+    // [END write_fan_out]
+
+    public void deleteNotifications(String idRemoteUser) {
+        FirebaseDatabase.getInstance().getReference()
+                .child("notificaciones")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child(idRemoteUser)
+                .setValue(null).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull com.google.android.gms.tasks.Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "Notificaciones eliminadas");
+
+                        } else {
+                            Log.d(TAG, "Error al eliminar notificaciones");
+
+                        }
+                    }
+                });
+    }
+
     @Override
     public void onReceive(Context context, Intent intent) {
         //Toast.makeText(context, "contenido", Toast.LENGTH_LONG).show();
@@ -113,105 +202,6 @@ public class CrazyReplyBroadcastReceiver extends BroadcastReceiver {
 
     }
 
-    private void responderNotificacion(String idRemoteUser, String respuesta) {
-        MessageCloudPoc messageCloudPoc = new MessageCloudPoc();
-        //mensajeNube.setIdMensaje();
-        //mensajeNube.setIdChat("-N5Jb_EbmyyX7RXVyhs");
-        messageCloudPoc.setContenido(respuesta);
-        messageCloudPoc.setFrom(FirebaseAuth.getInstance().getCurrentUser().getUid());
-        messageCloudPoc.setTo(idRemoteUser);
-        messageCloudPoc.setEstadoLectura(false);
-        messageCloudPoc.setType(0);/*0 texto */
-        Log.d(TAG, messageCloudPoc.toString());
-        sendMessage(messageCloudPoc);
-    }
-
-    // [START write_fan_out]
-    private void sendMessage(MessageCloudPoc messageCloudPoc) {
-        Log.d(TAG, "###########################");
-        Log.d(TAG, "sendMessage");
-        Log.d(TAG, messageCloudPoc.toString());
-        Log.d(TAG, "###########################");
-        Timestamp timestamp = new Timestamp(new Date());
-        messageCloudPoc.setTimeStamp(timestamp.toString());
-
-        // Create new post at /user-posts/$userid/$postid and at
-        // /posts/$postid simultaneously
-        String key = FirebaseDatabase.getInstance().getReference().child("crazyMessages").push().getKey();
-        messageCloudPoc.setIdMensaje(key);
-        //MessageCloudPoc post = new MessageCloudPoc();
-        Map<String, Object> postValues = messageCloudPoc.toMap();
-
-        Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/crazyMessages/" + messageCloudPoc.getFrom() + "/" + messageCloudPoc.getTo() + "/" + key, postValues);
-        childUpdates.put("/crazyMessages/" + messageCloudPoc.getTo() + "/" + messageCloudPoc.getFrom() + "/" + key, postValues);
-        childUpdates.put("/notificaciones/" + messageCloudPoc.getTo() + "/" + messageCloudPoc.getFrom() + "/" + key, postValues);
-
-        FirebaseDatabase.getInstance().getReference().updateChildren(childUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    Log.d(TAG, "Mensaje enviado");
-                } else {
-                    Log.d(TAG, "Error al enviar mensaje");
-                }
-            }
-        });
-
-
-        ChatPoc chatPoc = new ChatPoc();
-        chatPoc.setIdRemoteUser(messageCloudPoc.getTo());
-        chatPoc.setLastMessageCloudPoc(messageCloudPoc);
-        FirebaseDatabase.getInstance().getReference().child("crazyChats")
-                .child(messageCloudPoc.getFrom())
-                .child(chatPoc.getIdRemoteUser())
-                .setValue(chatPoc);
-
-        ChatPoc chatPocRemoto = new ChatPoc();
-        chatPocRemoto.setIdRemoteUser(messageCloudPoc.getFrom());
-        chatPocRemoto.setLastMessageCloudPoc(messageCloudPoc);
-        FirebaseDatabase.getInstance().getReference().child("crazyChats")
-                .child(messageCloudPoc.getTo())
-                .child(chatPocRemoto.getIdRemoteUser())
-                .setValue(chatPocRemoto);
-
-        /*Guardando localmente en la nube*/
-        //FirebaseDatabase.getInstance().getReference().child("crazyMessages").child(messageCloudPoc.getFrom()).updateChildren(childUpdates);
-        /*Guardando localmente en la nube*/
-        //FirebaseDatabase.getInstance().getReference().child("crazyMessages").child(messageCloudPoc.getTo()).updateChildren(childUpdates);
-
-    }
-    // [END write_fan_out]
-
-
-    private CharSequence getMessageText(Intent intent) {
-        Bundle remoteInput = RemoteInput.getResultsFromIntent(intent);
-        if (remoteInput != null) {
-            return remoteInput.getCharSequence(KEY_TEXT_REPLY);
-        }
-        return null;
-    }
-
-    private void deleteNotifications(String idRemoteUser) {
-        FirebaseDatabase.getInstance().getReference()
-                .child("notificaciones")
-                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .child(idRemoteUser)
-                .setValue(null).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull com.google.android.gms.tasks.Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "Notificaciones eliminadas");
-
-                        } else {
-                            Log.d(TAG, "Error al eliminar notificaciones");
-
-                        }
-                    }
-                });
-    }
-
-
     public static class AsyncTaskDeleteReplyNotification extends AsyncTask<String, Integer, String> {
 
         private final PendingResult pendingResult;
@@ -222,6 +212,23 @@ public class CrazyReplyBroadcastReceiver extends BroadcastReceiver {
         public AsyncTaskDeleteReplyNotification(PendingResult pendingResult, Intent intent) {
             this.pendingResult = pendingResult;
             this.intent = intent;
+        }
+
+        public void setIdNotification(int idNotification) {
+            this.idNotification = idNotification;
+        }
+
+        public void cancelNotification(int idNotification) {
+
+            Log.d(TAG, "cancelNotification: :)" + idNotification);
+            // notificationId is a unique int for each notification that you must define
+            notificationManagerCompat.cancel(idNotification);
+
+
+        }
+
+        public void setNotificationManagerCompat(NotificationManagerCompat notificationManagerCompat) {
+            this.notificationManagerCompat = notificationManagerCompat;
         }
 
         @Override
@@ -255,26 +262,6 @@ public class CrazyReplyBroadcastReceiver extends BroadcastReceiver {
             pendingResult.finish();
         }
 
-        public int getIdNotification() {
-            return idNotification;
-        }
-
-        public void setIdNotification(int idNotification) {
-            this.idNotification = idNotification;
-        }
-
-        private void cancelNotification(int idNotification) {
-
-            Log.d(TAG, "cancelNotification: :)" + idNotification);
-            // notificationId is a unique int for each notification that you must define
-            notificationManagerCompat.cancel(idNotification);
-
-
-        }
-
-        public void setNotificationManagerCompat(NotificationManagerCompat notificationManagerCompat) {
-            this.notificationManagerCompat = notificationManagerCompat;
-        }
 
     }
 

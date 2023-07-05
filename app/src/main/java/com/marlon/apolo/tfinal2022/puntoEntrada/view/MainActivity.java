@@ -17,8 +17,6 @@
  */
 package com.marlon.apolo.tfinal2022.puntoEntrada.view;
 
-import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK;
-import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.google.android.play.core.install.model.AppUpdateType.IMMEDIATE;
 
 import androidx.appcompat.app.AlertDialog;
@@ -52,7 +50,7 @@ import com.google.android.play.core.install.model.InstallStatus;
 import com.google.android.play.core.install.model.UpdateAvailability;
 import com.google.android.play.core.tasks.Task;
 import com.marlon.apolo.tfinal2022.BuildConfig;
-import com.marlon.apolo.tfinal2022.MainNavigationActivity;
+import com.marlon.apolo.tfinal2022.ui.MainNavigationActivity;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.infoInicial.view.InformacionInicialActivity;
 
@@ -115,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
 
 // Returns an intent object that you use to check for an update.
         Task<AppUpdateInfo> appUpdateInfoTask = appUpdateManager.getAppUpdateInfo();
+
 
 // Checks that the platform will allow the specified type of update.
         appUpdateInfoTask.addOnSuccessListener(appUpdateInfo -> {

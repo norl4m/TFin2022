@@ -19,7 +19,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.admin.viewModel.AdminViewModel;
-import com.marlon.apolo.tfinal2022.citasTrabajo.view.adapters.SeleccionarEmpleadorListAdapterPoc;
+import com.marlon.apolo.tfinal2022.citasTrabajo.adapters.SeleccionarEmpleadorListAdapterPoc;
 import com.marlon.apolo.tfinal2022.individualChat.model.ChatPoc;
 import com.marlon.apolo.tfinal2022.individualChat.model.ChatPocData;
 import com.marlon.apolo.tfinal2022.model.Administrador;

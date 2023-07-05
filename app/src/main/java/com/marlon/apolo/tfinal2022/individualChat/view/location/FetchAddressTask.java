@@ -18,6 +18,7 @@ import java.util.Locale;
 
 public class FetchAddressTask extends AsyncTask<Location, Void, String[]> {
 
+    private final String TAG = FetchAddressTask.class.getSimpleName();
     private Context mContext;
     private OnTaskCompleted mListener;
 
@@ -27,7 +28,6 @@ public class FetchAddressTask extends AsyncTask<Location, Void, String[]> {
         mListener = listener;
     }
 
-    private final String TAG = FetchAddressTask.class.getSimpleName();
 
     @Override
     protected String[] doInBackground(Location... params) {

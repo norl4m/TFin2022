@@ -47,49 +47,8 @@ public class SendFotoActivity extends AppCompatActivity {
     private AlertDialog alertDialogVar;
     private TextView textViewMessage;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_send_foto);
-
-        uriImage = getIntent().getData();
-        usuarioRemoto = (Usuario) getIntent().getSerializableExtra("usuarioRemoto");
-
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
-        ImageView imageView = findViewById(R.id.imageViewFoto);
-        if (uriImage != null) {
-            Glide.with(this).load(uriImage).into(imageView);
-        }
-
-        findViewById(R.id.fabSendFoto).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                MessageCloudPoc messageCloudPoc = new MessageCloudPoc();
-                //mensajeNube.setIdMensaje();
-                //mensajeNube.setIdChat("-N5Jb_EbmyyX7RXVyhs");
-                messageCloudPoc.setContenido(uriImage.toString());
-                messageCloudPoc.setFrom(FirebaseAuth.getInstance().getCurrentUser().getUid());
-                messageCloudPoc.setTo(usuarioRemoto.getIdUsuario());
-                messageCloudPoc.setEstadoLectura(false);
-                //messageCloudPoc.setType(0);/*0 texto */
-                Log.d(TAG, messageCloudPoc.toString());
-                sendMessage(messageCloudPoc);
-            }
-        });
-    }
-
     // [START write_fan_out]
-    private void sendMessage(MessageCloudPoc messageCloudPoc) {
+    public void sendMessage(MessageCloudPoc messageCloudPoc) {
         String title = "Por favor espere";
         String message = "Cargando imagen...";
         showCustomProgressDialog(title, message);
@@ -279,7 +238,7 @@ public class SendFotoActivity extends AppCompatActivity {
 
     }
 
-    private void closeAlertDialogLoad() {
+    public void closeAlertDialogLoad() {
         try {
             alertDialogVar.dismiss();
         } catch (Exception e) {
@@ -316,6 +275,47 @@ public class SendFotoActivity extends AppCompatActivity {
 
         String message = String.format(Locale.getDefault(), "Cargando imagen: %.2f %s", progress, "%");
         textViewMessage.setText(message);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_send_foto);
+
+        uriImage = getIntent().getData();
+        usuarioRemoto = (Usuario) getIntent().getSerializableExtra("usuarioRemoto");
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        ImageView imageView = findViewById(R.id.imageViewFoto);
+        if (uriImage != null) {
+            Glide.with(this).load(uriImage).into(imageView);
+        }
+
+        findViewById(R.id.fabSendFoto).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                MessageCloudPoc messageCloudPoc = new MessageCloudPoc();
+                //mensajeNube.setIdMensaje();
+                //mensajeNube.setIdChat("-N5Jb_EbmyyX7RXVyhs");
+                messageCloudPoc.setContenido(uriImage.toString());
+                messageCloudPoc.setFrom(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                messageCloudPoc.setTo(usuarioRemoto.getIdUsuario());
+                messageCloudPoc.setEstadoLectura(false);
+                //messageCloudPoc.setType(0);/*0 texto */
+                Log.d(TAG, messageCloudPoc.toString());
+                sendMessage(messageCloudPoc);
+            }
+        });
     }
 
     // [END write_fan_out]

@@ -41,7 +41,7 @@ public class PerfilActivity extends AppCompatActivity implements View.OnClickLis
         findViewById(R.id.imgBtnRegTrabajador).setOnClickListener(this);
     }
 
-    private void hideSystemBars() {
+    public void hideSystemBars() {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 

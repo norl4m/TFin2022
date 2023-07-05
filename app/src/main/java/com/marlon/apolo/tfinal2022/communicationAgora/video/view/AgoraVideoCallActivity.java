@@ -1964,7 +1964,7 @@ public class AgoraVideoCallActivity extends AppCompatActivity implements PopupMe
     }
 
 
-    private void createVideoCallOnFirebase(String channelName, int uid) {
+    public void createVideoCallOnFirebase(String channelName, int uid) {
         LlamadaVideo llamadaVideo = new LlamadaVideo();
         Participante participanteCaller = new Participante();
         Participante participanteDestiny = new Participante();
@@ -2007,22 +2007,6 @@ public class AgoraVideoCallActivity extends AppCompatActivity implements PopupMe
                         }
                     }
                 });
-
-//        FirebaseDatabase.getInstance().getReference().child("videoCalls")
-//                .child(idVideoCall)
-//                .addValueEventListener(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                        LlamadaVideo llamadaVideo1 = snapshot.getValue(LlamadaVideo.class);
-//                        Toast.makeText(getApplicationContext(), "State Changed", Toast.LENGTH_LONG).show();
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError error) {
-//
-//                    }
-//                });
-
 
         childEventListenerLlamar = new ChildEventListener() {
             @Override
