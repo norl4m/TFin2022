@@ -634,7 +634,7 @@ public class CrazyService extends Service {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, VIDEO_CALLS_CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_oficios)
-                .setContentTitle("Videollamada entrante...")
+                .setContentTitle(new String(Character.toChars(0x1F4F9))+" Videollamada entrante...")
                 .setContentText(llamadaVideo.getParticipanteCaller().getNombreParticipante())
                 .setPriority(NotificationCompat.PRIORITY_HIGH);
 
@@ -655,7 +655,8 @@ public class CrazyService extends Service {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             rejectPendingIntent = PendingIntent.getBroadcast(contextInstance, notificationId, rejectIntent, FLAG_MUTABLE);
 
-            answerPendingIntent = PendingIntent.getBroadcast(contextInstance, notificationId, answerIntent, FLAG_MUTABLE);
+            answerPendingIntent =
+                    PendingIntent.getBroadcast(contextInstance, notificationId, answerIntent, FLAG_MUTABLE);
         } else {
             rejectPendingIntent = PendingIntent.getBroadcast(contextInstance, notificationId, rejectIntent, FLAG_UPDATE_CURRENT);
 
