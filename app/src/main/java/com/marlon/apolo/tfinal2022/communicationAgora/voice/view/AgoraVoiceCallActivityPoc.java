@@ -261,7 +261,7 @@ public class AgoraVoiceCallActivityPoc extends AppCompatActivity implements Popu
     private String serverUrl = "";
 
     private String nodeJsUrl = "https://s3rv3rsid3.herokuapp.com";
-    private String javaUrl = "https://authwitouthauth.herokuapp.com";
+    private String javaUrl = "https://authwitouthauth-a975f368522e.herokuapp.com";
 
     private int tokenRole; // The token role: Broadcaster or Audience
     private int tokenExpireTime = 3600; // Expire time in Seconds.

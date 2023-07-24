@@ -655,8 +655,7 @@ public class CrazyService extends Service {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             rejectPendingIntent = PendingIntent.getBroadcast(contextInstance, notificationId, rejectIntent, FLAG_MUTABLE);
 
-            answerPendingIntent =
-                    PendingIntent.getBroadcast(contextInstance, notificationId, answerIntent, FLAG_MUTABLE);
+            answerPendingIntent = PendingIntent.getBroadcast(contextInstance, notificationId, answerIntent, FLAG_MUTABLE);
         } else {
             rejectPendingIntent = PendingIntent.getBroadcast(contextInstance, notificationId, rejectIntent, FLAG_UPDATE_CURRENT);
 
