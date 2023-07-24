@@ -36,5 +36,4 @@ public class EmpleadorTest {
         assertThat(empleador.getEmail(), is(equalTo("kevinjaramillo@gmail.com")));
         assertThat(empleador.getPassword(), is(equalTo("f5488346tng80qhm")));
     }
-
 }
