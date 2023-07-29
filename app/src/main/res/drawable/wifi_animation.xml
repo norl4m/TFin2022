@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:drawable="@drawable/ic_baseline_signal_wifi_0_bar_24"
+        android:duration="400"/>
+
+    <item
+        android:drawable="@drawable/ic_baseline_network_wifi_1_bar_24"
+        android:duration="400"/>
+
+    <item
+        android:drawable="@drawable/ic_baseline_network_wifi_2_bar_24"
+        android:duration="400"/>
+
+    <item
+        android:drawable="@drawable/ic_baseline_network_wifi_3_bar_24"
+        android:duration="400"/>
+
+    <item
+        android:drawable="@drawable/ic_baseline_signal_wifi_4_bar_24"
+        android:duration="400"/>
+
+</animation-list>

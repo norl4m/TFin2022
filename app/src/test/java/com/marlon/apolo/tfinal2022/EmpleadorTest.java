@@ -4,6 +4,8 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+import android.app.Activity;
+
 import com.marlon.apolo.tfinal2022.model.Empleador;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
 
@@ -30,6 +32,7 @@ public class EmpleadorTest {
         empleador.setApellido("Jaramillo");
         empleador.setEmail("kevinjaramillo@gmail.com");
         empleador.setPassword("f5488346tng80qhm");
+
         assertThat(empleador.getIdUsuario(), is(equalTo("-asd35uhjma6u322")));
         assertThat(empleador.getNombre(), is(equalTo("Kevin")));
         assertThat(empleador.getApellido(), is(equalTo("Jaramillo")));

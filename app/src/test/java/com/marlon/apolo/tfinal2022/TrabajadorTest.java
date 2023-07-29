@@ -30,6 +30,7 @@ public class TrabajadorTest {
         trabajador.setEmail("marlonapolo@gmail.com");
         trabajador.setCalificacion(2.0);
         trabajador.setEstadoRrcordP(false);
+
         assertThat(trabajador.getNombre(), is(equalTo("Marlon")));
         assertThat(trabajador.getApellido(), is(equalTo("Apolo")));
         assertThat(trabajador.getEmail(), is(equalTo("marlonapolo@gmail.com")));

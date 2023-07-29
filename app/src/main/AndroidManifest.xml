@@ -88,6 +88,13 @@
         android:theme="@style/Theme.TFinal2022"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".communicationAgora.video.view.VideoCallMainActivity"
+            android:exported="false"
+            android:label=""
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar" />
+
+        <activity
             android:name=".login.ResetPasswordActivity"
             android:exported="false"
             android:label=""
@@ -238,7 +245,6 @@ Set color used with incoming notification messages. This is used when no color i
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
-
         <activity
             android:name=".registro.view.RegistroOficioActivity"
             android:exported="false"

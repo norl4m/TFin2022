@@ -9,7 +9,6 @@
     <FrameLayout
         android:id="@+id/remote_video_view_container"
         android:layout_width="match_parent"
-
         android:layout_height="match_parent"
         android:background="@drawable/bg14"
         android:onClick="setStreamQuality" />

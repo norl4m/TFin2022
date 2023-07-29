@@ -25,6 +25,7 @@ import com.marlon.apolo.tfinal2022.puntoEntrada.view.MainActivity;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
 /*Los @SdkSuppress(minSdkVersion = 18) annotation ensures that tests will
 only run on devices with Android 4.3 (API level 18)
 * or newer, as required by the UI Automator framework.*/
@@ -70,7 +71,7 @@ public class ActivityMainTest {
     @Test
     public void useAppContext() throws Exception {
         // Context of the app under test.
-        Log.d("TAG","useAppContext"+" : "+appContext.getPackageName());
+        Log.d("TAG", "useAppContext" + " : " + appContext.getPackageName());
         assertEquals(BASIC_SAMPLE_PACKAGE, appContext.getPackageName());
     }
 
@@ -101,12 +102,14 @@ public class ActivityMainTest {
 
     @Test
     public void activityLaunch() {
-        Log.d("TAG","activityLaunch"+" : "+appContext.getPackageName());
+        Log.d("TAG", "activityLaunch" + " : " + appContext.getPackageName());
 
         onView(withId(R.id.textView1)).check(matches(isDisplayed()));
         onView(withId(R.id.imageViewLogo)).check(matches(isDisplayed()));
         onView(withId(R.id.textView2)).check(matches(isDisplayed()));
         onView(withId(R.id.textViewVersionCode)).check(matches(isDisplayed()));
+        Log.d(ActivityMainTest.class.getSimpleName(), "Test sobre interfaz gráfica exitoso");
+
     }
 
     // More tests...

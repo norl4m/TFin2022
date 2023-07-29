@@ -50,6 +50,7 @@ import com.google.android.play.core.install.model.InstallStatus;
 import com.google.android.play.core.install.model.UpdateAvailability;
 import com.google.android.play.core.tasks.Task;
 import com.marlon.apolo.tfinal2022.BuildConfig;
+import com.marlon.apolo.tfinal2022.communicationAgora.video.view.VideoCallMainActivity;
 import com.marlon.apolo.tfinal2022.ui.MainNavigationActivity;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.infoInicial.view.InformacionInicialActivity;
@@ -129,7 +130,8 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         if (getInfoInicialActivityFlag()) {
-                            startActivity(new Intent(MainActivity.this, MainNavigationActivity.class));
+//                            startActivity(new Intent(MainActivity.this, MainNavigationActivity.class));
+                            startActivity(new Intent(MainActivity.this, VideoCallMainActivity.class));
                         } else {
                             startActivity(new Intent(MainActivity.this, InformacionInicialActivity.class));
                         }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@drawable/btn_endcall_pressed" android:state_pressed="true" /> <!-- pressed -->
-    <item android:drawable="@drawable/btn_end_call" android:state_focused="true" /> <!-- focused -->
-    <item android:drawable="@drawable/btn_endcall_normal" /> <!-- default -->
+    <item android:drawable="@drawable/end_call_pressed" android:state_pressed="true" /> <!-- pressed -->
+    <item android:drawable="@drawable/end_call_focussed" android:state_focused="true" /> <!-- focused -->
+    <item android:drawable="@drawable/end_call_focussed" /> <!-- default -->
 </selector>

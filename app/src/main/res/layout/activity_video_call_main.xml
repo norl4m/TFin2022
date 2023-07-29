@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".communicationAgora.video.view.VideoCallMainActivity">
+
+    <FrameLayout
+        android:id="@+id/remote_video_view_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg14">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:divider="@drawable/divider_10p"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/imageViewRemoteU"
+                android:layout_width="156dp"
+                android:layout_height="156dp"
+                android:layout_gravity="center"
+                android:src="@drawable/usuario" />
+
+            <TextView
+                android:id="@+id/textViewRemoteU"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Marlon Apolo"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                android:textColor="@color/white" />
+
+            <TextView
+                android:id="@+id/textViewRemoteStateU"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Llamando..."
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                android:textColor="@color/white" />
+
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/networkStats"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/networkLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="4dp"
+            android:text="Estado de red: "
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+
+        <ImageView
+            android:id="@+id/imageViewWifiAnimation"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_toRightOf="@id/networkLabel" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/networkEncryption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/networkStats">
+
+        <TextView
+            android:id="@+id/networkLabelEncryption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="4dp"
+            android:text="Encriptación: "
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+
+        <ImageView
+            android:id="@+id/imageViewEncryption"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_toRightOf="@id/networkLabel" />
+    </LinearLayout>
+
+
+
+    <ImageView
+        android:id="@+id/resolution_360p"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_below="@id/networkEncryption"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:onClick="set360pResolution"
+        android:src="@drawable/icon_360_focussed"
+        android:text="360" />
+
+    <ImageView
+        android:id="@+id/resolution_720p"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_below="@id/networkEncryption"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_toRightOf="@id/resolution_360p"
+        android:onClick="set720pResolution"
+        android:src="@drawable/icon_720_focussed"
+        android:text="720" />
+
+
+    <ImageView
+        android:id="@+id/resolution_1080p"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_below="@id/networkEncryption"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_toRightOf="@id/resolution_720p"
+        android:onClick="set1080pResolution"
+        android:src="@drawable/icon_1080p"
+        android:text="1080" />
+
+    <FrameLayout
+        android:id="@+id/local_video_view_container"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:background="@color/teal_100">
+
+        <ImageView
+            android:id="@+id/imageViewLocal"
+            android:layout_width="156dp"
+            android:layout_height="156dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/usuario" />
+
+    </FrameLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:divider="@drawable/divider_10p"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:weightSum="5">
+
+        <ImageButton
+            android:id="@+id/activarAltavoz"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_margin="4dp"
+            android:layout_weight="0.8"
+            android:background="@drawable/speaker_normal_icon_behavior"
+            android:onClick="onSwitchSpeakerphoneClicked"
+            android:text="altavoz" />
+
+
+        <ImageButton
+            android:id="@+id/micMute"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_margin="4dp"
+            android:layout_weight="0.8"
+            android:background="@drawable/mic_mute_icon_behavior"
+            android:onClick="controlMic"
+            android:text="Silenciar mic" />
+
+
+        <ImageButton
+            android:id="@+id/control_camera"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_margin="4dp"
+            android:layout_weight="0.8"
+            android:background="@drawable/disable_camera_icon_behavior"
+            android:onClick="controlCamera"
+            android:text="enableDisableCamera" />
+
+
+        <ImageButton
+            android:id="@+id/switchCamera"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_margin="4dp"
+            android:layout_weight="0.8"
+            android:background="@drawable/switch_camera_icon_behavior"
+            android:onClick="switchCamera"
+            android:text="Silenciar mic" />
+
+
+        <ImageButton
+            android:id="@+id/joinButton"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_margin="4dp"
+            android:layout_weight="0.8"
+            android:background="@drawable/start_call_icon_behavior"
+            android:onClick="joinChannel"
+            android:text="Llamar" />
+
+
+        <ImageButton
+            android:id="@+id/leaveButton"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_margin="4dp"
+            android:layout_weight="0.8"
+            android:background="@drawable/end_call_icon_behavior"
+            android:onClick="leaveChannel"
+            android:text="Colgar" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/linLytRemoteUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/local_video_view_container"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        android:orientation="vertical"
+
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/imageViewRemote"
+            android:layout_width="156dp"
+            android:layout_height="156dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/usuario" />
+
+        <TextView
+            android:id="@+id/textViewRemoteUser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:fontFamily="@font/andika"
+            android:text="Marlon Apolo"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+
+        <TextView
+            android:id="@+id/textViewRemoteState"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:fontFamily="@font/andika"
+            android:text="Llamando"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+    </LinearLayout>
+
+</RelativeLayout>

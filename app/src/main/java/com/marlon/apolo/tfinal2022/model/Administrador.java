@@ -25,6 +25,7 @@ import com.marlon.apolo.tfinal2022.ui.oficios.viewModel.OficioViewModel;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.LongFunction;
 
 public class Administrador extends Usuario {
 

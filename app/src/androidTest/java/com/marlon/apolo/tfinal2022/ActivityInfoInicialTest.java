@@ -28,7 +28,8 @@ import org.junit.runner.RunWith;
 @RunWith(AndroidJUnit4.class)
 @SdkSuppress(minSdkVersion = 18)
 @LargeTest
-public class ActivityInfoInicialTest {
+public class
+ActivityInfoInicialTest {
     private static final int LAUNCH_TIMEOUT = 5000;
     private static final String STRING_TO_BE_TYPED = "UiAutomator";
     private UiDevice mDevice;
@@ -81,6 +82,5 @@ public class ActivityInfoInicialTest {
         onView(withId(R.id.btnChangeSlide)).perform(click());
 
         onView(withId(R.id.btnLogin)).perform(click());
-        // Wait for the app to appear
     }
 }
