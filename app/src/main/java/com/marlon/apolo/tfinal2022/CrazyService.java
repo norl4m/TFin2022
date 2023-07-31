@@ -16,9 +16,11 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.Icon;
+import android.media.AudioAttributes;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
@@ -42,6 +44,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.marlon.apolo.tfinal2022.citasTrabajo.receivers.AlarmReceiver;
 import com.marlon.apolo.tfinal2022.citasTrabajo.view.DetalleServicioActivity;
 import com.marlon.apolo.tfinal2022.communicationAgora.video.receivers.AcceptVideoCallBroadcastReceiver;
+import com.marlon.apolo.tfinal2022.communicationAgora.video.view.VideoCallMainActivity;
 import com.marlon.apolo.tfinal2022.communicationAgora.voice.receivers.AcceptVoiceCallBroadcastReceiver;
 import com.marlon.apolo.tfinal2022.communicationAgora.video.view.AgoraVideoCallActivity;
 import com.marlon.apolo.tfinal2022.communicationAgora.video.receivers.RejectVideoCallBroadcastReceiver;
@@ -312,6 +315,11 @@ public class CrazyService extends Service {
             channel.enableVibration(true);
             channel.enableLights(true);
             channel.setLightColor(Color.RED);
+//            AudioAttributes audioAttributes = new AudioAttributes.Builder()
+//                    .setUsage(AudioAttributes.USAGE_NOTIFICATION)
+//                    .build();
+//            channel.setSound(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.skype_caller_tone), audioAttributes);
+
 
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this
@@ -544,6 +552,12 @@ public class CrazyService extends Service {
                         stopPlaying();
                     }
                 }
+                Log.d(TAG,"onChildChanged");
+                Log.d(TAG,String.valueOf(llamadaVideoChanged.isRejectCallStatus()));
+                Log.d(TAG,String.valueOf(llamadaVideoChanged));
+                Log.d(TAG,String.valueOf(meMap.get(llamadaVideoChanged.getId())));
+                stopPlaying();
+
             }
 
             @Override
@@ -610,7 +624,8 @@ public class CrazyService extends Service {
         }
 
 
-        Intent fullScreenIntent = new Intent(this, AgoraVideoCallActivity.class);
+//        Intent fullScreenIntent = new Intent(this, AgoraVideoCallActivity.class);
+        Intent fullScreenIntent = new Intent(this, VideoCallMainActivity.class);
         fullScreenIntent.putExtra("callStatus", "llamadaEntrante");
         fullScreenIntent.putExtra("llamadaVideo", llamadaVideo);
 //        fullScreenIntent.putExtra("joinValue", "false");
@@ -757,6 +772,7 @@ public class CrazyService extends Service {
 
         // notificationId is a unique int for each notification that you must define
         notificationManager.notify(notificationId, builder.build());
+
 
 
         playingInconmingVideoCallAudio();
@@ -921,6 +937,10 @@ public class CrazyService extends Service {
         mediaPlayerCallTone = MediaPlayer.create(contextInstance, R.raw.skype_caller_tone);
         mediaPlayerCallTone.setLooping(true);
         mediaPlayerCallTone.start(); // no need to call prepare(); create() does that for you
+
+        // Start the MediaPlayerService to play the sound
+
+
     }
 
     public void stopPlaying() {
@@ -2503,6 +2523,14 @@ public class CrazyService extends Service {
 
 
     }
+
+
+
+
+
+
+
+
 
 
 }

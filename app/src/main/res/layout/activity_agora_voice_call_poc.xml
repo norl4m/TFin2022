@@ -268,7 +268,7 @@
             android:layout_margin="4dp"
             android:layout_weight="0.8"
             android:background="@drawable/start_call_icon_behavior"
-            android:onClick="joinChannel"
+            android:onClick="joinChannelButton"
             android:text="Llamar" />
 
 

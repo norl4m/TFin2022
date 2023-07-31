@@ -397,6 +397,10 @@ Set color used with incoming notification messages. This is used when no color i
                 <!-- <action android:name="android.intent.action.INPUT_METHOD_CHANGED" /> -->
             </intent-filter>
         </receiver>
+
+
+
+
     </application>
 
 </manifest>

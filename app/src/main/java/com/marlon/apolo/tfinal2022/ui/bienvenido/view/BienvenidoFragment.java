@@ -58,6 +58,7 @@ import com.marlon.apolo.tfinal2022.admin.viewModel.AdminViewModel;
 import com.marlon.apolo.tfinal2022.citasTrabajo.adapters.CitaListAdapter;
 import com.marlon.apolo.tfinal2022.citasTrabajo.viewModel.CitaViewModel;
 import com.marlon.apolo.tfinal2022.communicationAgora.video.view.AgoraVideoCallActivity;
+import com.marlon.apolo.tfinal2022.communicationAgora.video.view.VideoCallMainActivity;
 import com.marlon.apolo.tfinal2022.communicationAgora.voice.view.AgoraVoiceCallActivityPoc;
 import com.marlon.apolo.tfinal2022.databinding.FragmentBienvenidoBinding;
 import com.marlon.apolo.tfinal2022.individualChat.view.CrazyIndividualChatActivity;
@@ -879,7 +880,8 @@ public class BienvenidoFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                Intent intentVideollamada = new Intent(requireActivity(), AgoraVideoCallActivity.class);
+//                Intent intentVideollamada = new Intent(requireActivity(), AgoraVideoCallActivity.class);
+                Intent intentVideollamada = new Intent(requireActivity(), VideoCallMainActivity.class);
                 intentVideollamada.putExtra("usuarioRemoto", (Usuario) trabajador);
                 intentVideollamada.putExtra("usuarioLocal", (Usuario) usuarioFrom);
                 String channelName = FirebaseDatabase.getInstance().getReference().child("videoCalls")

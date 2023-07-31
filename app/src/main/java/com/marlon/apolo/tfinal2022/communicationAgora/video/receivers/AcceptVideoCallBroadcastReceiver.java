@@ -9,6 +9,7 @@ import android.widget.Toast;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.marlon.apolo.tfinal2022.communicationAgora.video.view.AgoraVideoCallActivity;
+import com.marlon.apolo.tfinal2022.communicationAgora.video.view.VideoCallMainActivity;
 import com.marlon.apolo.tfinal2022.model.LlamadaVideo;
 
 public class AcceptVideoCallBroadcastReceiver extends BroadcastReceiver {
@@ -26,7 +27,7 @@ public class AcceptVideoCallBroadcastReceiver extends BroadcastReceiver {
 //        Log.d(TAG, log);
         LlamadaVideo llamadaVideo = (LlamadaVideo) intent.getSerializableExtra("llamadaVideo");
         int notificationId = intent.getIntExtra("notificationId", -1);
-        Toast.makeText(context, "Contestando videollamada", Toast.LENGTH_LONG).show();
+        //Toast.makeText(context, "Contestando videollamada", Toast.LENGTH_LONG).show();
         cancelNotification(context, notificationId);
         answerVideoCall(context, llamadaVideo);
 
@@ -35,11 +36,14 @@ public class AcceptVideoCallBroadcastReceiver extends BroadcastReceiver {
 
     private void answerVideoCall(Context context, LlamadaVideo llamadaVideo) {
 //        Intent fullScreenIntent = new Intent(context, AgoraVideoCallActivity.class);
-        Intent fullScreenIntent = new Intent(context, AgoraVideoCallActivity.class);
+//        Intent fullScreenIntent = new Intent(context, AgoraVideoCallActivity.class);
+        Intent fullScreenIntent = new Intent(context, VideoCallMainActivity.class);
         fullScreenIntent.putExtra("callStatus", "llamadaEntrante");
+        llamadaVideo.setDestinyStatus(true);
+        llamadaVideo.setChannelConnectedStatus(true);
         fullScreenIntent.putExtra("llamadaVideo", llamadaVideo);
 //        fullScreenIntent.putExtra("joinValue", "false");
-        fullScreenIntent.putExtra("extraJoin", "conectar");
+//        fullScreenIntent.putExtra("extraJoin", "conectar");
 
 //        fullScreenIntent.putExtra("channelNameShare", llamadaVideo.getId());
 //        fullScreenIntent.putExtra("callStatus", 1);/*llamada entrante*/

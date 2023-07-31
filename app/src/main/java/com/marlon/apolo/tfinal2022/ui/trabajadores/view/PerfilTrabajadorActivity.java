@@ -37,6 +37,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.communicationAgora.video.view.AgoraVideoCallActivity;
+import com.marlon.apolo.tfinal2022.communicationAgora.video.view.VideoCallMainActivity;
 import com.marlon.apolo.tfinal2022.communicationAgora.voice.view.AgoraVoiceCallActivityPoc;
 import com.marlon.apolo.tfinal2022.individualChat.view.CrazyIndividualChatActivity;
 import com.marlon.apolo.tfinal2022.model.Administrador;
@@ -192,7 +193,8 @@ public class PerfilTrabajadorActivity extends AppCompatActivity {
 //
 
 
-        Intent intentVideollamada = new Intent(this, AgoraVideoCallActivity.class);
+//        Intent intentVideollamada = new Intent(this, AgoraVideoCallActivity.class);
+        Intent intentVideollamada = new Intent(this, VideoCallMainActivity.class);
         intentVideollamada.putExtra("usuarioRemoto", (Usuario) trabajadorSelected);
         intentVideollamada.putExtra("usuarioLocal", (Usuario) usuarioLocal);
         String channelName = FirebaseDatabase.getInstance().getReference().child("videoCalls")

@@ -33,6 +33,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.communicationAgora.video.view.AgoraVideoCallActivity;
+import com.marlon.apolo.tfinal2022.communicationAgora.video.view.VideoCallMainActivity;
 import com.marlon.apolo.tfinal2022.communicationAgora.voice.view.AgoraVoiceCallActivityPoc;
 import com.marlon.apolo.tfinal2022.individualChat.view.CrazyIndividualChatActivity;
 import com.marlon.apolo.tfinal2022.model.Chat;
@@ -191,7 +192,8 @@ public class TrabajadorListAdapterResultados extends RecyclerView.Adapter<Trabaj
             public void onClick(View v) {
 
 
-                Intent intentVideollamada = new Intent(context, AgoraVideoCallActivity.class);
+//                Intent intentVideollamada = new Intent(context, AgoraVideoCallActivity.class);
+                Intent intentVideollamada = new Intent(context, VideoCallMainActivity.class);
                 intentVideollamada.putExtra("usuarioRemoto", (Usuario) trabajador);
                 intentVideollamada.putExtra("usuarioLocal", (Usuario) usuarioFrom);
                 String channelName = FirebaseDatabase.getInstance().getReference().child("videoCalls")

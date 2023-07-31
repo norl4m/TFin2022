@@ -100,7 +100,7 @@
             android:layout_below="@+id/editChannelName"
             android:layout_marginTop="40dp"
             android:layout_toEndOf="@id/opciones_server"
-            android:onClick="joinChannel"
+            android:onClick="joinChannelButton"
             android:text="Join" />
 
         <Button

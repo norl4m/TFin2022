@@ -12,6 +12,7 @@ import androidx.core.app.NotificationManagerCompat;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.FirebaseDatabase;
+import com.marlon.apolo.tfinal2022.CrazyService;
 import com.marlon.apolo.tfinal2022.model.LlamadaVideo;
 
 public class RejectVideoCallBroadcastReceiver extends BroadcastReceiver {
@@ -33,6 +34,9 @@ public class RejectVideoCallBroadcastReceiver extends BroadcastReceiver {
         //Toast.makeText(context, context.getString(R.string.filter_reject_call), Toast.LENGTH_LONG).show();
         cancelNotification(context, notificationId);
         rejectVideoCall(context, llamadaVideo);
+
+
+
     }
 
     private void rejectVideoCall(Context context, LlamadaVideo llamadaVideo) {
