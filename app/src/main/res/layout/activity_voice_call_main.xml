@@ -76,8 +76,8 @@
         android:id="@+id/networkEncryption"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_below="@id/networkStats"
+        android:orientation="horizontal"
         android:visibility="gone">
 
         <TextView
@@ -98,7 +98,6 @@
     </LinearLayout>
 
 
-
     <ImageView
         android:id="@+id/resolution_360p"
         android:layout_width="56dp"
@@ -108,7 +107,8 @@
         android:layout_marginEnd="4dp"
         android:onClick="set360pResolution"
         android:src="@drawable/icon_360_focussed"
-        android:text="360" />
+        android:text="360"
+        android:visibility="gone" />
 
     <ImageView
         android:id="@+id/resolution_720p"
@@ -120,7 +120,8 @@
         android:layout_toRightOf="@id/resolution_360p"
         android:onClick="set720pResolution"
         android:src="@drawable/icon_720_focussed"
-        android:text="720" />
+        android:text="720"
+        android:visibility="gone" />
 
 
     <ImageView
@@ -133,7 +134,8 @@
         android:layout_toRightOf="@id/resolution_720p"
         android:onClick="set1080pResolution"
         android:src="@drawable/icon_1080p"
-        android:text="1080" />
+        android:text="1080"
+        android:visibility="gone" />
 
     <FrameLayout
         android:id="@+id/local_video_view_container"
@@ -142,14 +144,16 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:background="@color/teal_100">
+        android:background="@color/teal_100"
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/imageViewLocal"
             android:layout_width="156dp"
             android:layout_height="156dp"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/usuario" />
+            android:src="@drawable/usuario"
+            android:visibility="gone" />
 
     </FrameLayout>
 
@@ -193,7 +197,8 @@
             android:layout_weight="0.8"
             android:background="@drawable/disable_camera_icon_behavior"
             android:onClick="controlCamera"
-            android:text="enableDisableCamera" />
+            android:text="enableDisableCamera"
+            android:visibility="gone" />
 
 
         <ImageButton
@@ -204,7 +209,8 @@
             android:layout_weight="0.8"
             android:background="@drawable/switch_camera_icon_behavior"
             android:onClick="switchCamera"
-            android:text="Silenciar mic" />
+            android:text="Silenciar mic"
+            android:visibility="gone" />
 
 
         <ImageButton

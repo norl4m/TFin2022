@@ -119,45 +119,52 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                if (getInfoInicialActivityFlag()) {
-//                    startActivity(new Intent(MainActivity.this, MainNavigationActivity.class));
-////                            startActivity(new Intent(MainActivity.this, VideoCallMainActivity.class));
-//                } else {
-//                    startActivity(new Intent(MainActivity.this, InformacionInicialActivity.class));
-//                }
-//                finish();
-//            }
-//        }, TIME_SPLASH);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (getInfoInicialActivityFlag()) {
+                    startActivity(new Intent(MainActivity.this, MainNavigationActivity.class));
+//                            startActivity(new Intent(MainActivity.this, VideoCallMainActivity.class));
+                } else {
+                    startActivity(new Intent(MainActivity.this, InformacionInicialActivity.class));
+                }
+                finish();
+            }
+        }, TIME_SPLASH);
 
+        /****************************************/
 
 
 // Checks that the platform will allow the specified type of update.
-        appUpdateInfoTask.addOnSuccessListener(appUpdateInfo -> {
-            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
-                    // For a flexible update, use AppUpdateType.FLEXIBLE
-                    && appUpdateInfo.isUpdateTypeAllowed(IMMEDIATE)) {
-                // Request the update.
-                Log.d("TAG", "EXISTE UNA ACTUALIZACIÓN");
-                requestUpdate(appUpdateInfo);
-            } else {
-                Log.d("TAG", "App actualizada");
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (getInfoInicialActivityFlag()) {
-                            startActivity(new Intent(MainActivity.this, MainNavigationActivity.class));
-//                            startActivity(new Intent(MainActivity.this, VideoCallMainActivity.class));
-                        } else {
-                            startActivity(new Intent(MainActivity.this, InformacionInicialActivity.class));
-                        }
-                        finish();
-                    }
-                }, TIME_SPLASH);
-            }
-        });
+//        appUpdateInfoTask.addOnSuccessListener(appUpdateInfo -> {
+//            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+//                    // For a flexible update, use AppUpdateType.FLEXIBLE
+//                    && appUpdateInfo.isUpdateTypeAllowed(IMMEDIATE)) {
+//                // Request the update.
+//                Log.d("TAG", "EXISTE UNA ACTUALIZACIÓN");
+//                requestUpdate(appUpdateInfo);
+//            } else {
+//                Log.d("TAG", "App actualizada");
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        if (getInfoInicialActivityFlag()) {
+//                            startActivity(new Intent(MainActivity.this, MainNavigationActivity.class));
+////                            startActivity(new Intent(MainActivity.this, VideoCallMainActivity.class));
+//                        } else {
+//                            startActivity(new Intent(MainActivity.this, InformacionInicialActivity.class));
+//                        }
+//                        finish();
+//                    }
+//                }, TIME_SPLASH);
+//            }
+//        });
+//
+
+        /****************************************/
+
+
+
 //        new Handler().postDelayed(new Runnable() {
 //            @Override
 //            public void run() {

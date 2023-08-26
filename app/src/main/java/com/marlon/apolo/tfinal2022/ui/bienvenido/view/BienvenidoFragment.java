@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.speech.tts.Voice;
 import android.text.InputType;
 import android.util.Log;
 import android.util.TypedValue;
@@ -60,6 +61,7 @@ import com.marlon.apolo.tfinal2022.citasTrabajo.viewModel.CitaViewModel;
 import com.marlon.apolo.tfinal2022.communicationAgora.video.view.AgoraVideoCallActivity;
 import com.marlon.apolo.tfinal2022.communicationAgora.video.view.VideoCallMainActivity;
 import com.marlon.apolo.tfinal2022.communicationAgora.voice.view.AgoraVoiceCallActivityPoc;
+import com.marlon.apolo.tfinal2022.communicationAgora.voice.view.VoiceCallMainActivity;
 import com.marlon.apolo.tfinal2022.databinding.FragmentBienvenidoBinding;
 import com.marlon.apolo.tfinal2022.individualChat.view.CrazyIndividualChatActivity;
 import com.marlon.apolo.tfinal2022.model.Administrador;
@@ -807,7 +809,7 @@ public class BienvenidoFragment extends Fragment {
 
 
 //                    Intent intentllamadaVoz = new Intent(requireActivity(), AgoraOnlyVoiceCallActivity.class);
-                    Intent intentllamadaVoz = new Intent(requireActivity(), AgoraVoiceCallActivityPoc.class);
+                    Intent intentllamadaVoz = new Intent(requireActivity(), VoiceCallMainActivity.class);
                     intentllamadaVoz.putExtra("usuarioRemoto", (Usuario) trabajadorAtPosition);
                     intentllamadaVoz.putExtra("usuarioLocal", usuarioFrom);
                     String channelName = FirebaseDatabase.getInstance().getReference().child("voiceCalls").push().getKey();
@@ -948,7 +950,7 @@ public class BienvenidoFragment extends Fragment {
 
     public void realizarLlamadaVoz(Trabajador trabajador) {
 //        Intent intentllamadaVoz = new Intent(requireActivity(), AgoraOnlyVoiceCallActivity.class);
-        Intent intentllamadaVoz = new Intent(requireActivity(), AgoraVoiceCallActivityPoc.class);
+        Intent intentllamadaVoz = new Intent(requireActivity(), VoiceCallMainActivity.class);
         intentllamadaVoz.putExtra("usuarioRemoto", (Usuario) trabajadorAtPosition);
         intentllamadaVoz.putExtra("usuarioLocal", usuarioFrom);
         String channelName = FirebaseDatabase.getInstance().getReference().child("voiceCalls").push().getKey();

@@ -44,6 +44,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.marlon.apolo.tfinal2022.CrazyService;
+import com.marlon.apolo.tfinal2022.MLayoutGptService;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.admin.viewModel.AdminViewModel;
 import com.marlon.apolo.tfinal2022.buscador.view.BuscadorActivity;
@@ -394,7 +395,7 @@ public class MainNavigationActivity extends AppCompatActivity {
 
         }
 
-
+/*****************************************************/
         if (!isMyServiceRunning(CrazyService.class)) { //método que determina si el servicio ya está corriendo o no
 //            Intent serv = new Intent(getApplicationContext(),CrazyService.class); //serv de tipo Intent
 //            this.startService(serv); // tipo Context
@@ -421,6 +422,36 @@ public class MainNavigationActivity extends AppCompatActivity {
 
 
         }
+
+
+
+/****************************************/
+//        if (!isMyServiceRunning(MLayoutGptService.class)) { //método que determina si el servicio ya está corriendo o no
+////            Intent serv = new Intent(getApplicationContext(),CrazyService.class); //serv de tipo Intent
+////            this.startService(serv); // tipo Context
+//            Log.d(TAG, "Service started");
+//            if (firebaseUser != null) {
+////            Intent intent = new Intent(this, ServicioNotificacionCustom.class);
+////            Intent intent = new Intent(this, OffLaneService.class);
+////            Intent intent = new Intent(this, ForegroundCustomService.class);
+//                Context context = getApplicationContext();
+//                //Toast.makeText(getApplicationContext(), "GG SERVICIO", Toast.LENGTH_LONG).show();
+//                Intent intentPoc = new Intent(this, MLayoutGptService.class); // Build the intent for the service
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+////                startForegroundService(intent);
+//                    startForegroundService(intentPoc);
+//
+//
+//                } else {
+//                    startService(intentPoc);
+////                startService(intent);
+//                }
+//            }
+//        } else {
+//            Log.d(TAG, "Service already running");
+//
+//
+//        }
 
 
     }

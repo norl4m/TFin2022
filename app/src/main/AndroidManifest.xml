@@ -87,6 +87,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TFinal2022"
         android:usesCleartextTraffic="true">
+
+        <activity
+            android:name=".communicationAgora.voice.view.VoiceCallMainActivity"
+            android:exported="false"
+            android:label=""
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TFinal2022.NoActionBar" />
+
         <activity
             android:name=".communicationAgora.video.view.VideoCallMainActivity"
             android:exported="false"
@@ -341,6 +349,33 @@ Set color used with incoming notification messages. This is used when no color i
             android:name=".CrazyService"
             android:exported="false" />
 
+        <service
+            android:name=".MLayoutGptService"
+            android:exported="false" />
+
+        <receiver
+            android:name=".VideoCallGptReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="ACCEPT_INCOMING_VIDEO_CALL" />
+                <!-- <action android:name="android.intent.action.BOOT_COMPLETED" /> -->
+                <!-- <action android:name="android.intent.action.INPUT_METHOD_CHANGED" /> -->
+            </intent-filter>
+
+        </receiver>
+
+        <receiver
+            android:name=".NotificationDismissedGptReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="ACTION_DISMISS_NOTIFICATION" />
+                <!-- <action android:name="android.intent.action.BOOT_COMPLETED" /> -->
+                <!-- <action android:name="android.intent.action.INPUT_METHOD_CHANGED" /> -->
+            </intent-filter>
+
+        </receiver>
+
+
         <receiver
             android:name=".citasTrabajo.receivers.AlarmReceiver"
             android:enabled="true"
@@ -397,8 +432,6 @@ Set color used with incoming notification messages. This is used when no color i
                 <!-- <action android:name="android.intent.action.INPUT_METHOD_CHANGED" /> -->
             </intent-filter>
         </receiver>
-
-
 
 
     </application>

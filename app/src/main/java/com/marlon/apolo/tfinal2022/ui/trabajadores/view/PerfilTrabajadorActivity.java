@@ -39,6 +39,7 @@ import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.communicationAgora.video.view.AgoraVideoCallActivity;
 import com.marlon.apolo.tfinal2022.communicationAgora.video.view.VideoCallMainActivity;
 import com.marlon.apolo.tfinal2022.communicationAgora.voice.view.AgoraVoiceCallActivityPoc;
+import com.marlon.apolo.tfinal2022.communicationAgora.voice.view.VoiceCallMainActivity;
 import com.marlon.apolo.tfinal2022.individualChat.view.CrazyIndividualChatActivity;
 import com.marlon.apolo.tfinal2022.model.Administrador;
 import com.marlon.apolo.tfinal2022.model.Chat;
@@ -256,7 +257,7 @@ public class PerfilTrabajadorActivity extends AppCompatActivity {
 //
 
 //        Intent intentllamadaVoz = new Intent(this, AgoraOnlyVoiceCallActivity.class);
-        Intent intentllamadaVoz = new Intent(this, AgoraVoiceCallActivityPoc.class);
+        Intent intentllamadaVoz = new Intent(this, VoiceCallMainActivity.class);
         intentllamadaVoz.putExtra("usuarioRemoto", (Usuario) trabajadorSelected);
         intentllamadaVoz.putExtra("usuarioLocal", usuarioLocal);
         String channelName = FirebaseDatabase.getInstance().getReference().child("voiceCalls").push().getKey();

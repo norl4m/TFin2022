@@ -49,7 +49,9 @@ public class AuthAsyncTask extends AsyncTask<String, Void, String> {
     protected String doInBackground(String... strings) {
 
         try {
-            String GET_URL = "https://authwitouthauth.herokuapp.com/nimda/usuarios";
+            String javaUrl = "https://authwitouthauth-a975f368522e.herokuapp.com";
+
+            String GET_URL = javaUrl + "/nimda/usuarios";
             URL obj = new URL(GET_URL);
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
             con.setRequestMethod("GET");

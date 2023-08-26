@@ -43,8 +43,10 @@ public class PostAsyncTask extends AsyncTask<String, Integer, String> {
         Log.d(TAG, jsonObjectString);
         response = "";
         try {
+            String javaUrl = "https://authwitouthauth-a975f368522e.herokuapp.com";
+
 //            String urlBase = "https://authwitouthauth.herokuapp.com/usuarios";
-            String urlBase = "https://authwitouthauth.herokuapp.com/usuarios";
+            String urlBase = javaUrl + "/usuarios";
 
             URL url = new URL(urlBase);
 //        HttpURLConnection httpURLConnection = new url.openConnection();

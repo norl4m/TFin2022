@@ -51,6 +51,7 @@ import com.marlon.apolo.tfinal2022.communicationAgora.video.receivers.RejectVide
 import com.marlon.apolo.tfinal2022.communicationAgora.voice.receivers.RejectVoiceCallBroadcastReceiver;
 
 import com.marlon.apolo.tfinal2022.communicationAgora.voice.view.AgoraVoiceCallActivityPoc;
+import com.marlon.apolo.tfinal2022.communicationAgora.voice.view.VoiceCallMainActivity;
 import com.marlon.apolo.tfinal2022.individualChat.model.MessageCloudPoc;
 import com.marlon.apolo.tfinal2022.individualChat.receivers.CrazyDeleteBroadcastReceiver;
 import com.marlon.apolo.tfinal2022.individualChat.view.CrazyIndividualChatActivity;
@@ -297,6 +298,7 @@ public class CrazyService extends Service {
 
         }
     }
+
     public void createVideoCallChannel() {
         Log.d(TAG, "########################################");
         Log.d(TAG, "createVideoCallChannel");
@@ -552,10 +554,10 @@ public class CrazyService extends Service {
                         stopPlaying();
                     }
                 }
-                Log.d(TAG,"onChildChanged");
-                Log.d(TAG,String.valueOf(llamadaVideoChanged.isRejectCallStatus()));
-                Log.d(TAG,String.valueOf(llamadaVideoChanged));
-                Log.d(TAG,String.valueOf(meMap.get(llamadaVideoChanged.getId())));
+                Log.d(TAG, "onChildChanged");
+                Log.d(TAG, String.valueOf(llamadaVideoChanged.isRejectCallStatus()));
+                Log.d(TAG, String.valueOf(llamadaVideoChanged));
+                Log.d(TAG, String.valueOf(meMap.get(llamadaVideoChanged.getId())));
                 stopPlaying();
 
             }
@@ -591,67 +593,63 @@ public class CrazyService extends Service {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, VIDEO_CALLS_CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_oficios)
-                .setContentTitle("Videollamada entrante...")
+                .setContentTitle(new String(Character.toChars(0x1F4F9)) + "Videollamada entrante...")
                 .setContentText(llamadaVideo.getParticipanteCaller().getNombreParticipante())
                 .setPriority(NotificationCompat.PRIORITY_HIGH);
 
-        // Build a PendingIntent for the reply action to trigger.
-
-        Intent answerIntent = new Intent(contextInstance.getString(R.string.filter_incoing_call));
-        answerIntent.putExtra("callStatus", "llamadaEntrante");
-        answerIntent.putExtra("llamadaVideo", llamadaVideo);
-        answerIntent.putExtra("notificationId", notificationId);
-
-        Intent rejectIntent = new Intent(contextInstance.getString(R.string.filter_reject_call));
+        Intent rejectIntent = new Intent();
+        rejectIntent.setAction(contextInstance.getString(R.string.filter_reject_call));
         rejectIntent.putExtra("callStatus", "llamadaEntrante");
         rejectIntent.putExtra("llamadaVideo", llamadaVideo);
-        rejectIntent.putExtra("notificationId", notificationId);
-
-        PendingIntent rejectPendingIntent = null;
-        PendingIntent answerPendingIntent = null;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            rejectPendingIntent = PendingIntent.getBroadcast(contextInstance, notificationId, rejectIntent, FLAG_MUTABLE);
-
-            answerPendingIntent =
-                    PendingIntent.getBroadcast(contextInstance, notificationId, answerIntent, FLAG_MUTABLE);
-        } else {
-            rejectPendingIntent = PendingIntent.getBroadcast(contextInstance, notificationId, rejectIntent, FLAG_UPDATE_CURRENT);
-
-            answerPendingIntent =
-                    PendingIntent.getBroadcast(contextInstance, notificationId, answerIntent, FLAG_UPDATE_CURRENT);
-            /*Bandera mala: PendingIntent.FLAG_IMMUTABLE*/
-//
-        }
-
+        rejectIntent.putExtra("idNotification", notificationId);
 
 //        Intent fullScreenIntent = new Intent(this, AgoraVideoCallActivity.class);
-        Intent fullScreenIntent = new Intent(this, VideoCallMainActivity.class);
-        fullScreenIntent.putExtra("callStatus", "llamadaEntrante");
-        fullScreenIntent.putExtra("llamadaVideo", llamadaVideo);
-//        fullScreenIntent.putExtra("joinValue", "false");
-        //fullScreenIntent.putExtra("extraJoin", "noconectar");
+        Intent answerIntent = new Intent(this, VideoCallMainActivity.class);
+        answerIntent.setAction("CALL_ANSWER");
+        answerIntent.putExtra("callStatus", "llamadaEntrante");
+        answerIntent.putExtra("llamadaVideo", llamadaVideo);
+        answerIntent.putExtra("idNotification", notificationId);
 
 
-        PendingIntent fullScreenPendingIntent = null;
+        Intent contentIntent = new Intent(this, VideoCallMainActivity.class);
+        contentIntent.setAction("CALL_SCREEN");
+        contentIntent.putExtra("callStatus", "llamadaEntrante");
+        contentIntent.putExtra("llamadaVideo", llamadaVideo);
+        contentIntent.putExtra("idNotification", notificationId);
+
+        PendingIntent contentPendingIntent = null;
+
+        PendingIntent answerPendingIntent = null;
+
+        PendingIntent rejectPendingIntent = null;
+
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            fullScreenPendingIntent = PendingIntent.getActivity(this, notificationId,
-                    fullScreenIntent, PendingIntent.FLAG_MUTABLE);
+            contentPendingIntent = PendingIntent.getActivity(this, notificationId,
+                    contentIntent, PendingIntent.FLAG_MUTABLE);
+
+            answerPendingIntent = PendingIntent.getActivity(this, notificationId,
+                    answerIntent, PendingIntent.FLAG_MUTABLE);
+
+            rejectPendingIntent = PendingIntent.getBroadcast(contextInstance, notificationId,
+                    rejectIntent, FLAG_MUTABLE);
+
         } else {
-            fullScreenPendingIntent = PendingIntent.getActivity(this, notificationId,
-                    fullScreenIntent, FLAG_UPDATE_CURRENT);
-            /*Bandera mala: PendingIntent.FLAG_IMMUTABLE*/
-//
+            contentPendingIntent = PendingIntent.getActivity(this, notificationId,
+                    contentIntent, FLAG_UPDATE_CURRENT);
+
+            answerPendingIntent = PendingIntent.getActivity(this, notificationId,
+                    answerIntent, FLAG_UPDATE_CURRENT);
+
+            rejectPendingIntent = PendingIntent.getBroadcast(contextInstance, notificationId,
+                    rejectIntent, FLAG_UPDATE_CURRENT);
         }
 
-
-//        // Create the reply action and add the remote input.
         NotificationCompat.Action actionAccept =
                 new NotificationCompat.Action.Builder(R.drawable.ic_baseline_navigate_next_24,
                         "Contestar",
                         answerPendingIntent)
                         .build();
-        builder.addAction(actionAccept);
 
         NotificationCompat.Action actionReject =
                 new NotificationCompat.Action.Builder(R.drawable.ic_baseline_navigate_next_24,
@@ -659,13 +657,16 @@ public class CrazyService extends Service {
                         rejectPendingIntent)
                         .build();
 
+        builder.addAction(actionAccept);
         builder.addAction(actionReject);
+//        builder.setSound(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.bomberman));
 
+//        builder.setSound(Uri.parse("android.resource://" + getPackageName() + "/raw/" + R.raw.bomberman));
 
         builder.setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setCategory(NotificationCompat.CATEGORY_CALL)
                 .setDeleteIntent(rejectPendingIntent)
-                .setFullScreenIntent(fullScreenPendingIntent, true);
+                .setFullScreenIntent(contentPendingIntent, true);
 
         return builder;
     }
@@ -675,60 +676,56 @@ public class CrazyService extends Service {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, VIDEO_CALLS_CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_oficios)
-                .setContentTitle("Llamada entrante...")
+                .setContentTitle(new String(Character.toChars(0x260E)) + "Llamada entrante...")
                 .setContentText(llamadaVideo.getParticipanteCaller().getNombreParticipante())
                 .setPriority(NotificationCompat.PRIORITY_HIGH);
 
         // Build a PendingIntent for the reply action to trigger.
 
-        Intent answerIntent = new Intent(contextInstance.getString(R.string.filter_incoing_voice_call));
+        Intent answerIntent = new Intent(this, VoiceCallMainActivity.class);
+        answerIntent.setAction("CALL_ANSWER");
         answerIntent.putExtra("callStatus", "llamadaEntrante");
         answerIntent.putExtra("llamadaVoz", llamadaVideo);
-        answerIntent.putExtra("notificationId", notificationId);
+        answerIntent.putExtra("idNotification", notificationId);
 
-        Intent rejectIntent = new Intent(contextInstance.getString(R.string.filter_reject_voice_call));
+        Intent rejectIntent = new Intent();
+        rejectIntent.setAction(contextInstance.getString(R.string.filter_reject_voice_call));
         rejectIntent.putExtra("callStatus", "llamadaEntrante");
         rejectIntent.putExtra("llamadaVoz", llamadaVideo);
         rejectIntent.putExtra("notificationId", notificationId);
 
+
+        Intent fullScreenIntent = new Intent(this, VoiceCallMainActivity.class);
+        fullScreenIntent.setAction("CALL_SCREEN");
+        fullScreenIntent.putExtra("callStatus", "llamadaEntrante");
+        fullScreenIntent.putExtra("llamadaVoz", llamadaVideo);
+        fullScreenIntent.putExtra("idNotification", notificationId);
+
+//        fullScreenIntent.putExtra("joinValue", "false");
+        //fullScreenIntent.putExtra("extraJoin", "noconectar");
+
         PendingIntent rejectPendingIntent = null;
         PendingIntent answerPendingIntent = null;
+        PendingIntent fullScreenPendingIntent = null;
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             rejectPendingIntent = PendingIntent.getBroadcast(contextInstance, notificationId, rejectIntent, FLAG_MUTABLE);
 
             answerPendingIntent =
-                    PendingIntent.getBroadcast(contextInstance, notificationId, answerIntent, FLAG_MUTABLE);
-        } else {
-            rejectPendingIntent = PendingIntent.getBroadcast(contextInstance, notificationId, rejectIntent, FLAG_UPDATE_CURRENT);
+                    PendingIntent.getActivity(contextInstance, notificationId, answerIntent, FLAG_MUTABLE);
 
-            answerPendingIntent =
-                    PendingIntent.getBroadcast(contextInstance, notificationId, answerIntent, FLAG_UPDATE_CURRENT);
-            /*Bandera mala: PendingIntent.FLAG_IMMUTABLE*/
-//
-        }
-
-
-//        Intent fullScreenIntent = new Intent(this, AgoraOnlyVoiceCallActivity.class);
-        Intent fullScreenIntent = new Intent(this, AgoraVoiceCallActivityPoc.class);
-        fullScreenIntent.putExtra("callStatus", "llamadaEntrante");
-        fullScreenIntent.putExtra("llamadaVoz", llamadaVideo);
-//        fullScreenIntent.putExtra("joinValue", "false");
-        //fullScreenIntent.putExtra("extraJoin", "noconectar");
-
-
-        PendingIntent fullScreenPendingIntent = null;
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             fullScreenPendingIntent = PendingIntent.getActivity(this, notificationId,
                     fullScreenIntent, PendingIntent.FLAG_MUTABLE);
         } else {
             fullScreenPendingIntent = PendingIntent.getActivity(this, notificationId,
                     fullScreenIntent, FLAG_UPDATE_CURRENT);
+            rejectPendingIntent = PendingIntent.getBroadcast(contextInstance, notificationId, rejectIntent, FLAG_UPDATE_CURRENT);
+
+            answerPendingIntent =
+                    PendingIntent.getActivity(contextInstance, notificationId, answerIntent, FLAG_UPDATE_CURRENT);
             /*Bandera mala: PendingIntent.FLAG_IMMUTABLE*/
 //
         }
-
-
 //
 //        // Create the reply action and add the remote input.
         NotificationCompat.Action actionAccept =
@@ -772,10 +769,19 @@ public class CrazyService extends Service {
 
         // notificationId is a unique int for each notification that you must define
         notificationManager.notify(notificationId, builder.build());
+//        Toast.makeText(getApplicationContext(), "Notificando a lo loco", Toast.LENGTH_LONG).show();
 
+        try {
+            if (meMap.size() > 1) {
 
+            } else {
+                playingInconmingVideoCallAudio();
+            }
+        } catch (Exception e) {
 
-        playingInconmingVideoCallAudio();
+        }
+
+//        playingInconmingVideoCallAudio();
 //        mediaPlayerCallTone = MediaPlayer.create(contextInstance, R.raw.skype_caller_tone);
 //        mediaPlayerCallTone.setAudioStreamType(AudioManager.STREAM_MUSIC);
 //        try {
@@ -796,8 +802,15 @@ public class CrazyService extends Service {
         // notificationId is a unique int for each notification that you must define
         notificationManager.notify(notificationId, builder.build());
 
+        try {
+            if (meMapVoice.size() > 1) {
 
-        playingInconmingCallAudio();
+            } else {
+                playingInconmingCallAudio();
+            }
+        } catch (Exception e) {
+
+        }
 //        mediaPlayerCallTone = MediaPlayer.create(contextInstance, R.raw.skype_caller_tone);
 //        mediaPlayerCallTone.setAudioStreamType(AudioManager.STREAM_MUSIC);
 //        try {
@@ -934,7 +947,8 @@ public class CrazyService extends Service {
 
     public void playingInconmingVideoCallAudio() {
 //        mediaPlayerCallTone = MediaPlayer.create(contextInstance, R.raw.beat_it_gameboy);
-        mediaPlayerCallTone = MediaPlayer.create(contextInstance, R.raw.skype_caller_tone);
+//        mediaPlayerCallTone = MediaPlayer.create(contextInstance, R.raw.skype_caller_tone);
+        mediaPlayerCallTone = MediaPlayer.create(contextInstance, R.raw.bomberman);
         mediaPlayerCallTone.setLooping(true);
         mediaPlayerCallTone.start(); // no need to call prepare(); create() does that for you
 
@@ -1473,6 +1487,7 @@ public class CrazyService extends Service {
                 final int max = 4999;
                 int idNotification = new Random().nextInt((max - min) + 1) + min;
                 notificacionStack.setIdNotification(idNotification);
+
                 notificacionStackArrayList.add(notificacionStack);
 
                 String usuarioBloqueado = myPreferences.getString("idUserBlocking", "");
@@ -2525,12 +2540,44 @@ public class CrazyService extends Service {
     }
 
 
+    public class MusicPlaybackService extends Service implements MediaPlayer.OnCompletionListener {
+        private MediaPlayer mediaPlayer;
 
+        @Override
+        public void onCreate() {
+            super.onCreate();
+            mediaPlayer = MediaPlayer.create(this, R.raw.skype_caller_tone); // Cambia por tu canción
+            mediaPlayer.setOnCompletionListener(this);
+        }
 
+        @Override
+        public int onStartCommand(Intent intent, int flags, int startId) {
+            if (!mediaPlayer.isPlaying()) {
+                mediaPlayer.start();
+            }
+            return START_STICKY;
+        }
 
+        @Override
+        public void onDestroy() {
+            if (mediaPlayer.isPlaying()) {
+                mediaPlayer.stop();
+            }
+            mediaPlayer.release();
+            super.onDestroy();
+        }
 
+        @Override
+        public void onCompletion(MediaPlayer mediaPlayer) {
+            stopSelf(); // Detener el servicio cuando la canción termine
+        }
 
-
+        @Nullable
+        @Override
+        public IBinder onBind(Intent intent) {
+            return null;
+        }
+    }
 
 
 }

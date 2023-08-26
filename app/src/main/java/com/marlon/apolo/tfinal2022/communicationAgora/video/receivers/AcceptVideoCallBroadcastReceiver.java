@@ -59,6 +59,7 @@ public class AcceptVideoCallBroadcastReceiver extends BroadcastReceiver {
 
     private void cancelNotification(Context context, int idNotification) {
 
+        Toast.makeText(context,"Eliminando notifiacion"+String.valueOf(idNotification),Toast.LENGTH_SHORT).show();
 //        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(contextInstance);
         // notificationId is a unique int for each notification that you must define
 //        notificationManager.cancel(idNotification);

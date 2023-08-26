@@ -1,20 +1,17 @@
-package com.marlon.apolo.tfinal2022.communicationAgora.video.view;
+package com.marlon.apolo.tfinal2022.communicationAgora.voice.view;
 
 import android.Manifest;
 import android.app.NotificationManager;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -28,7 +25,6 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -43,11 +39,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.model.LlamadaVideo;
+import com.marlon.apolo.tfinal2022.model.LlamadaVoz;
 import com.marlon.apolo.tfinal2022.model.Participante;
 import com.marlon.apolo.tfinal2022.model.Usuario;
-import com.squareup.okhttp.Call;
-
-import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -68,7 +62,7 @@ import io.agora.rtc2.internal.LastmileProbeConfig;
 import io.agora.rtc2.video.VideoCanvas;
 import io.agora.rtc2.video.VideoEncoderConfiguration;
 
-public class VideoCallMainActivity extends AppCompatActivity {
+public class VoiceCallMainActivity extends AppCompatActivity {
 
 
     private static final int DELAY = 1000;
@@ -78,7 +72,7 @@ public class VideoCallMainActivity extends AppCompatActivity {
                     Manifest.permission.RECORD_AUDIO,
                     Manifest.permission.CAMERA
             };
-    private static final String TAG = VideoCallMainActivity.class.getSimpleName();
+    private static final String TAG = VoiceCallMainActivity.class.getSimpleName();
 
     private String javaUrl = "https://authwitouthauth-a975f368522e.herokuapp.com";
 
@@ -122,7 +116,7 @@ public class VideoCallMainActivity extends AppCompatActivity {
     private String idVideoCall;
     private ChildEventListener childEventListenerLlamar;
     private ChildEventListener childEventListenerResponder;
-    private LlamadaVideo llamadaVideoRemota;
+    private LlamadaVoz llamadaVozRemota;
     private String callStatus;
     private TextView textViewNameRemoteUser;
     private TextView textViewStateRemoteUser;
@@ -151,7 +145,15 @@ public class VideoCallMainActivity extends AppCompatActivity {
 //            showMessage("Remote user joined " + uid);
 
             // Set the remote video view
-            runOnUiThread(() -> setupRemoteVideo(uid));
+//            runOnUiThread(() -> setupRemoteVideo(uid));
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    textViewStateRemoteUser.setText("Comunicación establecida");
+                    textViewStateRemoteUser.setVisibility(View.VISIBLE);
+                }
+            });
         }
 
         @Override
@@ -163,7 +165,7 @@ public class VideoCallMainActivity extends AppCompatActivity {
         @Override
         public void onUserOffline(int uid, int reason) {
 //            showMessage("Remote user offline " + uid + " " + reason);
-            runOnUiThread(() -> remoteSurfaceView.setVisibility(View.GONE));
+//            runOnUiThread(() -> remoteSurfaceView.setVisibility(View.GONE));
         }
 
 
@@ -229,23 +231,23 @@ public class VideoCallMainActivity extends AppCompatActivity {
                     + " \n reason =" + reason
                     + " \n elapsed =" + elapsed;
 
-            if (reason == 5) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        remoteSurfaceView.setVisibility(View.GONE);
-
-                    }
-                });
-            }
-            if (reason == 6) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        remoteSurfaceView.setVisibility(View.VISIBLE);
-                    }
-                });
-            }
+//            if (reason == 5) {
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        remoteSurfaceView.setVisibility(View.GONE);
+//
+//                    }
+//                });
+//            }
+//            if (reason == 6) {
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        remoteSurfaceView.setVisibility(View.VISIBLE);
+//                    }
+//                });
+//            }
             Log.d(TAG, msg);
 //            showMessage(msg);
         }
@@ -318,53 +320,53 @@ public class VideoCallMainActivity extends AppCompatActivity {
     };
 
 
-    private void setupRemoteVideo(int uid) {
-        try {
-            stopPlaying();
-        } catch (Exception e) {
-
-        }
-        remoteUid = uid;
-        FrameLayout parent = findViewById(R.id.remote_video_view_container);
-        remoteSurfaceView = new SurfaceView(getBaseContext());
-//        remoteSurfaceView.setZOrderMediaOverlay(true);
-
-        if (parent.indexOfChild(mLocalVideo.view) > -1) {
-            parent = mLocalContainer;
-        }
-
-        // Only one remote video view is available for this
-        // tutorial. Here we check if there exists a surface
-        // view tagged as this uid.
-//        if (mRemoteVideo != null) {
-//            return;
+//    private void setupRemoteVideo(int uid) {
+//        try {
+//            stopPlaying();
+//        } catch (Exception e) {
+//
 //        }
+//        remoteUid = uid;
+//        FrameLayout parent = findViewById(R.id.remote_video_view_container);
+//        remoteSurfaceView = new SurfaceView(getBaseContext());
+////        remoteSurfaceView.setZOrderMediaOverlay(true);
+//
+//        if (parent.indexOfChild(mLocalVideo.view) > -1) {
+//            parent = mLocalContainer;
+//        }
+//
+//        // Only one remote video view is available for this
+//        // tutorial. Here we check if there exists a surface
+//        // view tagged as this uid.
+////        if (mRemoteVideo != null) {
+////            return;
+////        }
+//
+//        remoteSurfaceView.setZOrderMediaOverlay(parent == mLocalContainer);
+//
+//        parent.addView(remoteSurfaceView);
+//        mRemoteVideo = new VideoCanvas(remoteSurfaceView, VideoCanvas.RENDER_MODE_FIT, uid);
+//
+////        agoraEngine.setupRemoteVideo(new VideoCanvas(remoteSurfaceView, VideoCanvas.RENDER_MODE_FIT, uid));
+//        agoraEngine.setupRemoteVideo(mRemoteVideo);
+//        // Display RemoteSurfaceView.
+//        remoteSurfaceView.setVisibility(View.VISIBLE);
+//
+//    }
 
-        remoteSurfaceView.setZOrderMediaOverlay(parent == mLocalContainer);
-
-        parent.addView(remoteSurfaceView);
-        mRemoteVideo = new VideoCanvas(remoteSurfaceView, VideoCanvas.RENDER_MODE_FIT, uid);
-
-//        agoraEngine.setupRemoteVideo(new VideoCanvas(remoteSurfaceView, VideoCanvas.RENDER_MODE_FIT, uid));
-        agoraEngine.setupRemoteVideo(mRemoteVideo);
-        // Display RemoteSurfaceView.
-        remoteSurfaceView.setVisibility(View.VISIBLE);
-
-    }
-
-    public void setupLocalVideo() {
-        FrameLayout container = findViewById(R.id.local_video_view_container);
-        // Create a SurfaceView object and add it as a child to the FrameLayout.
-        localSurfaceView = new SurfaceView(getBaseContext());
-        localSurfaceView.setZOrderMediaOverlay(true);
-        container.addView(localSurfaceView);
-        mLocalVideo = new VideoCanvas(localSurfaceView, VideoCanvas.RENDER_MODE_HIDDEN, 0);
-
-        // Call setupLocalVideo with a VideoCanvas having uid set to 0.
-//        agoraEngine.setupLocalVideo(new VideoCanvas(localSurfaceView, VideoCanvas.RENDER_MODE_HIDDEN, 0));
-        agoraEngine.setupLocalVideo(mLocalVideo);
-
-    }
+//    public void setupLocalVideo() {
+//        FrameLayout container = findViewById(R.id.local_video_view_container);
+//        // Create a SurfaceView object and add it as a child to the FrameLayout.
+//        localSurfaceView = new SurfaceView(getBaseContext());
+//        localSurfaceView.setZOrderMediaOverlay(true);
+//        container.addView(localSurfaceView);
+//        mLocalVideo = new VideoCanvas(localSurfaceView, VideoCanvas.RENDER_MODE_HIDDEN, 0);
+//
+//        // Call setupLocalVideo with a VideoCanvas having uid set to 0.
+////        agoraEngine.setupLocalVideo(new VideoCanvas(localSurfaceView, VideoCanvas.RENDER_MODE_HIDDEN, 0));
+//        agoraEngine.setupLocalVideo(mLocalVideo);
+//
+//    }
 
     public void joinChannelButton(View view) {
 //        joinChannelCaller();
@@ -460,9 +462,9 @@ public class VideoCallMainActivity extends AppCompatActivity {
 //        }
     }
 
-    public void setLocalSurface() {
-        localSurfaceView.setVisibility(View.VISIBLE);
-    }
+//    public void setLocalSurface() {
+//        localSurfaceView.setVisibility(View.VISIBLE);
+//    }
 
 
     public void leaveChannel(View view) {
@@ -482,7 +484,7 @@ public class VideoCallMainActivity extends AppCompatActivity {
             if (!isJoined) {
 //                showMessage("Join a channel first");
                 textViewStateRemoteUser.setText("Llamada rechazada");
-                rejectVideoCall(llamadaVideoRemota);
+                rejectVideoCall(llamadaVozRemota);
             } else {
                 agoraEngine.leaveChannel();
 //                showMessage("You left the channel");
@@ -497,9 +499,9 @@ public class VideoCallMainActivity extends AppCompatActivity {
         }
     }
 
-    private void rejectVideoCall(LlamadaVideo llamadaVideo) {
+    private void rejectVideoCall(LlamadaVoz llamadaVideo) {
         llamadaVideo.setRejectCallStatus(true);
-        FirebaseDatabase.getInstance().getReference().child("videoCalls")
+        FirebaseDatabase.getInstance().getReference().child("voiceCalls")
                 .child(llamadaVideo.getId())
                 .setValue(llamadaVideo).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
@@ -510,7 +512,7 @@ public class VideoCallMainActivity extends AppCompatActivity {
                                 public void run() {
                                     finish();
                                 }
-                            }, 2000);
+                            }, DELAY);
                         }
                     }
                 });
@@ -654,7 +656,8 @@ public class VideoCallMainActivity extends AppCompatActivity {
             config.mEventHandler = mRtcEventHandler;
             agoraEngine = RtcEngine.create(config);
             // By default, the video module is disabled, call enableVideo to enable it.
-            agoraEngine.enableVideo();
+//            agoraEngine.enableVideo();
+            agoraEngine.disableVideo();
 
             // Enable the dual stream mode
             agoraEngine.enableDualStreamMode(true);
@@ -687,10 +690,11 @@ public class VideoCallMainActivity extends AppCompatActivity {
 // Set degradation preference
             videoConfigLocal.degradationPrefer = VideoEncoderConfiguration.DEGRADATION_PREFERENCE.MAINTAIN_BALANCED;
 // Apply the configuration
-            agoraEngine.setVideoEncoderConfiguration(videoConfigLocal);
+            //agoraEngine.setVideoEncoderConfiguration(videoConfigLocal);
 
 // Start the probe test
 //            startProbeTest();
+            agoraEngine.muteLocalVideoStream(false);
 
 
         } catch (Exception e) {
@@ -857,7 +861,7 @@ public class VideoCallMainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         hideSystemBars();
-        setContentView(R.layout.activity_video_call_main);
+        setContentView(R.layout.activity_voice_call_main);
         mLocalContainer = findViewById(R.id.local_video_view_container);
         networkStatus = findViewById(R.id.networkStatus);
 
@@ -946,25 +950,25 @@ public class VideoCallMainActivity extends AppCompatActivity {
 
             cancelNotification(idNot);
 
-            llamadaVideoRemota = (LlamadaVideo) getIntent().getSerializableExtra("llamadaVideo");
-            channelName = llamadaVideoRemota.getId();
-            idVideoCall = llamadaVideoRemota.getId();
+            llamadaVozRemota = (LlamadaVoz) getIntent().getSerializableExtra("llamadaVoz");
+            channelName = llamadaVozRemota.getId();
+            idVideoCall = llamadaVozRemota.getId();
             //showMessage(llamadaVideoRemota.toString());
 //            showMessage("cahnnelñ" + String.valueOf(llamadaVideoRemota.isChannelConnectedStatus()));
 //            showMessage("destiny" + String.valueOf(llamadaVideoRemota.isDestinyStatus()));
-            Log.d(TAG, llamadaVideoRemota.toString());
+            Log.d(TAG, llamadaVozRemota.toString());
 
-            setListenerLlamadaRemota(llamadaVideoRemota);
+            setListenerLlamadaRemota();
 
             if ("CALL_ANSWER".equals(getIntent().getAction())) {
-                llamadaVideoRemota.setChannelConnectedStatus(true);
-                llamadaVideoRemota.setDestinyStatus(true);
+                llamadaVozRemota.setChannelConnectedStatus(true);
+                llamadaVozRemota.setDestinyStatus(true);
                 imageButtonJoin.setVisibility(View.GONE);
                 joinChannelDestiny();
 //                showMessage("CONTESTANDO");
             }
             if ("CALL_SCREEN".equals(getIntent().getAction())) {
-                textViewNameRemoteUser.setText(String.format("%s", llamadaVideoRemota.getParticipanteCaller().getNombreParticipante()));
+                textViewNameRemoteUser.setText(String.format("%s", llamadaVozRemota.getParticipanteCaller().getNombreParticipante()));
                 textViewStateRemoteUser.setText(String.format("%s", "Llamada entrante..."));
 //                showMessage("SOLO SCREEN");
             }
@@ -1028,11 +1032,11 @@ public class VideoCallMainActivity extends AppCompatActivity {
                 } else {
 
 //                    showMessage("Ejecutando a lo loco");
-                    if (llamadaVideoRemota.isDestinyStatus() && llamadaVideoRemota.isChannelConnectedStatus()) {
+                    if (llamadaVozRemota.isDestinyStatus() && llamadaVozRemota.isChannelConnectedStatus()) {
                         imageButtonJoin.setVisibility(View.GONE);
                         joinChannelDestiny();
                     } else {
-                        textViewNameRemoteUser.setText(String.format("%s", llamadaVideoRemota.getParticipanteCaller().getNombreParticipante()));
+                        textViewNameRemoteUser.setText(String.format("%s", llamadaVozRemota.getParticipanteCaller().getNombreParticipante()));
                         textViewStateRemoteUser.setText(String.format("%s", "Llamada entrante..."));
                     }
                 }
@@ -1041,7 +1045,7 @@ public class VideoCallMainActivity extends AppCompatActivity {
                 if (callStatus.equals("llamadaSaliente")) {
 //                    joinChannelCaller();
                 } else {
-                    rejectVideoCall(llamadaVideoRemota);
+                    rejectVideoCall(llamadaVozRemota);
                 }
                 // Explain to the user that the feature is unavailable because
                 // the feature requires a permission that the user has denied.
@@ -1095,7 +1099,7 @@ public class VideoCallMainActivity extends AppCompatActivity {
                 agoraEngine,
                 channelName,
                 uid,
-                VideoCallMainActivity.this);
+                VoiceCallMainActivity.this);
 
         agoraTokenAsyncTaskWithJava.execute(javaUrl);
 
@@ -1103,7 +1107,7 @@ public class VideoCallMainActivity extends AppCompatActivity {
 
     public static class AgoraTokenAsyncTaskWithJavaCaller extends AsyncTask<String, Void, String> {
 
-        private VideoCallMainActivity videoCallMainActivity;
+        private VoiceCallMainActivity videoCallMainActivity;
         private boolean isJoined;
         private RtcEngine agoraEngine;
         private String channelName;
@@ -1112,7 +1116,7 @@ public class VideoCallMainActivity extends AppCompatActivity {
         private String TAG = AgoraTokenAsyncTaskWithJavaCaller.class.getSimpleName();
         private String token;
 
-        public AgoraTokenAsyncTaskWithJavaCaller(boolean isJoinedVar, RtcEngine agoraEngineVar, String channelNameVar, int uidVar, VideoCallMainActivity videoCallMainActivityVar) {
+        public AgoraTokenAsyncTaskWithJavaCaller(boolean isJoinedVar, RtcEngine agoraEngineVar, String channelNameVar, int uidVar, VoiceCallMainActivity videoCallMainActivityVar) {
             videoCallMainActivity = videoCallMainActivityVar;
             isJoined = isJoinedVar;
             agoraEngine = agoraEngineVar;
@@ -1199,8 +1203,8 @@ public class VideoCallMainActivity extends AppCompatActivity {
                 // Set the client role as BROADCASTER or AUDIENCE according to the scenario.
                 options.clientRoleType = Constants.CLIENT_ROLE_BROADCASTER;
                 // Display LocalSurfaceView.
-                videoCallMainActivity.setupLocalVideo();
-                videoCallMainActivity.setLocalSurface();
+//                videoCallMainActivity.setupLocalVideo();
+//                videoCallMainActivity.setLocalSurface();
                 // Start local preview.
                 agoraEngine.startPreview();
                 // Join the channel with a temp token.
@@ -1247,8 +1251,8 @@ public class VideoCallMainActivity extends AppCompatActivity {
                 agoraEngine,
                 channelName,
                 uid,
-                VideoCallMainActivity.this,
-                llamadaVideoRemota);
+                VoiceCallMainActivity.this,
+                llamadaVozRemota);
 
         agoraTokenAsyncTaskWithJavaDestiny.execute(javaUrl);
 
@@ -1256,7 +1260,7 @@ public class VideoCallMainActivity extends AppCompatActivity {
 
     public static class AgoraTokenAsyncTaskWithJavaDestiny extends AsyncTask<String, Void, String> {
 
-        private VideoCallMainActivity videoCallMainActivity;
+        private VoiceCallMainActivity videoCallMainActivity;
         private boolean isJoined;
         private RtcEngine agoraEngine;
         private String channelName;
@@ -1264,9 +1268,9 @@ public class VideoCallMainActivity extends AppCompatActivity {
         private String tokenLocal;
         private String TAG = AgoraTokenAsyncTaskWithJavaDestiny.class.getSimpleName();
         private String token;
-        private LlamadaVideo llamadaVideo;
+        private LlamadaVoz llamadaVideo;
 
-        public AgoraTokenAsyncTaskWithJavaDestiny(boolean isJoinedVar, RtcEngine agoraEngineVar, String channelNameVar, int uidVar, VideoCallMainActivity videoCallMainActivityVar, LlamadaVideo llamadaVideoVar) {
+        public AgoraTokenAsyncTaskWithJavaDestiny(boolean isJoinedVar, RtcEngine agoraEngineVar, String channelNameVar, int uidVar, VoiceCallMainActivity videoCallMainActivityVar, LlamadaVoz llamadaVideoVar) {
             videoCallMainActivity = videoCallMainActivityVar;
             isJoined = isJoinedVar;
             agoraEngine = agoraEngineVar;
@@ -1354,8 +1358,8 @@ public class VideoCallMainActivity extends AppCompatActivity {
                 // Set the client role as BROADCASTER or AUDIENCE according to the scenario.
                 options.clientRoleType = Constants.CLIENT_ROLE_BROADCASTER;
                 // Display LocalSurfaceView.
-                videoCallMainActivity.setupLocalVideo();
-                videoCallMainActivity.setLocalSurface();
+//                videoCallMainActivity.setupLocalVideo();
+//                videoCallMainActivity.setLocalSurface();
                 // Start local preview.
                 agoraEngine.startPreview();
                 // Join the channel with a temp token.
@@ -1440,7 +1444,7 @@ public class VideoCallMainActivity extends AppCompatActivity {
         llamadaVideo.setFinishCall(false);
 
         FirebaseDatabase.getInstance().getReference()
-                .child("videoCalls")
+                .child("voiceCalls")
                 .child(idVideoCall)
                 .setValue(llamadaVideo)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -1520,7 +1524,7 @@ public class VideoCallMainActivity extends AppCompatActivity {
 
             }
         };
-        FirebaseDatabase.getInstance().getReference().child("videoCalls")
+        FirebaseDatabase.getInstance().getReference().child("voiceCalls")
                 .addChildEventListener(childEventListenerLlamar);
     }
 
@@ -1553,7 +1557,7 @@ public class VideoCallMainActivity extends AppCompatActivity {
 
         try {
             FirebaseDatabase.getInstance().getReference()
-                    .child("videoCalls")
+                    .child("voiceCalls")
                     .child(idVideoCall)
 //                    .setValue(null)
                     .removeValue()
@@ -1584,7 +1588,7 @@ public class VideoCallMainActivity extends AppCompatActivity {
 
         try {
             FirebaseDatabase.getInstance().getReference()
-                    .child("videoCalls")
+                    .child("voiceCalls")
                     .child(idVideoCall)
 //                    .setValue(null)
                     .removeValue()
@@ -1612,7 +1616,7 @@ public class VideoCallMainActivity extends AppCompatActivity {
     }
 
 
-    private void constestarLlamada(LlamadaVideo llamadaVideo) {
+    private void constestarLlamada(LlamadaVoz llamadaVideo) {
 
 
         idVideoCall = llamadaVideo.getId();
@@ -1624,7 +1628,7 @@ public class VideoCallMainActivity extends AppCompatActivity {
 //        Toast.makeText(getApplicationContext(), llamadaVideo.toString(), Toast.LENGTH_LONG).show();
 
         FirebaseDatabase.getInstance().getReference()
-                .child("videoCalls")
+                .child("voiceCalls")
                 .child(llamadaVideo.getId())
                 .setValue(llamadaVideo)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -1633,7 +1637,9 @@ public class VideoCallMainActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "Contestando...");
                             //BUTTON
-                            textViewStateRemoteUser.setText("");
+//                            textViewStateRemoteUser.setText("");
+                            textViewStateRemoteUser.setText("Comunicación establecida");
+                            textViewStateRemoteUser.setVisibility(View.VISIBLE);
 //                            linLytRemoteUser.setVisibility(View.GONE);
 //                            textViewRemoteState.setVisibility(View.GONE);
 //                            textViewRemoteUser.setVisibility(View.GONE);
@@ -1648,7 +1654,7 @@ public class VideoCallMainActivity extends AppCompatActivity {
     }
 
 
-    private void setListenerLlamadaRemota(LlamadaVideo llamadaVideoRemota) {
+    private void setListenerLlamadaRemota() {
         //idVideoCall = llamadaVideoRemota.getId();
 
 //        showMessage("Escuchando eventos llamada remota");
@@ -1688,19 +1694,19 @@ public class VideoCallMainActivity extends AppCompatActivity {
             }
         };
 
-        FirebaseDatabase.getInstance().getReference().child("videoCalls")
+        FirebaseDatabase.getInstance().getReference().child("voiceCalls")
                 .addChildEventListener(childEventListenerResponder);
     }
 
     public void removeChildEventListenerLlamar() {
 //        showMessage("removeChildEventListener Llamar");
-        FirebaseDatabase.getInstance().getReference().child("videoCalls")
+        FirebaseDatabase.getInstance().getReference().child("voiceCalls")
                 .removeEventListener(childEventListenerLlamar);
     }
 
     public void removeChildEventListenerContestar() {
 //        showMessage("removeChildEventListener Contestar");
-        FirebaseDatabase.getInstance().getReference().child("videoCalls")
+        FirebaseDatabase.getInstance().getReference().child("voiceCalls")
                 .removeEventListener(childEventListenerResponder);
     }
 

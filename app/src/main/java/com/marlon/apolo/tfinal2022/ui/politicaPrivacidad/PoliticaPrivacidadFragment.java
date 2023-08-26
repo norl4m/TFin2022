@@ -31,7 +31,9 @@ public class PoliticaPrivacidadFragment extends Fragment {
         View root = inflater.inflate(R.layout.politica_privacidad_fragment, container, false);
         ProgressBar progressBar = root.findViewById(R.id.progressBar);
         WebView myWebView = root.findViewById(R.id.webview);
-        myWebView.loadUrl("https://authwitouthauth.herokuapp.com/politica-privacidad");
+        String javaUrl = "https://authwitouthauth-a975f368522e.herokuapp.com";
+
+        myWebView.loadUrl(javaUrl + "/politica-privacidad");
         myWebView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {

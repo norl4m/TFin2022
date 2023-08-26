@@ -39,13 +39,13 @@ public class DeleteAsyncTask extends AsyncTask<String, Integer, String> {
 
     @Override
     protected String doInBackground(String... strings) {
-        Log.d(TAG, "DELETE REQUEST");
-
         response = "";
         try {
 //            String urlBase = "https://authwitouthauth.herokuapp.com/usuarios";
 //            String urlBase = "https://authwitouthauth.herokuapp.com/usuarios/damin/delete/usuarios/{uid}";
-            String urlBase = "https://authwitouthauth.herokuapp.com/damin/delete/usuarios/" + uid;
+            String javaUrl = "https://authwitouthauth-a975f368522e.herokuapp.com";
+
+            String urlBase = javaUrl + "/damin/delete/usuarios/" + uid;
 
             URL url = new URL(urlBase);
 //        HttpURLConnection httpURLConnection = new url.openConnection();
