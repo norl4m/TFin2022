@@ -12,8 +12,8 @@ Write down the general informations of your project. It is worth to always put a
 ## Technologies
 ***
 A list of technologies used within the project:
-* [Technologie name](https://example.com): Version 12.3
-* [Technologie name](https://example.com): Version 2.34
+* [Android Gralde Plugin version](https://example.com): Version 7.2.1
+* [Gradle version](https://example.com): Version 7.3.3
 * [Library name](https://example.com): Version 1234
 ## Installation
 ***
