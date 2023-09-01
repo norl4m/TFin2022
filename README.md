@@ -8,7 +8,7 @@
 ***
 Write down the general informations of your project. It is worth to always put a project status in the Readme file. This is where you can add it.
 ### Screenshot
-![Image text](gs://tfinal2022-afc91.appspot.com/icono/skills.png)
+![Image text](https://firebasestorage.googleapis.com/v0/b/tfinal2022-afc91.appspot.com/o/icono%2Fskills.png?alt=media&token=fae13941-2708-48e2-8431-bcad62833a72)
 ## Technologies
 ***
 A list of technologies used within the project:
