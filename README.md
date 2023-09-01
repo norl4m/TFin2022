@@ -12,9 +12,9 @@ Write down the general informations of your project. It is worth to always put a
 ## Technologies
 ***
 A list of technologies used within the project:
-* [Android Gralde Plugin version](https://example.com): Version 7.2.1
-* [Gradle version](https://example.com): Version 7.3.3
-* [Library name](https://example.com): Version 1234
+* [Android Gralde Plugin version](https://gradle.org): Version 7.2.1
+* [Gradle version](https://gradle.org/install/): Version 7.3.3
+* [Agora SDK](https://docs.agora.io/en/video-calling/get-started/get-started-sdk?platform=android): Version 4.x
 ## Installation
 ***
 A little intro about the installation.
