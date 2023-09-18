@@ -42,6 +42,7 @@ import com.google.mlkit.vision.text.Text;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.parser.PdfTextExtractor;
 import com.marlon.apolo.tfinal2022.R;
+import com.marlon.apolo.tfinal2022.herramientas.DataValidation;
 import com.marlon.apolo.tfinal2022.herramientas.FirebaseMLKitVision;
 import com.marlon.apolo.tfinal2022.interfaces.DataStatusMLKit;
 import com.marlon.apolo.tfinal2022.model.Empleador;
@@ -568,27 +569,38 @@ public class RegistroRecordPolicialActivity extends AppCompatActivity implements
                             removeBlockingAllButtons();
 
                         } else {
-                            Toast.makeText(RegistroRecordPolicialActivity.this, "Verificación existosa!", Toast.LENGTH_SHORT).show();
-                            trabajador.setEstadoRrcordP(false);
-                            buttonNext.setEnabled(true);
+                            DataValidation dataValidation = new DataValidation();
+                            if (dataValidation.validateNameWithPoliceRecord(trabajador.getNombre(),trabajador.getApellido(),policeRecordVar.getNameAndLastName())){
+                                Toast.makeText(RegistroRecordPolicialActivity.this, "Verificación existosa!", Toast.LENGTH_SHORT).show();
 
-                            if (selectMethod == 1) {
-                                Glide.with(getApplicationContext()).load(uriPhoto).into(imageViewCam);
-                                imageViewCam.setColorFilter(null);
+
+                                trabajador.setEstadoRrcordP(false);
+                                buttonNext.setEnabled(true);
+
+                                if (selectMethod == 1) {
+                                    Glide.with(getApplicationContext()).load(uriPhoto).into(imageViewCam);
+                                    imageViewCam.setColorFilter(null);
+                                }
+
+                                if (selectMethod == 2) {
+                                    Glide.with(getApplicationContext()).load(uriPhoto).into(imageViewGallery);
+                                    imageViewGallery.setColorFilter(null);
+                                }
+
+
+                                if (selectMethod == 3) {
+                                    Glide.with(getApplicationContext()).load(R.drawable.ic_pdf_checked).into(imageViewPdf);
+                                    imageViewPdf.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.check_color));
+                                }
+
+                                blockingAllButtons();
+                            }else {
+                                Toast.makeText(RegistroRecordPolicialActivity.this, "El record policial ingresado es inválido!", Toast.LENGTH_SHORT).show();
+                                trabajador.setEstadoRrcordP(true);
+                                buttonNext.setEnabled(false);
+                                removeBlockingAllButtons();
                             }
 
-                            if (selectMethod == 2) {
-                                Glide.with(getApplicationContext()).load(uriPhoto).into(imageViewGallery);
-                                imageViewGallery.setColorFilter(null);
-                            }
-
-
-                            if (selectMethod == 3) {
-                                Glide.with(getApplicationContext()).load(R.drawable.ic_pdf_checked).into(imageViewPdf);
-                                imageViewPdf.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.check_color));
-                            }
-
-                            blockingAllButtons();
 
 
 //                            buttonRecord.setEnabled(false);

@@ -263,7 +263,7 @@ public class AuthUserListAdapter extends
         // Add the data to the view holder.
         holder.textViewUid.setText(String.format("UID: %s", mCurrent.getUid()));
         holder.textViewEmail.setText(String.format("EMAIL: %s", mCurrent.getEmail()));
-        holder.textViewPhone.setText(String.format("CELULAR: %s", mCurrent.getPhoneNumber()));
+//        holder.textViewPhone.setText(String.format("CELULAR: %s", mCurrent.getPhoneNumber()));
         Drawable[] itrems = new Drawable[]{AppCompatResources.getDrawable(contextInstance, R.drawable.bg4),
                 AppCompatResources.getDrawable(contextInstance, R.drawable.bg5),
                 AppCompatResources.getDrawable(contextInstance, R.drawable.bg6)};

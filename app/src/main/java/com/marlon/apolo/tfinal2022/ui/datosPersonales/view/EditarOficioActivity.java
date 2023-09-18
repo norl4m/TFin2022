@@ -1,10 +1,15 @@
 package com.marlon.apolo.tfinal2022.ui.datosPersonales.view;
 
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -13,6 +18,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,9 +28,12 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.marlon.apolo.tfinal2022.R;
+import com.marlon.apolo.tfinal2022.herramientas.NetworkTool;
 import com.marlon.apolo.tfinal2022.model.Oficio;
 import com.marlon.apolo.tfinal2022.model.OficioPoc;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
+import com.marlon.apolo.tfinal2022.receivers.NetworkReceiver;
+import com.marlon.apolo.tfinal2022.registro.view.RegWithEmailPasswordActivity;
 import com.marlon.apolo.tfinal2022.ui.bienvenido.viewModel.BienvenidoViewModel;
 import com.marlon.apolo.tfinal2022.ui.datosPersonales.adapters.EditarOficioSuperSpecialListAdapter;
 import com.marlon.apolo.tfinal2022.ui.oficios.viewModel.OficioViewModel;
@@ -40,6 +49,14 @@ public class EditarOficioActivity extends AppCompatActivity implements View.OnCl
     private OficioViewModel oficioViewModel;
     private EditarOficioSuperSpecialListAdapter editarOficioSuperSpecialListAdapter;
     private ChildEventListener childEventListenerOficios;
+    private NetworkReceiver receiver;
+
+    private SharedPreferences defaultSharedPreferences;
+    private SharedPreferences myPreferences;
+    private boolean networkFlag;
+    public static boolean sPref;
+    private NetworkTool networkTool;
+    private AlertDialog dialogInfo;
 
     public void loadOficios() {
         childEventListenerOficios = new ChildEventListener() {
@@ -171,6 +188,55 @@ public class EditarOficioActivity extends AppCompatActivity implements View.OnCl
         dialogNuevoOficio.show();
     }
 
+    public void alertDialogContinuarRegistroConDatos() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        // Get the layout inflater
+        LayoutInflater inflater = this.getLayoutInflater();
+
+        View promptsView = inflater.inflate(R.layout.dialog_info, null);
+        builder.setView(promptsView);
+
+        // set prompts.xml to alertdialog builder
+        final TextView textViewInfo = promptsView.findViewById(R.id.textViewInfo);
+
+        textViewInfo.setText(getResources().getString(R.string.text_error_conexion_internet_pero_si_datos));
+        builder.setPositiveButton("Continuar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                // sign in the user ...
+                trabajador.actualizarInfo(EditarOficioActivity.this);
+
+                try {
+                    dialogInfo.dismiss();
+                } catch (Exception e) {
+
+                }
+//                empleador.setFotoPerfil(null);
+
+//                Intent intent = new Intent(RegWithEmailPasswordActivity.this, MainNavigationActivity.class);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                startActivity(intent);
+            }
+        }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                try {
+                    dialogInfo.dismiss();
+                } catch (Exception e) {
+
+                }
+            }
+        });
+
+        builder.setCancelable(false);
+
+
+        dialogInfo = builder.create();
+        dialogInfo.show();
+
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -207,6 +273,22 @@ public class EditarOficioActivity extends AppCompatActivity implements View.OnCl
                 finish();
             }
         });
+
+
+        /*****************************/
+        networkTool = new NetworkTool(this);
+
+        // Registers BroadcastReceiver to track network connection changes.
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        receiver = new NetworkReceiver();
+        this.registerReceiver(receiver, filter);
+
+
+        // Gets the user's network preference settings
+        defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        myPreferences = EditarOficioActivity.this.getSharedPreferences("MyPreferences", MODE_PRIVATE);
+
+        /*******************************/
     }
 
     @Override
@@ -229,7 +311,33 @@ public class EditarOficioActivity extends AppCompatActivity implements View.OnCl
                 }
                 trabajador.setIdOficios(idsOfi);
                 if (!trabajador.getIdOficios().isEmpty()) {
-                    trabajador.actualizarInfo(this);
+
+                    networkFlag = myPreferences.getBoolean("networkFlag", false);
+                    sPref = defaultSharedPreferences.getBoolean("sync_network", true);
+
+                    Log.d(TAG, String.valueOf(sPref));
+                    Log.d(TAG, String.valueOf(networkFlag));
+
+                    if (((!sPref) && (networkFlag)) || ((sPref) && (networkFlag))) {
+                        // AsyncTask subclass
+                        //new DownloadXmlTask().execute(URL);
+                        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+                        boolean isMetered = cm.isActiveNetworkMetered();
+
+
+                        if (isMetered) {
+                            alertDialogContinuarRegistroConDatos();
+                        } else {
+                            trabajador.actualizarInfo(this);
+                        }
+
+                    } else {
+
+                        networkTool.alertDialogNoConectadoInfo();
+                    }
+
+
                     //Toast.makeText(getApplicationContext(), trabajador.toString(), Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(getApplicationContext(), "Para continuar por favor seleccione al menos un oficio de los registrados en la lista.", Toast.LENGTH_LONG).show();
@@ -239,5 +347,19 @@ public class EditarOficioActivity extends AppCompatActivity implements View.OnCl
                 alertDialogNuevoOficio();
                 break;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        try {
+            // Unregisters BroadcastReceiver when app is destroyed.
+            if (receiver != null) {
+                this.unregisterReceiver(receiver);
+            }
+        } catch (Exception e) {
+
+        }
+
     }
 }

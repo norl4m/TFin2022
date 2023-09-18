@@ -1,29 +1,38 @@
 package com.marlon.apolo.tfinal2022.ui.editarDatos;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.preference.PreferenceManager;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -31,9 +40,12 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.marlon.apolo.tfinal2022.R;
+import com.marlon.apolo.tfinal2022.herramientas.NetworkTool;
 import com.marlon.apolo.tfinal2022.model.Empleador;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
 import com.marlon.apolo.tfinal2022.model.Usuario;
+import com.marlon.apolo.tfinal2022.receivers.NetworkReceiver;
+import com.marlon.apolo.tfinal2022.registro.view.RegWithEmailPasswordActivity;
 import com.marlon.apolo.tfinal2022.ui.datosPersonales.view.EditarOficioActivity;
 import com.marlon.apolo.tfinal2022.ui.datosPersonales.view.FotoActivity;
 
@@ -68,6 +80,13 @@ public class EditarDataActivity extends AppCompatActivity implements View.OnClic
     private File cameraImage;
     private ProgressDialog progressDialog;
     private int colorNight;
+    private SharedPreferences defaultSharedPreferences;
+    private SharedPreferences myPreferences;
+    private NetworkTool networkTool;
+    private boolean networkFlag;
+    public static boolean sPref;
+    private NetworkReceiver receiver;
+    private Dialog dialogInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,6 +158,21 @@ public class EditarDataActivity extends AppCompatActivity implements View.OnClic
                 }
             }
         });
+        /*************************************/
+        networkTool = new NetworkTool(this);
+
+
+        // Registers BroadcastReceiver to track network connection changes.
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        receiver = new NetworkReceiver();
+        this.registerReceiver(receiver, filter);
+
+
+        // Gets the user's network preference settings
+        defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        myPreferences = EditarDataActivity.this.getSharedPreferences("MyPreferences", MODE_PRIVATE);
+        /*************************************/
+
 
         loadInfo(usuarioEdt);
 
@@ -290,21 +324,46 @@ public class EditarDataActivity extends AppCompatActivity implements View.OnClic
 //
 //                                Log.d(TAG, returnCursor.getString(nameIndex));
 //                                Log.d(TAG, Long.toString(returnCursor.getLong(sizeIndex)));
-                            String title = "Actualizando información";
-                            String messsage = "Por favor espere...";
-                            showProgress(title, messsage);
-                            if (photoFlag) {
-                                empleador.actualizarInfoConFoto(this, uriPhoto);
-                            } else {
-                                empleador.actualizarInfo(this);
 
+
+                            networkFlag = myPreferences.getBoolean("networkFlag", false);
+                            sPref = defaultSharedPreferences.getBoolean("sync_network", true);
+
+                            Log.d(TAG, String.valueOf(sPref));
+                            Log.d(TAG, String.valueOf(networkFlag));
+
+                            if (((!sPref) && (networkFlag)) || ((sPref) && (networkFlag))) {
+                                // AsyncTask subclass
+                                //new DownloadXmlTask().execute(URL);
+                                ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+                                boolean isMetered = cm.isActiveNetworkMetered();
+
+
+                                if (isMetered) {
+                                    alertDialogContinuarRegistroConDatos(empleador,photoFlag);
+                                } else {
+                                    String title = "Actualizando información";
+                                    String messsage = "Por favor espere...";
+                                    showProgress(title, messsage);
+                                    if (photoFlag) {
+                                        empleador.actualizarInfoConFoto(this, uriPhoto);
+                                    } else {
+                                        empleador.actualizarInfo(this);
+
+                                    }
+                                }
+
+
+                            } else {
+
+                                networkTool.alertDialogNoConectadoInfo();
                             }
+
 
                             break;
                         case 2:
-                            String title1 = "Actualizando información";
-                            String messsage1 = "Por favor espere...";
-                            showProgress(title1, messsage1);
+
                             trabajador.setNombre(name);
                             trabajador.setApellido(lastName);
                             trabajador.setFotoPerfil(usuarioEdt.getFotoPerfil());
@@ -324,11 +383,41 @@ public class EditarDataActivity extends AppCompatActivity implements View.OnClic
                                 photoFlag = false;
                             }
 
-                            if (photoFlag) {
-                                trabajador.actualizarInfoConFoto(this, uriPhoto);
-                            } else {
-                                trabajador.actualizarInfo(this);
 
+
+
+                            networkFlag = myPreferences.getBoolean("networkFlag", false);
+                            sPref = defaultSharedPreferences.getBoolean("sync_network", true);
+
+                            Log.d(TAG, String.valueOf(sPref));
+                            Log.d(TAG, String.valueOf(networkFlag));
+
+                            if (((!sPref) && (networkFlag)) || ((sPref) && (networkFlag))) {
+                                // AsyncTask subclass
+                                //new DownloadXmlTask().execute(URL);
+                                ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+                                boolean isMetered = cm.isActiveNetworkMetered();
+
+
+                                if (isMetered) {
+                                    alertDialogContinuarRegistroConDatosT(trabajador,photoFlag);
+                                } else {
+                                    String title1 = "Actualizando información";
+                                    String messsage1 = "Por favor espere...";
+                                    showProgress(title1, messsage1);
+                                    if (photoFlag) {
+                                        trabajador.actualizarInfoConFoto(this, uriPhoto);
+                                    } else {
+                                        trabajador.actualizarInfo(this);
+
+                                    }
+                                }
+
+
+                            } else {
+
+                                networkTool.alertDialogNoConectadoInfo();
                             }
 
 
@@ -370,6 +459,116 @@ public class EditarDataActivity extends AppCompatActivity implements View.OnClic
 
                 break;
         }
+    }
+
+
+    public void alertDialogContinuarRegistroConDatos(Empleador empleador, boolean photoflag) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        // Get the layout inflater
+        LayoutInflater inflater = this.getLayoutInflater();
+
+        View promptsView = inflater.inflate(R.layout.dialog_info, null);
+        builder.setView(promptsView);
+
+        // set prompts.xml to alertdialog builder
+        final TextView textViewInfo = promptsView.findViewById(R.id.textViewInfo);
+
+        textViewInfo.setText(getResources().getString(R.string.text_error_conexion_internet_pero_si_datos));
+        builder.setPositiveButton("Continuar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                // sign in the user ...
+                String title = "Actualizando información";
+                String messsage = "Por favor espere...";
+                showProgress(title, messsage);
+                if (photoflag) {
+                    empleador.actualizarInfoConFoto(EditarDataActivity.this, uriPhoto);
+                } else {
+                    empleador.actualizarInfo(EditarDataActivity.this);
+
+                }
+                try {
+                    dialogInfo.dismiss();
+                } catch (Exception e) {
+
+                }
+//                empleador.setFotoPerfil(null);
+
+//                Intent intent = new Intent(RegWithEmailPasswordActivity.this, MainNavigationActivity.class);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                startActivity(intent);
+            }
+        }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                try {
+                    dialogInfo.dismiss();
+                } catch (Exception e) {
+
+                }
+            }
+        });
+
+        builder.setCancelable(false);
+
+
+        dialogInfo = builder.create();
+        dialogInfo.show();
+
+    }
+    public void alertDialogContinuarRegistroConDatosT(Trabajador trabajador, boolean photoflag) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        // Get the layout inflater
+        LayoutInflater inflater = this.getLayoutInflater();
+
+        View promptsView = inflater.inflate(R.layout.dialog_info, null);
+        builder.setView(promptsView);
+
+        // set prompts.xml to alertdialog builder
+        final TextView textViewInfo = promptsView.findViewById(R.id.textViewInfo);
+
+        textViewInfo.setText(getResources().getString(R.string.text_error_conexion_internet_pero_si_datos));
+        builder.setPositiveButton("Continuar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                // sign in the user ...
+                String title = "Actualizando información";
+                String messsage = "Por favor espere...";
+                showProgress(title, messsage);
+                if (photoflag) {
+                    trabajador.actualizarInfoConFoto(EditarDataActivity.this, uriPhoto);
+                } else {
+                    trabajador.actualizarInfo(EditarDataActivity.this);
+
+                }
+                try {
+                    dialogInfo.dismiss();
+                } catch (Exception e) {
+
+                }
+//                empleador.setFotoPerfil(null);
+
+//                Intent intent = new Intent(RegWithEmailPasswordActivity.this, MainNavigationActivity.class);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                startActivity(intent);
+            }
+        }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                try {
+                    dialogInfo.dismiss();
+                } catch (Exception e) {
+
+                }
+            }
+        });
+
+        builder.setCancelable(false);
+
+
+        dialogInfo = builder.create();
+        dialogInfo.show();
+
     }
 
 
@@ -712,6 +911,20 @@ public class EditarDataActivity extends AppCompatActivity implements View.OnClic
         } catch (Exception e) {
             Log.d(TAG, e.toString());
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        try {
+            // Unregisters BroadcastReceiver when app is destroyed.
+            if (receiver != null) {
+                this.unregisterReceiver(receiver);
+            }
+        } catch (Exception e) {
+
+        }
+
     }
 
 }

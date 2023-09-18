@@ -8,11 +8,14 @@ import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -40,6 +43,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.preference.PreferenceManager;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -54,11 +58,14 @@ import com.google.firebase.database.ValueEventListener;
 import com.marlon.apolo.tfinal2022.R;
 import com.marlon.apolo.tfinal2022.admin.viewModel.AdminViewModel;
 import com.marlon.apolo.tfinal2022.databinding.FragmentDataUsuarioBinding;
+import com.marlon.apolo.tfinal2022.herramientas.NetworkTool;
 import com.marlon.apolo.tfinal2022.model.Administrador;
 import com.marlon.apolo.tfinal2022.model.Cita;
 import com.marlon.apolo.tfinal2022.model.Empleador;
 import com.marlon.apolo.tfinal2022.model.Trabajador;
 import com.marlon.apolo.tfinal2022.model.Usuario;
+import com.marlon.apolo.tfinal2022.receivers.NetworkReceiver;
+import com.marlon.apolo.tfinal2022.registro.view.RegWithEmailPasswordActivity;
 import com.marlon.apolo.tfinal2022.ui.empleadores.viewModel.EmpleadorViewModel;
 import com.marlon.apolo.tfinal2022.ui.trabajadores.viewModel.TrabajadorViewModel;
 
@@ -96,6 +103,14 @@ public class DataUsuarioFragment extends Fragment implements View.OnClickListene
     private LinearLayout linearLayout;
     private ArrayList<Cita> citaArrayList;
     private ValueEventListener valueEventListenerCitasCrazys;
+
+    private boolean networkFlag;
+    public static boolean sPref;
+    private NetworkReceiver receiver;
+    private SharedPreferences defaultSharedPreferences;
+    private SharedPreferences myPreferences;
+    private NetworkTool networkTool;
+    private AlertDialog dialogInfo;
 
 
     public void showProgress(String title, String message) {
@@ -157,6 +172,21 @@ public class DataUsuarioFragment extends Fragment implements View.OnClickListene
         SharedPreferences mPreferences = requireActivity().getSharedPreferences("MyPreferences", MODE_PRIVATE);
         user = mPreferences.getInt("usuario", -1);
 
+
+        /**************************************/
+        // Registers BroadcastReceiver to track network connection changes.
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        receiver = new NetworkReceiver();
+        requireActivity().registerReceiver(receiver, filter);
+
+
+        // Gets the user's network preference settings
+        defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireActivity());
+        myPreferences = requireActivity().getSharedPreferences("MyPreferences", MODE_PRIVATE);
+
+        networkTool = new NetworkTool(requireActivity());
+
+        /**************************************/
 
         return root;
     }
@@ -544,6 +574,62 @@ public class DataUsuarioFragment extends Fragment implements View.OnClickListene
         }
     }
 
+    public void alertDialogContinuarRegistroConDatos(String locationToFirebase, String password) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+        // Get the layout inflater
+        LayoutInflater inflater = this.getLayoutInflater();
+
+        View promptsView = inflater.inflate(R.layout.dialog_info, null);
+        builder.setView(promptsView);
+
+        // set prompts.xml to alertdialog builder
+        final TextView textViewInfo = promptsView.findViewById(R.id.textViewInfo);
+
+        textViewInfo.setText(getResources().getString(R.string.text_error_conexion_internet_pero_si_datos));
+        builder.setPositiveButton("Continuar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                // sign in the user ...
+
+                usuarioLocal.updateCompleteInfo(locationToFirebase, requireActivity(), metodoRegistro, password, progressDialog);
+
+
+                try {
+                    dialogInfo.dismiss();
+                } catch (Exception e) {
+
+                }
+//                empleador.setFotoPerfil(null);
+
+//                Intent intent = new Intent(RegWithEmailPasswordActivity.this, MainNavigationActivity.class);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                startActivity(intent);
+            }
+        }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                try {
+                    dialogInfo.dismiss();
+                } catch (Exception e) {
+
+                }
+                try {
+                    closeProgressDialog();
+                } catch (Exception e) {
+
+                }
+            }
+        });
+
+        builder.setCancelable(false);
+
+
+        dialogInfo = builder.create();
+        dialogInfo.show();
+
+    }
+
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -660,7 +746,30 @@ public class DataUsuarioFragment extends Fragment implements View.OnClickListene
 
 
                 if (flagReg) {
-                    usuarioLocal.updateCompleteInfo(locationToFirebase, requireActivity(), metodoRegistro, password, progressDialog);
+
+                    networkFlag = myPreferences.getBoolean("networkFlag", false);
+                    sPref = defaultSharedPreferences.getBoolean("sync_network", true);
+
+                    Log.d(TAG, String.valueOf(sPref));
+                    Log.d(TAG, String.valueOf(networkFlag));
+
+                    if (((!sPref) && (networkFlag)) || ((sPref) && (networkFlag))) {
+                        // AsyncTask subclass
+                        //new DownloadXmlTask().execute(URL);
+                        ConnectivityManager cm = (ConnectivityManager) requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+                        boolean isMetered = cm.isActiveNetworkMetered();
+
+                        if (isMetered) {
+                            alertDialogContinuarRegistroConDatos(locationToFirebase,password);
+                        } else {
+                            usuarioLocal.updateCompleteInfo(locationToFirebase, requireActivity(), metodoRegistro, password, progressDialog);
+                        }
+                    } else {
+                        closeProgressDialog();
+                        networkTool.alertDialogNoConectadoInfo();
+                    }
+
                 } else {
                     closeProgressDialog();
                     Toast.makeText(requireActivity(), "La información ingresada es incorrecta.", Toast.LENGTH_LONG).show();
@@ -762,6 +871,8 @@ public class DataUsuarioFragment extends Fragment implements View.OnClickListene
                 break;
         }
     }
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -945,6 +1056,14 @@ public class DataUsuarioFragment extends Fragment implements View.OnClickListene
     @Override
     public void onDestroy() {
         super.onDestroy();
+        try {
+            // Unregisters BroadcastReceiver when app is destroyed.
+            if (receiver != null) {
+                requireActivity().unregisterReceiver(receiver);
+            }
+        } catch (Exception e) {
+
+        }
         try {
             adminViewModel.removeValueEventListener();
         } catch (Exception e) {
